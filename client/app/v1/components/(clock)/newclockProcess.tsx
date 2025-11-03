@@ -11,7 +11,6 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { setWorkRole } from "@/app/lib/actions/cookieActions";
 import SwitchJobsMultiRoles from "./switchJobsMultipleRoles";
-import { returnToPrevWork } from "@/app/lib/actions/timeSheetActions";
 import QRMultiRoles from "./QRMultiRoles";
 import ClockLoadingPage from "./clock-loading-page";
 import { Contents } from "../(reusable)/contents";
@@ -22,16 +21,13 @@ import { CostCodeSelector } from "./(General)/costCodeSelector";
 import { JobsiteSelector } from "./(General)/jobsiteSelector";
 import MechanicVerificationStep from "./(Mechanic)/Verification-step-mechanic";
 import TascoVerificationStep from "./(Tasco)/Verification-step-tasco";
-import TascoClockInForm from "./(Tasco)/tascoClockInForm";
 import TruckVerificationStep from "./(Truck)/Verification-step-truck";
 import TascoMaterialSelector from "./(Tasco)/TascoMaterialSelector";
 import TascoEquipmentSelector from "./(Tasco)/TascoEquipmentSelector";
-import JobsiteSelectorLoading from "./(loading)/jobsiteSelectorLoading";
-import CostCodeSelectorLoading from "./(loading)/costCodeSelectorLoading";
-import TrailerSelectorLoading from "./(loading)/trailerSelectorLoading";
 
 import { useUserStore } from "@/app/lib/store/userStore";
 import { useEquipmentStore } from "@/app/lib/store/equipmentStore";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
 
 type NewClockProcessProps = {
   mechanicView: boolean;
@@ -279,47 +275,49 @@ export default function NewClockProcess({
   // Lets the user return to the previous work after break
   const handleReturn = async () => {
     try {
-      // setting the cookies below to fetch the prev TimeSheet
-      const fetchRecentTimeSheetId = await fetch(
-        "/api/getRecentTimecardReturn"
-      ).then((res) => res.json());
-      const tId = fetchRecentTimeSheetId.id;
-      // check for location permissions here
-      const formData = new FormData();
-      formData.append("id", tId?.toString() || "");
-      formData.append("userId", user?.id?.toString() || "");
-      const response = await returnToPrevWork(formData);
+      // Fetch the most recent timesheet for the user
+      const fetchRecentTimeSheet = await apiRequest(
+        `/api/v1/timesheet/user/${user?.id}/return`,
+        "GET"
+      );
+      const tId = fetchRecentTimeSheet?.id || fetchRecentTimeSheet?.data?.id;
+      if (!tId) throw new Error("No previous timesheet ID found");
 
-      if (response) {
-        // Set basic information from previous timesheet
+      // Fetch previous work for that timesheet
+      const response = await apiRequest(
+        `/api/v1/timesheet/${tId}/previous-work`,
+        "GET"
+      );
+      const prevWork = response?.data;
+      if (prevWork) {
         setJobsite({
-          id: response.Jobsite.id,
-          label: response.Jobsite.name,
-          code: response.Jobsite.qrId,
+          id: prevWork.Jobsite.id,
+          label: prevWork.Jobsite.name,
+          code: prevWork.Jobsite.qrId,
         });
         setCC({
-          id: response.CostCode.id,
-          label: response.CostCode.name,
-          code: response.CostCode.name,
+          id: prevWork.CostCode.id,
+          label: prevWork.CostCode.name,
+          code: prevWork.CostCode.name,
         });
 
         // Determine the role from previous work type
         const prevWorkRole =
-          response.workType === "LABOR"
+          prevWork.workType === "LABOR"
             ? "general"
-            : response.workType === "MECHANIC"
+            : prevWork.workType === "MECHANIC"
             ? "mechanic"
-            : response.workType === "TASCO"
+            : prevWork.workType === "TASCO"
             ? "tasco"
-            : response.workType === "TRUCK_DRIVER"
+            : prevWork.workType === "TRUCK_DRIVER"
             ? "truck"
             : "";
 
         setClockInRole(prevWorkRole);
 
         // Handle Tasco-specific data
-        if (response.TascoLogs && response.TascoLogs.length > 0) {
-          const firstTascoLog = response.TascoLogs[0];
+        if (prevWork.TascoLogs && prevWork.TascoLogs.length > 0) {
+          const firstTascoLog = prevWork.TascoLogs[0];
 
           if (firstTascoLog.shiftType && firstTascoLog.laborType) {
             if (
@@ -364,8 +362,8 @@ export default function NewClockProcess({
         }
 
         // Handle Truck-specific data
-        if (response.TruckingLogs && response.TruckingLogs.length > 0) {
-          const firstTruckLog = response.TruckingLogs[0];
+        if (prevWork.TruckingLogs && prevWork.TruckingLogs.length > 0) {
+          const firstTruckLog = prevWork.TruckingLogs[0];
 
           if (firstTruckLog.laborType) {
             setLaborType(firstTruckLog.laborType);
@@ -381,8 +379,8 @@ export default function NewClockProcess({
             setTruck(equipment);
           }
 
-          const workTypes = response.TruckingLogs.map(
-            (log) => log.laborType
+          const workTypes = prevWork.TruckingLogs.map(
+            (log: { laborType?: string }) => log.laborType
           ).filter(Boolean);
           setClockInRoleTypes(workTypes.toString());
         }

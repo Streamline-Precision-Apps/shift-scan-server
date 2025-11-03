@@ -22,6 +22,7 @@ import {
   getClockOutDetailsService,
   updateClockOutService,
   getPreviousTimesheet,
+  returnToPreviousTimesheetService,
 } from "../services/timesheetService.js";
 // GET /v1/timesheet/user/:userId/active-status
 export async function getTimesheetActiveStatusController(
@@ -619,5 +620,27 @@ export async function updateClockOutController(
       error: "Failed to update clock out details.",
       details: error instanceof Error ? error.message : String(error),
     });
+  }
+}
+
+// GET /v1/timesheet/:timesheetId/previous-work
+export async function getPreviousWorkController(
+  req: import("express").Request,
+  res: import("express").Response
+) {
+  try {
+    const timesheetId = Number(req.params.id);
+    if (!timesheetId) {
+      return res
+        .status(400)
+        .json({ error: "timesheetId parameter is required." });
+    }
+    const previousWork = await returnToPreviousTimesheetService(timesheetId);
+    if (!previousWork) {
+      return res.status(404).json({ error: "Previous work not found." });
+    }
+    return res.json({ success: true, data: previousWork });
+  } catch (error) {
+    return res.status(500).json({ error: "Failed to fetch previous work." });
   }
 }

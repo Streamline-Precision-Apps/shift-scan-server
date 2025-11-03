@@ -135,3 +135,22 @@ export function deleteAllCookie(req: express.Request, res: express.Response) {
   }
   res.json({ message: "All cookies deleted" });
 }
+
+// DELETE /api/cookies/list?name=key1&name=key2
+export function deleteCookieList(req: express.Request, res: express.Response) {
+  let { name } = req.query;
+  if (!name) {
+    return res.status(400).json({ error: "Missing cookie name(s)" });
+  }
+  if (typeof name === "string") {
+    name = [name];
+  }
+  if (!Array.isArray(name) || !name.every((n) => typeof n === "string")) {
+    return res.status(400).json({ error: "Invalid cookie name(s)" });
+  }
+
+  name.forEach((cookieName) => {
+    res.clearCookie(cookieName);
+  });
+  res.json({ message: `Cookies deleted: ${name.join(", ")}` });
+}

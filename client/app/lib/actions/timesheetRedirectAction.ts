@@ -23,7 +23,7 @@ type TimesheetRedirectData = {
 };
 
 export async function setTimesheetCookiesAndRedirect(
-  data: TimesheetRedirectData,
+  data: TimesheetRedirectData
 ) {
   const cookieStore = await cookies();
 
@@ -68,7 +68,7 @@ export async function setTimesheetCookiesAndRedirect(
       {
         path: "/",
         maxAge: 60 * 60 * 24 * 7, // 1 week
-      },
+      }
     );
 
     // Set cost code
@@ -96,7 +96,7 @@ export async function setTimesheetCookiesAndRedirect(
         {
           path: "/",
           maxAge: 60 * 60 * 24 * 7, // 1 week
-        },
+        }
       );
       if (data.truckingLog.equipmentQrId) {
         cookieStore.set("truck", data.truckingLog.equipmentQrId, {
@@ -111,7 +111,7 @@ export async function setTimesheetCookiesAndRedirect(
           {
             path: "/",
             maxAge: 60 * 60 * 24 * 7, // 1 week
-          },
+          }
         );
       }
     } else {
@@ -123,10 +123,10 @@ export async function setTimesheetCookiesAndRedirect(
     }
 
     // Redirect to dashboard
-    redirect("/dashboard");
+    redirect("/v1/dashboard");
   } catch (error) {
     console.error("Failed to set timesheet cookies:", error);
     // If cookie setting fails, still redirect to dashboard
-    redirect("/dashboard");
+    redirect("/v1/dashboard");
   }
 }

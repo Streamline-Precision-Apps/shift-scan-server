@@ -1391,3 +1391,54 @@ export async function getPreviousTimesheet(userId: string) {
 
   return timesheet;
 }
+
+export async function returnToPreviousTimesheetService(id: number) {
+  const PrevTimeSheet = await prisma.timeSheet.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      Jobsite: {
+        select: {
+          id: true,
+          qrId: true,
+          name: true,
+        },
+      },
+      CostCode: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      workType: true,
+      TascoLogs: {
+        select: {
+          shiftType: true,
+          Equipment: {
+            select: {
+              id: true,
+              qrId: true,
+              name: true,
+            },
+          },
+          laborType: true,
+          materialType: true,
+        },
+      },
+      TruckingLogs: {
+        select: {
+          laborType: true,
+          Equipment: {
+            select: {
+              qrId: true,
+              name: true,
+            },
+          },
+          startingMileage: true,
+        },
+      },
+    },
+  });
+
+  return PrevTimeSheet;
+}

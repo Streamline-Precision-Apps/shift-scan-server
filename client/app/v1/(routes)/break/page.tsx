@@ -3,10 +3,8 @@ import { useUserStore } from "@/app/lib/store/userStore";
 import NewClockProcess from "@/app/v1/components/(clock)/newclockProcess";
 import { Bases } from "@/app/v1/components/(reusable)/bases";
 import { Contents } from "@/app/v1/components/(reusable)/contents";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
-export default async function Clock() {
+export default function Clock() {
   const { user } = useUserStore();
 
   // Get the current language from cookies

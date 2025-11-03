@@ -26,7 +26,7 @@ export default function ActiveTimesheetCheck({
           await apiRequest(`/api/cookies/clear-all`, "DELETE");
 
           // Redirect to home page
-          router.replace("/");
+          router.replace("/v1");
         }
       } catch (error) {
         console.error("Failed to check active timesheet status:", error);

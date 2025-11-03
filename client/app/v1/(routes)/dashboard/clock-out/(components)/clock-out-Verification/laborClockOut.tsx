@@ -96,12 +96,29 @@ export const LaborClockOut = ({
           console.error("🔴 Failed to send notification:", error);
           return;
         } finally {
+          // List of cookie names to delete (add names as needed)
+          const cookiesToDelete: string[] = [
+            "currentPageView",
+            "costCode",
+            "equipment",
+            "jobSite",
+            "startingMileage",
+            "timeSheetId",
+            "truckId",
+            "adminAccess",
+            "laborType",
+            "workRole",
+          ];
+          // Build query string
+          const query = cookiesToDelete
+            .map((name) => `name=${encodeURIComponent(name)}`)
+            .join("&");
+          await apiRequest(
+            `/api/cookies/list${query ? `?${query}` : ""}`,
+            "DELETE"
+          );
+          localStorage.removeItem("timesheetId");
           await Promise.all([refetchTimesheet(), router.push("/v1")]);
-          // clear the saved storage after navigation
-          setTimeout(() => {
-            fetch("/api/cookies?method=deleteAll");
-            localStorage.removeItem("timesheetId");
-          }, 500);
         }
       }
     } catch (error) {

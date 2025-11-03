@@ -163,14 +163,17 @@ export default function WidgetSection() {
   // Handlers
   const handleToggle = () => setToggle(!toggle);
 
-  // Handle page redirects in a separate useEffect
   useEffect(() => {
-    if (pageView === "dashboard") {
-      router.push("/dashboard");
-    }
-    if (pageView === "removeLocalStorage") {
-      setPageView("");
-    }
+    const timer = setTimeout(() => {
+      if (pageView === "dashboard") {
+        router.push("/v1/dashboard");
+      }
+      if (pageView === "removeLocalStorage") {
+        setPageView("");
+      }
+    }, 300); // 300ms delay, adjust as needed
+
+    return () => clearTimeout(timer);
   }, [pageView, router, accountSetup, setPageView]);
 
   if (loadingUi) {

@@ -19,6 +19,7 @@ import {
   updateEmployeeEquipmentLogController,
   updateClockOutController,
   getRecentReturnTimesheetController,
+  getPreviousWorkController,
 } from "../controllers/timesheetController.js";
 
 const router = Router();
@@ -41,6 +42,8 @@ router.get("/user/:userId/clock-out-details", getClockOutDetailsController);
 router.put("/:id/clock-out", updateClockOutController);
 router.put("/:id", updateTimesheet);
 
+// Get previous work details for a timesheet
+router.get("/:id/previous-work", getPreviousWorkController);
 // Update a timesheet
 router.get("/:id/user/:userId", getBannerDataController);
 

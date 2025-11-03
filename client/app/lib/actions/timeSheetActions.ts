@@ -83,51 +83,51 @@ export async function CreateTimeSheet(formData: FormData) {
 }
 
 //--------- Update Time Sheet
-export async function breakOutTimeSheet(formData: FormData) {
-  try {
-    const id = Number(formData.get("id"));
-    const endTime = formatISO(formData.get("endTime") as string);
-    const comment = formData.get("timesheetComments") as string;
-    const clockOutLat = Number(formData.get("clockOutLat") as string) || null;
-    const clockOutLng = Number(formData.get("clockOutLng") as string) || null;
+// export async function breakOutTimeSheet(formData: FormData) {
+//   try {
+//     const id = Number(formData.get("id"));
+//     const endTime = formatISO(formData.get("endTime") as string);
+//     const comment = formData.get("timesheetComments") as string;
+//     const clockOutLat = Number(formData.get("clockOutLat") as string) || null;
+//     const clockOutLng = Number(formData.get("clockOutLng") as string) || null;
 
-    // Only DB operations in transaction
-    await prisma.$transaction(async (prisma) => {
-      const updatedTimeSheet = await prisma.timeSheet.update({
-        where: { id },
-        data: {
-          endTime,
-          comment,
-          status: "PENDING",
-          clockOutLat,
-          clockOutLng,
-        },
-      });
-      if (updatedTimeSheet) {
-        await prisma.user.update({
-          where: { id: updatedTimeSheet.userId },
-          data: {
-            clockedIn: false,
-            lastSeen: new Date().toISOString(),
-          },
-        });
-      }
-    });
+//     // Only DB operations in transaction
+//     await prisma.$transaction(async (prisma) => {
+//       const updatedTimeSheet = await prisma.timeSheet.update({
+//         where: { id },
+//         data: {
+//           endTime,
+//           comment,
+//           status: "PENDING",
+//           clockOutLat,
+//           clockOutLng,
+//         },
+//       });
+//       if (updatedTimeSheet) {
+//         await prisma.user.update({
+//           where: { id: updatedTimeSheet.userId },
+//           data: {
+//             clockedIn: false,
+//             lastSeen: new Date().toISOString(),
+//           },
+//         });
+//       }
+//     });
 
-    // Revalidate the path
-    revalidatePath(`/`);
-    revalidatePath("/dashboard");
-    revalidatePath("/admins/settings");
-    revalidatePath("/admins/assets");
-    revalidatePath("/admins/reports");
-    revalidatePath("/admins/personnel");
-    revalidatePath("/admins");
-    return { success: true };
-  } catch (error) {
-    console.error("[breakOutTimeSheet] Error:", error);
-    throw error;
-  }
-}
+//     // Revalidate the path
+//     revalidatePath(`/`);
+//     revalidatePath("/dashboard");
+//     revalidatePath("/admins/settings");
+//     revalidatePath("/admins/assets");
+//     revalidatePath("/admins/reports");
+//     revalidatePath("/admins/personnel");
+//     revalidatePath("/admins");
+//     return { success: true };
+//   } catch (error) {
+//     console.error("[breakOutTimeSheet] Error:", error);
+//     throw error;
+//   }
+// }
 //
 //-------------------------------------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------------
@@ -823,65 +823,6 @@ export async function updateTimeSheet(formData: FormData) {
   } catch (error) {
     console.error("Error updating timesheet:", error);
     return { success: false };
-  }
-}
-//---------
-//--------- return to prev work
-//---------
-export async function returnToPrevWork(formData: FormData) {
-  try {
-    console.log("formData received:", formData);
-    const id = Number(formData.get("id"));
-    const PrevTimeSheet = await prisma.timeSheet.findUnique({
-      where: { id },
-      select: {
-        id: true,
-        Jobsite: {
-          select: {
-            id: true,
-            qrId: true,
-            name: true,
-          },
-        },
-        CostCode: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-        workType: true,
-        TascoLogs: {
-          select: {
-            shiftType: true,
-            Equipment: {
-              select: {
-                id: true,
-                qrId: true,
-                name: true,
-              },
-            },
-            laborType: true,
-            materialType: true,
-          },
-        },
-        TruckingLogs: {
-          select: {
-            laborType: true,
-            Equipment: {
-              select: {
-                qrId: true,
-                name: true,
-              },
-            },
-            startingMileage: true,
-          },
-        },
-      },
-    });
-    console.log("PrevTimeSheet fetched:", PrevTimeSheet);
-    return PrevTimeSheet;
-  } catch (error) {
-    console.error("Error updating timesheet:", error);
   }
 }
 

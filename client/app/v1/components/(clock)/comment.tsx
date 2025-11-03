@@ -8,9 +8,11 @@ import { TextAreas } from "../(reusable)/textareas";
 import { Texts } from "../(reusable)/texts";
 import { useTranslations } from "next-intl";
 import { Titles } from "../(reusable)/titles";
-import { breakOutTimeSheet } from "@/app/lib/actions/timeSheetActions";
+// import { breakOutTimeSheet } from "@/app/lib/actions/timeSheetActions";
 import { setCurrentPageView } from "@/app/lib/actions/cookieActions";
 import { useRouter } from "next/navigation";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
+import { useUserStore } from "@/app/lib/store/userStore";
 
 export default function Comment({
   handleClick,
@@ -22,6 +24,9 @@ export default function Comment({
   clockInRole: string | undefined;
   setCommentsValue: React.Dispatch<React.SetStateAction<string>>;
 }) {
+  const { user } = useUserStore();
+  const userId = user?.id;
+
   const c = useTranslations("Clock");
   const router = useRouter();
   const returnRoute = () => {
@@ -30,15 +35,31 @@ export default function Comment({
 
   const setBreakout = async () => {
     try {
-      const formData2 = new FormData();
+      //1.) get timesheet Id
+      const timeSheetId = await apiRequest(
+        `/api/v1/timesheet/user/${userId}/return`,
+        "GET"
+      );
+      // 2.) call clock out route pass body
+      const body = {
+        userId: user?.id,
+        endTime: new Date().toISOString(),
+        timeSheetComments: commentsValue,
+        wasInjured: false,
+        clockOutLat: null,
+        clockOutLng: null,
+      };
 
-      formData2.append("endTime", new Date().toISOString());
-      formData2.append("timesheetComments", commentsValue);
+      // Use apiRequest to call the backend update route
+      const isUpdated = await apiRequest(
+        `/api/v1/timesheet/${timeSheetId}/clock-out`,
+        "PUT",
+        body
+      );
 
-      const isUpdated = await breakOutTimeSheet(formData2);
-      if (isUpdated) {
+      if (isUpdated.success === true) {
         setCurrentPageView("break");
-        router.push("/");
+        router.push("/v1");
       }
     } catch (err) {
       console.error(err);
