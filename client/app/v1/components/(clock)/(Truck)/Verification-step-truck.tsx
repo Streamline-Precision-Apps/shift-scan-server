@@ -25,6 +25,7 @@ import { useUserStore } from "@/app/lib/store/userStore";
 import { usePermissions } from "@/app/lib/context/permissionContext";
 import { useCommentData } from "@/app/lib/context/CommentContext";
 import { useTimeSheetData } from "@/app/lib/context/TimeSheetIdContext";
+import { sendNotification } from "@/app/lib/actions/generatorActions";
 
 type Options = {
   id: string;
@@ -88,29 +89,43 @@ export default function TruckVerificationStep({
         return;
       }
 
-      // const getStoredCoordinatesResult = getStoredCoordinates();
-      const formData = new FormData();
-      formData.append("submitDate", new Date().toISOString());
-      formData.append("userId", id?.toString() || "");
-      formData.append("date", new Date().toISOString());
-      formData.append("jobsiteId", jobsite?.id || "");
-      formData.append("costcode", cc?.code || "");
-      formData.append("startTime", new Date().toISOString());
-      formData.append("workType", role);
-      formData.append("laborType", clockInRoleTypes || ""); // sets the title of task to the labor type worked on
-      formData.append("startingMileage", startingMileage?.toString() || ""); // sets new starting mileage
-      formData.append("truck", truck?.id || ""); // sets truck ID if applicable
-      // formData.append("trailer", trailer?.id || ""); // sets trailer ID if applicable
-      formData.append("equipment", equipment?.id || ""); // sets equipment Id if applicable
-      // fetch coordinates from permissions context
-      // formData.append(
-      //   "clockInLat",
-      //   getStoredCoordinatesResult?.latitude.toString() || ""
-      // );
-      // formData.append(
-      //   "clockInLong",
-      //   getStoredCoordinatesResult?.longitude.toString() || ""
-      // );
+      const payload: {
+        date: string;
+        jobsiteId: string;
+        workType: string;
+        userId: string;
+        costCode: string;
+        startTime: string;
+        clockInLat?: number | null;
+        clockInLong?: number | null;
+        type?: string;
+        previousTimeSheetId?: number;
+        endTime?: string;
+        previoustimeSheetComments?: string;
+        clockOutLat?: number | null;
+        clockOutLong?: number | null;
+        startingMileage: number;
+        laborType: string;
+        truck: string;
+        equipmentId?: string;
+      } = {
+        date: new Date().toISOString(),
+        jobsiteId: jobsite?.id || "",
+        workType: role,
+        userId: id?.toString() || "",
+        costCode: cc?.code || "",
+        startTime: new Date().toISOString(),
+        clockInLat: null,
+        clockInLong: null,
+        startingMileage: startingMileage || 0,
+        laborType: clockInRoleTypes || "",
+        truck: truck?.id || "",
+        equipmentId: equipment?.id || "",
+
+        // Uncomment and set these if you have coordinates
+        // clockInLat: getStoredCoordinatesResult?.latitude ?? null,
+        // clockInLong: getStoredCoordinatesResult?.longitude ?? null,
+      };
 
       // If switching jobs, include the previous timesheet ID
       if (type === "switchJobs") {
@@ -125,40 +140,31 @@ export default function TruckVerificationStep({
           return (timeSheetId = ts);
         }
 
-        formData.append("id", timeSheetId.toString());
-        formData.append("endTime", new Date().toISOString());
-        formData.append(
-          "timeSheetComments",
-          savedCommentData?.id.toString() || ""
-        );
-        formData.append("type", "switchJobs"); // added to switch jobs
-        //   formData.append(
-        //     "clockOutLat",
-        //     getStoredCoordinatesResult?.latitude.toString() || ""
-        //   );
-        //   formData.append(
-        //     "clockOutLong",
-        //     getStoredCoordinatesResult?.longitude.toString() || ""
-        //   );
+        payload.type = "switchJobs";
+        payload.previousTimeSheetId = timeSheetId;
+        payload.endTime = new Date().toISOString();
+        payload.previoustimeSheetComments =
+          savedCommentData?.id?.toString() || "";
+        // Uncomment and set these if you have coordinates
+        // payload.clockOutLat = getStoredCoordinatesResult?.latitude ?? null;
+        // payload.clockOutLong = getStoredCoordinatesResult?.longitude ?? null;
       }
 
       // Use the new transaction-based function
-      const responseAction = await handleTruckTimeSheet(formData);
-      if (responseAction.success && type === "switchJobs") {
-        const response = await fetch("/api/notifications/send-multicast", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            topic: "timecard-submission",
-            title: "Timecard Approval Needed",
-            message: `#${responseAction.createdTimeCard.id} has been submitted by ${responseAction.createdTimeCard.User.firstName} ${responseAction.createdTimeCard.User.lastName} for approval.`,
-            link: `/admins/timesheets?id=${responseAction.createdTimeCard.id}`,
-            referenceId: responseAction.createdTimeCard.id,
-          }),
+      const responseAction = await handleTruckTimeSheet(payload);
+      if (
+        type === "switchJobs" &&
+        responseAction &&
+        responseAction.createdTimeSheet &&
+        responseAction.createdTimeSheet.id
+      ) {
+        await sendNotification({
+          topic: "timecard-submission",
+          title: "Timecard Approval Needed",
+          message: `#${responseAction.createdTimeCard.id} has been submitted by ${responseAction.createdTimeCard.User.firstName} ${responseAction.createdTimeCard.User.lastName} for approval.`,
+          link: `/admins/timesheets?id=${responseAction.createdTimeCard.id}`,
+          referenceId: responseAction.createdTimeCard.id,
         });
-        await response.json();
       }
 
       setCommentData(null);
@@ -169,7 +175,7 @@ export default function TruckVerificationStep({
         setWorkRole(role),
         setLaborType(clockInRoleTypes || ""),
         refetchTimesheet(),
-      ]).then(() => router.push("/dashboard"));
+      ]).then(() => router.push("/v1/dashboard"));
     } catch (error) {
       console.error("Error in handleSubmit:", error);
     } finally {

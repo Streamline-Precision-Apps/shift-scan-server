@@ -26,6 +26,7 @@ import { useUserStore } from "@/app/lib/store/userStore";
 import { usePermissions } from "@/app/lib/context/permissionContext";
 import { useCommentData } from "@/app/lib/context/CommentContext";
 import { useTimeSheetData } from "@/app/lib/context/TimeSheetIdContext";
+import { sendNotification } from "@/app/lib/actions/generatorActions";
 
 type Option = {
   id: string;
@@ -92,49 +93,62 @@ export default function TascoVerificationStep({
         console.error("Location permissions are required to clock in.");
         return;
       }
+      const payload: {
+        date: string;
+        jobsiteId: string;
+        workType: string;
+        userId: string;
+        costCode: string;
+        startTime: string;
+        clockInLat?: number | null;
+        clockInLong?: number | null;
+        type?: string;
+        previousTimeSheetId?: number;
+        endTime?: string;
+        previoustimeSheetComments?: string;
+        clockOutLat?: number | null;
+        clockOutLong?: number | null;
+        shiftType?: string;
+        laborType?: string;
+        materialType?: string;
+        equipmentId?: string;
+      } = {
+        date: new Date().toISOString(),
+        jobsiteId: jobsite?.id || "",
+        workType: role,
+        userId: id?.toString() || "",
+        costCode: cc?.code || "",
+        startTime: new Date().toISOString(),
+        // Uncomment and set these if you have coordinates
+        // clockInLat: getStoredCoordinatesResult?.latitude ?? null,
+        // clockInLong: getStoredCoordinatesResult?.longitude ?? null,
+      };
 
       // const getStoredCoordinatesResult = getStoredCoordinates();
-      const formData = new FormData();
-      formData.append("submitDate", new Date().toISOString());
-      formData.append("userId", id);
-      formData.append("date", new Date().toISOString());
-      formData.append("jobsiteId", jobsite?.id || "");
-      formData.append("costcode", cc?.code || "");
-      formData.append("startTime", new Date().toISOString());
-      // fetch coordinates from permissions context
-      // formData.append(
-      //   "clockInLat",
-      //   getStoredCoordinatesResult?.latitude.toString() || ""
-      // );
-      // formData.append(
-      //   "clockInLong",
-      //   getStoredCoordinatesResult?.longitude.toString() || ""
-      // );
 
       if (clockInRoleTypes === "tascoAbcdEquipment") {
-        formData.append("materialType", materialType || "");
-        formData.append("shiftType", "ABCD Shift");
-        formData.append("laborType", "Operator");
+        payload.materialType = materialType;
+        payload.shiftType = "ABCD Shift";
+        payload.laborType = "Operator";
       }
+
       if (clockInRoleTypes === "tascoAbcdLabor") {
-        formData.append("materialType", materialType || "");
-        formData.append("shiftType", "ABCD Shift");
-        formData.append("laborType", "Manual Labor");
+        payload.materialType = materialType;
+        payload.shiftType = "ABCD Shift";
+        payload.laborType = "Manual Labor";
       }
       if (clockInRoleTypes === "tascoEEquipment") {
-        formData.append("materialType", materialType || "");
-        formData.append("shiftType", "E shift");
-        formData.append("laborType", "EShift");
+        payload.materialType = materialType;
+        payload.shiftType = "E shift";
+        payload.laborType = "EShift";
       }
       if (clockInRoleTypes === "tascoFEquipment") {
-        formData.append("materialType", materialType || "");
-        formData.append("shiftType", "F Shift");
-        formData.append("laborType", "FShift");
+        payload.materialType = materialType;
+        payload.shiftType = "F shift";
+        payload.laborType = "FShift";
       }
-      formData.append("workType", role);
-      formData.append("equipment", equipment?.id || "");
-
-      console.log("Comments to submit:", comments);
+      payload.workType = role;
+      payload.equipmentId = equipment?.id || "";
 
       // If switching jobs, include the previous timesheet ID
       if (type === "switchJobs") {
@@ -148,40 +162,31 @@ export default function TascoVerificationStep({
           }
           return (timeSheetId = ts);
         }
-        formData.append("id", timeSheetId.toString());
-        formData.append("endTime", new Date().toISOString());
-        formData.append(
-          "timeSheetComments",
-          savedCommentData?.id.toString() || ""
-        );
-        formData.append("type", "switchJobs");
-        // formData.append(
-        //   "clockOutLat",
-        //   getStoredCoordinatesResult?.latitude.toString() || ""
-        // );
-        // formData.append(
-        //   "clockOutLong",
-        //   getStoredCoordinatesResult?.longitude.toString() || ""
-        // );
+        payload.type = "switchJobs";
+        payload.previousTimeSheetId = timeSheetId;
+        payload.endTime = new Date().toISOString();
+        payload.previoustimeSheetComments =
+          savedCommentData?.id?.toString() || "";
+        // Uncomment and set these if you have coordinates
+        // payload.clockOutLat = getStoredCoordinatesResult?.latitude ?? null;
+        // payload.clockOutLong = getStoredCoordinatesResult?.longitude ?? null;
       }
 
       // Use the new transaction-based function
-      const responseAction = await handleTascoTimeSheet(formData);
-      if (responseAction.success && type === "switchJobs") {
-        const response = await fetch("/api/notifications/send-multicast", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            topic: "timecard-submission",
-            title: "Timecard Approval Needed",
-            message: `#${responseAction.createdTimeCard.id} has been submitted by ${responseAction.createdTimeCard.User.firstName} ${responseAction.createdTimeCard.User.lastName} for approval.`,
-            link: `/admins/timesheets?id=${responseAction.createdTimeCard.id}`,
-            referenceId: responseAction.createdTimeCard.id,
-          }),
+      const responseAction = await handleTascoTimeSheet(payload);
+      if (
+        type === "switchJobs" &&
+        responseAction &&
+        responseAction.createdTimeSheet &&
+        responseAction.createdTimeSheet.id
+      ) {
+        await sendNotification({
+          topic: "timecard-submission",
+          title: "Timecard Approval Needed",
+          message: `#${responseAction.createdTimeCard.id} has been submitted by ${responseAction.createdTimeCard.User.firstName} ${responseAction.createdTimeCard.User.lastName} for approval.`,
+          link: `/admins/timesheets?id=${responseAction.createdTimeCard.id}`,
+          referenceId: responseAction.createdTimeCard.id,
         });
-        await response.json();
       }
 
       setCommentData(null);
@@ -198,7 +203,7 @@ export default function TascoVerificationStep({
             : clockInRoleTypes || ""
         ),
         refetchTimesheet(),
-      ]).then(() => router.push("/dashboard"));
+      ]).then(() => router.push("/v1/dashboard"));
     } catch (error) {
       console.error("Error in handleSubmit:", error);
     } finally {

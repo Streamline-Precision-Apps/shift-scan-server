@@ -10,7 +10,6 @@ export default function Clock() {
 
   // Get the current language from cookies
   const lang = user?.UserSettings?.language as string;
-
   const locale = lang || "en";
   return (
     <Bases>

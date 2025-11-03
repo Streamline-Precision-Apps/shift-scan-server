@@ -8,6 +8,7 @@ import TruckSelector from "../(General)/truckSelector";
 import { Buttons } from "@/app/v1/components/(reusable)/buttons";
 import { Titles } from "@/app/v1/components/(reusable)/titles";
 import { Texts } from "@/app/v1/components/(reusable)/texts";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
 
 type Option = {
   id: string;
@@ -68,22 +69,50 @@ export default function TruckDriverForm({
 
       setIsLoadingMileage(true);
       try {
-        const response = await fetch(`/api/equipment/${truck.id}/lastMileage`);
-        const data: LastMileageData = await response.json();
-        setLastMileageData(data);
+        const data = await apiRequest(
+          `/api/v1/equipment/${truck.id}/lastMileage`,
+          "GET"
+        );
+        console.log("Fetched last mileage data:", data);
+
+        // Handle the response - data is a TruckingLog with endingMileage at root level
+        const lastMileage = data?.endingMileage || null;
+        const equipmentName = data?.Equipment?.name || null;
+        const equipmentQrId = data?.Equipment?.qrId || null;
+        const userName = data?.TimeSheet?.User
+          ? `${data.TimeSheet.User.firstName} ${data.TimeSheet.User.lastName}`
+          : null;
+
+        setLastMileageData({
+          lastMileage,
+          startingMileage: lastMileage,
+          equipmentName,
+          equipmentQrId,
+          lastUpdated: data?.TimeSheet?.createdAt || null,
+          lastUser: userName,
+          timesheetEndTime: data?.TimeSheet?.endTime || null,
+        });
 
         // Auto-set starting mileage to last ending mileage if available
         if (
-          data?.lastMileage !== null &&
-          data?.lastMileage !== undefined &&
+          lastMileage !== null &&
+          lastMileage !== undefined &&
           startingMileage === 0
         ) {
-          setStartingMileage(data.lastMileage);
-          setDisplayValue(`${data.lastMileage.toLocaleString()}`);
+          setStartingMileage(lastMileage);
+          setDisplayValue(`${lastMileage.toLocaleString()}`);
         }
 
         // Always validate current starting mileage, even if it's empty
-        validateMileageWithData(startingMileage, data);
+        validateMileageWithData(startingMileage, {
+          lastMileage,
+          startingMileage: lastMileage,
+          equipmentName,
+          equipmentQrId,
+          lastUpdated: data?.TimeSheet?.createdAt || null,
+          lastUser: userName,
+          timesheetEndTime: data?.TimeSheet?.endTime || null,
+        });
       } catch (error) {
         console.error("Error fetching last mileage:", error);
         setLastMileageData(null);

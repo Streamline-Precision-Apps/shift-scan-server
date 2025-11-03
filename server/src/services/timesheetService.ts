@@ -3,8 +3,12 @@ import type { EquipmentState, Prisma } from "../../generated/prisma/client.js";
 import type {
   GeneralTimesheetInput,
   MechanicTimesheetInput,
+  TascoTimesheetInput,
+  TruckTimesheetInput,
 } from "../controllers/timesheetController.js";
 import prisma from "../lib/prisma.js";
+import e from "express";
+import { start } from "repl";
 
 export async function updateTimesheetService({
   id,
@@ -564,12 +568,138 @@ export async function createMechanicTimesheetService({
   return createdTimeCard;
 }
 
-export async function createTruckDriverTimesheetService({}) {
+export async function createTruckDriverTimesheetService({
+  data,
+  type,
+}: {
+  data: TruckTimesheetInput;
+  type?: string;
+}) {
   // Implementation for creating a truck driver timesheet
+  return await prisma.$transaction(async (prisma) => {
+    // Step 1: Create a new TimeSheet
+    const createdTimeSheet = await prisma.timeSheet.create({
+      data: {
+        date: formatISO(data.date),
+        Jobsite: { connect: { id: data.jobsiteId } },
+        User: { connect: { id: data.userId } },
+        CostCode: { connect: { name: data.costCode } },
+        startTime: formatISO(data.startTime),
+        workType: "TRUCK_DRIVER",
+        status: "DRAFT",
+        clockInLat: data.clockInLat || null,
+        clockInLng: data.clockInLong || null,
+        TruckingLogs: {
+          create: {
+            laborType: data.laborType,
+            truckNumber: data.truck,
+            equipmentId: data.equipmentId || null,
+            startingMileage: data.startingMileage,
+            trailerNumber: null,
+          },
+        },
+      },
+      include: {
+        User: {
+          select: {
+            firstName: true,
+            lastName: true,
+          },
+        },
+      },
+    });
+
+    if (createdTimeSheet) {
+      await prisma.user.update({
+        where: { id: data.userId },
+        data: {
+          clockedIn: true,
+        },
+      });
+    }
+    if (type === "switchJobs" && data.previousTimeSheetId && data.endTime) {
+      await prisma.timeSheet.update({
+        where: { id: data.previousTimeSheetId },
+        data: {
+          endTime: formatISO(data.endTime),
+          comment: data.previoustimeSheetComments || null,
+          status: "PENDING",
+          clockOutLat: data.clockOutLat || null,
+          clockOutLng: data.clockOutLong || null,
+        },
+      });
+    }
+    return createdTimeSheet;
+  });
 }
 
-export async function createTascoTimesheetService({}) {
+export async function createTascoTimesheetService({
+  data,
+  type,
+}: {
+  data: TascoTimesheetInput;
+  type?: string;
+}) {
   // Implementation for creating a tasco timesheet
+  // Only DB operations in transaction
+  return await prisma.$transaction(async (prisma) => {
+    // Step 1: Create a new TimeSheet
+    const createdTimeSheet = await prisma.timeSheet.create({
+      data: {
+        date: formatISO(data.date),
+        Jobsite: { connect: { id: data.jobsiteId } },
+        User: { connect: { id: data.userId } },
+        CostCode: { connect: { name: data.costCode } },
+        startTime: formatISO(data.startTime),
+        workType: "TASCO",
+        status: "DRAFT",
+        clockInLat: data.clockInLat || null,
+        clockInLng: data.clockInLong || null,
+        TascoLogs: {
+          create: {
+            shiftType: data.shiftType ?? "",
+            laborType: data.laborType ?? "",
+            ...(data.equipmentId && {
+              equipmentId: data.equipmentId,
+            }),
+            ...(data.materialType && {
+              materialTypeName: data.materialType,
+            }),
+          },
+        },
+      },
+      include: {
+        User: {
+          select: {
+            firstName: true,
+            lastName: true,
+          },
+        },
+      },
+    });
+
+    if (createdTimeSheet) {
+      await prisma.user.update({
+        where: { id: data.userId },
+        data: {
+          clockedIn: true,
+        },
+      });
+    }
+    if (type === "switchJobs" && data.previousTimeSheetId && data.endTime) {
+      await prisma.timeSheet.update({
+        where: { id: data.previousTimeSheetId },
+        data: {
+          endTime: formatISO(data.endTime),
+          comment: data.previoustimeSheetComments || null,
+          status: "PENDING",
+          clockOutLat: data.clockOutLat || null,
+          clockOutLng: data.clockOutLong || null,
+        },
+      });
+    }
+    return createdTimeSheet;
+  });
 }
 
 export async function getRecentTimeSheetForUser(userId: string) {

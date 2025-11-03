@@ -4,9 +4,10 @@ import {
   getEquipment,
   getEquipmentByQrId,
   createEquipment,
+  getEquipmentMileageController,
 } from "../controllers/equipmentController.js";
 const router = Router();
-
+router.get("/:id/lastMileage", getEquipmentMileageController);
 router.get("/qr/:qrId", getEquipmentByQrId);
 router.get("/", getEquipment);
 router.post("/", createEquipment);

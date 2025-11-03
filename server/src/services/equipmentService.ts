@@ -21,6 +21,37 @@ export async function getEquipment(query: { qrg?: boolean }) {
   }
 }
 
+export async function getEquipmentMileageService(equipmentId: string) {
+  return await prisma.truckingLog.findFirst({
+    where: {
+      OR: [
+        { truckNumber: equipmentId }, // Equipment used as truck (most common for mileage)
+        { trailerNumber: equipmentId }, // Equipment used as trailer
+        { equipmentId: equipmentId }, // Equipment being hauled
+      ],
+      endingMileage: {
+        not: null, // Only get entries that have an ending mileage recorded
+      },
+    },
+    orderBy: [
+      {
+        TimeSheet: {
+          // Order by creation time if endTime is null, otherwise by endTime
+          createdAt: "desc",
+        },
+      },
+    ],
+    include: {
+      Equipment: true,
+      TimeSheet: {
+        include: {
+          User: true,
+        },
+      },
+    },
+  });
+}
+
 // Find an equipment by QR code (for QR code uniqueness check)
 export async function getEquipmentByQrId(qrId: string) {
   const equipment = await prisma.equipment.findFirst({ where: { qrId } });

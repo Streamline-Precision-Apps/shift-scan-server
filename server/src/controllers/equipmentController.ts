@@ -11,6 +11,22 @@ export async function getEquipment(req: Request, res: Response) {
   }
 }
 
+export async function getEquipmentMileageController(
+  req: Request,
+  res: Response
+) {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ error: "Invalid equipment ID" });
+    }
+    const equipment = await equipmentService.getEquipmentMileageService(id);
+    res.json(equipment);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch equipment mileage" });
+  }
+}
+
 // Create equipment (POST)
 export async function createEquipment(req: Request, res: Response) {
   try {

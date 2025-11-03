@@ -309,6 +309,47 @@ export interface MechanicTimesheetInput {
   clockOutLat?: number | null;
   clockOutLong?: number | null;
 }
+export interface TascoTimesheetInput {
+  date: string;
+  jobsiteId: string;
+  workType: string;
+  userId: string;
+  costCode: string;
+  startTime: string;
+  clockInLat?: number | null;
+  clockInLong?: number | null;
+  type?: string;
+  previousTimeSheetId?: number;
+  endTime?: string;
+  previoustimeSheetComments?: string;
+  clockOutLat?: number | null;
+  clockOutLong?: number | null;
+  shiftType?: string;
+  laborType?: string;
+  materialType?: string;
+  equipmentId?: string;
+}
+export interface TruckTimesheetInput {
+  date: string;
+  jobsiteId: string;
+  workType: string;
+  userId: string;
+  costCode: string;
+  startTime: string;
+  clockInLat?: number | null;
+  clockInLong?: number | null;
+  type?: string;
+  previousTimeSheetId?: number;
+  endTime?: string;
+  previoustimeSheetComments?: string;
+  clockOutLat?: number | null;
+  clockOutLong?: number | null;
+  startingMileage: number;
+  laborType: string;
+  truck: string;
+  equipmentId?: string;
+  // trailerNumber?: string;
+}
 
 // POST /v1/timesheet/create
 export async function createTimesheetAndSwitchJobsController(
@@ -319,7 +360,9 @@ export async function createTimesheetAndSwitchJobsController(
     const body = req.body as {
       type: string;
     } & GeneralTimesheetInput &
-      MechanicTimesheetInput;
+      MechanicTimesheetInput &
+      TascoTimesheetInput &
+      TruckTimesheetInput;
     const { workType, type, ...rest } = body;
     let result;
     switch (workType) {
@@ -336,10 +379,16 @@ export async function createTimesheetAndSwitchJobsController(
         });
         break;
       case "tasco":
-        result = await createTascoTimesheetService({ ...rest, type });
+        result = await createTascoTimesheetService({
+          data: { ...rest, workType },
+          type,
+        });
         break;
       case "truck":
-        result = await createTruckDriverTimesheetService({ ...rest, type });
+        result = await createTruckDriverTimesheetService({
+          data: { ...rest, workType },
+          type,
+        });
         break;
       default:
         return res.status(400).json({ error: "Invalid workType" });
