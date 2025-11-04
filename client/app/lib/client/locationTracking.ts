@@ -1,9 +1,7 @@
 import { Geolocation } from "@capacitor/geolocation";
 import { Capacitor } from "@capacitor/core";
 import { getAuth } from "firebase/auth";
-
-declare const window: any;
-const BackgroundGeolocation = window.BackgroundGeolocation;
+import { BackgroundGeolocation } from "@capgo/background-geolocation";
 
 export interface LocationLog {
   coords: {
@@ -79,65 +77,93 @@ export async function startLocationWatch({ background = false } = {}) {
   });
 }
 
-// Start background location tracking using Cordova plugin
-export function startBackgroundLocationWatch() {
+// Start background location tracking using Capacitor BackgroundGeolocation plugin
+export async function startBackgroundLocationWatch() {
   if (!BackgroundGeolocation) {
     console.error("BackgroundGeolocation plugin not available");
     return;
   }
-  BackgroundGeolocation.configure({
-    desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
-    stationaryRadius: 50,
-    distanceFilter: 50,
-    debug: false,
-    interval: 300000, // 5 minutes
-    fastestInterval: 120000, // 2 minutes
-    activitiesInterval: 300000, // 5 minutes
-    stopOnTerminate: false,
-    startOnBoot: true,
-  });
-  BackgroundGeolocation.on("location", async function (location: any) {
-    try {
-      const auth = getAuth();
-      const user = auth.currentUser;
-      if (!user) throw new Error("No authenticated user");
-      const payload: LocationLog = {
-        coords: {
-          lat: location.latitude,
-          lng: location.longitude,
-          accuracy: location.accuracy,
-          speed: location.speed ?? null,
-          heading: location.heading ?? null,
-        },
-        device: {
-          platform:
-            typeof navigator !== "undefined" ? navigator.userAgent : null,
-        },
-      };
-      await fetch("/api/location/user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-    } catch (err) {
-      console.error("Failed to send background location to backend:", err);
-    }
-  });
-  BackgroundGeolocation.start();
+
+  try {
+    await BackgroundGeolocation.start(
+      {
+        backgroundMessage: "Location tracking in progress",
+        backgroundTitle: "Shift Scan",
+        requestPermissions: true,
+        stale: false,
+        distanceFilter: 50, // Only update when moved 50+ meters
+      },
+      async (location, error) => {
+        if (error) {
+          if (error.code === "NOT_AUTHORIZED") {
+            console.error("Location permission not granted");
+            if (
+              typeof window !== "undefined" &&
+              window.confirm(
+                "This app needs your location permission. Open settings now?"
+              )
+            ) {
+              await BackgroundGeolocation.openSettings();
+            }
+          }
+          console.error("BackgroundGeolocation error:", error);
+          return;
+        }
+
+        if (!location) {
+          console.error("Location is null");
+          return;
+        }
+
+        try {
+          const auth = getAuth();
+          const user = auth.currentUser;
+          if (!user) throw new Error("No authenticated user");
+
+          const payload: LocationLog = {
+            coords: {
+              lat: location.latitude,
+              lng: location.longitude,
+              accuracy: location.accuracy,
+              speed: location.speed ?? null,
+              heading: location.bearing ?? null,
+            },
+            device: {
+              platform:
+                typeof navigator !== "undefined" ? navigator.userAgent : null,
+            },
+          };
+
+          await fetch("/api/location/user", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          });
+        } catch (err) {
+          console.error("Failed to send background location to backend:", err);
+        }
+      }
+    );
+  } catch (err) {
+    console.error("Failed to start background geolocation:", err);
+  }
 }
 
 // Stop Tracking location (foreground and background)
-export function stopLocationWatch() {
+export async function stopLocationWatch() {
   if (watchId) {
     Geolocation.clearWatch({ id: watchId });
     watchId = null;
     lastFirestoreWriteTime = 0; // reset for next session
   }
   if (BackgroundGeolocation) {
-    BackgroundGeolocation.stop();
-    BackgroundGeolocation.removeAllListeners();
+    try {
+      await BackgroundGeolocation.stop();
+    } catch (err) {
+      console.error("Failed to stop background geolocation:", err);
+    }
   }
 }
 
