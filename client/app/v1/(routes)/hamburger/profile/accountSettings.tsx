@@ -53,7 +53,7 @@ type Employee = {
 export default function ProfilePage({ userId }: { userId: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const url = searchParams.get("returnUrl") || "/dashboard";
+  const url = searchParams.get("returnUrl") || "/v1/dashboard";
   const t = useTranslations("Hamburger-Profile");
   const [loading, setLoading] = useState(true);
   const [employee, setEmployee] = useState<Employee>();

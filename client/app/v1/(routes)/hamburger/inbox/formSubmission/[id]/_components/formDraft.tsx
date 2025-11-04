@@ -246,7 +246,7 @@ export default function FormDraft({
           onClick={async () => {
             // Save draft before navigating back
             await saveFormData();
-            router.push("/hamburger/inbox");
+            router.push("/v1/hamburger/inbox");
           }}
         >
           <div className="w-full h-full flex items-end  justify-center">

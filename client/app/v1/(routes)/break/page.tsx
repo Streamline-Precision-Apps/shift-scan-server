@@ -20,7 +20,7 @@ export default function Clock() {
           scannerType={"jobsite"}
           option={"break"}
           locale={locale}
-          returnpath="/"
+          returnpath="/v1"
           mechanicView={user?.mechanicView ?? false}
           tascoView={user?.tascoView ?? false}
           truckView={user?.truckView ?? false}

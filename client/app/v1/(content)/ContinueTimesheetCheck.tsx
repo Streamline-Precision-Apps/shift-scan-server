@@ -1,7 +1,8 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { useTimeSheetData } from "@/app/context/TimeSheetIdContext";
+import { useTimeSheetData } from "@/app/lib/context/TimeSheetIdContext";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
 
 export default function ContinueTimesheetCheck({
   id,
@@ -15,12 +16,13 @@ export default function ContinueTimesheetCheck({
       if (!id) return; // Don't make the request if ID is undefined
 
       try {
-        const response = await fetch(`/api/continue-timesheet?id=${id}`).then(
-          (res) => res.json(),
+        const response = await apiRequest(
+          `/api/v1/continue-timesheet?id=${id}`,
+          "GET"
         );
         if (response.success) {
           setTimeSheetData({ id: response.id });
-          router.push("/dashboard");
+          router.push("/v1/dashboard");
         }
       } catch (error) {
         console.error("Error continuing timesheet:", error);

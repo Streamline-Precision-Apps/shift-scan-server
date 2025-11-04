@@ -75,7 +75,7 @@ export default function SettingSelections({
         </Holds>
         <Holds className="row-span-1">
           <Buttons
-            onClick={() => router.push("/hamburger/changePassword")}
+            onClick={() => router.push("/v1/hamburger/changePassword")}
             background="orange"
             className="py-2"
           >
