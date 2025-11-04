@@ -658,10 +658,10 @@ export async function createTascoTimesheetService({
             shiftType: data.shiftType ?? "",
             laborType: data.laborType ?? "",
             ...(data.equipmentId && {
-              equipmentId: data.equipmentId,
+              Equipment: { connect: { id: data.equipmentId } },
             }),
             ...(data.materialType && {
-              materialTypeName: data.materialType,
+              TascoMaterialTypes: { connect: { name: data.materialType } },
             }),
           },
         },

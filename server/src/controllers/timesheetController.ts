@@ -363,7 +363,21 @@ export async function createTimesheetAndSwitchJobsController(
       MechanicTimesheetInput &
       TascoTimesheetInput &
       TruckTimesheetInput;
+
+    console.log(
+      "[createTimesheetController] Request body:",
+      JSON.stringify(body, null, 2)
+    );
+
     const { workType, type, ...rest } = body;
+
+    console.log(
+      "[createTimesheetController] workType:",
+      workType,
+      "type:",
+      type
+    );
+
     let result;
     switch (workType) {
       case "general":
@@ -394,10 +408,15 @@ export async function createTimesheetAndSwitchJobsController(
         return res.status(400).json({ error: "Invalid workType" });
     }
 
+    console.log("[createTimesheetController] Successfully created timesheet");
     return res.status(201).json({ success: true, data: result });
   } catch (error) {
     console.error("[createTimesheetController] Error:", error);
-    return res.status(500).json({ error: "Failed to create timesheet." });
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return res.status(500).json({
+      error: "Failed to create timesheet.",
+      details: errorMessage,
+    });
   }
 }
 // GET /v1/timesheet/:id/user/:userId

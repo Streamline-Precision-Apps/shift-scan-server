@@ -1,12 +1,14 @@
 "use client";
 
+import { apiRequest } from "@/app/lib/utils/api-Utils";
+
 export interface UpdateRefuelLogParams extends RefuelLogBase {
   type: RefuelLogType;
 }
 export interface RefuelLogBase {
   id: string;
   gallonsRefueled?: number;
-  milesAtfueling?: number;
+  milesAtFueling?: number;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -22,69 +24,101 @@ export interface CreateRefuelLogParams {
 
 export type RefuelLogType = "tasco" | "equipment";
 
+export interface CreateTascoFLoadParams {
+  tascoLogId: string;
+}
+
+export interface UpdateTascoFLoadParams {
+  id: number;
+  weight?: number | null;
+  screenType?: string | null;
+}
+
+export interface DeleteTascoFLoadParams {
+  id: number;
+}
+
+export type LoadType = "SCREENED" | "UNSCREENED";
+
 /* LOADS Hauled */
 //------------------------------------------------------------------
 //------------------------------------------------------------------
 
+/**
+ * Update Tasco Log load quantity
+ * PUT /api/v1/tasco-logs/:id/load-quantity
+ */
 export async function SetLoad(formData: FormData) {
   const tascoLogId = formData.get("tascoLogId") as string;
   const loadCount = Number(formData.get("loadCount"));
 
-  const tascoLog = await prisma.tascoLog.update({
-    where: {
-      id: tascoLogId,
-    },
-    data: {
-      LoadQuantity: loadCount,
-    },
-  });
-  revalidatePath("/dashboard/tasco");
-  revalidateTag("load");
-  return tascoLog;
+  if (!tascoLogId) {
+    throw new Error("Tasco Log ID is required");
+  }
+
+  try {
+    const response = await apiRequest(
+      `/api/v1/tasco-logs/${tascoLogId}/load-quantity`,
+      "PUT",
+      { loadCount }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Failed to update load quantity:", error);
+    throw new Error("Failed to update load quantity");
+  }
 }
 
 // /* Tasco Comments */
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 
+/**
+ * Update Tasco Log comment (updates associated TimeSheet comment)
+ * PUT /api/v1/tasco-logs/:id/comment
+ */
 export const updateTascoComments = async (formData: FormData) => {
   const id = formData.get("id") as string;
   const comment = formData.get("comment") as string;
 
-  const updatedLog = await prisma.tascoLog.update({
-    where: { id },
-    data: {
-      TimeSheet: {
-        update: {
-          comment,
-        },
-      },
-    },
-  });
+  if (!id) {
+    throw new Error("Tasco Log ID is required");
+  }
 
-  revalidatePath("/dashboard/tascoAssistant");
-  return updatedLog;
+  try {
+    const response = await apiRequest(
+      `/api/v1/tasco-logs/${id}/comment`,
+      "PUT",
+      { comment }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Failed to update comment:", error);
+    throw new Error("Failed to update comment");
+  }
 };
 
 // /* Tasco Refuel Logs */
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
+
 /**
  * Creates a new refuel log
+ * POST /api/v1/tasco-logs/:id/refuel-logs
  */
-export async function createRefuelLog(params: CreateRefuelLogParams) {
+export async function createRefuelLog(
+  params: CreateRefuelLogParams
+): Promise<any> {
   try {
-    return await prisma.$transaction(async (tx) => {
-      const data = {
-        ...(params.type === "tasco"
-          ? { tascoLogId: params.parentId }
-          : { employeeEquipmentLogId: params.parentId }),
-      };
+    if (params.type !== "tasco") {
+      throw new Error("Only tasco type is supported in new API");
+    }
 
-      const result = await tx.refuelLog.create({ data });
-      revalidatePaths();
-      return result;
-    });
+    const response = await apiRequest(
+      `/api/v1/tasco-logs/${params.parentId}/refuel-logs`,
+      "POST"
+    );
+    return response.data;
   } catch (error) {
     console.error(`Failed to create ${params.type} refuel log:`, error);
     throw new Error(`Failed to create ${params.type} refuel log`);
@@ -93,22 +127,27 @@ export async function createRefuelLog(params: CreateRefuelLogParams) {
 
 /**
  * Updates an existing refuel log
+ * PUT /api/v1/tasco-logs/refuel-logs/:refuelLogId
  */
-export async function updateRefuelLog(params: UpdateRefuelLogParams) {
+export async function updateRefuelLog(
+  params: UpdateRefuelLogParams
+): Promise<any> {
   try {
-    return await prisma.$transaction(async (tx) => {
-      const data = {
-        gallonsRefueled: params.gallonsRefueled,
-      };
+    const updateBody: Record<string, any> = {};
 
-      const result = await tx.refuelLog.update({
-        where: { id: params.id },
-        data,
-      });
+    if (params.gallonsRefueled !== undefined) {
+      updateBody.gallonsRefueled = params.gallonsRefueled;
+    }
+    if (params.milesAtFueling !== undefined) {
+      updateBody.milesAtFueling = params.milesAtFueling;
+    }
 
-      revalidatePaths();
-      return result;
-    });
+    const response = await apiRequest(
+      `/api/v1/tasco-logs/refuel-logs/${params.id}`,
+      "PUT",
+      updateBody
+    );
+    return response.data;
   } catch (error) {
     console.error(`Failed to update ${params.type} refuel log:`, error);
     throw new Error(`Failed to update ${params.type} refuel log`);
@@ -117,32 +156,86 @@ export async function updateRefuelLog(params: UpdateRefuelLogParams) {
 
 /**
  * Deletes a refuel log
+ * DELETE /api/v1/tasco-logs/refuel-logs/:refuelLogId
  */
 export async function deleteRefuelLog(params: DeleteRefuelLogParams) {
   try {
-    return await prisma.$transaction(async (tx) => {
-      const result = await tx.refuelLog.delete({
-        where: { id: params.id },
-      });
-
-      revalidatePaths();
-      return result;
-    });
+    await apiRequest(
+      `/api/v1/tasco-logs/refuel-logs/${params.id}`,
+      "DELETE"
+    );
+    return { success: true };
   } catch (error) {
     console.error(`Failed to delete ${params.type} refuel log:`, error);
     throw new Error(`Failed to delete ${params.type} refuel log`);
   }
 }
 
+/* TascoFLoads CRUD Operations */
+//------------------------------------------------------------------
+//------------------------------------------------------------------
+
 /**
- * Helper function to revalidate paths and tags
+ * Creates a new TascoFLoad
+ * POST /api/v1/tasco-logs/:id/f-loads
  */
-function revalidatePaths() {
+export async function createTascoFLoad(
+  params: CreateTascoFLoadParams
+): Promise<any> {
   try {
-    revalidatePath("/dashboard/tasco");
-    revalidatePath("/dashboard/tascoAssistant");
-    revalidateTag("load");
+    const response = await apiRequest(
+      `/api/v1/tasco-logs/${params.tascoLogId}/f-loads`,
+      "POST"
+    );
+    return response.data;
   } catch (error) {
-    console.error("Failed to revalidate paths:", error);
+    console.error("Failed to create TascoFLoad:", error);
+    throw new Error("Failed to create TascoFLoad");
+  }
+}
+
+/**
+ * Updates an existing TascoFLoad
+ * PUT /api/v1/tasco-logs/f-loads/:fLoadId
+ */
+export async function updateTascoFLoad(
+  params: UpdateTascoFLoadParams
+): Promise<any> {
+  try {
+    const updateBody: Record<string, any> = {};
+
+    if (params.weight !== undefined) {
+      updateBody.weight = params.weight;
+    }
+    if (params.screenType !== undefined) {
+      updateBody.screenType = params.screenType;
+    }
+
+    const response = await apiRequest(
+      `/api/v1/tasco-logs/f-loads/${params.id}`,
+      "PUT",
+      updateBody
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Failed to update TascoFLoad:", error);
+    throw new Error("Failed to update TascoFLoad");
+  }
+}
+
+/**
+ * Deletes a TascoFLoad
+ * DELETE /api/v1/tasco-logs/f-loads/:fLoadId
+ */
+export async function deleteTascoFLoad(params: DeleteTascoFLoadParams) {
+  try {
+    await apiRequest(
+      `/api/v1/tasco-logs/f-loads/${params.id}`,
+      "DELETE"
+    );
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to delete TascoFLoad:", error);
+    throw new Error("Failed to delete TascoFLoad");
   }
 }

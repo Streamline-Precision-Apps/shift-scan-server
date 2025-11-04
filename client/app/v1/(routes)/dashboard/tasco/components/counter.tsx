@@ -13,6 +13,7 @@ type LoadCounterProps = {
   removeAction?: () => void;
   allowRemove?: boolean;
   isLoading: boolean;
+  isFShift?: boolean; // New prop to hide +/- buttons for F-shift
 };
 
 export default function Counter({
@@ -20,6 +21,7 @@ export default function Counter({
   setCount,
   allowRemove,
   isLoading,
+  isFShift = false, // Default to false for backwards compatibility
 }: LoadCounterProps) {
   const AddLoad = () => {
     const newCount = count + 1;
@@ -37,24 +39,11 @@ export default function Counter({
       background={"darkBlue"}
       position={"center"}
     >
-      <Grids cols={"3"} gap={"5"} className="h-full w-full">
-        <Holds>
-          <Buttons
-            background={`${
-              count === 0 || count === undefined ? "darkGray" : "orange"
-            }`}
-            onClick={RemoveLoad}
-            disabled={(count === 0 && !allowRemove) || isLoading}
-            className={`p-2  border-[3px] border-black justify-center items-center rounded-[10px]`}
-            size={"60"}
-            shadow={"none"}
-          >
-            -
-          </Buttons>
-        </Holds>
+      {isFShift ? (
+        // F-shift: Only show the count, no +/- buttons
         <Holds
           background={"white"}
-          className="items-center justify-center border-2 border-black rounded-[10px] py-2"
+          className="items-center justify-center border-2 border-black rounded-[10px] py-2 w-full"
         >
           {isLoading && count === 0 ? (
             <div className="h-full w-full p-1">
@@ -64,23 +53,53 @@ export default function Counter({
             <Titles> {count}</Titles>
           )}
         </Holds>
-        <Holds>
-          <Buttons
-            onClick={AddLoad}
-            background={"green"}
-            size={"60"}
-            shadow={"none"}
-            disabled={isLoading}
-            className="p-2  border-[3px] border-black justify-center items-center rounded-[10px]"
+      ) : (
+        // Normal: Show +/- buttons and count
+        <Grids cols={"3"} gap={"5"} className="h-full w-full">
+          <Holds>
+            <Buttons
+              background={`${
+                count === 0 || count === undefined ? "darkGray" : "orange"
+              }`}
+              onClick={RemoveLoad}
+              disabled={(count === 0 && !allowRemove) || isLoading}
+              className={`p-2  border-[3px] border-black justify-center items-center rounded-[10px]`}
+              size={"60"}
+              shadow={"none"}
+            >
+              -
+            </Buttons>
+          </Holds>
+          <Holds
+            background={"white"}
+            className="items-center justify-center border-2 border-black rounded-[10px] py-2"
           >
-            <Images
-              titleImg="/plus.svg"
-              titleImgAlt="Add Icon"
-              className="mx-auto"
-            />
-          </Buttons>
-        </Holds>
-      </Grids>
+            {isLoading && count === 0 ? (
+              <div className="h-full w-full p-1">
+                <Spinner size={24} />
+              </div>
+            ) : (
+              <Titles> {count}</Titles>
+            )}
+          </Holds>
+          <Holds>
+            <Buttons
+              onClick={AddLoad}
+              background={"green"}
+              size={"60"}
+              shadow={"none"}
+              disabled={isLoading}
+              className="p-2  border-[3px] border-black justify-center items-center rounded-[10px]"
+            >
+              <Images
+                titleImg="/plus.svg"
+                titleImgAlt="Add Icon"
+                className="mx-auto"
+              />
+            </Buttons>
+          </Holds>
+        </Grids>
+      )}
     </Holds>
   );
 }

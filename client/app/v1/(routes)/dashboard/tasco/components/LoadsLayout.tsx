@@ -1,50 +1,44 @@
 import { Grids } from "@/app/v1/components/(reusable)/grids";
 import { Holds } from "@/app/v1/components/(reusable)/holds";
 import { Texts } from "@/app/v1/components/(reusable)/texts";
-import RefuelLogsList from "./RefuelLogsList";
-import { createRefuelLog } from "@/app/lib/actions/tascoActions";
-import { useTranslations } from "next-intl";
+import LoadsList from "./LoadsList";
+import { createTascoFLoad } from "@/app/lib/actions/tascoActions";
 import { Button } from "@/app/v1/components/ui/button";
 import { Plus } from "lucide-react";
 import { Suspense } from "react";
 import Spinner from "@/app/v1/components/(animations)/spinner";
+import { TascoFLoad } from "./tascoClientPage";
 
-export type Refueled = {
-  id: string;
-  tascoLogId: string;
-  gallonsRefueled: number;
-};
-export default function RefuelLayout({
+export default function LoadsLayout({
   tascoLog,
-  refuelLogs,
-  setRefuelLogs,
+  fLoads,
+  setFLoads,
+  setLoadCount,
 }: {
   tascoLog: string | undefined;
-  refuelLogs: Refueled[] | undefined;
-  setRefuelLogs: React.Dispatch<React.SetStateAction<Refueled[] | undefined>>;
+  fLoads: TascoFLoad[] | undefined;
+  setFLoads: React.Dispatch<React.SetStateAction<TascoFLoad[] | undefined>>;
+  setLoadCount: React.Dispatch<React.SetStateAction<number>>;
 }) {
-  const t = useTranslations("Tasco");
-  const AddRefuelLog = async () => {
+  const AddFLoad = async () => {
     if (!tascoLog) return;
 
     try {
-      const newRefuelLog = await createRefuelLog({
-        type: "tasco",
-        parentId: tascoLog,
+      const newFLoad = await createTascoFLoad({
+        tascoLogId: tascoLog,
       });
 
-      setRefuelLogs((prev) => [
-        ...(prev ?? []),
-        {
-          id: newRefuelLog.id,
-          employeeEquipmentLogId: newRefuelLog.employeeEquipmentLogId ?? "",
-          tascoLogId: newRefuelLog.tascoLogId ?? "",
-          gallonsRefueled: newRefuelLog.gallonsRefueled ?? 0,
-          milesAtFueling: newRefuelLog.milesAtFueling ?? 0,
-        },
-      ]);
+      const newLoad: TascoFLoad = {
+        id: newFLoad.id,
+        tascoLogId: newFLoad.tascoLogId,
+        weight: newFLoad.weight,
+        screenType: newFLoad.screenType,
+      };
+
+      setFLoads((prev) => [...(prev ?? []), newLoad]);
+      setLoadCount((prev) => prev + 1);
     } catch (error) {
-      console.error("Error adding refuel log:", error);
+      console.error("Error adding F load:", error);
     }
   };
 
@@ -59,13 +53,13 @@ export default function RefuelLayout({
         >
           <div className="h-full w-full flex items-center justify-between px-2">
             <Texts size={"sm"} className="">
-              {t("DidYouRefuel?")}
+              Add a load?
             </Texts>
 
             <Button
               size={"icon"}
-              className="bg-app-green hover:bg-app-green  w-10  text-black py-1.5 px-3 border-[3px] border-black rounded-[10px] shadow-none"
-              onClick={AddRefuelLog}
+              className="bg-app-green hover:bg-app-green w-10 text-black py-1.5 px-3 border-[3px] border-black rounded-[10px] shadow-none"
+              onClick={AddFLoad}
             >
               <Plus className="w-4 h-4" />
             </Button>
@@ -86,9 +80,10 @@ export default function RefuelLayout({
         >
           <div className="w-[90%] mx-auto flex-1 row-start-2 row-end-9 overflow-hidden">
             <div className="flex flex-col overflow-y-auto h-full no-scrollbar pt-3 pb-5">
-              <RefuelLogsList
-                refuelLogs={refuelLogs}
-                setRefuelLogs={setRefuelLogs}
+              <LoadsList
+                fLoads={fLoads}
+                setFLoads={setFLoads}
+                setLoadCount={setLoadCount}
               />
             </div>
           </div>
