@@ -10,8 +10,10 @@ import { TitleBoxes } from "@/app/v1/components/(reusable)/titleBoxes";
 import { useTranslations } from "next-intl";
 import TimeCardApprover from "./_Components/TimeCardApprover";
 import Spinner from "@/app/v1/components/(animations)/spinner";
+import { Capacitor } from "@capacitor/core";
 
 function TimeCardsContent() {
+  const ios = Capacitor.getPlatform() === "ios";
   const t = useTranslations("TimeCardSwiper");
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -22,28 +24,27 @@ function TimeCardsContent() {
       <Contents>
         <Grids
           rows={"7"}
-          gap={"5"}
-          className={`h-full bg-white rounded-[10px] ${
-            loading && "animate-pulse"
+          className={`h-full rounded-[10px]  ${loading && "animate-pulse"} ${
+            ios ? "pt-12" : ""
           }`}
         >
-          <Holds className="row-span-1 h-full">
+          <Holds className="row-span-1 h-full bg-white rounded-t-[10px]">
             <TitleBoxes
               onClick={() => router.push(`/v1/dashboard/myTeam?rPath=${url}`)}
             >
               <Holds className="h-full justify-end">
-                <Titles size={"h2"}>{t("ReviewYourTeam")}</Titles>
+                <Titles size={"lg"}>{t("ReviewYourTeam")}</Titles>
               </Holds>
             </TitleBoxes>
           </Holds>
           <Suspense
             fallback={
-              <Holds className="row-start-2 row-end-8 h-full w-full">
+              <Holds className="row-start-2 row-end-8 h-full w-full bg-white rounded-b-[10px]">
                 <Spinner />
               </Holds>
             }
           >
-            <Holds className="row-start-2 row-end-8 h-full w-full">
+            <Holds className="row-start-2 row-end-8 h-full w-full bg-white pt-5 rounded-b-[10px]">
               <TimeCardApprover loading={loading} setLoading={setLoading} />
             </Holds>
           </Suspense>
@@ -54,6 +55,7 @@ function TimeCardsContent() {
 }
 
 export default function TimeCards() {
+  const ios = Capacitor.getPlatform() === "ios";
   return (
     <Suspense
       fallback={
@@ -62,7 +64,11 @@ export default function TimeCards() {
             <Grids
               rows={"7"}
               gap={"5"}
-              className="h-full bg-white rounded-[10px]"
+              className={
+                ios
+                  ? "h-full bg-white rounded-[10px] pt-12"
+                  : " h-full bg-white rounded-[10px]"
+              }
             >
               <Holds className="row-span-1 h-full">
                 <TitleBoxes>

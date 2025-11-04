@@ -4,6 +4,7 @@ import NewClockProcess from "@/app/v1/components/(clock)/newclockProcess";
 import { Bases } from "@/app/v1/components/(reusable)/bases";
 import { Contents } from "@/app/v1/components/(reusable)/contents";
 import { Holds } from "@/app/v1/components/(reusable)/holds";
+import { Capacitor } from "@capacitor/core";
 
 export default function Clock() {
   const { user } = useUserStore();
@@ -11,10 +12,12 @@ export default function Clock() {
   // Get the current language from cookies
   const lang = user?.UserSettings?.language as string;
   const locale = lang || "en";
+  const ios = Capacitor.getPlatform() === "ios";
+
   return (
     <Bases>
       <Contents>
-        <Holds className="h-full">
+        <Holds className={ios ? "pt-12 h-full" : "h-full"}>
           <NewClockProcess
             mechanicView={user?.mechanicView ?? false}
             tascoView={user?.tascoView ?? false}

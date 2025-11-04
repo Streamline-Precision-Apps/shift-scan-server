@@ -17,6 +17,7 @@ import { usePermissions } from "@/app/lib/context/permissionContext";
 import { updateUserImage } from "@/app/lib/actions/hamburgerActions";
 import { apiRequest, getApiUrl } from "@/app/lib/utils/api-Utils";
 import { X } from "lucide-react";
+import { Capacitor } from "@capacitor/core";
 
 type Employee = {
   id: string;
@@ -47,6 +48,7 @@ export default function ProfileImageEditor({
     "select"
   );
 
+  const ios = Capacitor.getPlatform() === "ios";
   // State for the displayed profile image
   const [profileImageUrl, setProfileImageUrl] = useState<string>(
     employee?.image || ""
@@ -341,7 +343,10 @@ export default function ProfileImageEditor({
           {/* Back Button */}
 
           <Contents width={"section"} className="h-full w-full">
-            <Grids rows={"10"} className="h-full w-full">
+            <Grids
+              rows={"10"}
+              className={ios ? "pt-12 h-full w-full" : "h-full w-full"}
+            >
               <Holds className="row-start-1 row-end-2 relative">
                 <Titles size={"h4"}>
                   {mode === "crop"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { EyeIcon, EyeOff } from "lucide-react";
 import { Capacitor } from "@capacitor/core";
@@ -10,6 +10,7 @@ import { useProfitStore } from "../lib/store/profitStore";
 import { useEquipmentStore } from "../lib/store/equipmentStore";
 import { useCostCodeStore } from "../lib/store/costCodeStore";
 import { getApiUrl } from "../lib/utils/api-Utils";
+import Spinner from "../v1/components/(animations)/spinner";
 
 export default function SignInPage() {
   const isNative = Capacitor.isNativePlatform();
@@ -17,25 +18,25 @@ export default function SignInPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
   const [error, setError] = useState("");
   const router = useRouter();
   const t = useTranslations("signIn");
 
-  // helper: returns true for phone/tablet devices
-
-  const redirectAfterAuth = () => {
+  const redirectAfterAuth = useCallback(() => {
     const target = isNative ? "/v1" : "/admins";
     router.push(target);
-  };
+  }, [isNative, router]);
 
-  // Auto sign-in if token and userId are in localStorage
+  // Check once if user is already signed in
   useEffect(() => {
     const token =
       typeof window !== "undefined" ? localStorage.getItem("token") : null;
     const userId =
       typeof window !== "undefined" ? localStorage.getItem("userId") : null;
+
     if (token && userId) {
-      // Try to fetch user info and set user, then redirect
+      // User has credentials, attempt auto sign-in
       const url = getApiUrl();
 
       fetch(`${url}/api/v1/init`, {
@@ -47,23 +48,41 @@ export default function SignInPage() {
         credentials: "include",
         body: JSON.stringify({ token, userId: String(userId) }),
       })
-        .then((res) => res.json())
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("Auth failed");
+          }
+          return res.json();
+        })
         .then((dataJson) => {
           if (dataJson.user) {
             useUserStore.getState().setUser(dataJson.user);
+            if (dataJson.jobsites) {
+              useProfitStore.getState().setJobsites(dataJson.jobsites);
+            }
+            if (dataJson.equipments) {
+              useEquipmentStore.getState().setEquipments(dataJson.equipments);
+            }
+            if (dataJson.costCodes) {
+              useCostCodeStore.getState().setCostCodes(dataJson.costCodes);
+            }
+            // Successfully authenticated, redirect
+            redirectAfterAuth();
+          } else {
+            // No user data, show sign-in form
+            setCheckingAuth(false);
           }
-          if (dataJson.jobsites) {
-            useProfitStore.getState().setJobsites(dataJson.jobsites);
-          }
-          if (dataJson.equipments) {
-            useEquipmentStore.getState().setEquipments(dataJson.equipments);
-          }
-          if (dataJson.costCodes) {
-            useCostCodeStore.getState().setCostCodes(dataJson.costCodes);
-          }
-          redirectAfterAuth();
         })
-        .catch(() => {});
+        .catch((err) => {
+          // Auth check failed, clear invalid credentials and show sign-in form
+          console.log("Auto sign-in failed:", err);
+          localStorage.removeItem("token");
+          localStorage.removeItem("userId");
+          setCheckingAuth(false);
+        });
+    } else {
+      // No credentials, show sign-in form
+      setCheckingAuth(false);
     }
   }, [redirectAfterAuth]);
 
@@ -147,6 +166,22 @@ export default function SignInPage() {
       setLoading(false);
     }
   };
+
+  // Show loading screen while checking authentication
+  if (checkingAuth) {
+    return (
+      <main className="relative min-h-screen overflow-hidden bg-app-gradient bg-to-br from-app-dark-blue via-app-blue to-app-blue px-4 py-8 md:py-0 md:max-h-screen flex flex-col items-center justify-center">
+        <div className="pointer-events-none fixed inset-0 z-0">
+          <div className="absolute inset-0 bg-linear-to-br from-app-dark-blue via-app-blue to-app-blue animate-gradient-move opacity-80" />
+          <div className="absolute left-1/2 top-1/4 w-[600px] h-[600px] -translate-x-1/2 -translate-y-1/2 bg-app-blue opacity-20 rounded-full blur-3xl" />
+          <div className="absolute right-0 bottom-0 w-[400px] h-[400px] bg-app-blue opacity-10 rounded-full blur-2xl" />
+        </div>
+        <div className="relative z-10 text-white text-center">
+          <Spinner size={40} color="border-white" />
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-app-gradient bg-to-br from-app-dark-blue via-app-blue to-app-blue px-4 py-8 md:py-0 md:max-h-screen flex flex-col items-center justify-center">

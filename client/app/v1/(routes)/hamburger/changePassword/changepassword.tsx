@@ -15,6 +15,7 @@ import { TitleBoxes } from "@/app/v1/components/(reusable)/titleBoxes";
 import { X, Check } from "lucide-react";
 import { useSignOut } from "@/app/lib/hooks/useSignOut";
 import { setUserPassword } from "@/app/lib/actions/hamburgerActions";
+import { Capacitor } from "@capacitor/core";
 
 export default function ChangePassword({ userId }: { userId: string }) {
   // Shared password scoring function
@@ -43,7 +44,7 @@ export default function ChangePassword({ userId }: { userId: string }) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [readyToSubmit, setReadyToSubmit] = useState(false);
-
+  const ios = Capacitor.getPlatform() === "ios";
   const route = useRouter();
 
   const viewPasscode1 = () => {
@@ -171,7 +172,12 @@ export default function ChangePassword({ userId }: { userId: string }) {
     <>
       <Contents>
         <Forms onSubmit={handleSubmit} className="h-full w-full">
-          <Grids rows={"7"} cols={"1"} gap={"5"} className="h-full w-full">
+          <Grids
+            rows={"7"}
+            cols={"1"}
+            gap={"5"}
+            className={ios ? "pt-12 h-full w-full" : "h-full w-full"}
+          >
             <Holds
               background={"white"}
               size={"full"}

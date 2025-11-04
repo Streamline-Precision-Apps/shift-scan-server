@@ -8,6 +8,7 @@ import { Contents } from "@/app/v1/components/(reusable)/contents";
 import { Holds } from "@/app/v1/components/(reusable)/holds";
 import { getCookieList } from "@/app/lib/actions/cookieActions";
 import { Suspense, useState, useEffect } from "react";
+import { Capacitor } from "@capacitor/core";
 
 export default function SwitchJobs() {
   const { user } = useUserStore();
@@ -73,10 +74,11 @@ export default function SwitchJobs() {
   const workRole = cookieValues.workRole;
   const switchLaborType = cookieValues.switchLaborType;
 
+  const ios = Capacitor.getPlatform() === "ios";
   return (
     <Bases>
       <Contents>
-        <Holds background={"white"} className="h-full">
+        <Holds className={ios ? "pt-12 h-full" : "h-full"}>
           <Suspense
             fallback={
               <div className="flex rounded-[10px]  justify-center items-center h-full w-full bg-neutral-50 animate-pulse">

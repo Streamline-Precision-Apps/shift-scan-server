@@ -17,6 +17,7 @@ import { apiRequest, apiRequestNoResCheck } from "@/app/lib/utils/api-Utils";
 import { useUserStore } from "@/app/lib/store/userStore";
 import { useTeamStore } from "@/app/lib/store/teamStore";
 import { PullToRefresh } from "@/app/v1/components/(animations)/pullToRefresh";
+import { Capacitor } from "@capacitor/core";
 
 const CrewMemberSchema = z.object({
   id: z.string(),
@@ -39,6 +40,7 @@ export default function Content({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const ios = Capacitor.getPlatform() === "ios";
   // Drop-in animation: starts above and fades in, then settles
   const animationClass = "opacity-0 drop-in-animate";
   const animationClassActive = "opacity-100 drop-in-animate-active";
@@ -237,7 +239,7 @@ export default function Content({
   return (
     <Bases>
       <Contents>
-        <Grids rows={"7"} gap={"5"} className="h-full">
+        <Grids rows={"7"} gap={"5"} className={ios ? "pt-12" : ""}>
           <Holds background={"white"} className="row-start-1 row-end-2 h-full">
             <TitleBoxes
               onClick={() => router.push(`/v1/dashboard/myTeam?rPath=${url}`)}

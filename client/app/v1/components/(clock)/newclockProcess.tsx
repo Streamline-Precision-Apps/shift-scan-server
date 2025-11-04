@@ -452,15 +452,6 @@ export default function NewClockProcess({
   //   }
   // };
 
-  // Detect device type for user instructions
-  const isIOSDevice = (): boolean => {
-    if (typeof navigator === "undefined") return false;
-    return (
-      /iPad|iPhone|iPod/.test(navigator.userAgent) &&
-      !(window as Window & { MSStream?: unknown }).MSStream
-    );
-  };
-
   return (
     <>
       {step === 0 && (

@@ -15,6 +15,7 @@ import { Images } from "@/app/v1/components/(reusable)/images";
 import { Labels } from "@/app/v1/components/(reusable)/labels";
 import { TitleBoxes } from "@/app/v1/components/(reusable)/titleBoxes";
 import { useUserStore } from "@/app/lib/store/userStore";
+import { Capacitor } from "@capacitor/core";
 
 type FormProps = {
   base64String: string | null;
@@ -39,7 +40,7 @@ export const InjuryReportContent = ({
   const [error, setError] = useState<string | undefined>(undefined);
   const t = useTranslations("ClockOut");
   const { user } = useUserStore();
-
+  const ios = Capacitor.getPlatform() === "ios";
   const id = user?.id;
 
   const handleSupervisorCheckboxChange = (
@@ -81,101 +82,103 @@ export const InjuryReportContent = ({
   return (
     <Bases>
       <Contents>
-        <Holds
-          background={"white"}
-          className="h-full w-full flex flex-col items-center "
-        >
-          <TitleBoxes onClick={prevStep} className="h-24">
-            <Holds className="h-full justify-end">
-              <Holds position={"row"} className="w-full justify-center gap-2">
-                <Titles size={"md"}>{t("InjuryVerification")}</Titles>
-                <Images
-                  titleImg="/injury.svg"
-                  titleImgAlt="Verify"
-                  size={"full"}
-                  className="max-w-6 h-auto"
-                />
+        <Holds className={ios ? "pt-12 h-full" : "h-full"}>
+          <Holds
+            background={"white"}
+            className="h-full w-full flex flex-col items-center "
+          >
+            <TitleBoxes onClick={prevStep} className="h-24">
+              <Holds className="h-full justify-end">
+                <Holds position={"row"} className="w-full justify-center gap-2">
+                  <Titles size={"md"}>{t("InjuryVerification")}</Titles>
+                  <Images
+                    titleImg="/injury.svg"
+                    titleImgAlt="Verify"
+                    size={"full"}
+                    className="max-w-6 h-auto"
+                  />
+                </Holds>
               </Holds>
-            </Holds>
-          </TitleBoxes>
+            </TitleBoxes>
 
-          {/* Describe What Happened */}
+            {/* Describe What Happened */}
 
-          <div className="w-[90%] grow flex flex-col">
-            <Holds position={"row"} className="w-full  my-5">
-              <Holds className="w-fit pr-5">
-                <CheckBox
-                  checked={completedForm}
-                  onChange={handleCompleteFormCheckboxChange}
-                  id={"1"}
-                  name={""}
-                  size={2.25}
-                />
+            <div className="w-[90%] grow flex flex-col">
+              <Holds position={"row"} className="w-full  my-5">
+                <Holds className="w-fit pr-5">
+                  <CheckBox
+                    checked={completedForm}
+                    onChange={handleCompleteFormCheckboxChange}
+                    id={"1"}
+                    name={""}
+                    size={2.25}
+                  />
+                </Holds>
+                <Holds size={"80"}>
+                  <Texts position={"left"} size="md">
+                    {t("IFilledOutAnInjuryReport")}
+                  </Texts>
+                </Holds>
               </Holds>
-              <Holds size={"80"}>
-                <Texts position={"left"} size="md">
-                  {t("IFilledOutAnInjuryReport")}
-                </Texts>
+              <Holds position={"row"} className="w-full  mb-5">
+                <Holds className="w-fit pr-5">
+                  <CheckBox
+                    checked={supervisorChecked}
+                    onChange={handleSupervisorCheckboxChange}
+                    id={"1"}
+                    name={""}
+                    size={2.25}
+                  />
+                </Holds>
+                <Holds size={"80"}>
+                  <Texts position={"left"} size="md">
+                    {t("ContactedSupervisor")}
+                  </Texts>
+                </Holds>
               </Holds>
-            </Holds>
-            <Holds position={"row"} className="w-full  mb-5">
-              <Holds className="w-fit pr-5">
-                <CheckBox
-                  checked={supervisorChecked}
-                  onChange={handleSupervisorCheckboxChange}
-                  id={"1"}
-                  name={""}
-                  size={2.25}
-                />
+              <Holds className="h-32 mb-5 border-[3px] border-black rounded-[10px] ">
+                {base64String ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={base64String}
+                    alt="Loading signature"
+                    className="w-[60%] m-auto"
+                  />
+                ) : (
+                  <p>No Signature </p>
+                )}
               </Holds>
-              <Holds size={"80"}>
-                <Texts position={"left"} size="md">
-                  {t("ContactedSupervisor")}
-                </Texts>
+              <Holds position={"row"} className="mb-4 gap-2">
+                <Holds size={"20"}>
+                  <CheckBox
+                    checked={signatureChecked}
+                    onChange={handleSignatureCheckboxChange}
+                    id={"2"}
+                    name={""}
+                    size={2.25}
+                  />
+                </Holds>
+                <Holds size={"80"}>
+                  <Texts position={"left"} size="md">
+                    {t("SignatureVerify")}
+                  </Texts>
+                </Holds>
               </Holds>
-            </Holds>
-            <Holds className="h-32 mb-5 border-[3px] border-black rounded-[10px] ">
-              {base64String ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={base64String}
-                  alt="Loading signature"
-                  className="w-[60%] m-auto"
-                />
-              ) : (
-                <p>No Signature </p>
-              )}
-            </Holds>
-            <Holds position={"row"} className="mb-4 gap-2">
-              <Holds size={"20"}>
-                <CheckBox
-                  checked={signatureChecked}
-                  onChange={handleSignatureCheckboxChange}
-                  id={"2"}
-                  name={""}
-                  size={2.25}
-                />
-              </Holds>
-              <Holds size={"80"}>
-                <Texts position={"left"} size="md">
-                  {t("SignatureVerify")}
-                </Texts>
-              </Holds>
-            </Holds>
-          </div>
+            </div>
 
-          <div className="w-[90%] flex justify-end  pb-4 h-[70px] ">
-            <Buttons
-              background={
-                completedForm && signatureChecked ? "orange" : "darkGray"
-              }
-              disabled={completedForm && signatureChecked ? false : true}
-              onClick={handleSubmit}
-              className="h-[60px] w-full"
-            >
-              <Titles size={"md"}>{t("Continue")}</Titles>
-            </Buttons>
-          </div>
+            <div className="w-[90%] flex justify-end  pb-4 h-[70px] ">
+              <Buttons
+                background={
+                  completedForm && signatureChecked ? "orange" : "darkGray"
+                }
+                disabled={completedForm && signatureChecked ? false : true}
+                onClick={handleSubmit}
+                className="h-[60px] w-full"
+              >
+                <Titles size={"md"}>{t("Continue")}</Titles>
+              </Buttons>
+            </div>
+          </Holds>
         </Holds>
       </Contents>
     </Bases>

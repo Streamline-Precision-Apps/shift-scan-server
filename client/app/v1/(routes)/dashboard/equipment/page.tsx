@@ -18,6 +18,7 @@ import LoadingEquipmentLogClient from "./_components/LoadingEquipmentLogClient";
 import { apiRequest } from "@/app/lib/utils/api-Utils";
 import { useUserStore } from "@/app/lib/store/userStore";
 import { deleteEmployeeEquipmentLog } from "@/app/lib/actions/truckingActions";
+import { Capacitor } from "@capacitor/core";
 
 export type EmployeeEquipmentLogs = {
   id: string;
@@ -67,6 +68,7 @@ export default function EquipmentLogClient() {
   const t = useTranslations("Equipment");
   const [active, setActive] = useState(1);
   const router = useRouter();
+  const ios = Capacitor.getPlatform() === "ios";
 
   useEffect(() => {
     if (!user) return;
@@ -116,7 +118,11 @@ export default function EquipmentLogClient() {
   return (
     <Bases>
       <Contents>
-        <Grids rows={"7"} gap={"5"} className="relative size-full">
+        <Grids
+          rows={"7"}
+          gap={"5"}
+          className={ios ? "pt-12 relative size-full" : "relative size-full"}
+        >
           <Suspense fallback={<LoadingEquipmentLogClient />}>
             <Holds
               background={"white"}

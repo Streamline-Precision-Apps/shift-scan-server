@@ -49,9 +49,9 @@ export default function UsageData({
 
   return (
     <Holds className="row-start-1 row-end-8 w-full h-full overflow-y-auto no-scrollbar">
-      <Holds className="w-full h-fit">
+      <Holds className="w-full flex flex-col h-fit">
         <Holds className="w-full">
-          <Holds className="w-full mb-2">
+          <Holds className="mb-2">
             <Labels size="p5">{t("StartTime")}</Labels>
             <Inputs
               type="time"
@@ -60,7 +60,7 @@ export default function UsageData({
                   ? format(new Date(formState.startTime), "HH:mm")
                   : ""
               }
-              className="w-full border-[3px] border-black p-1 rounded-[10px] flex-col items-center"
+              className="w-[95%] border-[3px] border-black p-1 rounded-[10px]"
               onChange={(e) => {
                 const newTime = e.target.value;
                 const currentDate = new Date(formState.startTime || new Date());
@@ -89,7 +89,7 @@ export default function UsageData({
                   ? format(new Date(formState.endTime), "HH:mm")
                   : ""
               }
-              className="w-full border-[3px] border-black p-1 rounded-[10px]"
+              className="w-[95%] border-[3px] border-black p-1 rounded-[10px]"
               onChange={(e) => {
                 const newTime = e.target.value;
                 const currentDate = new Date(formState.endTime || new Date());
@@ -111,7 +111,7 @@ export default function UsageData({
           </Holds>
         </Holds>
         <Texts position={"right"} size="p6">
-          <span className="italic mr-1">{t("Duration:")}</span> {formattedTime}
+          <span className="italic ">{t("Duration:")}</span> {formattedTime}
         </Texts>
       </Holds>
 

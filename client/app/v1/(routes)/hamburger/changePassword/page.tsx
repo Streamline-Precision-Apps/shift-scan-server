@@ -13,6 +13,7 @@ import { Forms } from "@/app/v1/components/(reusable)/forms";
 import { useUserStore } from "@/app/lib/store/userStore";
 import ChangePassword from "./changepassword";
 import { useTranslations } from "next-intl";
+import { Capacitor } from "@capacitor/core";
 
 export default function Index() {
   const { user } = useUserStore();
@@ -28,11 +29,17 @@ export default function Index() {
   const userId = user?.id;
 
   async function ChangePasswordSkeleton() {
+    const ios = Capacitor.getPlatform() === "ios";
     const t = useTranslations("Hamburger-Profile");
     return (
       <Contents>
         <Forms className="h-full w-full">
-          <Grids rows={"7"} cols={"1"} gap={"5"} className="h-full w-full">
+          <Grids
+            rows={"7"}
+            cols={"1"}
+            gap={"5"}
+            className={ios ? "pt-12 h-full w-full" : "h-full w-full"}
+          >
             <Holds
               background={"white"}
               size={"full"}

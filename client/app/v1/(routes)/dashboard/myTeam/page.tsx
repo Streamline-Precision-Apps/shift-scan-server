@@ -19,6 +19,7 @@ import { apiRequestNoResCheck } from "@/app/lib/utils/api-Utils";
 import { useUserStore } from "@/app/lib/store/userStore";
 import { useTeamStore } from "@/app/lib/store/teamStore";
 import { PullToRefresh } from "@/app/v1/components/(animations)/pullToRefresh";
+import { Capacitor } from "@capacitor/core";
 
 // Zod schema for Team data
 const countSchema = z.object({
@@ -43,6 +44,7 @@ type TeamListItem = {
 };
 
 function MyTeamContent() {
+  const ios = Capacitor.getPlatform() === "ios";
   const { user } = useUserStore();
   const userId = user?.id;
   const router = useRouter();
@@ -153,7 +155,7 @@ function MyTeamContent() {
   return (
     <Bases>
       <Contents>
-        <Grids rows={"7"} gap={"5"} className="h-full w-full">
+        <Grids rows={"7"} gap={"5"} className={ios ? "pt-12" : ""}>
           <Holds
             background={"white"}
             className="row-start-1 row-end-2 h-full w-full"

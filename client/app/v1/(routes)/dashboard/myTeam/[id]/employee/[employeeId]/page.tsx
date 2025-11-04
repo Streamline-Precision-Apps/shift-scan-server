@@ -13,6 +13,7 @@ import EmployeeInfo from "./_components/employeeInfo";
 import EmployeeTimeCards from "./_components/EmployeeTimeCards";
 import { Bases } from "@/app/v1/components/(reusable)/bases";
 import { Contents } from "@/app/v1/components/(reusable)/contents";
+import { Capacitor } from "@capacitor/core";
 
 export default function TeamMemberLayout() {
   const t = useTranslations("MyTeam");
@@ -32,12 +33,12 @@ export default function TeamMemberLayout() {
   } = useEmployeeData(employeeId as string | undefined);
 
   const loading = loadingEmployee;
-
+  const ios = Capacitor.getPlatform() === "ios";
   return (
     <Bases>
       <Contents>
         <Holds className="h-full w-full">
-          <Grids rows={"7"} gap={"5"} className="h-full w-full">
+          <Grids rows={"7"} gap={"5"} className={ios ? "pt-12" : ""}>
             <Holds
               background={"white"}
               className="row-start-1 row-end-2 h-full w-full"

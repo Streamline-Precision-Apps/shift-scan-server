@@ -15,6 +15,7 @@ import ProfileImageEditor from "./ProfileImageEditor";
 import { usePermissions } from "@/app/lib/context/permissionContext";
 import { apiRequest } from "@/app/lib/utils/api-Utils";
 import { updateSettings } from "@/app/lib/actions/hamburgerActions";
+import { Capacitor } from "@capacitor/core";
 
 type UserSettings = {
   userId: string;
@@ -51,6 +52,7 @@ type Employee = {
 };
 
 export default function ProfilePage({ userId }: { userId: string }) {
+  const ios = Capacitor.getPlatform() === "ios";
   const router = useRouter();
   const searchParams = useSearchParams();
   const url = searchParams.get("returnUrl") || "/v1/dashboard";
@@ -280,7 +282,11 @@ export default function ProfilePage({ userId }: { userId: string }) {
   };
 
   return (
-    <Grids rows={"6"} gap={"5"}>
+    <Grids
+      rows={"6"}
+      gap={"5"}
+      className={ios ? "pt-12 h-full w-full" : "h-full w-full"}
+    >
       <Holds
         background={"white"}
         className={`row-start-1 row-end-2 h-full ${

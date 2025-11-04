@@ -18,6 +18,7 @@ import { apiRequest } from "@/app/lib/utils/api-Utils";
 import { useUserStore } from "@/app/lib/store/userStore";
 import { saveDraftToPending } from "@/app/lib/actions/formActions";
 import { FormIndividualTemplate } from "../../_adminComponents/types";
+import { Capacitor } from "@capacitor/core";
 
 // Define FormFieldValue type to match RenderFields expectations
 type FormFieldValue =
@@ -103,6 +104,7 @@ export default function DynamicForm({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const ios = Capacitor.getPlatform() === "ios";
   const id = use(params).id;
   // Search params from URL
   const t = useTranslations("Hamburger-Inbox");
@@ -604,29 +606,31 @@ export default function DynamicForm({
     return (
       <Bases>
         <Contents>
-          <Holds
-            background={"white"}
-            className="w-full h-full justify-center items-center animate-pulse"
-          >
-            <TitleBoxes
-              className="h-20 border-b-2 border-neutral-100"
-              onClick={() => {
-                router.back();
-              }}
+          <div className={ios ? "pt-12 h-full w-full" : "h-full w-full"}>
+            <Holds
+              background={"white"}
+              className="w-full h-full justify-center items-center animate-pulse "
             >
-              <div className="w-full h-full flex items-end pb-2 justify-center">
-                <Titles size={"md"} className="truncate max-w-[200px]">
-                  {t("Loading")}
-                </Titles>
-              </div>
-            </TitleBoxes>
+              <TitleBoxes
+                className="h-20 border-b-2 border-neutral-100"
+                onClick={() => {
+                  router.back();
+                }}
+              >
+                <div className="w-full h-full flex items-end pb-2 justify-center">
+                  <Titles size={"md"} className="truncate max-w-[200px]">
+                    {t("Loading")}
+                  </Titles>
+                </div>
+              </TitleBoxes>
 
-            <form className="bg-slate-50 h-full w-full overflow-y-auto no-scrollbar rounded-b-lg">
-              <Holds className="row-start-1 row-end-7 h-full w-full justify-center ">
-                <Spinner />
-              </Holds>
-            </form>
-          </Holds>
+              <form className="bg-slate-50 h-full w-full overflow-y-auto no-scrollbar rounded-b-lg">
+                <Holds className="row-start-1 row-end-7 h-full w-full justify-center ">
+                  <Spinner />
+                </Holds>
+              </form>
+            </Holds>
+          </div>
         </Contents>
       </Bases>
     );
@@ -635,7 +639,11 @@ export default function DynamicForm({
   // Render the form based on submission status
   return (
     <Bases>
-      <Contents>{getFormComponent}</Contents>
+      <Contents>
+        <div className={ios ? "pt-12 h-full w-full" : "h-full w-full"}>
+          {getFormComponent}
+        </div>
+      </Contents>
     </Bases>
   );
 }

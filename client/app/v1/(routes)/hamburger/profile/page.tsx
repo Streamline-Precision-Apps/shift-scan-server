@@ -8,10 +8,16 @@ import { Grids } from "@/app/v1/components/(reusable)/grids";
 import { TitleBoxes } from "@/app/v1/components/(reusable)/titleBoxes";
 import { useUserStore } from "@/app/lib/store/userStore";
 import { useState, useEffect } from "react";
+import { Capacitor } from "@capacitor/core";
 
 function ProfileSkeleton() {
+  const ios = Capacitor.getPlatform() === "ios";
   return (
-    <Grids rows={"6"} gap={"5"} className="h-full w-full">
+    <Grids
+      rows={"6"}
+      gap={"5"}
+      className={ios ? "pt-12 h-full w-full" : "h-full w-full"}
+    >
       <Holds
         background={"white"}
         size={"full"}
@@ -45,6 +51,7 @@ export default function EmployeeProfile() {
   const { user } = useUserStore();
   const [userId, setUserId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const ios = Capacitor.getPlatform() === "ios";
 
   useEffect(() => {
     // Try to get userId from user store first

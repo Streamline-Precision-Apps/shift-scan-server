@@ -29,6 +29,7 @@ import {
 
 import EquipmentIdClientPage from "./_components/EquipmentIdClientPage";
 import LoadingEquipmentIdPage from "./_components/loadingEquipmentIdPage";
+import { Capacitor } from "@capacitor/core";
 
 export type FormStatus = "DRAFT" | "PENDING" | "APPROVED" | "DENIED";
 
@@ -95,6 +96,7 @@ export default function CombinedForm({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const ios = Capacitor.getPlatform() === "ios";
   const router = useRouter();
   const id = use(params).id;
   const { setNotification } = useNotification();
@@ -166,7 +168,7 @@ export default function CombinedForm({
   return (
     <Bases>
       <Contents>
-        <Grids rows={"7"} gap={"5"} className="h-full w-full ">
+        <Grids rows={"7"} gap={"5"} className={ios ? "pt-12" : ""}>
           <Suspense fallback={<LoadingEquipmentIdPage />}>
             <EquipmentIdClientPage id={id} />
           </Suspense>

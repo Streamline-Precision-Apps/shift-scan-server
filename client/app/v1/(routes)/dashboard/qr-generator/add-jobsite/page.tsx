@@ -20,6 +20,7 @@ import { TitleBoxes } from "@/app/v1/components/(reusable)/titleBoxes";
 import { useUserStore } from "@/app/lib/store/userStore";
 import { Grids } from "@/app/v1/components/(reusable)/grids";
 import { Bases } from "@/app/v1/components/(reusable)/bases";
+import { Capacitor } from "@capacitor/core";
 
 export default function AddJobsiteForm() {
   const t = useTranslations("Generator");
@@ -124,11 +125,11 @@ export default function AddJobsiteForm() {
       setIsSubmitting(false);
     }
   };
-
+  const ios = Capacitor.getPlatform() === "ios";
   return (
     <Bases>
       <Contents>
-        <Grids rows={"7"} gap={"5"}>
+        <Grids rows={"7"} gap={"5"} className={ios ? "pt-12" : ""}>
           <Holds background={"white"} className="row-start-1 row-end-2 h-full">
             <TitleBoxes position={"row"} onClick={() => router.back()}>
               <Titles size={"lg"} className="">

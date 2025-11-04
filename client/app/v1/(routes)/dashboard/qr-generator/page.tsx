@@ -22,6 +22,7 @@ import { apiRequestNoResCheck } from "@/app/lib/utils/api-Utils";
 import { useProfitStore } from "@/app/lib/store/profitStore";
 import { useEquipmentStore } from "@/app/lib/store/equipmentStore";
 import { Suspense } from "react";
+import { Capacitor } from "@capacitor/core";
 
 const JobCodesSchema = z.object({
   id: z.string(),
@@ -57,6 +58,7 @@ type JobCodes = z.infer<typeof JobCodesSchema>;
 type EquipmentCodes = z.infer<typeof EquipmentCodesSchema>;
 
 function QRGeneratorContent() {
+  const ios = Capacitor.getPlatform() === "ios";
   const { jobsites, setJobsites } = useProfitStore();
   const { equipments, setEquipments } = useEquipmentStore();
   const [activeTab, setActiveTab] = useState(1);
@@ -232,7 +234,7 @@ function QRGeneratorContent() {
     return (
       <Bases>
         <Contents>
-          <Grids rows={"7"} gap={"5"}>
+          <Grids rows={"7"} gap={"5"} className={ios ? "pt-12" : ""}>
             <LoadingQRGeneratorContent />
           </Grids>
         </Contents>
@@ -242,7 +244,7 @@ function QRGeneratorContent() {
   return (
     <Bases>
       <Contents>
-        <Grids rows={"7"} gap={"5"}>
+        <Grids rows={"7"} gap={"5"} className={ios ? "pt-12" : ""}>
           <Holds
             background={"white"}
             className={`row-start-1 row-end-2 h-full ${
@@ -345,12 +347,13 @@ function QRGeneratorContent() {
 }
 
 export default function QRGenerator() {
+  const ios = Capacitor.getPlatform() === "ios";
   return (
     <Suspense
       fallback={
         <Bases>
           <Contents>
-            <Grids rows={"7"} gap={"5"}>
+            <Grids rows={"7"} gap={"5"} className={ios ? "pt-12" : ""}>
               <LoadingQRGeneratorContent />
             </Grids>
           </Contents>

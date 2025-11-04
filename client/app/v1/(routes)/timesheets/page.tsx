@@ -14,10 +14,11 @@ import { Texts } from "@/app/v1/components/(reusable)/texts";
 import ViewTimesheets from "@/app/v1/(routes)/timesheets/view-timesheets";
 import { useUserStore } from "@/app/lib/store/userStore";
 import { useTranslations } from "next-intl";
+import { Capacitor } from "@capacitor/core";
 
 export default function Timesheets() {
   const { user } = useUserStore();
-
+  const ios = Capacitor.getPlatform() === "ios";
   const id = user?.id;
 
   function LoadingSkeleton() {
@@ -88,7 +89,7 @@ export default function Timesheets() {
     return (
       <Bases>
         <Contents>
-          <Grids rows={"7"} gap={"5"} className="h-full w-full">
+          <Grids rows={"7"} gap={"5"} className={ios ? "pt-12" : ""}>
             <LoadingSkeleton />
           </Grids>
         </Contents>
@@ -98,7 +99,7 @@ export default function Timesheets() {
   return (
     <Bases>
       <Contents>
-        <Grids rows={"7"} gap={"5"} className="h-full w-full">
+        <Grids rows={"7"} gap={"5"} className={ios ? "pt-12" : ""}>
           <ViewTimesheets user={id} />
         </Grids>
       </Contents>

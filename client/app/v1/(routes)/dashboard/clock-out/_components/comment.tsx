@@ -16,6 +16,7 @@ import { Bases } from "@/app/v1/components/(reusable)/bases";
 import { usePermissions } from "@/app/lib/context/permissionContext";
 import { apiRequest } from "@/app/lib/utils/api-Utils";
 import { useUserStore } from "@/app/lib/store/userStore";
+import { Capacitor } from "@capacitor/core";
 
 export default function Comment({
   handleClick,
@@ -97,12 +98,15 @@ export default function Comment({
       console.error(err);
     }
   };
-
+  const ios = Capacitor.getPlatform() === "ios";
   return (
     <Bases>
       <Contents>
-        <Holds background={"white"} className="h-full">
-          <Holds className="h-full w-full flex flex-col items-center">
+        <Holds className={ios ? "pt-12 h-full" : "h-full"}>
+          <Holds
+            background={"white"}
+            className="h-full w-full flex flex-col items-center"
+          >
             <TitleBoxes onClick={returnRoute} className="h-24">
               <Holds className="h-full justify-end">
                 <Titles size={"md"}>{c("PreviousJobComments")}</Titles>

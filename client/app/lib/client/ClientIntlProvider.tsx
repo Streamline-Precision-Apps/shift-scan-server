@@ -24,6 +24,7 @@ export default function ClientIntlProvider({
 }) {
   const [locale, setLocale] = useState<Locale>(defaultLocale);
   const [messages, setMessages] = useState<any>(defaultMessages);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -76,6 +77,8 @@ export default function ClientIntlProvider({
         }
       } catch (err) {
         console.error("initLocale error", err);
+      } finally {
+        if (mounted) setIsReady(true);
       }
     }
 
@@ -133,6 +136,15 @@ export default function ClientIntlProvider({
       clearInterval(pollInterval);
     };
   }, []);
+
+  // Show minimal loading state while initializing
+  if (!isReady) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-linear-to-br from-app-dark-blue via-app-blue to-app-blue">
+        <div className="w-10 h-10 border-4 border-white/30 border-t-white rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <IntlProvider

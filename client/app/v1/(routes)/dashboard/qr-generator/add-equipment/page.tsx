@@ -19,6 +19,7 @@ import {
   sendNotification,
   createEquipment,
 } from "@/app/lib/actions/generatorActions";
+import { Capacitor } from "@capacitor/core";
 
 export type JobCode = {
   id: string;
@@ -136,10 +137,12 @@ export default function AddEquipmentForm({}) {
     }));
   };
 
+  const ios = Capacitor.getPlatform() === "ios";
+
   return (
     <Bases>
       <Contents>
-        <Grids rows={"7"} gap={"5"}>
+        <Grids rows={"7"} gap={"5"} className={ios ? "pt-12" : ""}>
           <Holds background={"white"} className="row-start-1 row-end-2 h-full">
             <TitleBoxes position={"row"} onClick={() => router.back()}>
               <Titles size={"lg"}>{t("NewEquipmentForm")}</Titles>
