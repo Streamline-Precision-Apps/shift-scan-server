@@ -1,4 +1,5 @@
-import { upsertContact } from "../models/Contacts.js";
+
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="b194a58c-293b-58e7-b083-b8f968f6d0e2")}catch(e){}}();
 import prisma from "../lib/prisma.js";
 import { hash } from "bcryptjs";
 const ALLOWED_USER_FIELDS = [
@@ -246,4 +247,169 @@ export async function updateContact(userId, data) {
         create: createData,
     });
 }
+export async function getAllActiveEmployees() {
+    const employees = await prisma.user.findMany({
+        select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            terminationDate: true,
+        },
+    });
+    if (!employees || employees.length === 0) {
+        throw new Error("No employees found");
+    }
+    const activeEmployees = employees.filter((employee) => {
+        // Check if terminationDate is null or in the future
+        return (!employee.terminationDate ||
+            new Date(employee.terminationDate) > new Date());
+    });
+    const activeEmployeeNames = activeEmployees.map((employee) => ({
+        id: employee.id,
+        firstName: employee.firstName,
+        lastName: employee.lastName,
+    }));
+    return activeEmployeeNames;
+}
+export async function getUsersTimeSheetByDate(userId, dateParam) {
+    const date = new Date(dateParam);
+    if (isNaN(date.getTime())) {
+        throw new Error("Invalid date format");
+    }
+    const nextDay = new Date(date);
+    nextDay.setDate(date.getDate() + 1);
+    // Query the database for timesheets on the specified date
+    const timesheets = await prisma.timeSheet.findMany({
+        where: {
+            userId: userId,
+            date: {
+                gte: date,
+                lt: nextDay,
+            },
+        },
+        orderBy: { date: "desc" },
+        include: {
+            Jobsite: {
+                select: {
+                    name: true,
+                },
+            },
+        },
+    });
+    return timesheets;
+}
+export async function getTeamsByUserId(userId) {
+    const teams = await prisma.crew.findMany({
+        where: {
+            leadId: userId,
+        },
+        select: {
+            id: true,
+            name: true,
+            // Use _count to count the total crew members
+            _count: {
+                select: {
+                    Users: true, // Count the number of crew members
+                },
+            },
+        },
+    });
+    return teams;
+}
+// service to get the online status of crew members
+export async function crewStatus(crewId) {
+    const crew = await prisma.crew.findUnique({
+        where: {
+            id: crewId,
+        },
+        select: {
+            Users: {
+                select: {
+                    id: true,
+                    clockedIn: true,
+                },
+            },
+        },
+    });
+    return crew;
+}
+// service to get employee in crew
+export async function getCrewMembers(crewId) {
+    console.log("[UserService] getCrewMembers called with crewId:", crewId);
+    const crew = await prisma.crew.findUnique({
+        where: {
+            id: crewId,
+        },
+        select: {
+            crewType: true,
+            Users: {
+                select: {
+                    id: true,
+                    firstName: true,
+                    lastName: true,
+                    image: true,
+                },
+            },
+        },
+    });
+    if (!crew) {
+        console.log("[UserService] No crew found for crewId:", crewId);
+        throw new Error("Crew not found");
+    }
+    // Sort crew members alphabetically by first name
+    const crewMembers = crew.Users.map((member) => member).sort((a, b) => a.firstName.localeCompare(b.firstName));
+    const crewType = crew.crewType;
+    console.log("[UserService] crewMembers:", crewMembers);
+    console.log("[UserService] crewType:", crewType);
+    return { crewMembers, crewType };
+}
+export async function getUserInfo(userId) {
+    const employee = await prisma.user.findUnique({
+        where: {
+            id: userId,
+        },
+        select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+            DOB: true,
+            image: true,
+            Contact: {
+                select: {
+                    phoneNumber: true,
+                    emergencyContact: true,
+                    emergencyContactNumber: true,
+                },
+            },
+        },
+    });
+    if (!employee) {
+        throw new Error("Employee not found");
+    }
+    const contact = employee.Contact;
+    const employeeData = {
+        id: employee.id,
+        firstName: employee.firstName,
+        lastName: employee.lastName,
+        email: employee.email,
+        DOB: employee.DOB,
+        image: employee.image,
+    };
+    const data = { employeeData, contact };
+    return data;
+}
+export async function getUserOnlineStatus(userId) {
+    const userStatus = await prisma.user.findUnique({
+        where: {
+            id: userId,
+        },
+        select: {
+            id: true,
+            clockedIn: true,
+        },
+    });
+    return userStatus;
+}
 //# sourceMappingURL=UserService.js.map
+//# debugId=b194a58c-293b-58e7-b083-b8f968f6d0e2

@@ -1,4 +1,6 @@
 // GET /api/cookies?name=key
+
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="44a887b2-b6ff-5db2-9efc-6a52ff24d49b")}catch(e){}}();
 import express from "express";
 export function getCookie(req, res) {
     let { name } = req.query;
@@ -19,9 +21,30 @@ export function getCookie(req, res) {
             return res.status(200).json({ value: "" });
         }
         console.warn(`⚠️  Cookie not found: ${name}`);
-        return res.status(404).json({ error: "Cookie not found" });
+        return res.status(204).send(); // No Content
     }
     res.json({ value });
+}
+// GET /api/cookies?name=key1&name=key2&name=key3
+export function getCookieList(req, res) {
+    let { name } = req.query;
+    if (!name) {
+        console.warn("❌ GET cookies: Missing cookie name parameter");
+        return res.status(400).json({ error: "Missing cookie name(s)" });
+    }
+    if (typeof name === "string") {
+        name = [name];
+    }
+    if (!Array.isArray(name) || !name.every((n) => typeof n === "string")) {
+        console.warn("❌ GET cookies: Invalid cookie name type");
+        return res.status(400).json({ error: "Invalid cookie name(s)" });
+    }
+    const values = {};
+    name.forEach((cookieName) => {
+        values[cookieName] = req.cookies?.[cookieName];
+        console.log(`📖 GET cookie: ${cookieName} = ${values[cookieName] ? values[cookieName] : "(not found)"}`);
+    });
+    res.json({ value: values });
 }
 // POST or PUT /api/cookies { name, value, options }
 // UPSERT: Creates cookie if it doesn't exist, updates if it does
@@ -59,7 +82,7 @@ export function setCookie(req, res) {
         name,
         value,
         action: isUpdate ? "UPDATE" : "CREATE",
-        options: cookieOptions
+        options: cookieOptions,
     });
 } // DELETE /api/cookies?name=key or /api/cookies (delete all)
 export function deleteCookie(req, res) {
@@ -83,4 +106,31 @@ export function deleteCookie(req, res) {
     }
     res.json({ message: "All cookies deleted" });
 }
+export function deleteAllCookie(req, res) {
+    // Always delete all cookies, regardless of query params
+    if (req.cookies) {
+        Object.keys(req.cookies).forEach((cookieName) => {
+            res.clearCookie(cookieName);
+        });
+    }
+    res.json({ message: "All cookies deleted" });
+}
+// DELETE /api/cookies/list?name=key1&name=key2
+export function deleteCookieList(req, res) {
+    let { name } = req.query;
+    if (!name) {
+        return res.status(400).json({ error: "Missing cookie name(s)" });
+    }
+    if (typeof name === "string") {
+        name = [name];
+    }
+    if (!Array.isArray(name) || !name.every((n) => typeof n === "string")) {
+        return res.status(400).json({ error: "Invalid cookie name(s)" });
+    }
+    name.forEach((cookieName) => {
+        res.clearCookie(cookieName);
+    });
+    res.json({ message: `Cookies deleted: ${name.join(", ")}` });
+}
 //# sourceMappingURL=cookiesController.js.map
+//# debugId=44a887b2-b6ff-5db2-9efc-6a52ff24d49b

@@ -1,5 +1,6 @@
 import * as UserService from "../services/UserService.js";
 import prisma from "../lib/prisma.js";
+// GET /api/v1/user/settings (GET, by query param or header)
 export async function getUserSettingsByQuery(req, res) {
     try {
         // Accept userId from body (POST)
@@ -107,6 +108,24 @@ export async function getUsers(req, res) {
         res.status(200).json({
             success: true,
             data: safeUsers,
+            message: "Users retrieved successfully",
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error instanceof Error ? error.message : "Unknown error",
+            message: "Failed to retrieve users",
+        });
+    }
+}
+// GET /api/users
+export async function getAllUsers(req, res) {
+    try {
+        const users = await UserService.getAllActiveEmployees();
+        res.status(200).json({
+            success: true,
+            data: users,
             message: "Users retrieved successfully",
         });
     }
@@ -380,4 +399,202 @@ export async function updateSettings(req, res) {
         });
     }
 }
+// GET /api/v1/user/:userId/timesheet/:date
+export async function getUsersTimeSheetByDate(req, res) {
+    try {
+        const { userId, date } = req.params;
+        if (!userId || !date) {
+            return res.status(400).json({
+                success: false,
+                error: "User ID and date are required",
+                message: "Failed to retrieve timesheet",
+            });
+        }
+        const timesheets = await UserService.getUsersTimeSheetByDate(userId, date);
+        if (!timesheets || timesheets.length === 0) {
+            // 204 No Content for empty result
+            return res.status(204).send();
+        }
+        res.status(200).json({
+            success: true,
+            data: timesheets,
+            message: "Timesheet(s) retrieved successfully",
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error instanceof Error ? error.message : "Unknown error",
+            message: "Failed to retrieve timesheet",
+        });
+    }
+}
+export async function getTeamsByUserId(req, res) {
+    try {
+        const { userId } = req.params;
+        if (!userId) {
+            return res.status(400).json({
+                success: false,
+                error: "User ID is required",
+                message: "Failed to retrieve teams",
+            });
+        }
+        const teams = await UserService.getTeamsByUserId(userId);
+        if (!teams || teams.length === 0) {
+            // 204 No Content for empty result
+            return res.status(204).send();
+        }
+        res.status(200).json({
+            success: true,
+            data: teams,
+            message: "Teams retrieved successfully",
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error instanceof Error ? error.message : "Unknown error",
+            message: "Failed to retrieve teams",
+        });
+    }
+}
+// GET /api/v1/user/:userId/crew/:crewId
+export async function getCrewMembers(req, res) {
+    try {
+        const { crewId } = req.params;
+        console.log("[UserController] getCrewMembers called with crewId:", crewId);
+        if (!crewId) {
+            console.log("[UserController] No crewId provided in params");
+            return res.status(400).json({
+                success: false,
+                error: "Crew ID is required",
+                message: "Failed to retrieve crew members",
+            });
+        }
+        const crew = await UserService.getCrewMembers(crewId);
+        console.log("[UserController] getCrewMembers service result:", crew);
+        if (!crew) {
+            console.log("[UserController] No crew found for crewId:", crewId);
+            return res.status(404).json({
+                success: false,
+                error: "Crew not found",
+                message: "No crew found for this ID",
+            });
+        }
+        res.status(200).json({
+            success: true,
+            data: crew,
+            message: "Crew members retrieved successfully",
+        });
+    }
+    catch (error) {
+        console.error("[UserController] Error in getCrewMembers:", error);
+        res.status(500).json({
+            success: false,
+            error: error instanceof Error ? error.message : "Unknown error",
+            message: "Failed to retrieve crew members",
+        });
+    }
+}
+// GET /api/v1/user/:userId/crew/:crewId/online
+export async function getCrewOnlineStatus(req, res) {
+    try {
+        const { crewId } = req.params;
+        if (!crewId) {
+            return res.status(400).json({
+                success: false,
+                error: "Crew ID is required",
+                message: "Failed to retrieve crew online status",
+            });
+        }
+        const crew = await UserService.crewStatus(crewId);
+        if (!crew) {
+            return res.status(404).json({
+                success: false,
+                error: "Crew not found",
+                message: "No crew found for this ID",
+            });
+        }
+        res.status(200).json({
+            success: true,
+            data: crew,
+            message: "Crew online status retrieved successfully",
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error instanceof Error ? error.message : "Unknown error",
+            message: "Failed to retrieve crew online status",
+        });
+    }
+}
+// GET /api/v1/user/:userId/online
+export async function getUserOnlineStatus(req, res) {
+    try {
+        const { userId } = req.params;
+        if (!userId) {
+            return res.status(400).json({
+                success: false,
+                error: "User ID is required",
+                message: "Failed to retrieve user online status",
+            });
+        }
+        const status = await UserService.getUserOnlineStatus(userId);
+        if (!status) {
+            return res.status(404).json({
+                success: false,
+                error: "User not found",
+                message: "No user found for this ID",
+            });
+        }
+        res.status(200).json({
+            success: true,
+            data: status,
+            message: "User online status retrieved successfully",
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error instanceof Error ? error.message : "Unknown error",
+            message: "Failed to retrieve user online status",
+        });
+    }
+}
+// GET /api/v1/user/:userId/info
+export async function getUserInfo(req, res) {
+    try {
+        const { userId } = req.params;
+        if (!userId) {
+            return res.status(400).json({
+                success: false,
+                error: "User ID is required",
+                message: "Failed to retrieve user info",
+            });
+        }
+        const info = await UserService.getUserInfo(userId);
+        if (!info) {
+            return res.status(404).json({
+                success: false,
+                error: "User not found",
+                message: "No user found for this ID",
+            });
+        }
+        res.status(200).json({
+            success: true,
+            data: info,
+            message: "User info retrieved successfully",
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error instanceof Error ? error.message : "Unknown error",
+            message: "Failed to retrieve user info",
+        });
+    }
+}
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="5c284a05-7ec3-5476-a3a8-e70aecc18674")}catch(e){}}();
 //# sourceMappingURL=userController.js.map
+//# debugId=5c284a05-7ec3-5476-a3a8-e70aecc18674

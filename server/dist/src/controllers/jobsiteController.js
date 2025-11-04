@@ -1,3 +1,5 @@
+
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="8cb49c89-d095-5b76-943c-f346209d224d")}catch(e){}}();
 import * as jobsiteService from "../services/jobsiteService.js";
 export async function getJobsites(req, res) {
     try {
@@ -97,3 +99,4 @@ export async function deleteJobsite(req, res) {
     }
 }
 //# sourceMappingURL=jobsiteController.js.map
+//# debugId=8cb49c89-d095-5b76-943c-f346209d224d

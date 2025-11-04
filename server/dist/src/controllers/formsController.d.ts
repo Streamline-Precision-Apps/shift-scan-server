@@ -1,5 +1,5 @@
 import express from "express";
-export declare const getUserSubmissions: (req: any, res: express.Response) => Promise<express.Response<any, Record<string, any>>>;
+export declare const getUserSubmissions: (req: express.Request, res: express.Response) => Promise<express.Response<any, Record<string, any>>>;
 export declare const getEmployeeRequests: (req: any, res: express.Response) => Promise<express.Response<any, Record<string, any>>>;
 export declare const getForms: (req: express.Request, res: express.Response) => Promise<void>;
 export declare const createFormSubmission: (req: express.Request, res: express.Response) => Promise<void>;

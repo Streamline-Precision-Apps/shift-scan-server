@@ -1,3 +1,5 @@
+
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="bc0a9c52-21ff-558b-a286-2ece30889d4c")}catch(e){}}();
 import prisma from "../lib/prisma.js";
 import { FormStatus } from "../../generated/prisma/client.js";
 /**
@@ -372,22 +374,22 @@ export const ServiceGetEmployeeRequests = async ({ filter, skip, take, managerId
         });
     }
 };
-export const ServiceGetUserSubmissions = async ({ userId, status, startDate, endDate, skip, take, }) => {
+export const ServiceGetUserSubmissions = async ({ userId, filter, startDate, endDate, skip, take, }) => {
     // Build where clause
     let whereClause = { userId };
-    if (status === "pending") {
+    if (filter === "pending") {
         whereClause = { ...whereClause, status: FormStatus.PENDING };
     }
-    else if (status === "approved") {
+    else if (filter === "approved") {
         whereClause = { ...whereClause, status: FormStatus.APPROVED };
     }
-    else if (status === "denied") {
+    else if (filter === "denied") {
         whereClause = { ...whereClause, status: FormStatus.DENIED };
     }
-    else if (status === "draft") {
+    else if (filter === "draft") {
         whereClause = { ...whereClause, status: FormStatus.DRAFT };
     }
-    else if (status === "all") {
+    else if (filter === "all") {
         if (startDate && endDate) {
             whereClause = {
                 ...whereClause,
@@ -569,3 +571,4 @@ export const ServiceForm = async (id, userId) => {
     return formattedForm;
 };
 //# sourceMappingURL=formsService.js.map
+//# debugId=bc0a9c52-21ff-558b-a286-2ece30889d4c

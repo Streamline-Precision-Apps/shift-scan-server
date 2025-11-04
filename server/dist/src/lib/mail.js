@@ -1,3 +1,5 @@
+
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="f67b33f7-a1ca-56a9-ad41-9a6a6a2c1156")}catch(e){}}();
 import { Resend } from "resend";
 const resend = new Resend(process.env.AUTH_RESEND_KEY);
 /**
@@ -35,3 +37,4 @@ export const sendPasswordResetEmail = async (email, token) => {
     }
 };
 //# sourceMappingURL=mail.js.map
+//# debugId=f67b33f7-a1ca-56a9-ad41-9a6a6a2c1156

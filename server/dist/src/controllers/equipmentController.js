@@ -1,3 +1,5 @@
+
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="aa6748c0-7125-5fa8-b40b-9eb5b61cb9e0")}catch(e){}}();
 import * as equipmentService from "../services/equipmentService.js";
 export async function getEquipment(req, res) {
     try {
@@ -6,6 +8,19 @@ export async function getEquipment(req, res) {
     }
     catch (error) {
         res.status(500).json({ error: "Failed to fetch equipment" });
+    }
+}
+export async function getEquipmentMileageController(req, res) {
+    try {
+        const { id } = req.params;
+        if (!id) {
+            return res.status(400).json({ error: "Invalid equipment ID" });
+        }
+        const equipment = await equipmentService.getEquipmentMileageService(id);
+        res.json(equipment);
+    }
+    catch (error) {
+        res.status(500).json({ error: "Failed to fetch equipment mileage" });
     }
 }
 // Create equipment (POST)
@@ -44,3 +59,4 @@ export async function getEquipmentByQrId(req, res) {
     }
 }
 //# sourceMappingURL=equipmentController.js.map
+//# debugId=aa6748c0-7125-5fa8-b40b-9eb5b61cb9e0

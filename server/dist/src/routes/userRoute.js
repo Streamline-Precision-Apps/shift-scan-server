@@ -1,7 +1,89 @@
+
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="63455a27-69da-5591-b2f9-f3ed4a08e64d")}catch(e){}}();
 import { Router } from "express";
 import { verifyToken } from "../middleware/authMiddleware.js";
-import { createUser, deleteUser, getUserById, getUsers, updateSettings, updateUser, getUserSettingsByQuery, getUserContact, } from "../controllers/userController.js";
+import { createUser, deleteUser, getUserById, getUsers, updateSettings, updateUser, getUserSettingsByQuery, getUserContact, getAllUsers, getUsersTimeSheetByDate, getTeamsByUserId, getCrewMembers, getCrewOnlineStatus, getUserOnlineStatus, getUserInfo, } from "../controllers/userController.js";
 const router = Router();
+/**
+ * @swagger
+ * /api/v1/user/{userId}/online:
+ *   get:
+ *     tags:
+ *       - Users
+ *     summary: Get user's online status
+ *     description: Retrieve a user's online (clocked in) status by userId
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: userId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User online status retrieved successfully
+ *       404:
+ *         description: User not found
+ */
+router.get("/:userId/online", getUserOnlineStatus);
+/**
+ * @swagger
+ * /api/v1/user/{userId}/info:
+ *   get:
+ *     tags:
+ *       - Users
+ *     summary: Get user info (profile + contact)
+ *     description: Retrieve a user's profile and contact info by userId
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: userId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User info retrieved successfully
+ *       404:
+ *         description: User not found
+ */
+router.get("/:userId/info", getUserInfo);
+/**
+ * @swagger
+ * /api/v1/user/{userId}/timesheet/{date}:
+ *   get:
+ *     tags:
+ *       - Users
+ *     summary: Get user's timesheet by date
+ *     description: Retrieve a user's timesheet for a specific date (requires authentication)
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: userId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - name: date
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: date
+ *     responses:
+ *       200:
+ *         description: Timesheet retrieved successfully
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Timesheet not found
+ */
+router.get("/:userId/timesheet/:date", getUsersTimeSheetByDate);
+router.get("/:userId/teams", getTeamsByUserId);
+router.get("/:userId/crew/:crewId", getCrewMembers);
+router.get("/:userId/crew/:crewId/online", getCrewOnlineStatus);
 /**
  * @swagger
  * /api/v1/user:
@@ -19,6 +101,7 @@ const router = Router();
  *         description: Unauthorized - invalid or missing bearer token
  */
 router.get("/", verifyToken, getUsers);
+router.get("/All", verifyToken, getAllUsers);
 /**
  * @swagger
  * /api/v1/user/{id}:
@@ -291,3 +374,4 @@ router.put("/:id", verifyToken, updateUser);
 router.delete("/:id", verifyToken, deleteUser);
 export default router;
 //# sourceMappingURL=userRoute.js.map
+//# debugId=63455a27-69da-5591-b2f9-f3ed4a08e64d

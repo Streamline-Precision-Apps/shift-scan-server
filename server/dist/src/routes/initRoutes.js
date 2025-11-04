@@ -1,4 +1,6 @@
 // routes needed for initialization of the app
+
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="9d5a4d5a-4fc8-591e-8e19-356b5f81861f")}catch(e){}}();
 import { Router } from "express";
 import { initHandler } from "../controllers/initController.js";
 import { payPeriodSheetsHandler } from "../controllers/payPeriodController.js";
@@ -89,3 +91,4 @@ router.post("/init", initHandler);
 router.post("/pay-period-timesheets", payPeriodSheetsHandler);
 export default router;
 //# sourceMappingURL=initRoutes.js.map
+//# debugId=9d5a4d5a-4fc8-591e-8e19-356b5f81861f

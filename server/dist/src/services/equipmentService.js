@@ -1,4 +1,6 @@
 // server/src/services/equipmentService.ts
+
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="db8f8cfa-308c-5a3c-b14f-87992b9ec755")}catch(e){}}();
 import prisma from "../lib/prisma.js";
 import { EquipmentTags, OwnershipType } from "../../generated/prisma/client.js";
 export async function getEquipment(query) {
@@ -19,6 +21,36 @@ export async function getEquipment(query) {
     else {
         return prisma.equipment.findMany();
     }
+}
+export async function getEquipmentMileageService(equipmentId) {
+    return await prisma.truckingLog.findFirst({
+        where: {
+            OR: [
+                { truckNumber: equipmentId }, // Equipment used as truck (most common for mileage)
+                { trailerNumber: equipmentId }, // Equipment used as trailer
+                { equipmentId: equipmentId }, // Equipment being hauled
+            ],
+            endingMileage: {
+                not: null, // Only get entries that have an ending mileage recorded
+            },
+        },
+        orderBy: [
+            {
+                TimeSheet: {
+                    // Order by creation time if endTime is null, otherwise by endTime
+                    createdAt: "desc",
+                },
+            },
+        ],
+        include: {
+            Equipment: true,
+            TimeSheet: {
+                include: {
+                    User: true,
+                },
+            },
+        },
+    });
 }
 // Find an equipment by QR code (for QR code uniqueness check)
 export async function getEquipmentByQrId(qrId) {
@@ -67,3 +99,4 @@ export async function createEquipment(data) {
     return result;
 }
 //# sourceMappingURL=equipmentService.js.map
+//# debugId=db8f8cfa-308c-5a3c-b14f-87992b9ec755

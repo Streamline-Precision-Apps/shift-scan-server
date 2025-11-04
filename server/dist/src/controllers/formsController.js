@@ -1,3 +1,5 @@
+
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="8d7caf6b-f8d0-53bb-bdfa-cc23543f0e89")}catch(e){}}();
 import { ServiceManagerFormApprovals, ServiceFormSubmissions, ServiceTeamSubmissions, ServiceFormDraft, ServiceForm, } from "../services/formsService.js";
 // Controller for forms endpoints
 import express from "express";
@@ -6,16 +8,16 @@ import { ServiceGetEmployeeRequests } from "../services/formsService.js";
 // Fetch employee requests for a manager (with filter, skip, take)
 export const getUserSubmissions = async (req, res) => {
     try {
-        const userId = req.user?.id;
-        if (!userId) {
-            return res.status(401).json({ error: "Unauthorized User" });
-        }
-        const status = req.query.status;
+        const filter = req.params.filter;
+        const userId = req.query.userId;
         const skip = parseInt(req.query.skip || "0");
         const take = parseInt(req.query.take || "10");
         const startDateParam = req.query.startDate;
         const endDateParam = req.query.endDate;
         const weekFilter = req.query.week === "true";
+        if (!userId) {
+            return res.status(401).json({ error: "Unauthorized User" });
+        }
         // Process date filters
         let startDate = null;
         let endDate = null;
@@ -36,7 +38,7 @@ export const getUserSubmissions = async (req, res) => {
         }
         const submissions = await ServiceGetUserSubmissions({
             userId,
-            status,
+            filter,
             startDate,
             endDate,
             skip,
@@ -300,3 +302,4 @@ export const getFormTemplate = async (req, res) => {
     }
 };
 //# sourceMappingURL=formsController.js.map
+//# debugId=8d7caf6b-f8d0-53bb-bdfa-cc23543f0e89

@@ -1,4 +1,6 @@
 // server/src/services/initService.ts
+
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="25aa6c11-374d-5ab0-8a97-68f0cc9102fd")}catch(e){}}();
 import prisma from "../lib/prisma.js";
 export async function getUserWithSettingsById(userId) {
     const user = await prisma.user.findUnique({
@@ -38,6 +40,7 @@ export async function getUserWithSettingsById(userId) {
             code: true,
             approvalStatus: true,
             archiveDate: true,
+            status: true,
         },
     });
     // Equipment (for equipmentStore)
@@ -49,11 +52,13 @@ export async function getUserWithSettingsById(userId) {
             code: true,
             approvalStatus: true,
             status: true,
+            equipmentTag: true,
         },
     });
     // CostCodes (for costCodeStore)
     const costCodes = await prisma.costCode.findMany({
         select: {
+            id: true,
             name: true,
             isActive: true,
             code: true,
@@ -84,3 +89,4 @@ export async function getUserWithSettingsById(userId) {
     };
 }
 //# sourceMappingURL=initService.js.map
+//# debugId=25aa6c11-374d-5ab0-8a97-68f0cc9102fd

@@ -262,9 +262,9 @@ export declare const ServiceGetEmployeeRequests: ({ filter, skip, take, managerI
     formType: string | null;
     submittedAt: Date | null;
 })[]>;
-export declare const ServiceGetUserSubmissions: ({ userId, status, startDate, endDate, skip, take, }: {
+export declare const ServiceGetUserSubmissions: ({ userId, filter, startDate, endDate, skip, take, }: {
     userId: string;
-    status: string;
+    filter: string;
     startDate: Date | null;
     endDate: Date | null;
     skip: number;

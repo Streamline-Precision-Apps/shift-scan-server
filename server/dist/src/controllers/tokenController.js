@@ -1,3 +1,5 @@
+
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="3fb8603c-bfc7-527c-8578-a4286c512ff4")}catch(e){}}();
 import prisma from "../lib/prisma.js";
 import { v4 as uuidv4 } from "uuid";
 import { sendPasswordResetEmail } from "../lib/mail.js";
@@ -242,3 +244,4 @@ export async function deleteResetToken(req, res) {
     }
 }
 //# sourceMappingURL=tokenController.js.map
+//# debugId=3fb8603c-bfc7-527c-8578-a4286c512ff4

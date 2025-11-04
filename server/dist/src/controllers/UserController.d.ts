@@ -26,11 +26,18 @@ interface CreateUserRequest extends Request {
     body: CreateUserRequestBody;
 }
 export declare function getUsers(req: Request, res: Response): Promise<void>;
+export declare function getAllUsers(req: Request, res: Response): Promise<void>;
 export declare function getUserById(req: Request, res: Response): Promise<Response<any, Record<string, any>> | undefined>;
 export declare function createUser(req: CreateUserRequest, res: Response): Promise<void>;
 export declare function updateUser(req: Request, res: Response): Promise<Response<any, Record<string, any>> | undefined>;
 export declare function deleteUser(req: Request, res: Response): Promise<Response<any, Record<string, any>> | undefined>;
 export declare function getUserSettings(req: Request, res: Response): Promise<Response<any, Record<string, any>> | undefined>;
 export declare function updateSettings(req: Request, res: Response): Promise<Response<any, Record<string, any>> | undefined>;
+export declare function getUsersTimeSheetByDate(req: Request, res: Response): Promise<Response<any, Record<string, any>> | undefined>;
+export declare function getTeamsByUserId(req: Request, res: Response): Promise<Response<any, Record<string, any>> | undefined>;
+export declare function getCrewMembers(req: Request, res: Response): Promise<Response<any, Record<string, any>> | undefined>;
+export declare function getCrewOnlineStatus(req: Request, res: Response): Promise<Response<any, Record<string, any>> | undefined>;
+export declare function getUserOnlineStatus(req: Request, res: Response): Promise<Response<any, Record<string, any>> | undefined>;
+export declare function getUserInfo(req: Request, res: Response): Promise<Response<any, Record<string, any>> | undefined>;
 export {};
 //# sourceMappingURL=userController.d.ts.map

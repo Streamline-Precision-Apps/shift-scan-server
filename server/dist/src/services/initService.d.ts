@@ -56,6 +56,7 @@ export declare function getUserWithSettingsById(userId: string): Promise<{
         approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         archiveDate: Date | null;
         code: string | null;
+        status: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
     }[];
     equipments: {
         id: string;
@@ -64,8 +65,10 @@ export declare function getUserWithSettingsById(userId: string): Promise<{
         approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         code: string | null;
         status: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
+        equipmentTag: import("../../generated/prisma/index.js").$Enums.EquipmentTags;
     }[];
     costCodes: {
+        id: string;
         name: string;
         code: string | null;
         CCTags: {

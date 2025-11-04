@@ -149,8 +149,8 @@ export declare function getUserByIdQuery(id: string, query: string): Promise<{
         comment: string | null;
         startTime: Date;
         endTime: Date | null;
-        maintenanceId: string;
         timeSheetId: number;
+        maintenanceId: string;
     }[] | {
         readAt: Date;
         id: number;
@@ -241,4 +241,82 @@ export declare function updateContact(userId: string, data: Partial<Prisma.Conta
     emergencyContact: string | null;
     emergencyContactNumber: string | null;
 }>;
+export declare function getAllActiveEmployees(): Promise<{
+    id: string;
+    firstName: string;
+    lastName: string;
+}[]>;
+export declare function getUsersTimeSheetByDate(userId: string, dateParam: string): Promise<({
+    Jobsite: {
+        name: string;
+    };
+} & {
+    createdAt: Date;
+    id: number;
+    userId: string;
+    updatedAt: Date;
+    comment: string | null;
+    status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
+    date: Date;
+    jobsiteId: string;
+    costcode: string;
+    nu: string;
+    Fp: string;
+    startTime: Date;
+    endTime: Date | null;
+    statusComment: string | null;
+    location: string | null;
+    workType: import("../../generated/prisma/index.js").$Enums.WorkType;
+    editedByUserId: string | null;
+    newTimeSheetId: string | null;
+    createdByAdmin: boolean;
+    clockInLat: number | null;
+    clockInLng: number | null;
+    clockOutLat: number | null;
+    clockOutLng: number | null;
+    withinFenceIn: boolean | null;
+    withinFenceOut: boolean | null;
+    wasInjured: boolean | null;
+})[]>;
+export declare function getTeamsByUserId(userId: string): Promise<{
+    id: string;
+    name: string;
+    _count: {
+        Users: number;
+    };
+}[]>;
+export declare function crewStatus(crewId: string): Promise<{
+    Users: {
+        id: string;
+        clockedIn: boolean;
+    }[];
+} | null>;
+export declare function getCrewMembers(crewId: string): Promise<{
+    crewMembers: {
+        id: string;
+        firstName: string;
+        lastName: string;
+        image: string | null;
+    }[];
+    crewType: import("../../generated/prisma/index.js").$Enums.WorkType;
+}>;
+export declare function getUserInfo(userId: string): Promise<{
+    employeeData: {
+        id: string;
+        firstName: string;
+        lastName: string;
+        email: string | null;
+        DOB: Date | null;
+        image: string | null;
+    };
+    contact: {
+        phoneNumber: string | null;
+        emergencyContact: string | null;
+        emergencyContactNumber: string | null;
+    } | null;
+}>;
+export declare function getUserOnlineStatus(userId: string): Promise<{
+    id: string;
+    clockedIn: boolean;
+} | null>;
 //# sourceMappingURL=UserService.d.ts.map
