@@ -13,12 +13,14 @@ import timesheetRoutes from "./timesheetRoute.js";
 import mechanicLogsRoutes from "./mechanicLogsRoutes.js";
 import truckingLogsRoutes from "./truckingLogsRoutes.js";
 import tascoLogsRoutes from "./tascoLogRoutes.js";
+import costCodesRoute from "./costCodesRoute.js";
 
 const router = Router();
 
 // all app routes
 router.use("/v1/forms", formsRoutes);
 router.use("/v1/equipment", equipmentRoutes);
+router.use("/v1/cost-codes", costCodesRoute);
 router.use("/v1/jobsite", jobsiteRoutes);
 router.use("/v1/user", userRoutes);
 router.use("/v1/timesheet", timesheetRoutes);

@@ -5,6 +5,7 @@ import NewCodeFinder from "@/app/v1/components/(search)/newCodeFinder";
 import { useTranslations } from "next-intl";
 import JobsiteSelectorLoading from "../(loading)/jobsiteSelectorLoading";
 import { useProfitStore } from "@/app/lib/store/profitStore";
+import { refreshJobsites } from "./refreshSelectors";
 
 type Option = {
   id: string;
@@ -61,6 +62,11 @@ export const JobsiteSelector = ({
     onJobsiteSelect(option); // Pass just the code to parent
   };
 
+  const handleRefresh = async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await refreshJobsites();
+  };
+
   return (
     <Suspense fallback={<JobsiteSelectorLoading />}>
       <NewCodeFinder
@@ -69,6 +75,7 @@ export const JobsiteSelector = ({
         onSelect={handleSelect}
         placeholder={t("SearchBarPlaceholder")}
         label="Select Job Site"
+        onRefresh={handleRefresh}
       />
     </Suspense>
   );

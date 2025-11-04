@@ -4,6 +4,7 @@ import NewCodeFinder from "@/app/v1/components/(search)/newCodeFinder";
 import { useTranslations } from "next-intl";
 import CostCodeSelectorLoading from "../(loading)/costCodeSelectorLoading";
 import { useCostCodeStore } from "@/app/lib/store/costCodeStore";
+import { refreshCostCodes } from "./refreshSelectors";
 
 type Option = {
   id: string;
@@ -66,6 +67,11 @@ export const CostCodeSelector = ({
     onCostCodeSelect(option); // Pass just the code to parent
   };
 
+  const handleRefresh = async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await refreshCostCodes();
+  };
+
   return (
     <Suspense fallback={<CostCodeSelectorLoading />}>
       <NewCodeFinder
@@ -74,6 +80,7 @@ export const CostCodeSelector = ({
         onSelect={handleSelect}
         placeholder={t("SearchBarPlaceholder")}
         label="Select Cost Code"
+        onRefresh={handleRefresh}
       />
     </Suspense>
   );

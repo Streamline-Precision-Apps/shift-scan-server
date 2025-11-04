@@ -5,6 +5,7 @@ import NewCodeFinder from "@/app/v1/components/(search)/newCodeFinder";
 import { useTranslations } from "next-intl";
 import EquipmentSelectorLoading from "../(loading)/equipmentSelectorLoading";
 import { useEquipmentStore } from "@/app/lib/store/equipmentStore";
+import { refreshEquipment } from "./refreshSelectors";
 
 type Option = {
   id: string; // Optional ID for compatibility
@@ -70,6 +71,11 @@ export const EquipmentSelector = ({
     onEquipmentSelect(option); // Pass just the code to parent
   };
 
+  const handleRefresh = async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await refreshEquipment();
+  };
+
   return (
     <Suspense fallback={<EquipmentSelectorLoading />}>
       <NewCodeFinder
@@ -78,6 +84,7 @@ export const EquipmentSelector = ({
         onSelect={handleSelect}
         placeholder={t("SearchBarPlaceholder")}
         label="Select an equipment"
+        onRefresh={handleRefresh}
       />
     </Suspense>
   );

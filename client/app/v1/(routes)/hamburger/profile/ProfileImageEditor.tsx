@@ -441,13 +441,13 @@ export default function ProfileImageEditor({
                   >
                     <Titles size={"sm"}>{t("ChangeProfilePhoto")}</Titles>
                   </Buttons>
-                  <Buttons
+                  {/* <Buttons
                     background="lightGray"
                     className="w-full py-2"
                     onClick={selectFromGallery}
                   >
                     <Titles size={"sm"}>{t("SelectFromGallery")}</Titles>
-                  </Buttons>
+                  </Buttons> */}
                 </Holds>
               ) : mode === "camera" ? (
                 <Holds className="row-start-9 row-end-11 w-full space-y-5">

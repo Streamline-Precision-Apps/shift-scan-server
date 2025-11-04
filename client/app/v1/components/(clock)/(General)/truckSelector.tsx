@@ -4,6 +4,7 @@ import NewCodeFinder from "@/app/v1/components/(search)/newCodeFinder";
 import { useTranslations } from "next-intl";
 import TruckSelectorLoading from "../(loading)/truckSelectorLoading";
 import { useEquipmentStore } from "@/app/lib/store/equipmentStore";
+import { refreshEquipment } from "./refreshSelectors";
 
 type Option = {
   id: string; // ID is now required
@@ -59,6 +60,11 @@ const TruckSelector = ({ onTruckSelect, initialValue }: TruckSelectorProps) => {
     onTruckSelect(option); // Pass just the code to parent
   };
 
+  const handleRefresh = async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await refreshEquipment();
+  };
+
   return (
     <Suspense fallback={<TruckSelectorLoading />}>
       <NewCodeFinder
@@ -67,6 +73,7 @@ const TruckSelector = ({ onTruckSelect, initialValue }: TruckSelectorProps) => {
         onSelect={handleSelect}
         placeholder={t("SearchBarPlaceholder")}
         label="Select a truck"
+        onRefresh={handleRefresh}
       />
     </Suspense>
   );
