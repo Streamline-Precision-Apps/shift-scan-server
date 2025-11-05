@@ -3,6 +3,10 @@ import { sendNotification } from "@/app/lib/actions/generatorActions";
 // import { updateTimeSheet } from "@/app/lib/actions/timeSheetActions";
 import { useUserStore } from "@/app/lib/store/userStore";
 import { apiRequest } from "@/app/lib/utils/api-Utils";
+import {
+  stopClockOutTracking,
+  getStoredCoordinates,
+} from "@/app/lib/client/locationTracking";
 
 import Spinner from "@/app/v1/components/(animations)/spinner";
 import { Bases } from "@/app/v1/components/(reusable)/bases";
@@ -70,14 +74,18 @@ export const LaborClockOut = ({
     }
     try {
       setLoading(true);
+
+      // Get current coordinates before stopping tracking
+      const coordinates = await getStoredCoordinates();
+
       // Prepare body for API request
       const body = {
         userId: user?.id,
         endTime: new Date().toISOString(),
         timeSheetComments: commentsValue,
         wasInjured,
-        clockOutLat: null,
-        clockOutLng: null,
+        clockOutLat: coordinates ? coordinates.lat : null,
+        clockOutLng: coordinates ? coordinates.lng : null,
       };
 
       // Use apiRequest to call the backend update route
@@ -87,6 +95,9 @@ export const LaborClockOut = ({
         body
       );
       if (result.success) {
+        // Stop location tracking only after successful clock-out
+        await stopClockOutTracking();
+
         try {
           await sendNotification({
             topic: "timecard-submission",

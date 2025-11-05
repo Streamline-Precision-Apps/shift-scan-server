@@ -462,69 +462,6 @@ export default function NewClockProcess({
       {/* Multiple Role Selection */}
       {step === 1 && (
         <>
-          {/*Comment out isLocationOn to eliminate restriction */}
-          {/* COMMENTED OUT: Location permission requirement
-          {!isLocationOn && (
-            <Holds background={"white"} className="h-full w-full">
-              <Grids rows={"7"} gap={"5"} className="h-full w-full p-3 pb-5">
-                <Holds className="row-start-1 row-end-2 h-full w-full">
-                  <TitleBoxes
-                    onClick={handleReturnPath}
-                    className="h-fit "
-                  ></TitleBoxes>
-                </Holds>
-                <Holds className="row-start-2 row-end-7 p-4 h-full w-full justify-center items-center">
-                  <Contents width="section">
-                    <Grids rows={"5"} gap={"2"} className="h-full w-full">
-                      <Holds className="row-start-1 row-end-2 justify-center">
-                        <Texts text={"red"} size={"md"} className="font-bold">
-                          {t("EnableLocation")}
-                        </Texts>
-                      </Holds>
-
-                      {locationRetryCount > 0 && (
-                        <Holds className="row-start-2 row-end-5 justify-center items-start">
-                          <Holds
-                            background="orange"
-                            className="w-full p-4 rounded-lg border border-orange-300"
-                          >
-                            <Texts size={"p5"} className="mb-2 font-semibold">
-                              {isIOSDevice()
-                                ? "iPhone/iPad:"
-                                : "Desktop/Android:"}
-                            </Texts>
-                            <Texts size={"p6"} className="mb-3">
-                              {isIOSDevice()
-                                ? "Go to Settings → Privacy → Location Services → Find this app and set to 'While Using' or 'Always'"
-                                : "Click the lock icon in your browser's address bar, then enable Location permission"}
-                            </Texts>
-                            <Texts size={"p5"} className="text-gray-700">
-                              {locationRetryCount >= 2
-                                ? "If you continue to deny location access, the app may not work correctly. Location is required for clocking in."
-                                : ""}
-                            </Texts>
-                          </Holds>
-                        </Holds>
-                      )}
-                    </Grids>
-                  </Contents>
-                </Holds>
-                <Holds className="row-start-7 row-end-8 justify-center">
-                  <Contents width="section">
-                    <Buttons
-                      background="orange"
-                      onClick={handleRetryLocationPermission}
-                      className="py-2 px-4"
-                    >
-                      <Titles size={"sm"}>{t("RetryPermission")}</Titles>
-                    </Buttons>
-                  </Contents>
-                </Holds>
-              </Grids>
-            </Holds>
-          )}
-          */}
-
           {type === "switchJobs" && (
             <SwitchJobsMultiRoles
               handleNextStep={handleNextStep}

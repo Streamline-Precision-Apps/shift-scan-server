@@ -17,6 +17,10 @@ import { usePermissions } from "@/app/lib/context/permissionContext";
 import { apiRequest } from "@/app/lib/utils/api-Utils";
 import { useUserStore } from "@/app/lib/store/userStore";
 import { Capacitor } from "@capacitor/core";
+import {
+  stopClockOutTracking,
+  getStoredCoordinates,
+} from "@/app/lib/client/locationTracking";
 
 export default function Comment({
   handleClick,
@@ -65,20 +69,17 @@ export default function Comment({
         console.error("Location permissions are required to clock in.");
         return;
       }
-      // const coordinates = getStoredCoordinates();
 
-      // formData2.append("clockOutLat", coordinates || "");
-      // formData2.append("clockOutLng", coordinates?.longitude.toString() || "");
-
-      // const isUpdated = await breakOutTimeSheet(formData2);
+      // Get current coordinates before stopping tracking
+      const coordinates = await getStoredCoordinates();
 
       const body = {
         userId: user?.id,
         endTime: new Date().toISOString(),
         timeSheetComments: commentsValue,
         wasInjured: false,
-        clockOutLat: null,
-        clockOutLng: null,
+        clockOutLat: coordinates ? coordinates.lat : null,
+        clockOutLng: coordinates ? coordinates.lng : null,
       };
 
       // Use apiRequest to call the backend update route
@@ -87,9 +88,10 @@ export default function Comment({
         "PUT",
         body
       );
-      console.log("Clock-out update response:", isUpdated);
 
       if (isUpdated) {
+        // Stop location tracking only after successful clock-out
+        await stopClockOutTracking();
         await setCurrentPageView("break");
         setTimeSheetData(null);
         router.push("/v1");

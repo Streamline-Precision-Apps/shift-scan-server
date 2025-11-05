@@ -18,6 +18,9 @@ import { useProfitStore } from "@/app/lib/store/profitStore";
 import { useEquipmentStore } from "@/app/lib/store/equipmentStore";
 import { useCostCodeStore } from "@/app/lib/store/costCodeStore";
 import { getApiUrl } from "@/app/lib/utils/api-Utils";
+import { usePermissions } from "@/app/lib/context/permissionContext";
+import { Buttons } from "../components/(reusable)/buttons";
+import { Titles } from "../components/(reusable)/titles";
 
 export default function WidgetSection() {
   const [loadingUi, setLoadingUi] = useState(true);
@@ -26,9 +29,11 @@ export default function WidgetSection() {
   const { setJobsites } = useProfitStore();
   const { setEquipments } = useEquipmentStore();
   const { setCostCodes } = useCostCodeStore();
+  const { permissionStatus, requestLocationPermission } = usePermissions();
   const router = useRouter();
   const [toggle, setToggle] = useState(true);
   const [loadedPageView, setLoadedPageView] = useState("");
+  const [locationEnabled, setLocationEnabled] = useState(false);
 
   // If no user, try to load from localStorage first, then refetch from /api/v1/init if needed
   useEffect(() => {
@@ -172,6 +177,11 @@ export default function WidgetSection() {
     }
   }, [userDataLoaded, loading, pageView]);
 
+  // Check location permissions status
+  useEffect(() => {
+    setLocationEnabled(permissionStatus.location === "granted");
+  }, [permissionStatus.location]);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       if (pageView === "dashboard") {
@@ -218,6 +228,8 @@ export default function WidgetSection() {
         handleToggle={handleToggle}
         loading={loading}
         isTerminate={isTerminate}
+        locationEnabled={locationEnabled}
+        requestLocationPermission={requestLocationPermission}
       />
     </>
   );
@@ -252,6 +264,8 @@ function MainContentSection({
   handleToggle,
   loading,
   isTerminate,
+  locationEnabled,
+  requestLocationPermission,
 }: {
   toggle: boolean;
   pageView: string;
@@ -259,6 +273,8 @@ function MainContentSection({
   handleToggle: () => void;
   loading: boolean;
   isTerminate: boolean;
+  locationEnabled: boolean;
+  requestLocationPermission: () => Promise<{ success: boolean }>;
 }) {
   return (
     <Holds
@@ -279,6 +295,8 @@ function MainContentSection({
               pageView={pageView}
               isManager={isManager}
               isTerminate={isTerminate}
+              locationEnabled={locationEnabled}
+              requestLocationPermission={requestLocationPermission}
             />
           )}
         </Grids>
@@ -325,12 +343,29 @@ function WidgetButtonsSection({
   pageView,
   isManager,
   isTerminate,
+  locationEnabled,
+  requestLocationPermission,
 }: {
   pageView: string;
   isManager: boolean;
   isTerminate: boolean;
+  locationEnabled: boolean;
+  requestLocationPermission: () => Promise<{ success: boolean }>;
 }) {
   const t = useTranslations("Home");
+  const router = useRouter();
+
+  const handleClockInClick = async () => {
+    // Verify location permission is actually enabled before routing
+    if (!locationEnabled) {
+      console.warn("Location permission not enabled");
+      return;
+    }
+
+    // Route to appropriate clock page
+    const destination = pageView === "break" ? "/v1/break" : "/v1/clock";
+    router.push(destination);
+  };
   return (
     <>
       {isManager && (
@@ -361,17 +396,51 @@ function WidgetButtonsSection({
             : "col-span-2 row-span-8 gap-5 h-full py-3"
         }
       >
-        <WidgetContainer
-          titleImg="/clockIn.svg"
-          titleImgAlt={t("ClockInIcon")}
-          text={"Clock-btn" + (pageView === "break" ? "-break" : "")}
-          textSize={isManager ? "h3" : "h3"}
-          background={"green"}
-          translation={"Home"}
-          href={pageView === "break" ? "/v1/break" : "/v1/clock"}
-          disabled={isTerminate}
-        />
-        {/*Todo: Eventually add to the disabled prop || isLocationOn === false */}
+        {locationEnabled ? (
+          <Buttons
+            background="green"
+            className="w-full py-3 rounded-lg"
+            onClick={handleClockInClick}
+          >
+            <div className="flex flex-col space-y-2 justify-center items-center">
+              <img
+                src={"/clockIn.svg"}
+                alt={t("ClockInIcon")}
+                className="h-full w-full max-h-10 max-w-10 object-contain"
+              />
+              <Titles size={"h3"}>
+                {t("Clock-btn" + (pageView === "break" ? "-break" : ""))}
+              </Titles>
+            </div>
+          </Buttons>
+        ) : (
+          // <WidgetContainer
+          //   titleImg="/clockIn.svg"
+          //   titleImgAlt={t("ClockInIcon")}
+          //   text={"Clock-btn" + (pageView === "break" ? "-break" : "")}
+          //   textSize={isManager ? "h3" : "h3"}
+          //   background={"green"}
+          //   translation={"Home"}
+          //   href={pageView === "break" ? "/v1/break" : "/v1/clock"}
+          //   disabled={isTerminate}
+          // />
+          <Buttons
+            background="orange"
+            className="w-full py-3 rounded-lg"
+            onClick={async () => {
+              await requestLocationPermission();
+            }}
+          >
+            <div className="flex flex-col space-y-2 justify-center items-center">
+              <img
+                src="/filterDials.svg"
+                alt="location"
+                className="h-full w-full max-h-10 max-w-10 object-contain"
+              />
+              <Titles size="lg">Enable Location</Titles>
+            </div>
+          </Buttons>
+        )}
       </Holds>
     </>
   );

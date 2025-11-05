@@ -28,6 +28,10 @@ import { useCommentData } from "@/app/lib/context/CommentContext";
 import { usePermissions } from "@/app/lib/context/permissionContext";
 import { useTimeSheetData } from "@/app/lib/context/TimeSheetIdContext";
 import { sendNotification } from "@/app/lib/actions/generatorActions";
+import {
+  startClockInTracking,
+  getStoredCoordinates,
+} from "@/app/lib/client/locationTracking";
 
 type Options = {
   id: string;
@@ -84,6 +88,10 @@ export default function VerificationStep({
         console.error("Location permissions are required to clock in.");
         return;
       }
+
+      // Get current coordinates
+      const coordinates = await getStoredCoordinates();
+
       // Build the payload for handleGeneralTimeSheet
       const payload: {
         date: string;
@@ -107,9 +115,8 @@ export default function VerificationStep({
         userId: id?.toString() || "",
         costCode: cc?.code || "",
         startTime: new Date().toISOString(),
-        // Uncomment and set these if you have coordinates
-        // clockInLat: getStoredCoordinatesResult?.latitude ?? null,
-        // clockInLong: getStoredCoordinatesResult?.longitude ?? null,
+        clockInLat: coordinates ? coordinates.lat : null,
+        clockInLong: coordinates ? coordinates.lng : null,
       };
 
       if (type === "switchJobs") {
@@ -128,9 +135,14 @@ export default function VerificationStep({
         payload.endTime = new Date().toISOString();
         payload.previoustimeSheetComments =
           savedCommentData?.id?.toString() || "";
-        // Uncomment and set these if you have coordinates
-        // payload.clockOutLat = getStoredCoordinatesResult?.latitude ?? null;
-        // payload.clockOutLong = getStoredCoordinatesResult?.longitude ?? null;
+        // For clock out, get coordinates again
+        const clockOutCoordinates = await getStoredCoordinates();
+        payload.clockOutLat = clockOutCoordinates
+          ? clockOutCoordinates.lat
+          : null;
+        payload.clockOutLong = clockOutCoordinates
+          ? clockOutCoordinates.lng
+          : null;
       }
 
       const responseAction = await handleGeneralTimeSheet(payload);
@@ -147,6 +159,11 @@ export default function VerificationStep({
           link: `/admins/timesheets?id=${responseAction.createdTimeSheet.id}`,
           referenceId: responseAction.createdTimeSheet.id,
         });
+      }
+
+      // Start location tracking for clock in
+      if (type !== "switchJobs") {
+        await startClockInTracking();
       }
 
       // Update state and redirect

@@ -351,7 +351,10 @@ export async function stopLocationWatch() {
 }
 
 // Get the current coordinates of the user (for clock in/out)
-export async function getStoredCoordinates() {
+export async function getStoredCoordinates(): Promise<{
+  lat: number;
+  lng: number;
+} | null> {
   try {
     if (isNative) {
       const pos = await Geolocation.getCurrentPosition();
@@ -362,7 +365,7 @@ export async function getStoredCoordinates() {
       };
     } else if (typeof navigator !== "undefined" && navigator.geolocation) {
       // Fallback to browser geolocation API
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         navigator.geolocation.getCurrentPosition(
           (pos) => {
             resolve({

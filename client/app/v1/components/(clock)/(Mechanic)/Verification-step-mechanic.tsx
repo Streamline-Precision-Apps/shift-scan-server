@@ -29,6 +29,10 @@ import { useSavedCostCode } from "@/app/lib/context/CostCodeContext";
 import { useCommentData } from "@/app/lib/context/CommentContext";
 import { handleMechanicTimeSheet } from "@/app/lib/actions/timeSheetActions";
 import { sendNotification } from "@/app/lib/actions/generatorActions";
+import {
+  startClockInTracking,
+  getStoredCoordinates,
+} from "@/app/lib/client/locationTracking";
 
 type Option = {
   id: string;
@@ -88,6 +92,10 @@ export default function MechanicVerificationStep({
         console.error("Location permissions are required to clock in.");
         return;
       }
+
+      // Get current coordinates
+      const coordinates = await getStoredCoordinates();
+
       const payload: {
         date: string;
         jobsiteId: string;
@@ -110,32 +118,35 @@ export default function MechanicVerificationStep({
         userId: id?.toString() || "",
         costCode: costCode || "",
         startTime: new Date().toISOString(),
-        // Uncomment and set these if you have coordinates
-        // clockInLat: getStoredCoordinatesResult?.latitude ?? null,
-        // clockInLong: getStoredCoordinatesResult?.longitude ?? null,
+        clockInLat: coordinates ? coordinates.lat : null,
+        clockInLong: coordinates ? coordinates.lng : null,
       };
-      // const getStoredCoordinatesResult = getStoredCoordinates();
 
       // If switching jobs, include the previous timesheet ID
       if (type === "switchJobs") {
-        // const timeSheetId = await fetchRecentTimeSheetId();
         let timeSheetId = savedTimeSheetData?.id;
         if (!timeSheetId) {
           await refetchTimesheet();
           const ts = savedTimeSheetData?.id;
           if (!ts) {
             console.error("No active timesheet found for job switch.");
+            return;
           }
-          return (timeSheetId = ts);
+          timeSheetId = ts;
         }
         payload.type = "switchJobs";
         payload.previousTimeSheetId = timeSheetId;
         payload.endTime = new Date().toISOString();
         payload.previoustimeSheetComments =
           savedCommentData?.id?.toString() || "";
-        // Uncomment and set these if you have coordinates
-        // payload.clockOutLat = getStoredCoordinatesResult?.latitude ?? null;
-        // payload.clockOutLong = getStoredCoordinatesResult?.longitude ?? null;
+        // For clock out, get coordinates again
+        const clockOutCoordinates = await getStoredCoordinates();
+        payload.clockOutLat = clockOutCoordinates
+          ? clockOutCoordinates.lat
+          : null;
+        payload.clockOutLong = clockOutCoordinates
+          ? clockOutCoordinates.lng
+          : null;
       }
 
       const responseAction = await handleMechanicTimeSheet(payload);
@@ -152,6 +163,11 @@ export default function MechanicVerificationStep({
           link: `/admins/timesheets?id=${responseAction.createdTimeCard.id}`,
           referenceId: responseAction.createdTimeCard.id,
         });
+      }
+
+      // Start location tracking for clock in
+      if (type !== "switchJobs") {
+        await startClockInTracking();
       }
 
       // Update state and redirect

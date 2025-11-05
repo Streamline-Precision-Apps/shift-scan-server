@@ -1,5 +1,5 @@
 "use client";
-import { ChangeEvent, use, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { InjuryReportContent } from "./_components/injuryReportContent";
 import { useCurrentView } from "@/app/lib/context/CurrentViewContext";
 import ReviewYourDay from "./_components/reviewYourDay";

@@ -27,6 +27,10 @@ import { usePermissions } from "@/app/lib/context/permissionContext";
 import { useCommentData } from "@/app/lib/context/CommentContext";
 import { useTimeSheetData } from "@/app/lib/context/TimeSheetIdContext";
 import { sendNotification } from "@/app/lib/actions/generatorActions";
+import {
+  startClockInTracking,
+  getStoredCoordinates,
+} from "@/app/lib/client/locationTracking";
 
 type Option = {
   id: string;
@@ -93,6 +97,10 @@ export default function TascoVerificationStep({
         console.error("Location permissions are required to clock in.");
         return;
       }
+
+      // Get current coordinates
+      const coordinates = await getStoredCoordinates();
+
       const payload: {
         date: string;
         jobsiteId: string;
@@ -119,12 +127,9 @@ export default function TascoVerificationStep({
         userId: id?.toString() || "",
         costCode: cc?.code || "",
         startTime: new Date().toISOString(),
-        // Uncomment and set these if you have coordinates
-        // clockInLat: getStoredCoordinatesResult?.latitude ?? null,
-        // clockInLong: getStoredCoordinatesResult?.longitude ?? null,
+        clockInLat: coordinates ? coordinates.lat : null,
+        clockInLong: coordinates ? coordinates.lng : null,
       };
-
-      // const getStoredCoordinatesResult = getStoredCoordinates();
 
       if (clockInRoleTypes === "tascoAbcdEquipment") {
         payload.materialType = materialType;
@@ -152,24 +157,29 @@ export default function TascoVerificationStep({
 
       // If switching jobs, include the previous timesheet ID
       if (type === "switchJobs") {
-        //
         let timeSheetId = savedTimeSheetData?.id;
         if (!timeSheetId) {
           await refetchTimesheet();
           const ts = savedTimeSheetData?.id;
           if (!ts) {
             console.error("No active timesheet found for job switch.");
+            return;
           }
-          return (timeSheetId = ts);
+          timeSheetId = ts;
         }
         payload.type = "switchJobs";
         payload.previousTimeSheetId = timeSheetId;
         payload.endTime = new Date().toISOString();
         payload.previoustimeSheetComments =
           savedCommentData?.id?.toString() || "";
-        // Uncomment and set these if you have coordinates
-        // payload.clockOutLat = getStoredCoordinatesResult?.latitude ?? null;
-        // payload.clockOutLong = getStoredCoordinatesResult?.longitude ?? null;
+        // For clock out, get coordinates again
+        const clockOutCoordinates = await getStoredCoordinates();
+        payload.clockOutLat = clockOutCoordinates
+          ? clockOutCoordinates.lat
+          : null;
+        payload.clockOutLong = clockOutCoordinates
+          ? clockOutCoordinates.lng
+          : null;
       }
 
       // Use the new transaction-based function
@@ -187,6 +197,11 @@ export default function TascoVerificationStep({
           link: `/admins/timesheets?id=${responseAction.createdTimeCard.id}`,
           referenceId: responseAction.createdTimeCard.id,
         });
+      }
+
+      // Start location tracking for clock in
+      if (type !== "switchJobs") {
+        await startClockInTracking();
       }
 
       setCommentData(null);
