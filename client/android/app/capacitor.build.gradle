@@ -15,7 +15,6 @@ dependencies {
     implementation project(':capacitor-file-transfer')
     implementation project(':capacitor-file-viewer')
     implementation project(':capacitor-geolocation')
-    implementation project(':capacitor-preferences')
     implementation project(':capacitor-push-notifications')
     implementation project(':capacitor-screen-orientation')
     implementation project(':capacitor-splash-screen')

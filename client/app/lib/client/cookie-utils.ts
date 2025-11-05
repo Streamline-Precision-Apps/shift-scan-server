@@ -1,6 +1,6 @@
 // client/app/lib/client/cookie-utils.ts
 import { CapacitorCookies } from "@capacitor/core";
-import { Preferences } from "@capacitor/preferences";
+import { Device } from "@capacitor/device";
 const COOKIE_KEY = "locale";
 
 // Read cookies using CapacitorCookies when available, otherwise document.cookie
@@ -47,11 +47,15 @@ export async function readLocaleCookie(): Promise<string | null> {
     }
   }
 
-  // 3) Fallback to Preferences (native)
+  // 3) Fallback to Device.getLanguageTag()
   try {
-    const stored = await Preferences.get({ key: COOKIE_KEY });
-    if (stored && typeof stored.value === "string" && stored.value.length > 0) {
-      return stored.value;
+    const deviceLang = await Device.getLanguageTag();
+    if (
+      deviceLang &&
+      typeof deviceLang.value === "string" &&
+      deviceLang.value.length > 0
+    ) {
+      return deviceLang.value;
     }
   } catch (e) {
     // ignore
@@ -76,12 +80,6 @@ export async function setLocaleCookie(value: string) {
       )}; path=/; expires=${expires};`;
     }
   } catch (e) {
-    // fallback: also persist to Preferences so native fallback works
-  }
-  // also persist in Preferences as a fallback
-  try {
-    await Preferences.set({ key: COOKIE_KEY, value });
-  } catch (e) {
     // ignore
   }
 }
@@ -101,7 +99,4 @@ export async function deleteLocaleCookie() {
       )}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;`;
     }
   } catch (e) {}
-  try {
-    await Preferences.remove({ key: COOKIE_KEY } as any);
-  } catch {}
 }

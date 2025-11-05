@@ -17,7 +17,6 @@ def capacitor_pods
   pod 'CapacitorFileTransfer', :path => '../../node_modules/@capacitor/file-transfer'
   pod 'CapacitorFileViewer', :path => '../../node_modules/@capacitor/file-viewer'
   pod 'CapacitorGeolocation', :path => '../../node_modules/@capacitor/geolocation'
-  pod 'CapacitorPreferences', :path => '../../node_modules/@capacitor/preferences'
   pod 'CapacitorPushNotifications', :path => '../../node_modules/@capacitor/push-notifications'
   pod 'CapacitorScreenOrientation', :path => '../../node_modules/@capacitor/screen-orientation'
   pod 'CapacitorSplashScreen', :path => '../../node_modules/@capacitor/splash-screen'
