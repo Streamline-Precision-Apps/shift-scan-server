@@ -374,26 +374,25 @@ export default function SignInPage() {
                 {error}
               </div>
             )}
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-app-dark-blue hover:bg-app-dark-blue/80 disabled:bg-app-dark-blue/50 text-white font-bold py-3 px-8 rounded-xl shadow-lg text-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-app-blue"
-            >
-              {loading ? t("loading") : t("submit")}
-            </button>
-
-            {isNative && biometricAvailable && (
+            <div className="flex flex-row gap-2">
+              {isNative && biometricAvailable && (
+                <button
+                  type="button"
+                  onClick={handleBiometricLogin}
+                  disabled={biometricLoading || loading}
+                  className="w-20   border border-app-dark-blue text-white font-bold p-1 rounded-xl shadow-lg text-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-app-dark-blue flex items-center justify-center gap-2"
+                >
+                  <Fingerprint className="w-4 h-4" color="black" />
+                </button>
+              )}
               <button
-                type="button"
-                onClick={handleBiometricLogin}
-                disabled={biometricLoading || loading}
-                className="w-full bg-app-blue hover:bg-app-blue/80 disabled:bg-app-blue/50 text-white font-bold py-3 px-8 rounded-xl shadow-lg text-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-app-dark-blue flex items-center justify-center gap-2"
+                type="submit"
+                disabled={loading}
+                className="w-full bg-app-dark-blue hover:bg-app-dark-blue/80 disabled:bg-app-dark-blue/50 text-white font-bold py-3 px-8 rounded-xl shadow-lg text-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-app-blue"
               >
-                <Fingerprint className="w-5 h-5" />
-                {biometricLoading ? t("loading") : "Biometric Sign In"}
+                {loading ? t("loading") : t("submit")}
               </button>
-            )}
+            </div>
           </form>
 
           <div className="mt-4 text-center">
