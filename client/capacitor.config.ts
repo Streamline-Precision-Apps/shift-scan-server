@@ -1,12 +1,18 @@
 /// <reference types="@capacitor/splash-screen" />
 import type { CapacitorConfig } from "@capacitor/cli";
 
+// Determine the server URL based on the platform
+const serverUrl =
+  process.env.CAPACITOR_PLATFORM === "android"
+    ? "http://10.0.2.2:3000" // Android emulator
+    : "http://localhost:3000"; // Physical device or web
+
 const config: CapacitorConfig = {
   appId: "com.shiftscanapp",
   appName: "Shift Scan",
   webDir: "out",
   server: {
-    url: "http://localhost:3000",
+    url: serverUrl,
     cleartext: true,
   },
   plugins: {

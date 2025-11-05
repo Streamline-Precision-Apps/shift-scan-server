@@ -25,13 +25,8 @@ android {
 }
 
 repositories {
-    google()
-    mavenCentral()
-    maven {
-        url '../capacitor-cordova-android-plugins/src/main/libs'
-    }
-    maven {
-        url '../../node_modules/@capacitor/background-runner/android/src/main/libs'
+    flatDir{
+        dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
     }
 }
 
