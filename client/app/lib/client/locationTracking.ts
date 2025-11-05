@@ -329,27 +329,6 @@ export async function startBackgroundLocationWatch() {
   }
 }
 
-// Stop Tracking location (foreground and background)
-// Stops all location updates from the BackgroundGeolocation.start() method
-export async function stopLocationWatch() {
-  if (watchId) {
-    // Stop foreground tracking
-    Geolocation.clearWatch({ id: watchId });
-    watchId = null;
-    lastFirestoreWriteTime = 0; // reset for next session
-  }
-  if (isBackgroundTrackingActive && BackgroundGeolocation) {
-    try {
-      // Stops location updates (only affects background tracking started by start())
-      await BackgroundGeolocation.stop();
-      isBackgroundTrackingActive = false;
-      console.log("Background location tracking stopped");
-    } catch (err) {
-      console.error("Failed to stop background geolocation:", err);
-    }
-  }
-}
-
 // Get the current coordinates of the user (for clock in/out)
 export async function getStoredCoordinates(): Promise<{
   lat: number;
@@ -386,44 +365,6 @@ export async function getStoredCoordinates(): Promise<{
   } catch (err) {
     console.error("Failed to get current coordinates:", err);
     return null;
-  }
-}
-
-// Send location to backend API for one-time updates
-export async function sendLocationToBackend() {
-  try {
-    const auth = getAuth();
-    const user = auth.currentUser;
-    if (!user) throw new Error("No authenticated user");
-
-    const pos = await Geolocation.getCurrentPosition();
-    if (!pos) throw new Error("Geolocation position is null");
-
-    const payload: LocationLog = {
-      coords: {
-        lat: pos.coords.latitude,
-        lng: pos.coords.longitude,
-        accuracy: pos.coords.accuracy,
-        speed: pos.coords.speed ?? null,
-        heading: pos.coords.heading ?? null,
-      },
-      device: {
-        platform: typeof navigator !== "undefined" ? navigator.userAgent : null,
-      },
-    };
-    const url = getApiUrl();
-    await fetch(`${url}/api/location/user`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        // Optionally add auth token if needed
-      },
-      body: JSON.stringify(payload),
-    });
-    return { success: true };
-  } catch (err) {
-    console.error("Failed to send location to backend:", err);
-    return { success: false, error: err };
   }
 }
 
