@@ -14,6 +14,9 @@ import { Texts } from "../(reusable)/texts";
 import { Holds } from "../(reusable)/holds";
 import { Titles } from "../(reusable)/titles";
 import { usePermissions } from "@/app/lib/context/permissionContext";
+import { Capacitor } from "@capacitor/core";
+import { Camera, CameraResultType, CameraSource } from "@capacitor/camera";
+import Spinner from "../(animations)/spinner";
 
 interface CameraComponentProps {
   setBase64String: Dispatch<SetStateAction<string>>;
@@ -33,6 +36,7 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
   const [cameraActive, setCameraActive] = useState(false);
+  const native = Capacitor.isNativePlatform();
   const t = useTranslations("Widgets");
   const { requestCameraPermission } = usePermissions();
 
@@ -42,29 +46,47 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
     };
 
     try {
-      // First request camera permission using the centralized permissions context
-      const permissionGranted = await requestCameraPermission();
+      if (native) {
+        // Use native Capacitor Camera API
+        setCameraActive(true);
+        const photo = await Camera.getPhoto({
+          quality: 90,
+          allowEditing: false,
+          resultType: CameraResultType.DataUrl,
+          source: CameraSource.Camera,
+        });
 
-      if (!permissionGranted) {
-        console.error("Camera permission denied");
-        return;
-      }
+        if (photo.dataUrl) {
+          setImageSrc(photo.dataUrl);
+          setBase64String(photo.dataUrl);
+        }
+        setCameraActive(false);
+      } else {
+        // First request camera permission using the centralized permissions context
+        const permissionGranted = await requestCameraPermission();
 
-      const mediaStream = await navigator.mediaDevices.getUserMedia(
-        constraints
-      );
-      setStream(mediaStream);
-      if (videoRef.current) {
-        videoRef.current.srcObject = mediaStream;
+        if (!permissionGranted) {
+          console.error("Camera permission denied");
+          return;
+        }
+
+        const mediaStream = await navigator.mediaDevices.getUserMedia(
+          constraints
+        );
+        setStream(mediaStream);
+        if (videoRef.current) {
+          videoRef.current.srcObject = mediaStream;
+        }
+        setCameraActive(true);
       }
-      setCameraActive(true);
     } catch (error) {
       console.error("Error accessing the camera: ", error);
+      setCameraActive(false);
     }
   };
 
   const hideCamera = () => {
-    if (stream) {
+    if (!native && stream) {
       stream.getTracks().forEach((track) => track.stop());
       setStream(null);
     }
@@ -85,16 +107,22 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
 
   const toggleCamera = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    if (cameraActive) {
-      hideCamera();
-    } else {
+    if (native) {
+      // On native, start camera directly (it handles its own dialog)
       await startCamera();
+    } else {
+      // On web, toggle between active states
+      if (cameraActive) {
+        hideCamera();
+      } else {
+        await startCamera();
+      }
     }
   };
 
   const takePicture = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    if (canvasRef.current && videoRef.current) {
+    if (!native && canvasRef.current && videoRef.current) {
       const context = canvasRef.current.getContext("2d");
       if (context && videoRef.current.readyState === 4) {
         // Set the canvas dimensions to match video
@@ -139,22 +167,30 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
   return (
     <>
       <Holds size={"full"} position="center">
-        <video
-          ref={videoRef}
-          autoPlay
-          style={{
-            display: cameraActive && !imageSrc ? "block" : "none",
-            width: VIDEO_DIMENSIONS,
-            height: VIDEO_DIMENSIONS,
-            margin: "0 auto",
-          }}
-        ></video>
-        <canvas
-          ref={canvasRef}
-          style={{ display: "none", margin: "0 auto" }}
-          width={VIDEO_DIMENSIONS}
-          height={VIDEO_DIMENSIONS}
-        ></canvas>
+        {cameraActive && native ? (
+          <div className="flex items-center justify-center w-full h-full">
+            <Spinner size={60} color={"border-app-dark-blue"} />
+          </div>
+        ) : (
+          <>
+            <video
+              ref={videoRef}
+              autoPlay
+              style={{
+                display: cameraActive && !imageSrc && !native ? "block" : "none",
+                width: VIDEO_DIMENSIONS,
+                height: VIDEO_DIMENSIONS,
+                margin: "0 auto",
+              }}
+            ></video>
+            <canvas
+              ref={canvasRef}
+              style={{ display: "none", margin: "0 auto" }}
+              width={VIDEO_DIMENSIONS}
+              height={VIDEO_DIMENSIONS}
+            ></canvas>
+          </>
+        )}
       </Holds>
       {imageSrc === null && (
         <Holds position={"row"} className="mb-5 mx-auto">
@@ -167,7 +203,7 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
               {cameraActive ? `${t("HideCamera")}` : `${t("ShowCamera")}`}
             </Titles>
           </Buttons>
-          {cameraActive && (
+          {cameraActive && !native && (
             <Buttons background="green" onClick={takePicture}>
               {t("TakePicture")}
             </Buttons>

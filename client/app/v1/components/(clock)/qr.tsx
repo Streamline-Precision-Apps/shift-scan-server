@@ -9,9 +9,10 @@ import React, {
 } from "react";
 import QrScanner from "qr-scanner";
 import { useRouter } from "next/navigation";
-
 import { useProfitStore } from "@/app/lib/store/profitStore";
 import { useEQScanData } from "@/app/lib/context/equipmentContext";
+import { Capacitor } from "@capacitor/core";
+import { CapacitorBarcodeScanner } from "@capacitor/barcode-scanner";
 
 type Option = {
   id: string;
@@ -42,6 +43,8 @@ export default function QR({
   setFailedToScan,
   setJobsite,
 }: QrReaderProps) {
+  const native = Capacitor.isNativePlatform();
+
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const qrScannerRef = useRef<QrScanner | null>(null);
   const [scanCount, setScanCount] = useState(0);
@@ -72,6 +75,69 @@ export default function QR({
 
   // Constants
   const SCAN_THRESHOLD = 200;
+
+  // Helper function to process scan data (shared between native and web)
+  const processScanData = useCallback(
+    (data: string) => {
+      if (!data || typeof data !== "string" || data.trim() === "") {
+        return;
+      }
+
+      // Validate QR code against jobsite results
+      const matchedJobsite = jobsiteResults?.find(
+        (j) => j.qrId.toLowerCase() === data.toLowerCase()
+      );
+
+      if (!matchedJobsite) {
+        console.error("Error: QR code not found in jobsiteResults", data);
+        throw new Error("Invalid QR code Scanned!");
+      }
+
+      if (type === "equipment") {
+        setscanEQResult({ data });
+        qrScannerRef.current?.stop();
+        handleNextStep();
+        handleNextStep();
+      } else {
+        setJobsite({
+          id: matchedJobsite.id,
+          label: matchedJobsite.name,
+          code: matchedJobsite.qrId,
+        });
+        qrScannerRef.current?.stop();
+        if (handleScanJobsite) {
+          handleScanJobsite(clockInRole || "");
+        }
+      }
+    },
+    [
+      jobsiteResults,
+      type,
+      setscanEQResult,
+      handleNextStep,
+      setJobsite,
+      handleScanJobsite,
+      clockInRole,
+    ]
+  );
+
+  // Native barcode scanner
+  const startNativeScanner = useCallback(async () => {
+    try {
+      // Start the native barcode scanner (QR code only)
+      const result = await CapacitorBarcodeScanner.scanBarcode({
+        hint: 0, // QR_CODE
+      });
+
+      if (result.ScanResult) {
+        processScanData(result.ScanResult);
+      }
+    } catch (error) {
+      console.error("Native scanner error:", error);
+      setStartCamera(false);
+      setFailedToScan(true);
+    }
+  }, [processScanData, setStartCamera, setFailedToScan]);
 
   // ------------------- Different scan processes below ----------------------------
   const processEquipmentScan = useCallback(
@@ -108,34 +174,13 @@ export default function QR({
     [jobsiteResults, handleScanJobsite, clockInRole]
   );
 
-  // ----------------------- End of scan processes -------------------------------
+  // ----------------------- End of scan processes -------------------------
 
   const handleScanSuccess = useCallback(
     (result: QrScanner.ScanResult) => {
       try {
         const { data } = result;
-        // Guard: Ignore empty or obviously invalid scans
-        if (!data || typeof data !== "string" || data.trim() === "") {
-          return;
-        }
-
-        if (
-          !jobsiteResults?.some(
-            (j) => j.qrId.toLowerCase() === data.toLowerCase()
-          )
-        ) {
-          console.error("Error: QR code not found in jobsiteResults", data);
-          throw new Error("Invalid QR code Scanned!");
-        }
-
-        if (type === "equipment") {
-          processEquipmentScan(data);
-
-          handleNextStep();
-          handleNextStep();
-        } else {
-          processGeneralScan(data);
-        }
+        processScanData(data);
       } catch (error) {
         console.error("QR Code Processing Error:", error);
         qrScannerRef.current?.stop();
@@ -143,24 +188,24 @@ export default function QR({
         setFailedToScan(true);
       }
     },
-    [
-      jobsiteResults,
-      type,
-      processEquipmentScan,
-      processGeneralScan,
-      setStartCamera,
-      setFailedToScan,
-    ]
+    [processScanData, setStartCamera, setFailedToScan]
   );
 
   const handleScanFail = useCallback(() => {
     setScanCount((prev) => prev + 1);
   }, []);
 
+  // Effect to handle native scanner on native platforms
   useEffect(() => {
-    if (!videoRef.current) return;
+    if (!startCamera) return;
 
-    if (startCamera) {
+    if (native) {
+      // Use native barcode scanner
+      startNativeScanner();
+    } else {
+      // Use web-based QR scanner (existing implementation)
+      if (!videoRef.current) return;
+
       const scanner = new QrScanner(videoRef.current, handleScanSuccess, {
         onDecodeError: handleScanFail,
         highlightScanRegion: true,
@@ -197,14 +242,18 @@ export default function QR({
           console.error("No camera found");
         }
       });
-    } else {
-      qrScannerRef.current?.stop();
     }
 
     return () => {
       qrScannerRef.current?.stop();
     };
-  }, [handleScanSuccess, handleScanFail, startCamera]);
+  }, [
+    native,
+    startCamera,
+    handleScanSuccess,
+    handleScanFail,
+    startNativeScanner,
+  ]);
 
   useEffect(() => {
     if (scanCount >= SCAN_THRESHOLD) {
@@ -214,12 +263,24 @@ export default function QR({
   }, [scanCount, router, setStartCamera]);
 
   return (
-    <video
-      ref={videoRef}
-      className="w-full h-full rounded-[10px] border-[3px] border-black bg-black bg-opacity-85 object-cover"
-      aria-label="QR scanner video stream"
-    >
-      Video stream not available. Please enable your camera.
-    </video>
+    <>
+      {native ? (
+        <div className="w-full h-full rounded-[10px] border-[3px] border-black bg-black bg-opacity-85 flex items-center justify-center">
+          <div className="text-center text-white">
+            <p className="text-lg font-semibold">
+              Scanning with native camera...
+            </p>
+          </div>
+        </div>
+      ) : (
+        <video
+          ref={videoRef}
+          className="w-full h-full rounded-[10px] border-[3px] border-black bg-black bg-opacity-85 object-cover"
+          aria-label="QR scanner video stream"
+        >
+          Video stream not available. Please enable your camera.
+        </video>
+      )}
+    </>
   );
 }

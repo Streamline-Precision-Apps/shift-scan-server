@@ -18,6 +18,7 @@ import { updateUserImage } from "@/app/lib/actions/hamburgerActions";
 import { apiRequest, getApiUrl } from "@/app/lib/utils/api-Utils";
 import { X } from "lucide-react";
 import { Capacitor } from "@capacitor/core";
+import { Camera, CameraResultType, CameraSource } from "@capacitor/camera";
 
 type Employee = {
   id: string;
@@ -47,7 +48,7 @@ export default function ProfileImageEditor({
   const [mode, setMode] = useState<"select" | "camera" | "preview" | "crop">(
     "select"
   );
-
+  const native = Capacitor.isNativePlatform();
   const ios = Capacitor.getPlatform() === "ios";
   const android = Capacitor.getPlatform() === "android";
   // State for the displayed profile image
@@ -88,6 +89,60 @@ export default function ProfileImageEditor({
     return () => stopCamera();
   }, [mode]);
 
+  const startCamera = async () => {
+    try {
+      if (native) {
+        // Use native Capacitor Camera API
+        const photo = await Camera.getPhoto({
+          quality: 90,
+          allowEditing: false,
+          resultType: CameraResultType.DataUrl,
+          source: CameraSource.Camera,
+        });
+
+        if (photo.dataUrl) {
+          setImageSrc(photo.dataUrl);
+          setMode("crop");
+        }
+      } else {
+        // Use web-based camera access
+        // Request camera permission using the centralized permissions context
+        const permissionGranted = await requestCameraPermission();
+
+        if (!permissionGranted) {
+          console.warn("Camera permission denied by user");
+          setMode("select");
+          return;
+        }
+
+        // Try to get media stream with camera access
+        try {
+          const mediaStream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: "user", width: 300, height: 300 },
+          });
+          setStream(mediaStream);
+          if (videoRef.current) videoRef.current.srcObject = mediaStream;
+        } catch (mediaError) {
+          console.error(
+            "Failed to access camera via getUserMedia:",
+            mediaError
+          );
+          // If getUserMedia fails, reset mode and show error
+          setMode("select");
+          return;
+        }
+      }
+    } catch (error) {
+      console.error("Camera error:", error);
+      setMode("select");
+    }
+  };
+
+  const stopCamera = () => {
+    stream?.getTracks().forEach((track) => track.stop());
+    setStream(null);
+  };
+
   // Handle crop completion
   useEffect(() => {
     if (completedCrop && imageRef.current && canvasRef.current) {
@@ -122,41 +177,6 @@ export default function ProfileImageEditor({
     }
   }, [completedCrop]);
 
-  const startCamera = async () => {
-    try {
-      // Request camera permission using the centralized permissions context
-      const permissionGranted = await requestCameraPermission();
-
-      if (!permissionGranted) {
-        console.warn("Camera permission denied by user");
-        setMode("select");
-        return;
-      }
-
-      // Try to get media stream with camera access
-      try {
-        const mediaStream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: "user", width: 300, height: 300 },
-        });
-        setStream(mediaStream);
-        if (videoRef.current) videoRef.current.srcObject = mediaStream;
-      } catch (mediaError) {
-        console.error("Failed to access camera via getUserMedia:", mediaError);
-        // If getUserMedia fails, reset mode and show error
-        setMode("select");
-        return;
-      }
-    } catch (error) {
-      console.error("Camera permission error:", error);
-      setMode("select");
-    }
-  };
-
-  const stopCamera = () => {
-    stream?.getTracks().forEach((track) => track.stop());
-    setStream(null);
-  };
-
   // const selectFromGallery = async () => {
   //   try {
   //     // Request photos permission for gallery access
@@ -189,7 +209,8 @@ export default function ProfileImageEditor({
   // };
 
   const takePicture = () => {
-    if (videoRef.current) {
+    // This only applies to web; native uses Camera API directly
+    if (!native && videoRef.current) {
       const canvas = document.createElement("canvas");
       canvas.width = videoRef.current.videoWidth;
       canvas.height = videoRef.current.videoHeight;
@@ -371,13 +392,24 @@ export default function ProfileImageEditor({
               {/* Content Area */}
               <Holds className="row-start-2 row-end-6 h-full w-full justify-center items-center">
                 {mode === "camera" ? (
-                  <video
-                    ref={videoRef}
-                    autoPlay
-                    playsInline
-                    muted
-                    className="w-[250px] h-[250px] object-cover rounded-full border-[3px] border-black"
-                  />
+                  !native ? (
+                    <video
+                      ref={videoRef}
+                      autoPlay
+                      playsInline
+                      muted
+                      className="w-[250px] h-[250px] object-cover rounded-full border-[3px] border-black"
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center w-full h-full">
+                      <div className="text-center">
+                        <Spinner size={60} color={"border-app-dark-blue"} />
+                        <p className="mt-4 text-app-dark-blue">
+                          {t("ChangeProfilePhoto")}
+                        </p>
+                      </div>
+                    </div>
+                  )
                 ) : mode === "preview" ? (
                   <img
                     src={canvasRef.current?.toDataURL() || imageSrc}
@@ -458,13 +490,15 @@ export default function ProfileImageEditor({
                 </Holds>
               ) : mode === "camera" ? (
                 <Holds className="row-start-9 row-end-11 w-full space-y-5">
-                  <Buttons
-                    background="green"
-                    className="w-full py-2"
-                    onClick={takePicture}
-                  >
-                    <Titles size={"sm"}>{t("CaptureImage")}</Titles>
-                  </Buttons>
+                  {!native && (
+                    <Buttons
+                      background="green"
+                      className="w-full py-2"
+                      onClick={takePicture}
+                    >
+                      <Titles size={"sm"}>{t("CaptureImage")}</Titles>
+                    </Buttons>
+                  )}
                   <Buttons
                     background="red"
                     className="w-full py-2"

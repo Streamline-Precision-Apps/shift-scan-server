@@ -5,6 +5,9 @@ import { Titles } from "../(reusable)/titles";
 import { Images } from "../(reusable)/images";
 import { useTranslations } from "next-intl";
 import { usePermissions } from "@/app/lib/context/permissionContext";
+import { Capacitor } from "@capacitor/core";
+import { Camera, CameraResultType, CameraSource } from "@capacitor/camera";
+import Spinner from "../(animations)/spinner";
 
 interface CameraComponentProps {
   setImageBlob?: React.Dispatch<React.SetStateAction<Blob | null>>;
@@ -12,6 +15,7 @@ interface CameraComponentProps {
 
 const CameraComponent: React.FC<CameraComponentProps> = ({ setImageBlob }) => {
   const t = useTranslations("SignUpProfilePicture");
+  const native = Capacitor.isNativePlatform();
   const [cameraActive, setCameraActive] = useState(false);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -31,38 +35,61 @@ const CameraComponent: React.FC<CameraComponentProps> = ({ setImageBlob }) => {
     };
 
     try {
-      // First request camera permission using the centralized permissions context
-      const permissionGranted = await requestCameraPermission();
+      if (native) {
+        // Use native Capacitor Camera API
+        setCameraActive(true);
+        const photo = await Camera.getPhoto({
+          quality: 90,
+          allowEditing: false,
+          resultType: CameraResultType.DataUrl,
+          source: CameraSource.Camera,
+        });
 
-      if (!permissionGranted) {
-        setError(
-          "Camera permission denied. Please grant camera access in your settings."
+        if (photo.dataUrl) {
+          setImageSrc(photo.dataUrl);
+
+          // If the parent component wants the Blob version, provide it
+          if (setImageBlob) {
+            const blob = await fetch(photo.dataUrl).then((res) => res.blob());
+            setImageBlob(blob);
+          }
+        }
+        setCameraActive(false);
+      } else {
+        // First request camera permission using the centralized permissions context
+        const permissionGranted = await requestCameraPermission();
+
+        if (!permissionGranted) {
+          setError(
+            "Camera permission denied. Please grant camera access in your settings."
+          );
+          return;
+        }
+
+        if (!navigator.mediaDevices?.getUserMedia) {
+          setError("Camera not supported in this browser.");
+          return;
+        }
+        const mediaStream = await navigator.mediaDevices.getUserMedia(
+          constraints
         );
-        return;
+        if (videoRef.current) {
+          videoRef.current.srcObject = mediaStream;
+        }
+        setCameraActive(true);
+        setError(null);
       }
-
-      if (!navigator.mediaDevices?.getUserMedia) {
-        setError("Camera not supported in this browser.");
-        return;
-      }
-      const mediaStream = await navigator.mediaDevices.getUserMedia(
-        constraints
-      );
-      if (videoRef.current) {
-        videoRef.current.srcObject = mediaStream;
-      }
-      setCameraActive(true);
-      setError(null);
     } catch (err) {
       setError(
         "Error accessing the camera. Please check permissions and try again."
       );
+      setCameraActive(false);
     }
   };
 
   // Stop the camera
   const hideCamera = () => {
-    if (videoRef.current?.srcObject) {
+    if (!native && videoRef.current?.srcObject) {
       const tracks = (videoRef.current.srcObject as MediaStream).getTracks();
       tracks.forEach((track) => track.stop());
       videoRef.current.srcObject = null;
@@ -72,7 +99,7 @@ const CameraComponent: React.FC<CameraComponentProps> = ({ setImageBlob }) => {
 
   // Capture the image from the video stream
   const takePicture = () => {
-    if (canvasRef.current && videoRef.current) {
+    if (!native && canvasRef.current && videoRef.current) {
       const context = canvasRef.current.getContext("2d");
       if (context) {
         context.drawImage(videoRef.current, 0, 0, 250, 250);
@@ -142,13 +169,17 @@ const CameraComponent: React.FC<CameraComponentProps> = ({ setImageBlob }) => {
               </svg>
             </button>
           )}
-          {!imageSrc && !cameraActive && (
+          {cameraActive && native ? (
+            <div className="flex items-center justify-center w-full h-full">
+              <Spinner size={60} color={"border-blue-500"} />
+            </div>
+          ) : !imageSrc && !cameraActive ? (
             <Images
               className="w-[250px] h-[250px] opacity-50"
               titleImg="/profileEmpty.svg"
               titleImgAlt="person"
             />
-          )}
+          ) : null}
           {imageSrc && (
             <img
               src={imageSrc}
@@ -157,16 +188,18 @@ const CameraComponent: React.FC<CameraComponentProps> = ({ setImageBlob }) => {
               style={{ margin: "0 auto" }}
             />
           )}
-          <video
-            ref={videoRef}
-            id="player"
-            autoPlay
-            playsInline
-            className={`absolute top-0 left-0 w-[250px] h-[250px] object-cover rounded-full border-8 border-black shadow-lg transition-all duration-300 ${
-              cameraActive && !imageSrc ? "block" : "hidden"
-            }`}
-            style={{ margin: "0 auto" }}
-          ></video>
+          {!native && (
+            <video
+              ref={videoRef}
+              id="player"
+              autoPlay
+              playsInline
+              className={`absolute top-0 left-0 w-[250px] h-[250px] object-cover rounded-full border-8 border-black shadow-lg transition-all duration-300 ${
+                cameraActive && !imageSrc ? "block" : "hidden"
+              }`}
+              style={{ margin: "0 auto" }}
+            ></video>
+          )}
           <canvas
             id="canvas"
             ref={canvasRef}
@@ -189,7 +222,7 @@ const CameraComponent: React.FC<CameraComponentProps> = ({ setImageBlob }) => {
             </Titles>
           </Buttons>
         )}
-        {cameraActive && (
+        {cameraActive && !native && (
           <Buttons
             background={"red"}
             onClick={() => {
