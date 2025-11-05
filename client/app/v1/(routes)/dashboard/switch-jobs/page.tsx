@@ -75,10 +75,13 @@ export default function SwitchJobs() {
   const switchLaborType = cookieValues.switchLaborType;
 
   const ios = Capacitor.getPlatform() === "ios";
+  const android = Capacitor.getPlatform() === "android";
   return (
     <Bases>
       <Contents>
-        <Holds className={ios ? "pt-12 h-full" : "h-full"}>
+        <Holds
+          className={ios ? "pt-12 h-full" : android ? "pt-4 h-full" : "h-full"}
+        >
           <Suspense
             fallback={
               <div className="flex rounded-[10px]  justify-center items-center h-full w-full bg-neutral-50 animate-pulse">

@@ -49,6 +49,7 @@ export default function ProfileImageEditor({
   );
 
   const ios = Capacitor.getPlatform() === "ios";
+  const android = Capacitor.getPlatform() === "android";
   // State for the displayed profile image
   const [profileImageUrl, setProfileImageUrl] = useState<string>(
     employee?.image || ""
@@ -156,36 +157,36 @@ export default function ProfileImageEditor({
     setStream(null);
   };
 
-  const selectFromGallery = async () => {
-    try {
-      // Request photos permission for gallery access
-      const photosGranted = await requestPhotosPermission();
+  // const selectFromGallery = async () => {
+  //   try {
+  //     // Request photos permission for gallery access
+  //     const photosGranted = await requestPhotosPermission();
 
-      if (!photosGranted) {
-        console.warn("Photos permission denied by user");
-        return;
-      }
+  //     if (!photosGranted) {
+  //       console.warn("Photos permission denied by user");
+  //       return;
+  //     }
 
-      // Use HTML file input for web/cross-platform compatibility
-      const input = document.createElement("input");
-      input.type = "file";
-      input.accept = "image/*";
-      input.onchange = (e: any) => {
-        const file = e.target.files?.[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = (event: any) => {
-            setImageSrc(event.target.result);
-            setMode("crop");
-          };
-          reader.readAsDataURL(file);
-        }
-      };
-      input.click();
-    } catch (error) {
-      console.error("Error selecting from gallery:", error);
-    }
-  };
+  //     // Use HTML file input for web/cross-platform compatibility
+  //     const input = document.createElement("input");
+  //     input.type = "file";
+  //     input.accept = "image/*";
+  //     input.onchange = (e: any) => {
+  //       const file = e.target.files?.[0];
+  //       if (file) {
+  //         const reader = new FileReader();
+  //         reader.onload = (event: any) => {
+  //           setImageSrc(event.target.result);
+  //           setMode("crop");
+  //         };
+  //         reader.readAsDataURL(file);
+  //       }
+  //     };
+  //     input.click();
+  //   } catch (error) {
+  //     console.error("Error selecting from gallery:", error);
+  //   }
+  // };
 
   const takePicture = () => {
     if (videoRef.current) {
@@ -345,7 +346,13 @@ export default function ProfileImageEditor({
           <Contents width={"section"} className="h-full w-full">
             <Grids
               rows={"10"}
-              className={ios ? "pt-12 h-full w-full" : "h-full w-full"}
+              className={
+                ios
+                  ? "pt-12 h-full w-full"
+                  : android
+                  ? "pt-4 h-full w-full"
+                  : "h-full w-full"
+              }
             >
               <Holds className="row-start-1 row-end-2 relative">
                 <Titles size={"h4"}>

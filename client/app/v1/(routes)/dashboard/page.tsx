@@ -21,6 +21,7 @@ export default function Dashboard() {
   const router = useRouter();
   const { user } = useUserStore();
   const ios = Capacitor.getPlatform() === "ios";
+  const android = Capacitor.getPlatform() === "android";
 
   // State for cookies
   const [cookiesState, setCookiesState] = useState({
@@ -70,7 +71,11 @@ export default function Dashboard() {
     return (
       <Bases>
         <Contents>
-          <Holds className={ios ? "pt-12 h-full" : "h-full"}>
+          <Holds
+            className={
+              ios ? "pt-12 h-full" : android ? "pt-4 h-full" : "h-full"
+            }
+          >
             <div className="flex justify-center items-center h-full">
               <p className="text-red-500">User not found. Please log in.</p>
             </div>
@@ -83,7 +88,11 @@ export default function Dashboard() {
   return (
     <Bases>
       <Contents>
-        <Grids rows={"8"} gap={"5"} className={ios ? "pt-12" : ""}>
+        <Grids
+          rows={"8"}
+          gap={"5"}
+          className={ios ? "pt-12" : android ? "pt-4" : ""}
+        >
           {/* Active timesheet check component - runs on dashboard load */}
 
           <ActiveTimesheetCheck userId={user.id} />

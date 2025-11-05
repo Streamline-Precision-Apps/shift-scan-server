@@ -14,6 +14,7 @@ import { Capacitor } from "@capacitor/core";
 
 function TimeCardsContent() {
   const ios = Capacitor.getPlatform() === "ios";
+  const android = Capacitor.getPlatform() === "android";
   const t = useTranslations("TimeCardSwiper");
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -25,7 +26,7 @@ function TimeCardsContent() {
         <Grids
           rows={"7"}
           className={`h-full rounded-[10px]  ${loading && "animate-pulse"} ${
-            ios ? "pt-12" : ""
+            ios ? "pt-12" : android ? "pt-4" : ""
           }`}
         >
           <Holds className="row-span-1 h-full bg-white rounded-t-[10px]">
@@ -56,6 +57,7 @@ function TimeCardsContent() {
 
 export default function TimeCards() {
   const ios = Capacitor.getPlatform() === "ios";
+  const android = Capacitor.getPlatform() === "android";
   return (
     <Suspense
       fallback={
@@ -67,6 +69,8 @@ export default function TimeCards() {
               className={
                 ios
                   ? "h-full bg-white rounded-[10px] pt-12"
+                  : android
+                  ? "h-full bg-white rounded-[10px] pt-4"
                   : " h-full bg-white rounded-[10px]"
               }
             >

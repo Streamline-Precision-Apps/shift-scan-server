@@ -59,6 +59,7 @@ type EquipmentCodes = z.infer<typeof EquipmentCodesSchema>;
 
 function QRGeneratorContent() {
   const ios = Capacitor.getPlatform() === "ios";
+  const android = Capacitor.getPlatform() === "android";
   const { jobsites, setJobsites } = useProfitStore();
   const { equipments, setEquipments } = useEquipmentStore();
   const [activeTab, setActiveTab] = useState(1);
@@ -234,7 +235,11 @@ function QRGeneratorContent() {
     return (
       <Bases>
         <Contents>
-          <Grids rows={"7"} gap={"5"} className={ios ? "pt-12" : ""}>
+          <Grids
+            rows={"7"}
+            gap={"5"}
+            className={ios ? "pt-12" : android ? "pt-4" : ""}
+          >
             <LoadingQRGeneratorContent />
           </Grids>
         </Contents>
@@ -244,7 +249,11 @@ function QRGeneratorContent() {
   return (
     <Bases>
       <Contents>
-        <Grids rows={"7"} gap={"5"} className={ios ? "pt-12" : ""}>
+        <Grids
+          rows={"7"}
+          gap={"5"}
+          className={ios ? "pt-12" : android ? "pt-4" : ""}
+        >
           <Holds
             background={"white"}
             className={`row-start-1 row-end-2 h-full ${
@@ -348,12 +357,17 @@ function QRGeneratorContent() {
 
 export default function QRGenerator() {
   const ios = Capacitor.getPlatform() === "ios";
+  const android = Capacitor.getPlatform() === "android";
   return (
     <Suspense
       fallback={
         <Bases>
           <Contents>
-            <Grids rows={"7"} gap={"5"} className={ios ? "pt-12" : ""}>
+            <Grids
+              rows={"7"}
+              gap={"5"}
+              className={ios ? "pt-12" : android ? "pt-4" : ""}
+            >
               <LoadingQRGeneratorContent />
             </Grids>
           </Contents>

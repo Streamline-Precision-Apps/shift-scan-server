@@ -45,6 +45,7 @@ export default function ChangePassword({ userId }: { userId: string }) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [readyToSubmit, setReadyToSubmit] = useState(false);
   const ios = Capacitor.getPlatform() === "ios";
+  const android = Capacitor.getPlatform() === "android";
   const route = useRouter();
 
   const viewPasscode1 = () => {
@@ -176,7 +177,13 @@ export default function ChangePassword({ userId }: { userId: string }) {
             rows={"7"}
             cols={"1"}
             gap={"5"}
-            className={ios ? "pt-12 h-full w-full" : "h-full w-full"}
+            className={
+              ios
+                ? "pt-12 h-full w-full"
+                : android
+                ? "pt-4 h-full w-full"
+                : "h-full w-full"
+            }
           >
             <Holds
               background={"white"}

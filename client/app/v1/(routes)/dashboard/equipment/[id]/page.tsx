@@ -97,6 +97,7 @@ export default function CombinedForm({
   params: Promise<{ id: string }>;
 }) {
   const ios = Capacitor.getPlatform() === "ios";
+  const android = Capacitor.getPlatform() === "android";
   const router = useRouter();
   const id = use(params).id;
   const { setNotification } = useNotification();
@@ -168,7 +169,11 @@ export default function CombinedForm({
   return (
     <Bases>
       <Contents>
-        <Grids rows={"7"} gap={"5"} className={ios ? "pt-12" : ""}>
+        <Grids
+          rows={"7"}
+          gap={"5"}
+          className={ios ? "pt-12" : android ? "pt-4" : ""}
+        >
           <Suspense fallback={<LoadingEquipmentIdPage />}>
             <EquipmentIdClientPage id={id} />
           </Suspense>

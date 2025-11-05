@@ -52,10 +52,13 @@ export default function ReviewYourDay({
   const t = useTranslations("ClockOut");
   const t2 = useTranslations("MyTeam");
   const ios = Capacitor.getPlatform() === "ios";
+  const android = Capacitor.getPlatform() === "android";
   return (
     <Bases>
       <Contents>
-        <Holds className={ios ? "pt-12 h-full" : "h-full"}>
+        <Holds
+          className={ios ? "pt-12 h-full" : android ? "pt-4 h-full" : "h-full"}
+        >
           <Holds
             background={"white"}
             className="h-full w-full flex flex-col justify-center items-center "

@@ -16,9 +16,10 @@ export default function InboxContent({ isManager }: { isManager: boolean }) {
   const url = searchParams.get("returnUrl") || "/v1/dashboard";
   const t = useTranslations("Hamburger-Inbox");
   const ios = Capacitor.getPlatform() === "ios";
+  const android = Capacitor.getPlatform() === "android";
 
   return (
-    <div className={ios ? "pt-12 h-full" : "h-full"}>
+    <div className={ios ? "pt-12 h-full" : android ? "pt-4 h-full" : "h-full"}>
       <div className={`h-full w-full rounded-lg bg-white `}>
         {/* Static content - header */}
         <TitleBoxes

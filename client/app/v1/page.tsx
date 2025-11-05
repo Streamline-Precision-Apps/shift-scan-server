@@ -8,10 +8,15 @@ import { Capacitor } from "@capacitor/core";
 
 export default function Home() {
   const ios = Capacitor.getPlatform() === "ios";
+  const android = Capacitor.getPlatform() === "android";
   return (
     <Bases>
       <Contents>
-        <Grids rows={"8"} gap={"5"} className={ios ? "pt-12" : ""}>
+        <Grids
+          rows={"8"}
+          gap={"5"}
+          className={ios ? "pt-12" : android ? "pt-4" : ""}
+        >
           <HamburgerMenuNew isHome={true} />
           <WidgetSection />
         </Grids>

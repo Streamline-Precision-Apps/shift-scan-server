@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { EyeIcon, EyeOff } from "lucide-react";
 import { Capacitor } from "@capacitor/core";
+import { SplashScreen } from "@capacitor/splash-screen";
 import { useTranslations } from "next-intl";
 import { useUserStore } from "../lib/store/userStore";
 import { useProfitStore } from "../lib/store/profitStore";
@@ -30,60 +31,71 @@ export default function SignInPage() {
 
   // Check once if user is already signed in
   useEffect(() => {
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
-    const userId =
-      typeof window !== "undefined" ? localStorage.getItem("userId") : null;
+    const checkAndHideSplash = async () => {
+      try {
+        const token =
+          typeof window !== "undefined" ? localStorage.getItem("token") : null;
+        const userId =
+          typeof window !== "undefined" ? localStorage.getItem("userId") : null;
 
-    if (token && userId) {
-      // User has credentials, attempt auto sign-in
-      const url = getApiUrl();
+        if (token && userId) {
+          // User has credentials, attempt auto sign-in
+          const url = getApiUrl();
 
-      fetch(`${url}/api/v1/init`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        credentials: "include",
-        body: JSON.stringify({ token, userId: String(userId) }),
-      })
-        .then((res) => {
-          if (!res.ok) {
-            throw new Error("Auth failed");
+          try {
+            const res = await fetch(`${url}/api/v1/init`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              credentials: "include",
+              body: JSON.stringify({ token, userId: String(userId) }),
+            });
+
+            if (!res.ok) {
+              throw new Error("Auth failed");
+            }
+
+            const dataJson = await res.json();
+
+            if (dataJson.user) {
+              useUserStore.getState().setUser(dataJson.user);
+              if (dataJson.jobsites) {
+                useProfitStore.getState().setJobsites(dataJson.jobsites);
+              }
+              if (dataJson.equipments) {
+                useEquipmentStore.getState().setEquipments(dataJson.equipments);
+              }
+              if (dataJson.costCodes) {
+                useCostCodeStore.getState().setCostCodes(dataJson.costCodes);
+              }
+              // Successfully authenticated, redirect
+              redirectAfterAuth();
+              return;
+            }
+          } catch (err) {
+            // Auth check failed, clear invalid credentials and show sign-in form
+            console.log("Auto sign-in failed:", err);
+            localStorage.removeItem("token");
+            localStorage.removeItem("userId");
           }
-          return res.json();
-        })
-        .then((dataJson) => {
-          if (dataJson.user) {
-            useUserStore.getState().setUser(dataJson.user);
-            if (dataJson.jobsites) {
-              useProfitStore.getState().setJobsites(dataJson.jobsites);
-            }
-            if (dataJson.equipments) {
-              useEquipmentStore.getState().setEquipments(dataJson.equipments);
-            }
-            if (dataJson.costCodes) {
-              useCostCodeStore.getState().setCostCodes(dataJson.costCodes);
-            }
-            // Successfully authenticated, redirect
-            redirectAfterAuth();
-          } else {
-            // No user data, show sign-in form
-            setCheckingAuth(false);
+        }
+        // Show sign-in form
+        setCheckingAuth(false);
+      } finally {
+        // Wait 2 seconds then hide splash screen
+        setTimeout(async () => {
+          try {
+            await SplashScreen.hide();
+          } catch (e) {
+            console.warn("Failed to hide splash screen:", e);
           }
-        })
-        .catch((err) => {
-          // Auth check failed, clear invalid credentials and show sign-in form
-          console.log("Auto sign-in failed:", err);
-          localStorage.removeItem("token");
-          localStorage.removeItem("userId");
-          setCheckingAuth(false);
-        });
-    } else {
-      // No credentials, show sign-in form
-      setCheckingAuth(false);
-    }
+        }, 2000);
+      }
+    };
+
+    checkAndHideSplash();
   }, [redirectAfterAuth]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -223,6 +235,7 @@ export default function SignInPage() {
                 required
                 className="w-full px-4 py-3 md:py-3 border border-gray-300 rounded-xl text-gray-700 placeholder:text-gray-700 focus:outline-none focus:ring-2 focus:ring-app-blue focus:border-transparent transition-all duration-200"
                 placeholder={t("usernamePlaceholder")}
+                autoCapitalize="off"
               />
             </div>
 
@@ -243,6 +256,7 @@ export default function SignInPage() {
                   className="w-full px-4 py-3 md:py-3 border border-gray-300 text-gray-700  placeholder:text-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-app-blue focus:border-transparent transition-all duration-200"
                   placeholder={t("passwordPlaceholder")}
                   minLength={6}
+                  autoCapitalize="off"
                 />
                 <button
                   type="button"

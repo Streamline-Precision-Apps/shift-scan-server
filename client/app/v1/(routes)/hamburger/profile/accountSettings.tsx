@@ -53,6 +53,7 @@ type Employee = {
 
 export default function ProfilePage({ userId }: { userId: string }) {
   const ios = Capacitor.getPlatform() === "ios";
+  const android = Capacitor.getPlatform() === "android";
   const router = useRouter();
   const searchParams = useSearchParams();
   const url = searchParams.get("returnUrl") || "/v1/dashboard";
@@ -285,7 +286,13 @@ export default function ProfilePage({ userId }: { userId: string }) {
     <Grids
       rows={"6"}
       gap={"5"}
-      className={ios ? "pt-12 h-full w-full" : "h-full w-full"}
+      className={
+        ios
+          ? "pt-12 h-full w-full"
+          : android
+          ? "pt-4 h-full w-full"
+          : "h-full w-full"
+      }
     >
       <Holds
         background={"white"}

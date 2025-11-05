@@ -138,11 +138,16 @@ export default function AddEquipmentForm({}) {
   };
 
   const ios = Capacitor.getPlatform() === "ios";
+  const android = Capacitor.getPlatform() === "android";
 
   return (
     <Bases>
       <Contents>
-        <Grids rows={"7"} gap={"5"} className={ios ? "pt-12" : ""}>
+        <Grids
+          rows={"7"}
+          gap={"5"}
+          className={ios ? "pt-12" : android ? "pt-4" : ""}
+        >
           <Holds background={"white"} className="row-start-1 row-end-2 h-full">
             <TitleBoxes position={"row"} onClick={() => router.back()}>
               <Titles size={"lg"}>{t("NewEquipmentForm")}</Titles>

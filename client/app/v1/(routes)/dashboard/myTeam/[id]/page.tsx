@@ -41,6 +41,7 @@ export default function Content({
   params: Promise<{ id: string }>;
 }) {
   const ios = Capacitor.getPlatform() === "ios";
+  const android = Capacitor.getPlatform() === "android";
   // Drop-in animation: starts above and fades in, then settles
   const animationClass = "opacity-0 drop-in-animate";
   const animationClassActive = "opacity-100 drop-in-animate-active";
@@ -239,7 +240,11 @@ export default function Content({
   return (
     <Bases>
       <Contents>
-        <Grids rows={"7"} gap={"5"} className={ios ? "pt-12" : ""}>
+        <Grids
+          rows={"7"}
+          gap={"5"}
+          className={ios ? "pt-12" : android ? "pt-4" : ""}
+        >
           <Holds background={"white"} className="row-start-1 row-end-2 h-full">
             <TitleBoxes
               onClick={() => router.push(`/v1/dashboard/myTeam?rPath=${url}`)}

@@ -30,6 +30,7 @@ export default function Index() {
 
   async function ChangePasswordSkeleton() {
     const ios = Capacitor.getPlatform() === "ios";
+    const android = Capacitor.getPlatform() === "android";
     const t = useTranslations("Hamburger-Profile");
     return (
       <Contents>
@@ -38,7 +39,13 @@ export default function Index() {
             rows={"7"}
             cols={"1"}
             gap={"5"}
-            className={ios ? "pt-12 h-full w-full" : "h-full w-full"}
+            className={
+              ios
+                ? "pt-12 h-full w-full"
+                : android
+                ? "pt-4 h-full w-full"
+                : "h-full w-full"
+            }
           >
             <Holds
               background={"white"}

@@ -14,10 +14,13 @@ export default function Clock() {
 
   const locale = lang || "en";
   const ios = Capacitor.getPlatform() === "ios";
+  const android = Capacitor.getPlatform() === "android";
   return (
     <Bases>
       <Contents>
-        <Holds className={ios ? "pt-12 h-full" : "h-full"}>
+        <Holds
+          className={ios ? "pt-12 h-full" : android ? "pt-4 h-full" : "h-full"}
+        >
           <NewClockProcess
             type={"jobsite"}
             scannerType={"jobsite"}

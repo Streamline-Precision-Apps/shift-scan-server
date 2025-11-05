@@ -105,6 +105,7 @@ export default function DynamicForm({
   params: Promise<{ id: string }>;
 }) {
   const ios = Capacitor.getPlatform() === "ios";
+  const android = Capacitor.getPlatform() === "android";
   const id = use(params).id;
   // Search params from URL
   const t = useTranslations("Hamburger-Inbox");
@@ -606,7 +607,15 @@ export default function DynamicForm({
     return (
       <Bases>
         <Contents>
-          <div className={ios ? "pt-12 h-full w-full" : "h-full w-full"}>
+          <div
+            className={
+              ios
+                ? "pt-12 h-full w-full"
+                : android
+                ? "pt-4 h-full w-full"
+                : "h-full w-full"
+            }
+          >
             <Holds
               background={"white"}
               className="w-full h-full justify-center items-center animate-pulse "
@@ -640,7 +649,15 @@ export default function DynamicForm({
   return (
     <Bases>
       <Contents>
-        <div className={ios ? "pt-12 h-full w-full" : "h-full w-full"}>
+        <div
+          className={
+            ios
+              ? "pt-12 h-full w-full"
+              : android
+              ? "pt-4 h-full w-full"
+              : "h-full w-full"
+          }
+        >
           {getFormComponent}
         </div>
       </Contents>

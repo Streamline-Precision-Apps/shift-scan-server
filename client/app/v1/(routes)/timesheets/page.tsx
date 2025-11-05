@@ -19,6 +19,7 @@ import { Capacitor } from "@capacitor/core";
 export default function Timesheets() {
   const { user } = useUserStore();
   const ios = Capacitor.getPlatform() === "ios";
+  const android = Capacitor.getPlatform() === "android";
   const id = user?.id;
 
   function LoadingSkeleton() {
@@ -89,7 +90,11 @@ export default function Timesheets() {
     return (
       <Bases>
         <Contents>
-          <Grids rows={"7"} gap={"5"} className={ios ? "pt-12" : ""}>
+          <Grids
+            rows={"7"}
+            gap={"5"}
+            className={ios ? "pt-12" : android ? "pt-4" : ""}
+          >
             <LoadingSkeleton />
           </Grids>
         </Contents>
@@ -99,7 +104,11 @@ export default function Timesheets() {
   return (
     <Bases>
       <Contents>
-        <Grids rows={"7"} gap={"5"} className={ios ? "pt-12" : ""}>
+        <Grids
+          rows={"7"}
+          gap={"5"}
+          className={ios ? "pt-12" : android ? "pt-4" : ""}
+        >
           <ViewTimesheets user={id} />
         </Grids>
       </Contents>

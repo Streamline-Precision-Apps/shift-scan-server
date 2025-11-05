@@ -69,6 +69,7 @@ export default function EquipmentLogClient() {
   const [active, setActive] = useState(1);
   const router = useRouter();
   const ios = Capacitor.getPlatform() === "ios";
+  const android = Capacitor.getPlatform() === "android";
 
   useEffect(() => {
     if (!user) return;
@@ -121,7 +122,13 @@ export default function EquipmentLogClient() {
         <Grids
           rows={"7"}
           gap={"5"}
-          className={ios ? "pt-12 relative size-full" : "relative size-full"}
+          className={
+            ios
+              ? "pt-12 relative size-full"
+              : android
+              ? "pt-4 relative size-full"
+              : "relative size-full"
+          }
         >
           <Suspense fallback={<LoadingEquipmentLogClient />}>
             <Holds

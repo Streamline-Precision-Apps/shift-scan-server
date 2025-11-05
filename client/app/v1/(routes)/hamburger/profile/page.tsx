@@ -12,11 +12,18 @@ import { Capacitor } from "@capacitor/core";
 
 function ProfileSkeleton() {
   const ios = Capacitor.getPlatform() === "ios";
+  const android = Capacitor.getPlatform() === "android";
   return (
     <Grids
       rows={"6"}
       gap={"5"}
-      className={ios ? "pt-12 h-full w-full" : "h-full w-full"}
+      className={
+        ios
+          ? "pt-12 h-full w-full"
+          : android
+          ? "pt-4 h-full w-full"
+          : "h-full w-full"
+      }
     >
       <Holds
         background={"white"}
@@ -51,7 +58,6 @@ export default function EmployeeProfile() {
   const { user } = useUserStore();
   const [userId, setUserId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const ios = Capacitor.getPlatform() === "ios";
 
   useEffect(() => {
     // Try to get userId from user store first

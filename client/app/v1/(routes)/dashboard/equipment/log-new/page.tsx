@@ -8,10 +8,14 @@ import { Capacitor } from "@capacitor/core";
 
 export default function LogNewEquipment() {
   const ios = Capacitor.getPlatform() === "ios";
+  const android = Capacitor.getPlatform() === "android";
   return (
     <Bases>
       <Contents>
-        <Grids rows={"1"} className={`${ios ? "pt-12" : ""}`}>
+        <Grids
+          rows={"1"}
+          className={`${ios ? "pt-12" : android ? "pt-4" : ""} h-full`}
+        >
           <Holds background={"white"} className="h-full row-span-1">
             <ScanEquipment />
           </Holds>

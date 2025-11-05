@@ -45,6 +45,7 @@ type TeamListItem = {
 
 function MyTeamContent() {
   const ios = Capacitor.getPlatform() === "ios";
+  const android = Capacitor.getPlatform() === "android";
   const { user } = useUserStore();
   const userId = user?.id;
   const router = useRouter();
@@ -155,7 +156,11 @@ function MyTeamContent() {
   return (
     <Bases>
       <Contents>
-        <Grids rows={"7"} gap={"5"} className={ios ? "pt-12" : ""}>
+        <Grids
+          rows={"7"}
+          gap={"5"}
+          className={ios ? "pt-12" : android ? "pt-4" : ""}
+        >
           <Holds
             background={"white"}
             className="row-start-1 row-end-2 h-full w-full"

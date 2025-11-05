@@ -13,11 +13,14 @@ export default function Clock() {
   const lang = user?.UserSettings?.language as string;
   const locale = lang || "en";
   const ios = Capacitor.getPlatform() === "ios";
+  const android = Capacitor.getPlatform() === "android";
 
   return (
     <Bases>
       <Contents>
-        <Holds className={ios ? "pt-12 h-full" : "h-full"}>
+        <Holds
+          className={ios ? "pt-12 h-full" : android ? "pt-4 h-full" : "h-full"}
+        >
           <NewClockProcess
             mechanicView={user?.mechanicView ?? false}
             tascoView={user?.tascoView ?? false}

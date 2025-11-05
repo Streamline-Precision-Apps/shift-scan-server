@@ -55,6 +55,7 @@ export const LaborClockOut = ({
   refetchTimesheet: () => Promise<void>;
 }) => {
   const ios = Capacitor.getPlatform() === "ios";
+  const android = Capacitor.getPlatform() === "android";
   const t = useTranslations("ClockOut");
   const [date] = useState(new Date());
   const [loading, setLoading] = useState<boolean>(false);
@@ -133,7 +134,9 @@ export const LaborClockOut = ({
   return (
     <Bases>
       <Contents>
-        <Holds className={ios ? "pt-12 h-full" : "h-full"}>
+        <Holds
+          className={ios ? "pt-12 h-full" : android ? "pt-4 h-full" : "h-full"}
+        >
           {loading && (
             <Holds className="h-full absolute justify-center items-center">
               <Spinner size={40} />
