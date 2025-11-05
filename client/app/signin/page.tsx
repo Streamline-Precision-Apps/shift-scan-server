@@ -9,6 +9,7 @@ import {
   BiometricAuth,
   BiometryErrorType,
 } from "@aparajita/capacitor-biometric-auth";
+import type { CheckBiometryResult } from "@aparajita/capacitor-biometric-auth";
 import { useTranslations } from "next-intl";
 import { useUserStore } from "../lib/store/userStore";
 import { useProfitStore } from "../lib/store/profitStore";
@@ -35,21 +36,45 @@ export default function SignInPage() {
     router.push(target);
   }, [isNative, router]);
 
+  // Update biometry state and handle availability changes
+  const updateBiometryInfo = useCallback((info: CheckBiometryResult): void => {
+    if (info.isAvailable) {
+      // Biometry is available, info.biometryType will tell you the primary type.
+      setBiometricAvailable(true);
+    } else {
+      // Biometry is not available, info.reason and info.code will tell you why.
+      console.log(
+        `Biometry unavailable - Reason: ${info.reason}, Code: ${info.code}`
+      );
+      setBiometricAvailable(false);
+    }
+  }, []);
+
+  // Check biometric availability
+  useEffect(() => {
+    const checkBiometryAvailability = async () => {
+      if (isNative) {
+        try {
+          const biometryInfo = await BiometricAuth.checkBiometry();
+          updateBiometryInfo(biometryInfo);
+        } catch (err) {
+          if (err instanceof Error) {
+            console.error("Biometric check failed:", err.message);
+          } else {
+            console.error("Biometric check failed:", err);
+          }
+          setBiometricAvailable(false);
+        }
+      }
+    };
+
+    checkBiometryAvailability();
+  }, [isNative, updateBiometryInfo]);
+
   // Check once if user is already signed in
   useEffect(() => {
     const checkAndHideSplash = async () => {
       try {
-        // Check biometric availability on native platforms
-        if (isNative) {
-          try {
-            const biometryInfo = await BiometricAuth.checkBiometry();
-            setBiometricAvailable(biometryInfo.isAvailable);
-          } catch (err) {
-            console.log("Biometric check failed:", err);
-            setBiometricAvailable(false);
-          }
-        }
-
         const token =
           typeof window !== "undefined" ? localStorage.getItem("token") : null;
         const userId =
@@ -153,14 +178,16 @@ export default function SignInPage() {
       localStorage.setItem("token", data.token);
       localStorage.setItem("userId", String(userId));
 
-      // Save credentials for biometric login on native platforms
+      // Save credentials for biometric login on native platforms (with delay to ensure storage)
       if (isNative && biometricAvailable) {
         try {
-          // Store credentials securely using biometric auth
           localStorage.setItem("shift_scan_username", username);
           localStorage.setItem("shift_scan_password", password);
+          console.log("✅ Biometric credentials saved");
+          // Wait a bit to ensure credentials are persisted before continuing
+          await new Promise((resolve) => setTimeout(resolve, 200));
         } catch (bioErr) {
-          console.log("Failed to save biometric credentials:", bioErr);
+          console.error("Failed to save biometric credentials:", bioErr);
         }
       }
 

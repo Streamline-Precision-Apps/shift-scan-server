@@ -1,0 +1,77 @@
+THIRD-PARTY LICENSES - Plain Text Version
+
+Shift Scan uses the following third-party libraries and services:
+
+EXTERNAL SERVICES & APIS
+- Firebase (Google Cloud) - Apache 2.0 License
+  Cloud messaging, storage, authentication, and database services
+  
+- Resend - Commercial/Proprietary
+  Email delivery service
+  
+- Sentry - Commercial/Proprietary
+  Error tracking and performance monitoring
+
+MOBILE & PLATFORM FRAMEWORKS
+- Capacitor - Apache 2.0 License
+  Cross-platform app development framework for iOS and Android
+  
+- Google Play Services - Proprietary
+  Android platform services and APIs
+  
+- Apple iOS Services - Proprietary
+  iOS platform services and APIs
+
+UI & COMPONENT LIBRARIES (MIT License)
+- Radix UI - Accessible component library
+- TailwindCSS - CSS framework
+- Lucide React - SVG icon library
+- React Icons - Icon library
+- Framer Motion - Animation library
+- Sonner - Toast notification component
+- Slick Carousel - Carousel/slider component
+- React Day Picker - Date picker component
+- React Image Crop - Image editing tool
+
+WEB FRAMEWORK & RUNTIME
+- Next.js (MIT) - React framework
+- React (MIT) - UI library
+- TypeScript (Apache 2.0) - Programming language
+
+BACKEND & DATABASE
+- Express (MIT) - Web server framework
+- Prisma (Apache 2.0) - Database ORM
+- NextAuth (ISC) - Authentication system
+- Morgan (MIT) - Request logging
+- Helmet (MIT) - Security middleware
+- Multer (MIT) - File upload handler
+
+STATE MANAGEMENT & UTILITIES (MIT License)
+- Zustand - State management
+- date-fns - Date manipulation
+- lodash - Utility functions
+- uuid - Unique ID generation
+- jwt-decode - JWT token decoding
+- class-variance-authority - Component variants
+- clsx - Class name utilities
+- tailwind-merge - CSS class merging
+- vaul - Drawer component
+
+SECURITY & AUTHENTICATION
+- bcryptjs (MIT) - Password hashing
+- jsonwebtoken (MIT) - JWT token creation/verification
+- CORS (MIT) - Cross-origin security
+- Cookie Parser (MIT) - Session management
+
+DOCUMENTATION
+- Swagger JSDoc (MIT) - API documentation
+- Swagger UI Express (Apache 2.0) - API documentation interface
+
+CUSTOM ASSETS
+All app icons, logos, SVG graphics, and images are custom assets owned by Streamline Precision Apps.
+
+All third-party content is used in compliance with their respective open-source and commercial licenses. For complete license details, please visit the respective GitHub repositories or official documentation pages.
+
+Last Updated: November 5, 2025
+App: Shift Scan v0.1.0
+Organization: Streamline Precision Apps

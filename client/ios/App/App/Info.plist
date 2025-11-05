@@ -36,7 +36,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Scan Qr Codes with camera to quickly clock into site</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>To help users clock in faster and verify credeintals</string>
+	<string>To help users sign in faster and verify credentials</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>The app uses your location to verify that you are physically at your assigned jobsite when clocking in or out. This ensures accurate timesheets and prevents errors or unauthorized clock-ins from outside the site. Your location is only used while the app is open or actively running in the background for clock-in purposes, and it is not tracked when the app is fully closed.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
