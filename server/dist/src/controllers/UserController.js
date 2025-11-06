@@ -595,6 +595,56 @@ export async function getUserInfo(req, res) {
         });
     }
 }
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="5c284a05-7ec3-5476-a3a8-e70aecc18674")}catch(e){}}();
+export async function sessionController(req, res) {
+    try {
+        const { id } = req.params;
+        if (!id) {
+            return res.status(400).json({
+                success: false,
+                error: "User ID is required",
+                message: "Failed to create session",
+            });
+        }
+        const session = await UserService.createSession(id);
+        res.status(201).json({
+            success: true,
+            data: session,
+            message: "Session created successfully",
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error instanceof Error ? error.message : "Unknown error",
+            message: "Failed to create session",
+        });
+    }
+}
+export async function endSessionController(req, res) {
+    try {
+        const { sessionId } = req.params;
+        if (!sessionId) {
+            return res.status(400).json({
+                success: false,
+                error: "Session ID is required",
+                message: "Failed to end session",
+            });
+        }
+        const session = await UserService.EndSession(Number(sessionId));
+        res.status(200).json({
+            success: true,
+            data: session,
+            message: "Session ended successfully",
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error instanceof Error ? error.message : "Unknown error",
+            message: "Failed to end session",
+        });
+    }
+}
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="2a9bbaa3-62d6-5909-b52d-94c02cf3c565")}catch(e){}}();
 //# sourceMappingURL=userController.js.map
-//# debugId=5c284a05-7ec3-5476-a3a8-e70aecc18674
+//# debugId=2a9bbaa3-62d6-5909-b52d-94c02cf3c565

@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="d56f20bc-e520-521c-9dcb-ca4b9a156684")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="4218b30c-721a-5109-bcc1-892bb6039c91")}catch(e){}}();
 import { Router } from "express";
 import { verifyToken } from "../middleware/authMiddleware.js";
 import { getUserLocations, getUserLocationHistory, postUserLocation, getAllUsersLocations, } from "../controllers/locationController.js";
@@ -12,8 +12,8 @@ router.get("/user", verifyToken, getUserLocations);
 router.get("/:userId", verifyToken, getUserLocations);
 // Get location history for any user
 router.get("/:userId/history", verifyToken, getUserLocationHistory);
-// Post a new location log
-router.post("/user", verifyToken, postUserLocation);
+// Post a new location log (expects userId and sessionId in body)
+router.post("/", postUserLocation);
 export default router;
 //# sourceMappingURL=locationRoutes.js.map
-//# debugId=d56f20bc-e520-521c-9dcb-ca4b9a156684
+//# debugId=4218b30c-721a-5109-bcc1-892bb6039c91

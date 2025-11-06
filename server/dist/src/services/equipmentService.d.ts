@@ -13,8 +13,8 @@ export declare function getEquipmentMileageService(equipmentId: string): Promise
         id: string;
         name: string;
         updatedAt: Date;
-        description: string | null;
         qrId: string;
+        description: string | null;
         creationReason: string | null;
         approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         createdById: string | null;
@@ -70,6 +70,9 @@ export declare function getEquipmentMileageService(equipmentId: string): Promise
         id: number;
         userId: string;
         updatedAt: Date;
+        sessionId: number | null;
+        startTime: Date;
+        endTime: Date | null;
         comment: string | null;
         status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         date: Date;
@@ -77,8 +80,6 @@ export declare function getEquipmentMileageService(equipmentId: string): Promise
         costcode: string;
         nu: string;
         Fp: string;
-        startTime: Date;
-        endTime: Date | null;
         statusComment: string | null;
         location: string | null;
         workType: import("../../generated/prisma/index.js").$Enums.WorkType;
@@ -92,7 +93,6 @@ export declare function getEquipmentMileageService(equipmentId: string): Promise
         withinFenceIn: boolean | null;
         withinFenceOut: boolean | null;
         wasInjured: boolean | null;
-        sessionId: number | null;
     };
 } & {
     id: string;
@@ -111,8 +111,8 @@ export declare function getEquipmentByQrId(qrId: string): Promise<{
     id: string;
     name: string;
     updatedAt: Date;
-    description: string | null;
     qrId: string;
+    description: string | null;
     creationReason: string | null;
     approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
     createdById: string | null;
@@ -155,8 +155,8 @@ export declare function createEquipment(data: {
     id: string;
     name: string;
     updatedAt: Date;
-    description: string | null;
     qrId: string;
+    description: string | null;
     creationReason: string | null;
     approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
     createdById: string | null;

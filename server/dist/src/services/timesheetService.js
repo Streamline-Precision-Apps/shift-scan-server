@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="6e11ff58-9547-5906-886d-2c15f215e8ed")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="632f6db8-d0fc-5280-9aac-b096edcf4d6f")}catch(e){}}();
 import { formatISO } from "date-fns";
 import prisma from "../lib/prisma.js";
 export async function updateTimesheetService({ id, editorId, changes, changeReason, numberOfChanges, startTime, endTime, Jobsite, CostCode, comment, }) {
@@ -385,19 +385,24 @@ export async function approveTimesheetsBatchService({ userId, timesheetIds, stat
 }
 export async function createGeneralTimesheetService({ data, type, }) {
     const createdTimeSheet = await prisma.$transaction(async (prisma) => {
+        // Build create data
+        const createData = {
+            date: data.date,
+            Jobsite: { connect: { id: data.jobsiteId } },
+            User: { connect: { id: data.userId } },
+            CostCode: { connect: { name: data.costCode } },
+            startTime: data.startTime,
+            workType: "LABOR",
+            status: "DRAFT",
+            clockInLat: data.clockInLat || null,
+            clockInLng: data.clockInLong || null,
+        };
+        if (data.sessionId !== null && data.sessionId !== undefined) {
+            createData.sessionId = data.sessionId;
+        }
         // Step 1: Create a new TimeSheet
         const createdTimeSheet = await prisma.timeSheet.create({
-            data: {
-                date: data.date,
-                Jobsite: { connect: { id: data.jobsiteId } },
-                User: { connect: { id: data.userId } },
-                CostCode: { connect: { name: data.costCode } },
-                startTime: data.startTime,
-                workType: "LABOR",
-                status: "DRAFT",
-                clockInLat: data.clockInLat || null,
-                clockInLng: data.clockInLong || null,
-            },
+            data: createData,
             include: {
                 User: {
                     select: {
@@ -435,19 +440,24 @@ export async function createGeneralTimesheetService({ data, type, }) {
 export async function createMechanicTimesheetService({ data, type, }) {
     // Implementation for creating a mechanic timesheet
     const createdTimeCard = await prisma.$transaction(async (prisma) => {
+        // Build create data
+        const createData = {
+            date: formatISO(data.date),
+            Jobsite: { connect: { id: data.jobsiteId } },
+            User: { connect: { id: data.userId } },
+            CostCode: { connect: { name: data.costCode } },
+            startTime: formatISO(data.startTime),
+            workType: "MECHANIC",
+            status: "DRAFT",
+            clockInLat: data.clockInLat || null,
+            clockInLng: data.clockInLong || null,
+        };
+        if (data.sessionId !== null && data.sessionId !== undefined) {
+            createData.sessionId = data.sessionId;
+        }
         // Step 1: Create a new TimeSheet
         const createdTimeSheet = await prisma.timeSheet.create({
-            data: {
-                date: formatISO(data.date),
-                Jobsite: { connect: { id: data.jobsiteId } },
-                User: { connect: { id: data.userId } },
-                CostCode: { connect: { name: data.costCode } },
-                startTime: formatISO(data.startTime),
-                workType: "MECHANIC",
-                status: "DRAFT",
-                clockInLat: data.clockInLat || null,
-                clockInLng: data.clockInLong || null,
-            },
+            data: createData,
             include: {
                 User: {
                     select: {
@@ -472,8 +482,8 @@ export async function createMechanicTimesheetService({ data, type, }) {
                     endTime: formatISO(data.endTime),
                     comment: data.previoustimeSheetComments || null,
                     status: "PENDING",
-                    clockInLat: data.clockInLat || null,
-                    clockInLng: data.clockInLong || null,
+                    clockOutLat: data.clockOutLat || null,
+                    clockOutLng: data.clockOutLong || null,
                 },
             });
         }
@@ -484,28 +494,33 @@ export async function createMechanicTimesheetService({ data, type, }) {
 export async function createTruckDriverTimesheetService({ data, type, }) {
     // Implementation for creating a truck driver timesheet
     return await prisma.$transaction(async (prisma) => {
-        // Step 1: Create a new TimeSheet
-        const createdTimeSheet = await prisma.timeSheet.create({
-            data: {
-                date: formatISO(data.date),
-                Jobsite: { connect: { id: data.jobsiteId } },
-                User: { connect: { id: data.userId } },
-                CostCode: { connect: { name: data.costCode } },
-                startTime: formatISO(data.startTime),
-                workType: "TRUCK_DRIVER",
-                status: "DRAFT",
-                clockInLat: data.clockInLat || null,
-                clockInLng: data.clockInLong || null,
-                TruckingLogs: {
-                    create: {
-                        laborType: data.laborType,
-                        truckNumber: data.truck,
-                        equipmentId: data.equipmentId || null,
-                        startingMileage: data.startingMileage,
-                        trailerNumber: null,
-                    },
+        // Build create data
+        const createData = {
+            date: formatISO(data.date),
+            Jobsite: { connect: { id: data.jobsiteId } },
+            User: { connect: { id: data.userId } },
+            CostCode: { connect: { name: data.costCode } },
+            startTime: formatISO(data.startTime),
+            workType: "TRUCK_DRIVER",
+            status: "DRAFT",
+            clockInLat: data.clockInLat || null,
+            clockInLng: data.clockInLong || null,
+            TruckingLogs: {
+                create: {
+                    laborType: data.laborType,
+                    truckNumber: data.truck,
+                    equipmentId: data.equipmentId || null,
+                    startingMileage: data.startingMileage,
+                    trailerNumber: null,
                 },
             },
+        };
+        if (data.sessionId !== null && data.sessionId !== undefined) {
+            createData.sessionId = data.sessionId;
+        }
+        // Step 1: Create a new TimeSheet
+        const createdTimeSheet = await prisma.timeSheet.create({
+            data: createData,
             include: {
                 User: {
                     select: {
@@ -542,31 +557,36 @@ export async function createTascoTimesheetService({ data, type, }) {
     // Implementation for creating a tasco timesheet
     // Only DB operations in transaction
     return await prisma.$transaction(async (prisma) => {
-        // Step 1: Create a new TimeSheet
-        const createdTimeSheet = await prisma.timeSheet.create({
-            data: {
-                date: formatISO(data.date),
-                Jobsite: { connect: { id: data.jobsiteId } },
-                User: { connect: { id: data.userId } },
-                CostCode: { connect: { name: data.costCode } },
-                startTime: formatISO(data.startTime),
-                workType: "TASCO",
-                status: "DRAFT",
-                clockInLat: data.clockInLat || null,
-                clockInLng: data.clockInLong || null,
-                TascoLogs: {
-                    create: {
-                        shiftType: data.shiftType ?? "",
-                        laborType: data.laborType ?? "",
-                        ...(data.equipmentId && {
-                            Equipment: { connect: { id: data.equipmentId } },
-                        }),
-                        ...(data.materialType && {
-                            TascoMaterialTypes: { connect: { name: data.materialType } },
-                        }),
-                    },
+        // Build create data
+        const createData = {
+            date: formatISO(data.date),
+            Jobsite: { connect: { id: data.jobsiteId } },
+            User: { connect: { id: data.userId } },
+            CostCode: { connect: { name: data.costCode } },
+            startTime: formatISO(data.startTime),
+            workType: "TASCO",
+            status: "DRAFT",
+            clockInLat: data.clockInLat || null,
+            clockInLng: data.clockInLong || null,
+            TascoLogs: {
+                create: {
+                    shiftType: data.shiftType ?? "",
+                    laborType: data.laborType ?? "",
+                    ...(data.equipmentId && {
+                        Equipment: { connect: { id: data.equipmentId } },
+                    }),
+                    ...(data.materialType && {
+                        TascoMaterialTypes: { connect: { name: data.materialType } },
+                    }),
                 },
             },
+        };
+        if (data.sessionId !== null && data.sessionId !== undefined) {
+            createData.sessionId = data.sessionId;
+        }
+        // Step 1: Create a new TimeSheet
+        const createdTimeSheet = await prisma.timeSheet.create({
+            data: createData,
             include: {
                 User: {
                     select: {
@@ -1427,4 +1447,4 @@ export async function deleteRefuelLogService(refuelLogId) {
     }
 }
 //# sourceMappingURL=timesheetService.js.map
-//# debugId=6e11ff58-9547-5906-886d-2c15f215e8ed
+//# debugId=632f6db8-d0fc-5280-9aac-b096edcf4d6f

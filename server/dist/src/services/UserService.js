@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="b194a58c-293b-58e7-b083-b8f968f6d0e2")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="4008501c-fe38-5d71-b7f6-854801c89778")}catch(e){}}();
 import prisma from "../lib/prisma.js";
 import { hash } from "bcryptjs";
 const ALLOWED_USER_FIELDS = [
@@ -411,5 +411,24 @@ export async function getUserOnlineStatus(userId) {
     });
     return userStatus;
 }
+export async function createSession(userId) {
+    const newSession = await prisma.session.create({
+        data: {
+            userId,
+        },
+    });
+    return newSession;
+}
+export async function EndSession(id) {
+    const newSession = await prisma.session.update({
+        where: {
+            id,
+        },
+        data: {
+            endTime: new Date().toISOString(),
+        },
+    });
+    return newSession;
+}
 //# sourceMappingURL=UserService.js.map
-//# debugId=b194a58c-293b-58e7-b083-b8f968f6d0e2
+//# debugId=4008501c-fe38-5d71-b7f6-854801c89778

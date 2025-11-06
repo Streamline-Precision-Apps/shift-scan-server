@@ -11,8 +11,8 @@ export declare function getTascoLogById(tascoLogId: string): Promise<({
         id: string;
         name: string;
         updatedAt: Date;
-        description: string | null;
         qrId: string;
+        description: string | null;
         creationReason: string | null;
         approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         createdById: string | null;
@@ -41,6 +41,9 @@ export declare function getTascoLogById(tascoLogId: string): Promise<({
         id: number;
         userId: string;
         updatedAt: Date;
+        sessionId: number | null;
+        startTime: Date;
+        endTime: Date | null;
         comment: string | null;
         status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         date: Date;
@@ -48,8 +51,6 @@ export declare function getTascoLogById(tascoLogId: string): Promise<({
         costcode: string;
         nu: string;
         Fp: string;
-        startTime: Date;
-        endTime: Date | null;
         statusComment: string | null;
         location: string | null;
         workType: import("../../generated/prisma/index.js").$Enums.WorkType;
@@ -63,7 +64,6 @@ export declare function getTascoLogById(tascoLogId: string): Promise<({
         withinFenceIn: boolean | null;
         withinFenceOut: boolean | null;
         wasInjured: boolean | null;
-        sessionId: number | null;
     };
     RefuelLogs: {
         id: string;
@@ -102,8 +102,8 @@ export declare function getTascoLogsByTimesheet(timeSheetId: number): Promise<({
         id: string;
         name: string;
         updatedAt: Date;
-        description: string | null;
         qrId: string;
+        description: string | null;
         creationReason: string | null;
         approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         createdById: string | null;
@@ -164,8 +164,8 @@ export declare function updateTascoLogLoadQuantity(tascoLogId: string, loadCount
         id: string;
         name: string;
         updatedAt: Date;
-        description: string | null;
         qrId: string;
+        description: string | null;
         creationReason: string | null;
         approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         createdById: string | null;
@@ -226,8 +226,8 @@ export declare function updateTascoLogComment(tascoLogId: string, comment: strin
         id: string;
         name: string;
         updatedAt: Date;
-        description: string | null;
         qrId: string;
+        description: string | null;
         creationReason: string | null;
         approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         createdById: string | null;
@@ -256,6 +256,9 @@ export declare function updateTascoLogComment(tascoLogId: string, comment: strin
         id: number;
         userId: string;
         updatedAt: Date;
+        sessionId: number | null;
+        startTime: Date;
+        endTime: Date | null;
         comment: string | null;
         status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         date: Date;
@@ -263,8 +266,6 @@ export declare function updateTascoLogComment(tascoLogId: string, comment: strin
         costcode: string;
         nu: string;
         Fp: string;
-        startTime: Date;
-        endTime: Date | null;
         statusComment: string | null;
         location: string | null;
         workType: import("../../generated/prisma/index.js").$Enums.WorkType;
@@ -278,7 +279,6 @@ export declare function updateTascoLogComment(tascoLogId: string, comment: strin
         withinFenceIn: boolean | null;
         withinFenceOut: boolean | null;
         wasInjured: boolean | null;
-        sessionId: number | null;
     };
     RefuelLogs: {
         id: string;
@@ -397,8 +397,8 @@ export declare function getCompleteTascoLogData(tascoLogId: string): Promise<({
         id: string;
         name: string;
         updatedAt: Date;
-        description: string | null;
         qrId: string;
+        description: string | null;
         creationReason: string | null;
         approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         createdById: string | null;
@@ -427,6 +427,9 @@ export declare function getCompleteTascoLogData(tascoLogId: string): Promise<({
         id: number;
         userId: string;
         updatedAt: Date;
+        sessionId: number | null;
+        startTime: Date;
+        endTime: Date | null;
         comment: string | null;
         status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         date: Date;
@@ -434,8 +437,6 @@ export declare function getCompleteTascoLogData(tascoLogId: string): Promise<({
         costcode: string;
         nu: string;
         Fp: string;
-        startTime: Date;
-        endTime: Date | null;
         statusComment: string | null;
         location: string | null;
         workType: import("../../generated/prisma/index.js").$Enums.WorkType;
@@ -449,7 +450,6 @@ export declare function getCompleteTascoLogData(tascoLogId: string): Promise<({
         withinFenceIn: boolean | null;
         withinFenceOut: boolean | null;
         wasInjured: boolean | null;
-        sessionId: number | null;
     };
     RefuelLogs: {
         id: string;

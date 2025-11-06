@@ -19,8 +19,8 @@ export declare function updateTimesheetService({ id, editorId, changes, changeRe
             id: string;
             name: string;
             updatedAt: Date;
-            description: string;
             qrId: string;
+            description: string;
             creationReason: string | null;
             approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
             addressId: string | null;
@@ -61,6 +61,9 @@ export declare function updateTimesheetService({ id, editorId, changes, changeRe
         id: number;
         userId: string;
         updatedAt: Date;
+        sessionId: number | null;
+        startTime: Date;
+        endTime: Date | null;
         comment: string | null;
         status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         date: Date;
@@ -68,8 +71,6 @@ export declare function updateTimesheetService({ id, editorId, changes, changeRe
         costcode: string;
         nu: string;
         Fp: string;
-        startTime: Date;
-        endTime: Date | null;
         statusComment: string | null;
         location: string | null;
         workType: import("../../generated/prisma/index.js").$Enums.WorkType;
@@ -83,7 +84,6 @@ export declare function updateTimesheetService({ id, editorId, changes, changeRe
         withinFenceIn: boolean | null;
         withinFenceOut: boolean | null;
         wasInjured: boolean | null;
-        sessionId: number | null;
     };
     editorLog: ({
         User: {
@@ -119,9 +119,9 @@ export declare function getUserTimesheetsByDate({ employeeId, dateParam, }: {
     Jobsite: {
         name: string;
     };
-    status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
     startTime: Date;
     endTime: Date | null;
+    status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
     workType: import("../../generated/prisma/index.js").$Enums.WorkType;
     CostCode: {
         name: string;
@@ -135,9 +135,9 @@ export declare function getTimesheetDetailsManager({ timesheetId, }: {
         id: string;
         name: string;
     };
-    comment: string | null;
     startTime: Date;
     endTime: Date | null;
+    comment: string | null;
     CostCode: {
         id: string;
         name: string;
@@ -155,6 +155,8 @@ export declare function getManagerCrewTimesheets({ managerId, }: {
         Jobsite: {
             name: string;
         };
+        startTime: Date;
+        endTime: Date | null;
         status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         EmployeeEquipmentLogs: {
             id: string;
@@ -191,8 +193,6 @@ export declare function getManagerCrewTimesheets({ managerId, }: {
         }[];
         date: Date;
         jobsiteId: string;
-        startTime: Date;
-        endTime: Date | null;
         workType: import("../../generated/prisma/index.js").$Enums.WorkType;
         CostCode: {
             name: string;
@@ -283,6 +283,9 @@ export declare function createGeneralTimesheetService({ data, type, }: {
     id: number;
     userId: string;
     updatedAt: Date;
+    sessionId: number | null;
+    startTime: Date;
+    endTime: Date | null;
     comment: string | null;
     status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
     date: Date;
@@ -290,8 +293,6 @@ export declare function createGeneralTimesheetService({ data, type, }: {
     costcode: string;
     nu: string;
     Fp: string;
-    startTime: Date;
-    endTime: Date | null;
     statusComment: string | null;
     location: string | null;
     workType: import("../../generated/prisma/index.js").$Enums.WorkType;
@@ -305,7 +306,6 @@ export declare function createGeneralTimesheetService({ data, type, }: {
     withinFenceIn: boolean | null;
     withinFenceOut: boolean | null;
     wasInjured: boolean | null;
-    sessionId: number | null;
 }>;
 export declare function createMechanicTimesheetService({ data, type, }: {
     data: MechanicTimesheetInput;
@@ -320,6 +320,9 @@ export declare function createMechanicTimesheetService({ data, type, }: {
     id: number;
     userId: string;
     updatedAt: Date;
+    sessionId: number | null;
+    startTime: Date;
+    endTime: Date | null;
     comment: string | null;
     status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
     date: Date;
@@ -327,8 +330,6 @@ export declare function createMechanicTimesheetService({ data, type, }: {
     costcode: string;
     nu: string;
     Fp: string;
-    startTime: Date;
-    endTime: Date | null;
     statusComment: string | null;
     location: string | null;
     workType: import("../../generated/prisma/index.js").$Enums.WorkType;
@@ -342,7 +343,6 @@ export declare function createMechanicTimesheetService({ data, type, }: {
     withinFenceIn: boolean | null;
     withinFenceOut: boolean | null;
     wasInjured: boolean | null;
-    sessionId: number | null;
 }>;
 export declare function createTruckDriverTimesheetService({ data, type, }: {
     data: TruckTimesheetInput;
@@ -357,6 +357,9 @@ export declare function createTruckDriverTimesheetService({ data, type, }: {
     id: number;
     userId: string;
     updatedAt: Date;
+    sessionId: number | null;
+    startTime: Date;
+    endTime: Date | null;
     comment: string | null;
     status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
     date: Date;
@@ -364,8 +367,6 @@ export declare function createTruckDriverTimesheetService({ data, type, }: {
     costcode: string;
     nu: string;
     Fp: string;
-    startTime: Date;
-    endTime: Date | null;
     statusComment: string | null;
     location: string | null;
     workType: import("../../generated/prisma/index.js").$Enums.WorkType;
@@ -379,7 +380,6 @@ export declare function createTruckDriverTimesheetService({ data, type, }: {
     withinFenceIn: boolean | null;
     withinFenceOut: boolean | null;
     wasInjured: boolean | null;
-    sessionId: number | null;
 }>;
 export declare function createTascoTimesheetService({ data, type, }: {
     data: TascoTimesheetInput;
@@ -394,6 +394,9 @@ export declare function createTascoTimesheetService({ data, type, }: {
     id: number;
     userId: string;
     updatedAt: Date;
+    sessionId: number | null;
+    startTime: Date;
+    endTime: Date | null;
     comment: string | null;
     status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
     date: Date;
@@ -401,8 +404,6 @@ export declare function createTascoTimesheetService({ data, type, }: {
     costcode: string;
     nu: string;
     Fp: string;
-    startTime: Date;
-    endTime: Date | null;
     statusComment: string | null;
     location: string | null;
     workType: import("../../generated/prisma/index.js").$Enums.WorkType;
@@ -416,7 +417,6 @@ export declare function createTascoTimesheetService({ data, type, }: {
     withinFenceIn: boolean | null;
     withinFenceOut: boolean | null;
     wasInjured: boolean | null;
-    sessionId: number | null;
 }>;
 export declare function getRecentTimeSheetForUser(userId: string): Promise<{
     id: number;
@@ -516,8 +516,8 @@ export declare function getEquipmentLogs(userId: string): Promise<({
         id: string;
         name: string;
         updatedAt: Date;
-        description: string | null;
         qrId: string;
+        description: string | null;
         creationReason: string | null;
         approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         createdById: string | null;
@@ -543,9 +543,9 @@ export declare function getEquipmentLogs(userId: string): Promise<({
     } | null;
 } & {
     id: string;
-    comment: string | null;
     startTime: Date;
     endTime: Date | null;
+    comment: string | null;
     equipmentId: string | null;
     timeSheetId: number;
     maintenanceId: string | null;
@@ -563,9 +563,9 @@ export declare function createEmployeeEquipmentLogService({ equipmentId, timeShe
     comment?: string | null;
 }): Promise<{
     id: string;
-    comment: string | null;
     startTime: Date;
     endTime: Date | null;
+    comment: string | null;
     equipmentId: string | null;
     timeSheetId: number;
     maintenanceId: string | null;
@@ -583,14 +583,14 @@ export declare function getEmployeeEquipmentLogDetails(logId: string): Promise<{
         model: string | null;
         year: string | null;
     } | null;
+    startTime: Date;
+    endTime: Date | null;
     comment: string | null;
     Maintenance: {
         id: string;
         equipmentIssue: string | null;
         additionalInfo: string | null;
     } | null;
-    startTime: Date;
-    endTime: Date | null;
     equipmentId: string | null;
     RefuelLog: {
         id: string;
@@ -630,8 +630,8 @@ export declare function getClockOutDetailsService(userId: string): Promise<{
             id: string;
             name: string;
             updatedAt: Date;
-            description: string;
             qrId: string;
+            description: string;
             creationReason: string | null;
             approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
             addressId: string | null;
@@ -672,6 +672,9 @@ export declare function getClockOutDetailsService(userId: string): Promise<{
         id: number;
         userId: string;
         updatedAt: Date;
+        sessionId: number | null;
+        startTime: Date;
+        endTime: Date | null;
         comment: string | null;
         status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         date: Date;
@@ -679,8 +682,6 @@ export declare function getClockOutDetailsService(userId: string): Promise<{
         costcode: string;
         nu: string;
         Fp: string;
-        startTime: Date;
-        endTime: Date | null;
         statusComment: string | null;
         location: string | null;
         workType: import("../../generated/prisma/index.js").$Enums.WorkType;
@@ -694,7 +695,6 @@ export declare function getClockOutDetailsService(userId: string): Promise<{
         withinFenceIn: boolean | null;
         withinFenceOut: boolean | null;
         wasInjured: boolean | null;
-        sessionId: number | null;
     })[];
     signature: string;
     comment: string;
@@ -711,6 +711,9 @@ export declare function updateClockOutService(timeSheetId: string, userId: strin
         id: number;
         userId: string;
         updatedAt: Date;
+        sessionId: number | null;
+        startTime: Date;
+        endTime: Date | null;
         comment: string | null;
         status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         date: Date;
@@ -718,8 +721,6 @@ export declare function updateClockOutService(timeSheetId: string, userId: strin
         costcode: string;
         nu: string;
         Fp: string;
-        startTime: Date;
-        endTime: Date | null;
         statusComment: string | null;
         location: string | null;
         workType: import("../../generated/prisma/index.js").$Enums.WorkType;
@@ -733,7 +734,6 @@ export declare function updateClockOutService(timeSheetId: string, userId: strin
         withinFenceIn: boolean | null;
         withinFenceOut: boolean | null;
         wasInjured: boolean | null;
-        sessionId: number | null;
     };
     error?: never;
 } | {
@@ -778,6 +778,9 @@ export declare function getContinueTimesheetService(id: number, userId: string):
     id: number;
     userId: string;
     updatedAt: Date;
+    sessionId: number | null;
+    startTime: Date;
+    endTime: Date | null;
     comment: string | null;
     status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
     date: Date;
@@ -785,8 +788,6 @@ export declare function getContinueTimesheetService(id: number, userId: string):
     costcode: string;
     nu: string;
     Fp: string;
-    startTime: Date;
-    endTime: Date | null;
     statusComment: string | null;
     location: string | null;
     workType: import("../../generated/prisma/index.js").$Enums.WorkType;
@@ -800,7 +801,6 @@ export declare function getContinueTimesheetService(id: number, userId: string):
     withinFenceIn: boolean | null;
     withinFenceOut: boolean | null;
     wasInjured: boolean | null;
-    sessionId: number | null;
 }) | null>;
 export declare function returnToPreviousTimesheetService(id: number): Promise<{
     id: number;

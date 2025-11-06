@@ -49,8 +49,8 @@ export declare function getUserByIdQuery(id: string, query: string): Promise<{
         id: string;
         name: string;
         updatedAt: Date;
-        description: string | null;
         qrId: string;
+        description: string | null;
         creationReason: string | null;
         approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         createdById: string | null;
@@ -78,8 +78,8 @@ export declare function getUserByIdQuery(id: string, query: string): Promise<{
         id: string;
         name: string;
         updatedAt: Date;
-        description: string;
         qrId: string;
+        description: string;
         creationReason: string | null;
         approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         addressId: string | null;
@@ -103,10 +103,51 @@ export declare function getUserByIdQuery(id: string, query: string): Promise<{
         email: string;
         expiration: Date;
     }[] | {
+        id: number;
+        userId: string;
+        startTime: Date;
+        endTime: Date | null;
+    }[] | {
+        id: string;
+        updatedAt: Date;
+        signature: string | null;
+        comment: string | null;
+        submittedAt: Date;
+        formSubmissionId: number;
+        signedBy: string | null;
+    }[] | {
+        data: Prisma.JsonValue | null;
+        title: string | null;
         createdAt: Date;
         id: number;
         userId: string;
         updatedAt: Date;
+        status: import("../../generated/prisma/index.js").$Enums.FormStatus;
+        formTemplateId: string;
+        formType: string | null;
+        submittedAt: Date | null;
+    }[] | {
+        id: string;
+        userId: string;
+        startTime: Date;
+        endTime: Date | null;
+        comment: string | null;
+        timeSheetId: number;
+        maintenanceId: string;
+    }[] | {
+        id: number;
+        userId: string;
+        notificationId: number;
+        response: string | null;
+        respondedAt: Date;
+    }[] | {
+        createdAt: Date;
+        id: number;
+        userId: string;
+        updatedAt: Date;
+        sessionId: number | null;
+        startTime: Date;
+        endTime: Date | null;
         comment: string | null;
         status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         date: Date;
@@ -114,8 +155,6 @@ export declare function getUserByIdQuery(id: string, query: string): Promise<{
         costcode: string;
         nu: string;
         Fp: string;
-        startTime: Date;
-        endTime: Date | null;
         statusComment: string | null;
         location: string | null;
         workType: import("../../generated/prisma/index.js").$Enums.WorkType;
@@ -129,44 +168,6 @@ export declare function getUserByIdQuery(id: string, query: string): Promise<{
         withinFenceIn: boolean | null;
         withinFenceOut: boolean | null;
         wasInjured: boolean | null;
-        sessionId: number | null;
-    }[] | {
-        data: Prisma.JsonValue | null;
-        title: string | null;
-        createdAt: Date;
-        id: number;
-        userId: string;
-        updatedAt: Date;
-        status: import("../../generated/prisma/index.js").$Enums.FormStatus;
-        formTemplateId: string;
-        formType: string | null;
-        submittedAt: Date | null;
-    }[] | {
-        createdAt: Date;
-        id: number;
-        userId: string;
-    }[] | {
-        id: string;
-        updatedAt: Date;
-        signature: string | null;
-        comment: string | null;
-        submittedAt: Date;
-        formSubmissionId: number;
-        signedBy: string | null;
-    }[] | {
-        id: string;
-        userId: string;
-        comment: string | null;
-        startTime: Date;
-        endTime: Date | null;
-        timeSheetId: number;
-        maintenanceId: string;
-    }[] | {
-        id: number;
-        userId: string;
-        notificationId: number;
-        response: string | null;
-        respondedAt: Date;
     }[] | {
         id: string;
         timeSheetId: number;
@@ -260,6 +261,9 @@ export declare function getUsersTimeSheetByDate(userId: string, dateParam: strin
     id: number;
     userId: string;
     updatedAt: Date;
+    sessionId: number | null;
+    startTime: Date;
+    endTime: Date | null;
     comment: string | null;
     status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
     date: Date;
@@ -267,8 +271,6 @@ export declare function getUsersTimeSheetByDate(userId: string, dateParam: strin
     costcode: string;
     nu: string;
     Fp: string;
-    startTime: Date;
-    endTime: Date | null;
     statusComment: string | null;
     location: string | null;
     workType: import("../../generated/prisma/index.js").$Enums.WorkType;
@@ -282,7 +284,6 @@ export declare function getUsersTimeSheetByDate(userId: string, dateParam: strin
     withinFenceIn: boolean | null;
     withinFenceOut: boolean | null;
     wasInjured: boolean | null;
-    sessionId: number | null;
 })[]>;
 export declare function getTeamsByUserId(userId: string): Promise<{
     id: string;
@@ -325,4 +326,16 @@ export declare function getUserOnlineStatus(userId: string): Promise<{
     id: string;
     clockedIn: boolean;
 } | null>;
+export declare function createSession(userId: string): Promise<{
+    id: number;
+    userId: string;
+    startTime: Date;
+    endTime: Date | null;
+}>;
+export declare function EndSession(id: number): Promise<{
+    id: number;
+    userId: string;
+    startTime: Date;
+    endTime: Date | null;
+}>;
 //# sourceMappingURL=UserService.d.ts.map

@@ -22,6 +22,7 @@ export interface GeneralTimesheetInput {
     previoustimeSheetComments?: string;
     clockOutLat?: number | null;
     clockOutLong?: number | null;
+    sessionId?: number | null;
 }
 export interface MechanicTimesheetInput {
     date: string;
@@ -38,6 +39,7 @@ export interface MechanicTimesheetInput {
     previoustimeSheetComments?: string;
     clockOutLat?: number | null;
     clockOutLong?: number | null;
+    sessionId?: number | null;
 }
 export interface TascoTimesheetInput {
     date: string;
@@ -58,6 +60,7 @@ export interface TascoTimesheetInput {
     laborType?: string;
     materialType?: string;
     equipmentId?: string;
+    sessionId?: number | null;
 }
 export interface TruckTimesheetInput {
     date: string;
@@ -78,6 +81,7 @@ export interface TruckTimesheetInput {
     laborType: string;
     truck: string;
     equipmentId?: string;
+    sessionId?: number | null;
 }
 export declare function createTimesheetAndSwitchJobsController(req: Express.Request, res: Express.Response): Promise<Express.Response<any, Record<string, any>>>;
 export declare function getBannerDataController(req: Express.Request, res: Express.Response): Promise<Express.Response<any, Record<string, any>>>;

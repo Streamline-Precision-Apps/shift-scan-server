@@ -12,8 +12,8 @@ export declare function getJobsiteByQrId(qrId: string): Promise<{
     id: string;
     name: string;
     updatedAt: Date;
-    description: string;
     qrId: string;
+    description: string;
     creationReason: string | null;
     approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
     addressId: string | null;
@@ -32,8 +32,8 @@ export declare function getJobsiteById(id: string): Promise<{
     id: string;
     name: string;
     updatedAt: Date;
-    description: string;
     qrId: string;
+    description: string;
     creationReason: string | null;
     approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
     addressId: string | null;
@@ -57,8 +57,8 @@ export declare function createJobsite(data: any): Promise<{
     id: string;
     name: string;
     updatedAt: Date;
-    description: string;
     qrId: string;
+    description: string;
     creationReason: string | null;
     approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
     addressId: string | null;
@@ -77,8 +77,8 @@ export declare function updateJobsite(id: string, updates: any): Promise<{
     id: string;
     name: string;
     updatedAt: Date;
-    description: string;
     qrId: string;
+    description: string;
     creationReason: string | null;
     approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
     addressId: string | null;

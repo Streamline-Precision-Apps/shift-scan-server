@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="b515b2f6-1a79-555a-ac8e-829fdb235b2e")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="706104a7-9dd9-5039-ad0f-b91ed14d11dc")}catch(e){}}();
 import { fetchLatestLocation, fetchLocationHistory, fetchAllUsersLatestLocations, saveUserLocation, validateLocationPayload, } from "../services/locationService.js";
 // get the latest location for a user
 export async function getUserLocations(req, res) {
@@ -47,18 +47,19 @@ export async function getUserLocationHistory(req, res) {
 }
 // Handle POST location from client
 export async function postUserLocation(req, res) {
-    // Try to get userId from authenticated token first, then from X-User-ID header
-    const userId = req.headers["x-user-id"];
-    if (!userId) {
-        return res.status(400).json({ error: "Missing userId" });
+    // Extract userId, sessionId, and location data from request body
+    const { userId, sessionId, coords, device } = req.body;
+    if (!userId || !sessionId || !coords) {
+        return res
+            .status(400)
+            .json({ error: "Missing userId, sessionId, or coordinates" });
     }
-    const { coords, device } = req.body;
     const validationError = validateLocationPayload({ coords });
     if (validationError) {
         return res.status(400).json({ error: validationError });
     }
     try {
-        await saveUserLocation(userId, coords, device);
+        await saveUserLocation(userId, parseInt(sessionId), coords, device);
         return res.status(201).json({ success: true });
     }
     catch (err) {
@@ -67,4 +68,4 @@ export async function postUserLocation(req, res) {
     }
 }
 //# sourceMappingURL=locationController.js.map
-//# debugId=b515b2f6-1a79-555a-ac8e-829fdb235b2e
+//# debugId=706104a7-9dd9-5039-ad0f-b91ed14d11dc
