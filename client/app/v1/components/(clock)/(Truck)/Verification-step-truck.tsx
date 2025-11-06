@@ -177,7 +177,7 @@ export default function TruckVerificationStep({
 
       // Start location tracking for clock in
       if (type !== "switchJobs") {
-        await startClockInTracking();
+        await startClockInTracking(id);
       }
 
       setCommentData(null);

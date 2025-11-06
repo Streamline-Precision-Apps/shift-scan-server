@@ -8,7 +8,7 @@
  * The expression evaluator is guarded with a regex to only allow numeric characters and math operators.
  */
 export declare const config: {
-    readonly port: string | 3001;
+    readonly port: number;
     readonly nodeEnv: string;
     readonly databaseUrl: string;
     readonly jwtSecret: string;

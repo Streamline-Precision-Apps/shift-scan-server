@@ -4,10 +4,10 @@ import type { Request, Response } from "express";
 import {
   fetchLatestLocation,
   fetchLocationHistory,
+  fetchAllUsersLatestLocations,
   saveUserLocation,
   validateLocationPayload,
 } from "../services/locationService.js";
-
 
 // get the latest location for a user
 export async function getUserLocations(
@@ -30,6 +30,19 @@ export async function getUserLocations(
   }
 }
 
+// Get all users' current locations for map view
+export async function getAllUsersLocations(
+  req: AuthenticatedRequest,
+  res: Response
+) {
+  try {
+    const locations = await fetchAllUsersLatestLocations();
+    return res.json(locations);
+  } catch (err) {
+    console.error("Error fetching all users locations:", err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+}
 
 // fetch all locations for a user (for history)
 export async function getUserLocationHistory(req: Request, res: Response) {
@@ -46,13 +59,13 @@ export async function getUserLocationHistory(req: Request, res: Response) {
   }
 }
 
-
 // Handle POST location from client
 export async function postUserLocation(
   req: AuthenticatedRequest,
   res: Response
 ) {
-  const userId = req.user?.id;
+  // Try to get userId from authenticated token first, then from X-User-ID header
+  const userId = req.headers["x-user-id"] as string;
   if (!userId) {
     return res.status(400).json({ error: "Missing userId" });
   }

@@ -1,6 +1,5 @@
 import { Geolocation } from "@capacitor/geolocation";
 import { Capacitor } from "@capacitor/core";
-import { getAuth } from "firebase/auth";
 import { BackgroundGeolocation } from "@capgo/background-geolocation";
 import { getApiUrl } from "../utils/api-Utils";
 
@@ -28,10 +27,13 @@ let isBackgroundTrackingActive = false;
 // Track whether user is clocked in
 let isUserClockedIn = false;
 
+// Store the current user ID for use in callbacks
+let currentUserId: string | null = null;
+
 // add a variable to track the last time a write to FireStore occurred
 let lastFirestoreWriteTime: number = 0;
-const WRITE_INTERVAL_MS = 5 * 60 * 1000; // e.g., 5 mins
-
+const WRITE_INTERVAL_MS = 30 * 1000; // 30 seconds for testing (change back to 5 * 60 * 1000 for production)
+// 5 * 60 * 1000; // e.g., 5 mins
 // LOCAL STORAGE KEY for permissions
 const LOCATION_PERMISSION_REQUESTED_KEY = "location_permission_requested";
 
@@ -91,9 +93,17 @@ export function hasLocationPermissionBeenRequested(): boolean {
  * START TRACKING when user clocks in
  * Starts BOTH foreground (Geolocation) and background (BackgroundGeolocation) tracking simultaneously
  * Only tracks if user is clocked in
+ * @param userId - The authenticated user's ID (pass from the component that has access to the user)
  */
-export async function startClockInTracking() {
+export async function startClockInTracking(userId: string) {
   try {
+    if (!userId) {
+      throw new Error("User ID is required to start tracking");
+    }
+
+    // Store the user ID for use in callbacks
+    currentUserId = userId;
+
     // Mark user as clocked in
     isUserClockedIn = true;
     console.log("User clocked in - starting location tracking");
@@ -110,6 +120,7 @@ export async function startClockInTracking() {
   } catch (err) {
     console.error("Failed to start tracking on clock in:", err);
     isUserClockedIn = false;
+    currentUserId = null;
     return { success: false, error: err };
   }
 }
@@ -121,6 +132,7 @@ export async function startClockInTracking() {
 export async function stopClockOutTracking() {
   try {
     isUserClockedIn = false;
+    currentUserId = null;
     console.log("User clocked out - stopping location tracking");
 
     // Stop both tracking methods
@@ -192,9 +204,11 @@ async function startForegroundLocationWatch() {
       }
 
       try {
-        const auth = getAuth();
-        const user = auth.currentUser;
-        if (!user) throw new Error("No authenticated user");
+        // Use stored user ID instead of auth.currentUser
+        if (!currentUserId) {
+          console.error("User ID not available for location tracking");
+          return;
+        }
 
         const payload: LocationLog = {
           coords: {
@@ -214,6 +228,7 @@ async function startForegroundLocationWatch() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "X-User-ID": currentUserId,
           },
           body: JSON.stringify(payload),
         });
@@ -291,9 +306,11 @@ export async function startBackgroundLocationWatch() {
         }
 
         try {
-          const auth = getAuth();
-          const user = auth.currentUser;
-          if (!user) throw new Error("No authenticated user");
+          // Use stored user ID instead of auth.currentUser
+          if (!currentUserId) {
+            console.error("User ID not available for location tracking");
+            return;
+          }
 
           // Use Location interface properties
           const payload: LocationLog = {
@@ -314,6 +331,7 @@ export async function startBackgroundLocationWatch() {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              "X-User-ID": currentUserId,
             },
             body: JSON.stringify(payload),
           });

@@ -4,9 +4,13 @@ import {
   getUserLocations,
   getUserLocationHistory,
   postUserLocation,
+  getAllUsersLocations,
 } from "../controllers/locationController.js";
 
 const router = Router();
+
+// Get all users' current locations for map view
+router.get("/all", verifyToken, getAllUsersLocations);
 
 // Get latest location for authenticated user
 router.get("/user", verifyToken, getUserLocations);

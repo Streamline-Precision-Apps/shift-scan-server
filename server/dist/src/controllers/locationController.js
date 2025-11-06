@@ -1,6 +1,6 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="a2ac1ec1-50e4-5fb7-90c8-2dce55eae585")}catch(e){}}();
-import { fetchLatestLocation, fetchLocationHistory, saveUserLocation, validateLocationPayload, } from "../services/locationService.js";
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="010201f3-4d75-5674-95a1-997d5501954b")}catch(e){}}();
+import { fetchLatestLocation, fetchLocationHistory, fetchAllUsersLatestLocations, saveUserLocation, validateLocationPayload, } from "../services/locationService.js";
 // get the latest location for a user
 export async function getUserLocations(req, res) {
     const userId = req.user?.id || req.params.userId;
@@ -16,6 +16,17 @@ export async function getUserLocations(req, res) {
     }
     catch (err) {
         console.error("Error fetching user location:", err);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+}
+// Get all users' current locations for map view
+export async function getAllUsersLocations(req, res) {
+    try {
+        const locations = await fetchAllUsersLatestLocations();
+        return res.json(locations);
+    }
+    catch (err) {
+        console.error("Error fetching all users locations:", err);
         return res.status(500).json({ error: "Internal server error" });
     }
 }
@@ -55,4 +66,4 @@ export async function postUserLocation(req, res) {
     }
 }
 //# sourceMappingURL=locationController.js.map
-//# debugId=a2ac1ec1-50e4-5fb7-90c8-2dce55eae585
+//# debugId=010201f3-4d75-5674-95a1-997d5501954b

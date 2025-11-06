@@ -13,7 +13,13 @@ export async function fetchLatestLocation(
 ): Promise<Location | null> {
   const locationsRef = getLocationsCollection(userId);
   const snapshot = await locationsRef.orderBy("ts", "desc").limit(1).get();
-  if (snapshot.empty || !snapshot.docs[0]) return null;
+  console.log(
+    `[Location] Fetching latest for user ${userId}: ${snapshot.size} docs found`
+  );
+  if (snapshot.empty || !snapshot.docs[0]) {
+    console.warn(`[Location] No location found for user ${userId}`);
+    return null;
+  }
   return snapshot.docs[0].data() as Location;
 }
 
@@ -23,6 +29,48 @@ export async function fetchLocationHistory(
   const locationsRef = getLocationsCollection(userId);
   const snapshot = await locationsRef.orderBy("ts", "desc").get();
   return snapshot.docs.map((doc) => doc.data() as Location);
+}
+
+export async function fetchAllUsersLatestLocations(): Promise<
+  Array<{
+    userId: string;
+    location: Location;
+    userName?: string;
+  }>
+> {
+  try {
+    // Get all users from the main users collection
+    const usersRef = firestoreDb.collection("users");
+    const usersSnapshot = await usersRef.get();
+
+    const allLocations: Array<{
+      userId: string;
+      location: Location;
+      userName?: string;
+    }> = [];
+
+    // For each user, get their latest location
+    for (const userDoc of usersSnapshot.docs) {
+      const userId = userDoc.id;
+      const userData = userDoc.data();
+      const latestLocation = await fetchLatestLocation(userId);
+
+      if (latestLocation) {
+        allLocations.push({
+          userId,
+          location: latestLocation,
+          userName: userData.firstName
+            ? `${userData.firstName} ${userData.lastName || ""}`
+            : userId,
+        });
+      }
+    }
+
+    return allLocations;
+  } catch (err) {
+    console.error("Error fetching all users locations:", err);
+    return [];
+  }
 }
 
 export function validateLocationPayload(

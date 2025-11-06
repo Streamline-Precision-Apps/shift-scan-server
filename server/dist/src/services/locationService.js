@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="92be5582-f194-55fa-b264-1239034fc0e5")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="a7e0f227-7e31-5244-8430-82ac689db331")}catch(e){}}();
 import { firestoreDb } from "../lib/firebase.js";
 // Helper to get collection reference
 function getLocationsCollection(userId) {
@@ -17,6 +17,34 @@ export async function fetchLocationHistory(userId) {
     const locationsRef = getLocationsCollection(userId);
     const snapshot = await locationsRef.orderBy("ts", "desc").get();
     return snapshot.docs.map((doc) => doc.data());
+}
+export async function fetchAllUsersLatestLocations() {
+    try {
+        // Get all users from the main users collection
+        const usersRef = firestoreDb.collection("users");
+        const usersSnapshot = await usersRef.get();
+        const allLocations = [];
+        // For each user, get their latest location
+        for (const userDoc of usersSnapshot.docs) {
+            const userId = userDoc.id;
+            const userData = userDoc.data();
+            const latestLocation = await fetchLatestLocation(userId);
+            if (latestLocation) {
+                allLocations.push({
+                    userId,
+                    location: latestLocation,
+                    userName: userData.firstName
+                        ? `${userData.firstName} ${userData.lastName || ""}`
+                        : userId,
+                });
+            }
+        }
+        return allLocations;
+    }
+    catch (err) {
+        console.error("Error fetching all users locations:", err);
+        return [];
+    }
 }
 export function validateLocationPayload(payload) {
     if (!payload.coords ||
@@ -39,4 +67,4 @@ export async function saveUserLocation(userId, coords, device) {
     return true;
 }
 //# sourceMappingURL=locationService.js.map
-//# debugId=92be5582-f194-55fa-b264-1239034fc0e5
+//# debugId=a7e0f227-7e31-5244-8430-82ac689db331

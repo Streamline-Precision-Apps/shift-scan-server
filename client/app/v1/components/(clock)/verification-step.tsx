@@ -163,7 +163,7 @@ export default function VerificationStep({
 
       // Start location tracking for clock in
       if (type !== "switchJobs") {
-        await startClockInTracking();
+        await startClockInTracking(id);
       }
 
       // Update state and redirect

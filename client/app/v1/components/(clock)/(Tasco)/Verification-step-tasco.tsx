@@ -201,7 +201,7 @@ export default function TascoVerificationStep({
 
       // Start location tracking for clock in
       if (type !== "switchJobs") {
-        await startClockInTracking();
+        await startClockInTracking(id);
       }
 
       setCommentData(null);

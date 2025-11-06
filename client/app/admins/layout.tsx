@@ -9,5 +9,5 @@ export default function DashboardLayout({
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  return <div className="flex h-screen"></div>;
+  return <div className="flex w-screen h-screen">{children}</div>;
 }
