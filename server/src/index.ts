@@ -34,7 +34,10 @@ async function main() {
     // CORS middleware
     app.use(
       cors({
-        origin: process.env.CORS_ORIGIN_LOCAL, // change this later to process.env.CORS_ORIGIN for ios/android testing
+        origin:
+          process.env.NODE_ENV === "production"
+            ? process.env.CORS_ORIGIN || "*"
+            : process.env.CORS_ORIGIN_LOCAL || "http://localhost:3000",
         credentials: true,
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         allowedHeaders: ["Content-Type", "Authorization"],
@@ -88,16 +91,18 @@ async function main() {
     // Error handling middleware (must be last)
     app.use(errorHandler);
 
+    const PORT = parseInt(process.env.PORT || "8080", 10) || 8080;
+
     // Start server
-    const server = app.listen(config.port, "0.0.0.0", () => {
-      console.log(`🌟 Server is running on port ${config.port}`);
-      console.log(`🌐 Accessible at http://0.0.0.0:${config.port}`);
-      console.log(
-        `📱 Accessible from Android at http://192.168.1.102:${config.port}`
-      );
-      console.log(
-        `📖 API documentation available at http://localhost:${config.port}/api-docs`
-      );
+    const server = app.listen(PORT, "0.0.0.0", () => {
+      console.log(`🌟 Server is running on port ${PORT}`);
+      console.log(`🌐 Accessible at http://0.0.0.0:${PORT}`);
+      if (process.env.NODE_ENV !== "production") {
+        console.log(`📱 Accessible from test at http://192.168.1.102:${PORT}`);
+        console.log(
+          `📖 API documentation available at http://localhost:${PORT}/api-docs`
+        );
+      }
     });
 
     // Handle server shutdown

@@ -8,6 +8,9 @@ firebase-service-account.json
 .env.development
 .env.production
 
-
 # Sentry Config File
 .sentryclirc
+
+# Notes files
+devDocs
+

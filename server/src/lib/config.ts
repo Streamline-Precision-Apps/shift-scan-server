@@ -10,8 +10,9 @@
 
 import parseEnvSeconds from "./tokenExpirationParser.js";
 
-export const config = {
-  port: parseInt(process.env.PORT || "3001", 10),
+// Default to 8080 for Cloud Run compatibility
+const config = {
+  port: parseInt(process.env.PORT || "8080", 10),
   nodeEnv: process.env.NODE_ENV || "development",
   databaseUrl: process.env.POSTGRES_PRISMA_URL || "",
   jwtSecret: process.env.JWT_SECRET || "your_jwt_secret",
