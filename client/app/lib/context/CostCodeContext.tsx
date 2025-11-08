@@ -37,7 +37,11 @@ export const SavedCostCodeProvider: React.FC<{ children: ReactNode }> = ({
         // Only parse JSON if response is ok (not 404 or other errors)
         if (res.success) {
           const previousCostCode = await res.json();
-          if (previousCostCode && previousCostCode !== "") {
+          if (
+            previousCostCode &&
+            previousCostCode !== "" &&
+            previousCostCode !== costcode
+          ) {
             setCostCode(previousCostCode);
           }
         }

@@ -3,7 +3,6 @@ import { useUserStore } from "@/app/lib/store/userStore";
 import { Buttons } from "../(reusable)/buttons";
 import { Holds } from "../(reusable)/holds";
 import { useEffect } from "react";
-import { Capacitor } from "@capacitor/core";
 
 // Utility to extract the ?t= value from the image URL
 function getImageTimestamp(url: string | null | undefined): string | null {

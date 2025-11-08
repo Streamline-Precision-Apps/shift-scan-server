@@ -21,7 +21,7 @@ export function getUserId() {
   return "";
 }
 
-// Helper for API requests
+// Helper for API requests with enhanced error handling
 export async function apiRequest(
   path: string,
   method: string,
@@ -57,13 +57,22 @@ export async function apiRequest(
     fetchOptions.body = fetchBody;
   }
 
-  const res = await fetch(url, fetchOptions);
-  if (res.status === 204) return []; // or return [] if you expect an array
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
+  try {
+    const res = await fetch(url, fetchOptions);
+    if (res.status === 204) return []; // or return [] if you expect an array
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(errorText);
+    }
+    return res.json();
+  } catch (error) {
+    // Log cookie-related errors for debugging
+    console.error(`❌ API request failed [${method} ${path}]:`, error);
+    throw error;
+  }
 }
 
-// Helper for API requests
+// Helper for API requests without response status check
 export async function apiRequestNoResCheck(
   path: string,
   method: string,
@@ -88,12 +97,17 @@ export async function apiRequestNoResCheck(
     fetchBody = JSON.stringify(body);
   }
 
-  const res = await fetch(url, {
-    method,
-    headers,
-    body: fetchBody,
-    credentials: "include", // ✅ CRITICAL: Allow cookies to be sent and received
-  });
+  try {
+    const res = await fetch(url, {
+      method,
+      headers,
+      body: fetchBody,
+      credentials: "include", // ✅ CRITICAL: Allow cookies to be sent and received
+    });
 
-  return res;
+    return res;
+  } catch (error) {
+    console.error(`❌ API request failed [${method} ${path}]:`, error);
+    throw error;
+  }
 }

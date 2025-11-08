@@ -21,6 +21,7 @@ import { NModals } from "@/app/v1/components/(reusable)/newmodals";
 import { Selects } from "@/app/v1/components/(reusable)/selects";
 import LanguageModal from "@/app/v1/components/(modal)/langaugeModal";
 import { setLocale } from "@/app/lib/actions/cookieActions";
+import { useLocale } from "@/app/lib/client/ClientIntlProvider";
 import { useSession } from "@/app/lib/context/sessionContext";
 import { useUserStore } from "@/app/lib/store/userStore";
 type UserSettings = {
@@ -59,6 +60,7 @@ export default function SettingSelections({
   const { updateLocale } = useSession();
   const [language, setLanguage] = useState<string>();
   const [isLangModalOpen, setIsLangModalOpen] = useState(false);
+  const { resetLocale } = useLocale();
   useEffect(() => {
     if (!data?.language) return;
     setLanguage(data.language);
@@ -101,29 +103,8 @@ export default function SettingSelections({
                 // 1. Update database via state change
                 handleLanguageChange("language", newLanguage);
 
-                // 2. Update cookies
-                try {
-                  console.log("📝 Setting locale cookie to:", newLanguage);
-                  const response = await setLocale(newLanguage === "es");
-                  console.log("✅ Cookie API call successful:", response);
-
-                  // IMPORTANT: Wait a moment for browser to process Set-Cookie header
-                  await new Promise((resolve) => setTimeout(resolve, 100));
-
-                  // Verify cookie was set
-                  if (typeof window !== "undefined") {
-                    const locale = document.cookie
-                      .split("; ")
-                      .find((row) => row.startsWith("locale="));
-                    console.log(
-                      "🔍 Locale cookie in browser:",
-                      locale || "❌ NOT FOUND"
-                    );
-                    console.log("📋 All cookies:", document.cookie);
-                  }
-                } catch (error) {
-                  console.error("❌ Failed to update locale cookie:", error);
-                }
+                // 2. Update language in ClientIntlProvider (locks in language)
+                await resetLocale(newLanguage as any);
 
                 // 3. Update session context
                 updateLocale(newLanguage);

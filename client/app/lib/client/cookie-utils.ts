@@ -3,6 +3,16 @@ import { CapacitorCookies } from "@capacitor/core";
 import { Device } from "@capacitor/device";
 const COOKIE_KEY = "locale";
 
+// Sanitize cookie value - reject nested objects or malformed data
+function isCookieValueValid(value: unknown): boolean {
+  if (typeof value !== "string") return false;
+  if (value.length === 0) return false;
+  // Reject if it looks like a malformed nested object (contains %3A or multiple nested "value")
+  if (value.includes("value%22%3A%7B%22value%22")) return false;
+  if (value.includes("j%3A%7B")) return false; // URL-encoded malformed JSON
+  return true;
+}
+
 // Read cookies using CapacitorCookies when available, otherwise document.cookie
 export async function readLocaleCookie(): Promise<string | null> {
   // 1) Try CapacitorCookies (native/webview) if available
@@ -24,7 +34,8 @@ export async function readLocaleCookie(): Promise<string | null> {
         if (
           entry &&
           typeof entry.value === "string" &&
-          entry.value.length > 0
+          entry.value.length > 0 &&
+          isCookieValueValid(entry.value)
         ) {
           return entry.value;
         }
@@ -65,6 +76,12 @@ export async function readLocaleCookie(): Promise<string | null> {
 }
 
 export async function setLocaleCookie(value: string) {
+  // Validate input before storing
+  if (!isCookieValueValid(value)) {
+    console.warn("❌ Attempted to set invalid cookie value:", value);
+    return; // Don't set malformed cookies
+  }
+
   const url =
     typeof window !== "undefined" ? window.location.origin : "http://localhost"; // pick sensible default
   try {

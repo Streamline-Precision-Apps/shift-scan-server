@@ -139,7 +139,7 @@ export default function WidgetSection() {
       }
     };
     fetchUser();
-  }, [user, setUser, setJobsites, setEquipments, setCostCodes]);
+  }, []);
 
   const accountSetup = user?.accountSetup;
   const permission = user?.permission;

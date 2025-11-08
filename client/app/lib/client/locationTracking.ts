@@ -36,7 +36,7 @@ let currentSessionId: number | null = null;
 
 // add a variable to track the last time a write to FireStore occurred
 let lastFirestoreWriteTime: number = 0;
-const WRITE_INTERVAL_MS = 30 * 1000; // 30 seconds for testing (change back to 5 * 60 * 1000 for production)
+const WRITE_INTERVAL_MS = 5 * 60 * 1000; // 30 seconds for testing (change back to 5 * 60 * 1000 for production)
 // 5 * 60 * 1000; // e.g., 5 mins
 // LOCAL STORAGE KEY for permissions
 const LOCATION_PERMISSION_REQUESTED_KEY = "location_permission_requested";

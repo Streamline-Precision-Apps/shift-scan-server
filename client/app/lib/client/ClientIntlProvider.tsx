@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext, createContext } from "react";
 import { IntlProvider } from "next-intl";
 import { Device } from "@capacitor/device";
 import { loadMessages, defaultLocale, type Locale } from "./i18n-client";
@@ -14,6 +14,17 @@ export async function persistLocale(value: Locale) {
     console.error("persistLocale failed", e);
   }
   if (typeof window !== "undefined") window.location.reload();
+}
+
+export const LocaleContext = createContext<{
+  locale: Locale;
+  resetLocale: (newLocale: Locale) => Promise<void>;
+} | undefined>(undefined);
+
+export function useLocale() {
+  const ctx = useContext(LocaleContext);
+  if (!ctx) throw new Error("useLocale must be used within ClientIntlProvider");
+  return ctx;
 }
 
 export default function ClientIntlProvider({
@@ -88,43 +99,21 @@ export default function ClientIntlProvider({
     };
   }, []);
 
-  // 🎧 NEW: Listen for cookie changes (e.g., from settings)
-  useEffect(() => {
-    let mounted = true;
-    const pollInterval = setInterval(async () => {
+  // Manual locale reset function
+  const resetLocale = async (newLocale: Locale) => {
+    setLocale(newLocale);
+    if (newLocale !== defaultLocale) {
       try {
-        const cookieLocale = await readLocaleCookie();
-        if (cookieLocale && mounted) {
-          const newLocale = cookieLocale as Locale;
-          setLocale((prev) => {
-            if (prev !== newLocale) {
-              // Load new messages if needed
-              if (newLocale !== defaultLocale) {
-                loadMessages(newLocale)
-                  .then((msgs) => {
-                    if (mounted && msgs) setMessages(msgs);
-                  })
-                  .catch((err) =>
-                    console.error("Failed loading messages for", newLocale, err)
-                  );
-              } else {
-                setMessages(defaultMessages);
-              }
-              return newLocale;
-            }
-            return prev;
-          });
-        }
+        const msgs = await loadMessages(newLocale);
+        setMessages(msgs);
       } catch (err) {
-        console.error("Error polling locale cookie:", err);
+        console.error("Failed loading messages for", newLocale, err);
       }
-    }, 500); // Poll every 500ms for cookie changes
-
-    return () => {
-      mounted = false;
-      clearInterval(pollInterval);
-    };
-  }, []);
+    } else {
+      setMessages(defaultMessages);
+    }
+    await setLocaleCookie(newLocale);
+  };
 
   // Show minimal loading state while initializing
   if (!isReady) {
@@ -136,14 +125,16 @@ export default function ClientIntlProvider({
   }
 
   return (
-    <IntlProvider
-      locale={locale ?? defaultLocale}
-      messages={messages}
-      // Provide a stable default timezone to avoid environment fallback errors
-      // and potential hydration/markup mismatches between server and client.
-      timeZone="UTC"
-    >
-      {children}
-    </IntlProvider>
+    <LocaleContext.Provider value={{ locale, resetLocale }}>
+      <IntlProvider
+        locale={locale ?? defaultLocale}
+        messages={messages}
+        // Provide a stable default timezone to avoid environment fallback errors
+        // and potential hydration/markup mismatches between server and client.
+        timeZone="UTC"
+      >
+        {children}
+      </IntlProvider>
+    </LocaleContext.Provider>
   );
 }

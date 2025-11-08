@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
+  allowedDevOrigins: [
+    "https://shift-scan-server-897456891133.us-west3.run.app/",
+    "192.168.1.102:3000",
+    "localhost:3000",
+  ],
 };
 
 const withNextIntl = createNextIntlPlugin("./i18n.ts");
