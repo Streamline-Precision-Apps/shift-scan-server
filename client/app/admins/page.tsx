@@ -1,11 +1,47 @@
 "use client";
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import "@/app/globals.css";
+import React, { useEffect, useState, useCallback } from "react";
 import { PageHeaderContainer } from "./_pages/PageHeaderContainer";
 import { NotificationTable } from "./_components/NotificationTable";
-import { JsonValue } from "../../../../prisma/generated/prisma/runtime/library";
-import { Notification } from "../../../../prisma/generated/prisma/client";
 import { useUserStore } from "../lib/store/userStore";
 import NotificationActionsList from "./_components/NotificationAction";
+import { apiRequest } from "../lib/utils/api-Utils";
+
+export type JsonValue =
+  | string
+  | number
+  | boolean
+  | null
+  | JsonValue[]
+  | { [key: string]: JsonValue };
+
+export type AdminNotification = {
+  body: string | null;
+  title: string;
+  metadata: JsonValue;
+  id: number;
+  url: string | null;
+  createdAt: string;
+  topic: string | null;
+  pushedAt: string | null;
+  pushAttempts: number;
+  readAt: string | null;
+  referenceId: string | null;
+  Response: {
+    id: number;
+    notificationId: number;
+    userId: string;
+    response: string | null;
+    respondedAt: string;
+    user: {
+      firstName: string;
+      lastName: string;
+    };
+  } | null;
+  Reads: Array<{
+    userId: string;
+  }>;
+};
 
 export type ResolvedNotification = {
   id: number;
@@ -34,8 +70,15 @@ export type ResolvedNotification = {
   }>;
 };
 
+interface FetchNotificationsResponse {
+  notifications: AdminNotification[];
+  count: number;
+  resolved: ResolvedNotification[];
+  unreadCount: number;
+}
+
 export default function Admins() {
-  const [data, setData] = useState<Notification[] | undefined>();
+  const [data, setData] = useState<AdminNotification[] | undefined>();
   const [totalCount, setTotalCount] = useState(0);
   const [resolved, setResolved] = useState<
     ResolvedNotification[] | undefined
@@ -43,38 +86,57 @@ export default function Admins() {
   const [unreadCount, setUnreadCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const initialLoad = useRef(true);
-  const { data: session } = useSession();
-  const currentUserId = session?.user?.id || "";
+  const [error, setError] = useState<string | null>(null);
+  const { user } = useUserStore();
+  const currentUserId = user?.id || "";
 
   const fetchData = useCallback(async () => {
+    // Validate userId before making request
+    if (!currentUserId) {
+      setError("User ID not available");
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      if (initialLoad.current) {
-        setIsLoading(true);
-        initialLoad.current = false;
-      }
+      setError(null);
       setIsRefreshing(true);
-      const response = await fetch("/api/notification-center");
-      const json = await response.json();
-      // API returns { notifications: Notification[] }
-      setData(json.notifications);
-      setTotalCount(json.count);
-      setResolved(json.resolved);
-      setUnreadCount(json.unreadCount);
+
+      const res = await apiRequest(
+        `/api/v1/admins/notification-center?userId=${currentUserId}`,
+        "GET"
+      );
+
+      // Type-safe response validation
+      const response = res as FetchNotificationsResponse;
+      setData(response.notifications || []);
+      setTotalCount(response.count || 0);
+      setResolved(response.resolved || []);
+      setUnreadCount(response.unreadCount || 0);
     } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch notifications";
       console.error("❌ Error refreshing data:", error);
+      setError(errorMessage);
+      setData([]);
+      setResolved([]);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
     }
-  }, []);
+  }, [currentUserId]);
 
+  // Fetch data when userId is available
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    if (currentUserId) {
+      fetchData();
+    }
+  }, [currentUserId, fetchData]);
 
   return (
-    <div className="flex flex-col h-screen w-full p-4 ">
+    <div className="flex flex-col h-screen w-full p-4  ">
       {/* Main content goes here */}
       <div className="flex flex-col h-[5vh] w-full">
         <PageHeaderContainer
@@ -86,6 +148,12 @@ export default function Admins() {
           }}
         />
       </div>
+
+      {error && (
+        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          {error}
+        </div>
+      )}
 
       <div className="flex flex-row h-[90vh] w-full gap-x-4 pt-4 ">
         <NotificationTable

@@ -1,19 +1,19 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Notification } from "../../../../../prisma/generated/prisma/client";
 import { format } from "date-fns";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/v1/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/app/v1/components/ui/tooltip";
 import { Check, FileSymlink } from "lucide-react";
-import { markBrokenEquipmentNotificationsAsRead } from "@/actions/NotificationActions";
+import { markBrokenEquipmentNotificationsAsRead } from "@/app/lib/actions/NotificationActions";
+import type { AdminNotification } from "@/app/admins/page";
 
 export const notificationTableColumns = (
-  setData: React.Dispatch<React.SetStateAction<Notification[] | undefined>>,
-): ColumnDef<Notification>[] => [
+  setData: React.Dispatch<React.SetStateAction<AdminNotification[] | undefined>>
+): ColumnDef<AdminNotification>[] => [
   {
     accessorKey: "createdAt",
     header: "Received",
@@ -33,14 +33,14 @@ export const notificationTableColumns = (
         {row.original.topic === "timecards-changes"
           ? "Modification"
           : row.original.topic === "timecard-submission"
-            ? "Approval"
-            : row.original.topic === "form-submissions"
-              ? "Approval"
-              : row.original.topic === "items"
-                ? "New Item"
-                : row.original.topic === "equipment-break"
-                  ? "Repair"
-                  : row.original.topic || "-"}
+          ? "Approval"
+          : row.original.topic === "form-submissions"
+          ? "Approval"
+          : row.original.topic === "items"
+          ? "New Item"
+          : row.original.topic === "equipment-break"
+          ? "Repair"
+          : row.original.topic || "-"}
       </div>
     ),
   },
@@ -79,7 +79,7 @@ export const notificationTableColumns = (
                         notificationId: row.original.id,
                       });
                       setData((prev) =>
-                        prev?.filter((n) => n.id !== row.original.id),
+                        prev?.filter((n) => n.id !== row.original.id)
                       );
                     }}
                   >

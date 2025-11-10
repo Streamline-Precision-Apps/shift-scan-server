@@ -1,8 +1,5 @@
 "use client";
-
-import { se } from "date-fns/locale";
-import { useSession } from "next-auth/react";
-import { Session } from "next-auth";
+import { useUserStore } from "@/app/lib/store/userStore";
 import React, {
   createContext,
   useContext,
@@ -18,7 +15,6 @@ interface UserProfileContextType {
   refresh: () => Promise<void>;
   setImage: (img: string | null) => void;
   loading: boolean;
-  session: Session | null; // Properly typed session from next-auth
 }
 
 // Create a cache for the user image promise
@@ -208,7 +204,7 @@ export const UserRole: React.FC<{
 );
 
 const UserProfileContext = createContext<UserProfileContextType | undefined>(
-  undefined,
+  undefined
 );
 
 export const useUserProfile = () => {
@@ -223,28 +219,14 @@ export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [image, setImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [name, setName] = useState("");
-  const [role, setRole] = useState("");
-  const { data: session, status } = useSession();
+  const { user } = useUserStore();
 
-  // Set name and role only after session is loaded
-  React.useEffect(() => {
-    if (status === "loading") {
-      setLoading(true);
-      return;
-    }
-    if (session?.user) {
-      const newName =
-        session.user.firstName && session.user.lastName
-          ? `${session.user.firstName} ${session.user.lastName.slice(0, 1)}`
-          : "";
-      const newRole = session.user.permission || "";
-
-      setName(newName);
-      setRole(newRole);
-      setLoading(false);
-    }
-  }, [session, status]);
+  // Set name and role from userStore
+  const name =
+    user && user.firstName && user.lastName
+      ? `${user.firstName} ${user.lastName.slice(0, 1)}`
+      : "";
+  const role = user?.permission || "";
 
   const refresh = useCallback(async () => {
     setLoading(true);
@@ -266,17 +248,19 @@ export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({
       imageData = null;
       setImage(null);
     } finally {
-      if (status !== "loading") setLoading(false);
+      setLoading(false);
     }
-  }, [status]);
+  }, []);
 
   React.useEffect(() => {
-    if (status !== "loading") refresh();
-  }, [refresh, status]);
+    if (user) {
+      refresh();
+    }
+  }, [user, refresh]);
 
   return (
     <UserProfileContext.Provider
-      value={{ image, name, role, refresh, setImage, loading, session }}
+      value={{ image, name, role, refresh, setImage, loading }}
     >
       {children}
     </UserProfileContext.Provider>

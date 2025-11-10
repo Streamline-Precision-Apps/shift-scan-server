@@ -4,26 +4,25 @@ import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { VariantProps, cva } from "class-variance-authority";
 import { PanelLeft } from "lucide-react";
-
-import { cn } from "@/app/lib/utils/utils";
-import { Button } from "@/app/v1/components/ui/button";
-import { Input } from "@/app/v1/components/ui/input";
-import { Separator } from "@/app/v1/components/ui/separator";
+import { useIsMobile } from "@/app/lib/hooks/use-mobile";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./tooltip";
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from "@/app/v1/components/ui/sheet";
-import { Skeleton } from "@/app/v1/components/ui/skeleton";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/app/v1/components/ui/tooltip";
-import { useIsMobile } from "@/app/lib/hooks/use-mobile";
+} from "./sheet";
+import { cn } from "@/app/lib/utils/utils";
+import { Button } from "./button";
+import { Input } from "./input";
+import { Separator } from "./separator";
+import { Skeleton } from "./skeleton";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;

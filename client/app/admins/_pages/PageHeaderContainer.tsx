@@ -1,8 +1,8 @@
 "use client";
-import ReloadBtnSpinner from "@/components/(animations)/reload-btn-spinner";
-import { Button } from "@/components/ui/button";
-import { useSidebar } from "@/components/ui/sidebar";
-import { Skeleton } from "@/components/ui/skeleton";
+import ReloadBtnSpinner from "@/app/v1/components/(animations)/reload-btn-spinner";
+import { Button } from "@/app/v1/components/ui/button";
+import { useSidebar } from "@/app/v1/components/ui/sidebar";
+import { Skeleton } from "@/app/v1/components/ui/skeleton";
 
 type PageHeaderContainerProps = {
   loading: boolean;

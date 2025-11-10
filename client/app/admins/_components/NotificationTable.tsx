@@ -12,18 +12,18 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Notification } from "../../../../../prisma/generated/prisma/client";
+} from "@/app/v1/components/ui/table";
 import { notificationTableColumns } from "./notificationTableColumns";
 import { Bell, BellDot, BellElectric, BellPlus } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/app/v1/components/ui/badge";
+import type { AdminNotification } from "@/app/admins/page";
 
 interface NotificationTableProps {
-  data: Notification[];
+  data: AdminNotification[];
   totalCount: number;
   loading?: boolean;
 
-  setData: React.Dispatch<React.SetStateAction<Notification[] | undefined>>;
+  setData: React.Dispatch<React.SetStateAction<AdminNotification[] | undefined>>;
 }
 
 export function NotificationTable({
@@ -70,7 +70,7 @@ export function NotificationTable({
                     ? null
                     : flexRender(
                         header.column.columnDef.header,
-                        header.getContext(),
+                        header.getContext()
                       )}
                 </TableHead>
               ))}

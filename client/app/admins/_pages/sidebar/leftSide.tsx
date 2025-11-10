@@ -9,12 +9,19 @@ import {
   SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarTrigger,
 } from "@/app/v1/components/ui/sidebar";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import SignOutModal from "./SignOutModal";
 import { Button } from "@/app/v1/components/ui/button";
-import { ChevronUp, ChevronDown, LogOut, BellPlus } from "lucide-react";
+import {
+  ChevronUp,
+  ChevronDown,
+  LogOut,
+  BellPlus,
+  ChevronLeft,
+} from "lucide-react";
 import NotificationModal from "./NotificationModal";
 import { useDashboardData } from "./DashboardDataContext";
 import {
