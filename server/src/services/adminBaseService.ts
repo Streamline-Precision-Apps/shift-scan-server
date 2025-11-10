@@ -114,3 +114,52 @@ export async function fetchNotificationServiceByUserId(userId: string) {
     unreadCount,
   };
 }
+
+export async function getDashboardData(userId: string) {
+  const clockedInUsers = await prisma.user.count({
+    where: {
+      clockedIn: true,
+    },
+  });
+
+  const totalPendingTimesheets = await prisma.timeSheet.count({
+    where: {
+      status: "PENDING",
+    },
+  });
+
+  const pendingForms = await prisma.formSubmission.count({
+    where: {
+      status: "PENDING",
+    },
+  });
+
+  const equipmentAwaitingApproval = await prisma.equipment.count({
+    where: {
+      approvalStatus: "PENDING",
+    },
+  });
+
+  const jobsitesAwaitingApproval = await prisma.jobsite.count({
+    where: {
+      approvalStatus: "PENDING",
+    },
+  });
+  return {
+    clockedInUsers,
+    totalPendingTimesheets,
+    pendingForms,
+    equipmentAwaitingApproval,
+    jobsitesAwaitingApproval,
+  };
+}
+
+export async function getUserTopicPreferences(userId: string) {
+  const preferences = await prisma.topicSubscription.findMany({
+    where: { userId: userId },
+    select: {
+      topic: true,
+    },
+  });
+  return preferences;
+}

@@ -24,12 +24,7 @@ import {
 } from "lucide-react";
 import NotificationModal from "./NotificationModal";
 import { useDashboardData } from "./DashboardDataContext";
-import {
-  useUserProfile,
-  UserImage,
-  UserName,
-  UserRole,
-} from "./UserImageContext";
+import { UserImage, UserName, UserRole } from "./UserImageContext";
 import Link from "next/link";
 
 export default function LeftSidebar() {
@@ -38,7 +33,7 @@ export default function LeftSidebar() {
   const [showNotificationModal, setShowNotificationModal] = useState(false);
   const [isProfileOpened, setIsProfileOpened] = useState(false);
   const { data } = useDashboardData();
-  const { refresh } = useUserProfile(); // Only need refresh function now
+
   const Page = [
     {
       id: 1,
@@ -98,10 +93,9 @@ export default function LeftSidebar() {
       link: "/admins/timesheets",
     },
   ];
-
   return (
-    <Sidebar className="w-[--sidebar-width] h-full">
-      <SidebarContent className="h-full bg-white bg-opacity-25 flex flex-col">
+    <Sidebar className="h-full">
+      <SidebarContent className="h-full  bg-white/25 flex flex-col">
         <SidebarGroupContent className="flex-1 flex flex-col">
           <SidebarGroup>
             <div className="w-full h-16 flex items-center justify-center bg-white rounded-lg ">
@@ -193,25 +187,13 @@ export default function LeftSidebar() {
                 <div className="w-full px-4 py-2 bg-white rounded-[10px] inline-flex justify-start items-center gap-3">
                   <div className="flex items-center w-11 h-11 justify-center">
                     <UserImage
-                      onImageLoad={(img) => {
-                        // Optional: Update context state when image loads
-                      }}
                       className="w-11 h-11 rounded-full object-cover bg-gray-100"
                       alt="profile"
                     />
                   </div>
                   <div className="inline-flex flex-col  flex-1 justify-center items-start">
-                    <UserName
-                      onDataLoad={(data) => {
-                        // Optional: Handle data load if needed
-                      }}
-                      maxLength={12}
-                    />
-                    <UserRole
-                      onDataLoad={(data) => {
-                        // Optional: Handle data load if needed
-                      }}
-                    />
+                    <UserName maxLength={12} />
+                    <UserRole />
                   </div>
                   <div className="flex justify-end items-center w-fit">
                     <Button
@@ -256,26 +238,13 @@ export default function LeftSidebar() {
               <div className="w-full px-4 py-2 bg-white rounded-[10px] inline-flex justify-start items-center gap-3">
                 <div className="flex items-center w-11 h-11 justify-center">
                   <UserImage
-                    onImageLoad={(img) => {
-                      // Optional: Update context state when image loads
-                    }}
                     className="w-11 h-11 rounded-full object-cover bg-gray-100"
                     alt="profile"
                   />
                 </div>
                 <div className="inline-flex flex-col flex-1 justify-center items-start">
-                  <UserName
-                    onDataLoad={(data) => {
-                      // Optional: Handle data load if needed
-                    }}
-                    className="mb-2"
-                    maxLength={12}
-                  />
-                  <UserRole
-                    onDataLoad={(data) => {
-                      // Optional: Handle data load if needed
-                    }}
-                  />
+                  <UserName className="mb-2" maxLength={12} />
+                  <UserRole />
                 </div>
                 <div className="flex justify-end items-center w-fit">
                   <Button

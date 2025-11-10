@@ -1,16 +1,16 @@
 "use client";
-import { Holds } from "@/components/(reusable)/holds";
-import { Inputs } from "@/components/(reusable)/inputs";
+import { Holds } from "@/app/v1/components/(reusable)/holds";
+import { Inputs } from "@/app/v1/components/(reusable)/inputs";
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-} from "@/components/ui/popover";
+} from "@/app/v1/components/ui/popover";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/app/v1/components/ui/tooltip";
 import React from "react";
 
 interface SearchBarProps {
@@ -42,7 +42,11 @@ const SearchBarPopover: React.FC<SearchBarProps> = ({
             type="button"
             aria-label="Open search"
             disabled={disabled}
-            className={`flex items-center justify-center w-${imageSize} h-${imageSize} p-2.5  transition focus:outline-none focus:ring-none focus:ring-blue-500 ${open ? "rounded-tl-md rounded-bl-md border-r border-black bg-white/5 hover:bg-white/5 " : "rounded-md bg-white hover:bg-slate-100 "}`}
+            className={`flex items-center justify-center w-${imageSize} h-${imageSize} p-2.5  transition focus:outline-none focus:ring-none focus:ring-blue-500 ${
+              open
+                ? "rounded-tl-md rounded-bl-md border-r border-black bg-white/5 hover:bg-white/5 "
+                : "rounded-md bg-white hover:bg-slate-100 "
+            }`}
           >
             <img
               src={open ? "/searchLeft-white.svg" : "/searchLeft.svg"}

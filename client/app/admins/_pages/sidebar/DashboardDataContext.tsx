@@ -1,4 +1,6 @@
 "use client";
+import { useUserStore } from "@/app/lib/store/userStore";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
 import React, {
   createContext,
   useContext,
@@ -29,7 +31,7 @@ export const useDashboardData = () => {
   const ctx = useContext(DashboardDataContext);
   if (!ctx)
     throw new Error(
-      "useDashboardData must be used within DashboardDataProvider",
+      "useDashboardData must be used within DashboardDataProvider"
     );
   return ctx;
 };
@@ -39,13 +41,16 @@ export const DashboardDataProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [data, setData] = useState<DashboardData | undefined>();
   const [loading, setLoading] = useState(false);
-
+  const { user } = useUserStore();
   const refresh = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch("/api/getDashboard");
-      const json = await response.json();
-      setData(json);
+      const res = await apiRequest(
+        `/api/v1/admins/dashboard-data?userId=${user?.id}`,
+        "GET"
+      );
+
+      setData(res);
     } catch (error) {
       console.error("Error refreshing dashboard data:", error);
     } finally {

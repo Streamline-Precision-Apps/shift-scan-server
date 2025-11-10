@@ -29,9 +29,11 @@ export async function setFCMToken({ token }: { token: string }) {
   }
 }
 
-export async function getUserTopicPreferences(): Promise<{ topic: string }[]> {
-  const session = await auth();
-  const userId = session?.user?.id;
+export async function getUserTopicPreferences(
+  userId: string
+): Promise<{ topic: string }[]> {
+  // You must provide userId from your session or context when calling this function
+  // For now, try to get it from localStorage or another client-side method if needed
 
   if (!userId) {
     console.warn(
@@ -41,13 +43,18 @@ export async function getUserTopicPreferences(): Promise<{ topic: string }[]> {
   }
 
   try {
-    const preferences = await prisma.topicSubscription.findMany({
-      where: { userId: userId },
-      select: {
-        topic: true,
-      },
-    });
-    return preferences;
+    const response = await apiRequest(
+      `/api/v1/admins/notification-preferences?userId=${userId}`,
+      "GET"
+    );
+    if (response && Array.isArray(response.preferences)) {
+      return response.preferences;
+    }
+    // fallback if response is array itself
+    if (Array.isArray(response)) {
+      return response;
+    }
+    return [];
   } catch (error) {
     console.error("Error fetching user topic preferences:", error);
     return [];
