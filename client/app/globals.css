@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
 :root {
-  color-scheme: light;
   --background: hsl(0 0% 100%);
   --foreground: hsl(0 0% 3.9%);
   --foreground-thumb: hsl(216, 12.2%, 83.92%);

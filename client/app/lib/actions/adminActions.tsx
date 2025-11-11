@@ -559,3 +559,196 @@ export async function restoreJobsite(id: string) {
     };
   }
 }
+
+// -- Cost Codes
+export async function createTag(payload: {
+  name: string;
+  description: string;
+  CostCodes: { id: string; name: string }[];
+  Jobsites: { id: string; name: string }[];
+}) {
+  try {
+    const result = await apiRequest("/api/v1/admins/tags", "POST", payload);
+    return {
+      success: true,
+      data: result,
+      message: "Tag created successfully",
+    };
+  } catch (error) {
+    console.error("Error creating tag:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error occurred",
+    };
+  }
+}
+
+export async function deleteTag(id: string) {
+  try {
+    await apiRequest(`/api/v1/admins/tags/${id}`, "DELETE");
+    return {
+      success: true,
+      message: "Tag deleted successfully",
+    };
+  } catch (error) {
+    console.error("Error deleting tag:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error occurred",
+    };
+  }
+}
+
+export async function deleteCostCode(id: string) {
+  try {
+    await apiRequest(`/api/v1/admins/cost-codes/${id}`, "DELETE");
+    return {
+      success: true,
+      message: "Cost code deleted successfully",
+    };
+  } catch (error) {
+    console.error("Error deleting cost code:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error occurred",
+    };
+  }
+}
+export async function archiveCostCode(id: string) {
+  try {
+    await apiRequest(`/api/v1/admins/cost-codes/${id}/archive`, "PUT");
+    return { success: true, message: "Cost code archived successfully" };
+  } catch (error) {
+    console.error("Error archiving cost code:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error occurred",
+    };
+  }
+}
+
+export async function restoreCostCode(id: string) {
+  try {
+    await apiRequest(`/api/v1/admins/cost-codes/${id}/restore`, "PUT");
+    return { success: true, message: "Cost code restored successfully" };
+  } catch (error) {
+    console.error("Error restoring cost code:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error occurred",
+    };
+  }
+}
+
+export async function updateTagAdmin(formData: FormData) {
+  try {
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
+    }
+
+    const id = formData.get("id") as string;
+    if (!id) {
+      throw new Error("Tag ID is required");
+    }
+    const updateData: any = {};
+    if (formData.has("name")) {
+      updateData.name = (formData.get("name") as string)?.trim();
+    }
+    if (formData.has("description")) {
+      updateData.description =
+        (formData.get("description") as string)?.trim() || "";
+    }
+    if (formData.has("Jobsites")) {
+      const jobsitesString = formData.get("Jobsites") as string;
+      updateData.Jobsites = JSON.parse(jobsitesString || "[]");
+    }
+    if (formData.has("CostCodes")) {
+      const costCodesString = formData.get("CostCodes") as string;
+      updateData.CostCodes = JSON.parse(costCodesString || "[]");
+    }
+    const result = await apiRequest(
+      `/api/v1/admins/tags/${id}`,
+      "PUT",
+      updateData
+    );
+    return {
+      success: true,
+      data: result,
+      message: "Tag updated successfully",
+    };
+  } catch (error) {
+    console.error("Error updating tag:", error);
+    throw new Error(
+      `Failed to update tag: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`
+    );
+  }
+}
+
+export async function createCostCode(payload: {
+  code: string;
+  name: string;
+  isActive: boolean;
+  CCTags: { id: string; name: string }[];
+}) {
+  try {
+    const result = await apiRequest(
+      "/api/v1/admins/cost-codes",
+      "POST",
+      payload
+    );
+    return {
+      success: true,
+      data: result,
+      message: "Cost code created successfully",
+    };
+  } catch (error) {
+    console.error("Error creating cost code:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error occurred",
+    };
+  }
+}
+
+export async function updateCostCodeAdmin(formData: FormData) {
+  try {
+    const id = formData.get("id") as string;
+    if (!id) {
+      throw new Error("Cost code ID is required");
+    }
+    const updateData: any = {};
+    if (formData.has("code")) {
+      updateData.code = (formData.get("code") as string)?.trim();
+    }
+    if (formData.has("name")) {
+      updateData.name = (formData.get("name") as string)?.trim();
+    }
+    if (formData.has("isActive")) {
+      updateData.isActive = formData.get("isActive") === "true";
+    }
+    if (formData.has("cCTags")) {
+      const cCTagsString = formData.get("cCTags") as string;
+      updateData.CCTags = JSON.parse(cCTagsString || "[]");
+    }
+    updateData.updatedAt = new Date();
+    const result = await apiRequest(
+      `/api/v1/admins/cost-codes/${id}`,
+      "PUT",
+      updateData
+    );
+    return {
+      success: true,
+      data: result,
+      message: "Cost code updated successfully",
+    };
+  } catch (error) {
+    console.error("Error updating cost code:", error);
+    throw new Error(
+      `Failed to update cost code: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`
+    );
+  }
+}

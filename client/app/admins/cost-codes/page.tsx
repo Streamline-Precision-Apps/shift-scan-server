@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/v1/components/ui/button";
 import React, { useState } from "react";
 import {
   Dialog,
@@ -8,9 +8,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/app/v1/components/ui/dialog";
 import { useCostCodeData } from "./_components/useCostCodeData";
-import Spinner from "@/components/(animations)/spinner";
+import Spinner from "@/app/v1/components/(animations)/spinner";
 import CreateCostCodeModal from "./_components/CreateCostCodeModal";
 import EditCostCodeModal from "./_components/EditCostCodeModal";
 import { useTagData } from "./_components/useTagData";
@@ -21,7 +21,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/app/v1/components/ui/tooltip";
 import { Tags } from "lucide-react";
 import { PageHeaderContainer } from "../_pages/PageHeaderContainer";
 import { FooterPagination } from "../_pages/FooterPagination";

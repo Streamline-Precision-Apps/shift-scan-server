@@ -1,14 +1,14 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/app/v1/components/ui/button";
+import { Input } from "@/app/v1/components/ui/input";
+import { Label } from "@/app/v1/components/ui/label";
 import { useEffect, useState } from "react";
-import { updateTagAdmin } from "@/actions/AssetActions";
+import { updateTagAdmin } from "@/app/lib/actions/adminActions";
 import { toast } from "sonner";
-import { Combobox } from "@/components/ui/combobox";
+import { Combobox } from "@/app/v1/components/ui/combobox";
 import { Tag, useTagDataById } from "./useTagDataById";
 import { AlertCircle, X } from "lucide-react";
-import Spinner from "@/components/(animations)/spinner";
+import Spinner from "@/app/v1/components/(animations)/spinner";
 
 export default function EditTagModal({
   cancel,
@@ -33,7 +33,7 @@ export default function EditTagModal({
   }, [tagDetails]);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value, type } = e.target;
     setFormData((prev) =>
@@ -43,7 +43,7 @@ export default function EditTagModal({
             [name]:
               type === "number" ? (value === "" ? null : Number(value)) : value,
           }
-        : prev,
+        : prev
     );
   };
 
@@ -61,7 +61,7 @@ export default function EditTagModal({
       fd.append("Jobsites", JSON.stringify(formData.Jobsites.map((j) => j.id)));
       fd.append(
         "CostCodeTags",
-        JSON.stringify(formData.CostCodes.map((c) => c.id)),
+        JSON.stringify(formData.CostCodes.map((c) => c.id))
       );
 
       const result = await updateTagAdmin(fd);
@@ -83,7 +83,7 @@ export default function EditTagModal({
 
   if (loading || !formData || !originalForm) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-40 ">
         <div className="bg-white rounded-lg shadow-lg w-[600px] h-[80vh]  px-6 py-4 flex flex-col items-center">
           <div className="w-full flex flex-col border-b border-gray-100 pb-3 relative">
             <Button
@@ -135,7 +135,7 @@ export default function EditTagModal({
   const allJobsites = [
     ...safeJobsiteSummaries,
     ...formData.Jobsites.filter(
-      (js) => !safeJobsiteSummaries.some((j) => j.id === js.id),
+      (js) => !safeJobsiteSummaries.some((j) => j.id === js.id)
     ),
   ];
 
@@ -145,12 +145,12 @@ export default function EditTagModal({
   const allCostCodes = [
     ...safeCostCodeSummaries,
     ...formData.CostCodes.filter(
-      (cc) => !safeCostCodeSummaries.some((c) => c.id === cc.id),
+      (cc) => !safeCostCodeSummaries.some((c) => c.id === cc.id)
     ),
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-40 ">
       <div className="bg-white rounded-lg shadow-lg w-[600px] h-[80vh]  px-6 py-4 flex flex-col items-center">
         <div className="w-full flex flex-col border-b border-gray-100 pb-3 relative">
           <Button
@@ -241,7 +241,7 @@ export default function EditTagModal({
                       allJobsites
                         ? allJobsites
                             .filter(
-                              (jobsite) => jobsite.name.toLowerCase() !== "all",
+                              (jobsite) => jobsite.name.toLowerCase() !== "all"
                             )
                             .map((jobsite) => ({
                               label: jobsite.name,
@@ -257,10 +257,10 @@ export default function EditTagModal({
                           ? {
                               ...prev,
                               Jobsites: allJobsites.filter((jobsite) =>
-                                selectedIds.includes(jobsite.id),
+                                selectedIds.includes(jobsite.id)
                               ),
                             }
-                          : prev,
+                          : prev
                       );
                     }}
                   />
@@ -282,10 +282,10 @@ export default function EditTagModal({
                                 ? {
                                     ...prev,
                                     Jobsites: prev.Jobsites.filter(
-                                      (j) => j.id !== js.id,
+                                      (j) => j.id !== js.id
                                     ),
                                   }
-                                : prev,
+                                : prev
                             );
                           }}
                           aria-label={`Remove ${js.name}`}
@@ -323,7 +323,7 @@ export default function EditTagModal({
                         ? allCostCodes
                             .filter(
                               (costCode) =>
-                                costCode.name.toLowerCase() !== "all",
+                                costCode.name.toLowerCase() !== "all"
                             )
                             .map((costCode) => ({
                               label: costCode.name,
@@ -339,17 +339,21 @@ export default function EditTagModal({
                           ? {
                               ...prev,
                               CostCodes: allCostCodes.filter((costCode) =>
-                                selectedIds.includes(costCode.id),
+                                selectedIds.includes(costCode.id)
                               ),
                             }
-                          : prev,
+                          : prev
                       );
                     }}
                     disabled={formData.name.toUpperCase() === "ALL"}
                   />
                 </div>
                 <div
-                  className={`min-h-[100px] ${formData.name.toUpperCase() === "ALL" ? "bg-slate-50" : "bg-white"} border border-gray-200 rounded p-2 mt-2`}
+                  className={`min-h-[100px] ${
+                    formData.name.toUpperCase() === "ALL"
+                      ? "bg-slate-50"
+                      : "bg-white"
+                  } border border-gray-200 rounded p-2 mt-2`}
                 >
                   <div className=" flex flex-wrap gap-2">
                     {formData.CostCodes.map((cc) => (
@@ -367,10 +371,10 @@ export default function EditTagModal({
                                 ? {
                                     ...prev,
                                     CostCodes: prev.CostCodes.filter(
-                                      (c) => c.id !== cc.id,
+                                      (c) => c.id !== cc.id
                                     ),
                                   }
-                                : prev,
+                                : prev
                             );
                           }}
                           disabled={formData.name.toUpperCase() === "ALL"}

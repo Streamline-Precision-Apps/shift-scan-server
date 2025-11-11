@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
-import { deleteTag } from "@/actions/AssetActions";
+import { deleteTag } from "@/app/lib/actions/adminActions";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
 
 export type TagSummary = {
   id: string;
@@ -34,7 +35,7 @@ export const useTagData = () => {
   const [showDeleteTagDialog, setShowDeleteTagDialog] = useState(false);
   const [pendingTagEditId, setPendingTagEditId] = useState<string | null>(null);
   const [pendingTagDeleteId, setPendingTagDeleteId] = useState<string | null>(
-    null,
+    null
   );
 
   // Debounce search input
@@ -52,14 +53,12 @@ export const useTagData = () => {
       try {
         setLoading(true);
         const encodedSearch = encodeURIComponent(searchTerm.trim());
-        const response = await fetch(
-          `/api/getTagSummary?page=${page}&pageSize=${pageSize}&search=${encodedSearch}`,
+        const data = await apiRequest(
+          `/api/v1/admins/tags?page=${page}&pageSize=${pageSize}&search=${encodedSearch}`,
+          "GET"
         );
-        if (!response.ok) {
-          throw new Error(`HTTP error ${response.status}`);
-        }
-        const data = await response.json();
-        setTagDetails(data.tags);
+
+        setTagDetails(data.tagSummary);
         setTotal(data.total);
         setTotalPages(data.totalPages);
       } catch (error) {
@@ -103,7 +102,7 @@ export const useTagData = () => {
 
   // Simple filter by tag name
   const filteredTags = tagDetails.filter((tag) =>
-    tag.name.toLowerCase().includes(inputValue.toLowerCase()),
+    tag.name.toLowerCase().includes(inputValue.toLowerCase())
   );
 
   // Reset to page 1 if search or filter changes

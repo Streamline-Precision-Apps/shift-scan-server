@@ -1,4 +1,5 @@
 "use client";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
 import { useState, useEffect } from "react";
 
 export type Tag = {
@@ -39,14 +40,15 @@ export const useTagDataById = (id: string) => {
     const fetchTagDetails = async () => {
       try {
         setLoading(true);
-        const [tag, costCode, Jobsite] = await Promise.all([
-          fetch("/api/getTagById/" + id),
-          fetch("/api/getCostCodeSummary"),
-          fetch("/api/getJobsiteSummary"),
-        ]).then((res) => Promise.all(res.map((r) => r.json())));
+        const [tag, costCode, jobsite] = await Promise.all([
+          apiRequest(`/api/v1/admins/tags/${id}`, "GET"),
+          apiRequest("/api/v1/admins/cost-codes", "GET"),
+          apiRequest("/api/v1/admins/jobsite", "GET"),
+        ]);
+
         setTagDetails(tag);
-        setCostCodeSummaries(costCode);
-        setJobsiteSummaries(Jobsite);
+        setCostCodeSummaries(costCode.costCodes || []);
+        setJobsiteSummaries(jobsite.jobsiteSummary || []);
       } catch (error) {
         console.error("Failed to fetch tag details:", error);
       } finally {

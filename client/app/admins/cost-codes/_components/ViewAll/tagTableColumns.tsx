@@ -5,18 +5,18 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/app/v1/components/ui/tooltip";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from "@/components/ui/hover-card";
-import { Button } from "@/components/ui/button";
+} from "@/app/v1/components/ui/hover-card";
+import { Button } from "@/app/v1/components/ui/button";
 
 // Define the column configuration
 export const getTagTableColumns = (
   onEdit: (id: string) => void,
-  onDelete: (id: string) => void,
+  onDelete: (id: string) => void
 ): ColumnDef<TagSummary>[] => [
   {
     accessorKey: "nameAndDescription",

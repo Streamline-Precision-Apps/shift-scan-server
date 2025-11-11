@@ -1,4 +1,5 @@
 "use client";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
 import { useState, useEffect, useCallback } from "react";
 
 export type CostCode = {
@@ -32,12 +33,12 @@ export const useCostCodeDataById = (id: string) => {
       try {
         setLoading(true);
         const [costCodeDetails, tag] = await Promise.all([
-          fetch("/api/getCostCodeById/" + id),
-          fetch("/api/getTagSummary"),
-        ]).then((res) => Promise.all(res.map((r) => r.json())));
+          apiRequest(`/api/v1/admins/cost-codes/${id}`, "GET"),
+          apiRequest("/api/v1/admins/tags", "GET"),
+        ]);
 
         setCostCodeDetails(costCodeDetails);
-        setTagSummaries(tag);
+        setTagSummaries(tag.tagSummary || []);
       } catch (error) {
         console.error("Failed to fetch job site details:", error);
       } finally {
