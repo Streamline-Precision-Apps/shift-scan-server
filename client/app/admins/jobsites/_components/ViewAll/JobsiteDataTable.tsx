@@ -13,15 +13,15 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/app/v1/components/ui/table";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Button } from "@/components/ui/button";
+} from "@/app/v1/components/ui/tooltip";
+import { Button } from "@/app/v1/components/ui/button";
 import React, { Dispatch, SetStateAction, useMemo, Suspense } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/app/v1/components/ui/skeleton";
 import { JobsiteSummary } from "../useJobsiteData";
 import { getJobsiteTableColumns } from "./jobsiteTableColumns";
 import LoadingJobsiteTableState from "./loadingJobsiteTableState";
@@ -69,9 +69,9 @@ export function JobsiteDataTable({
         onDeleteClick,
         onQrClick,
         onArchiveClick,
-        onRestoreClick,
+        onRestoreClick
       ),
-    [onEditClick, onDeleteClick, onQrClick, onArchiveClick, onRestoreClick],
+    [onEditClick, onDeleteClick, onQrClick, onArchiveClick, onRestoreClick]
   );
 
   const table = useReactTable({
@@ -118,7 +118,7 @@ export function JobsiteDataTable({
                           ? null
                           : flexRender(
                               header.column.columnDef.header,
-                              header.getContext(),
+                              header.getContext()
                             )}
                       </TableHead>
                     );
@@ -148,7 +148,7 @@ export function JobsiteDataTable({
                         >
                           {flexRender(
                             cell.column.columnDef.cell,
-                            cell.getContext(),
+                            cell.getContext()
                           )}
                         </TableCell>
                       ))}

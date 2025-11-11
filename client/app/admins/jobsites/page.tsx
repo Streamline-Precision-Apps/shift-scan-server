@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/v1/components/ui/button";
 import React from "react";
 import { useSearchParams } from "next/navigation";
 import {
@@ -9,17 +9,17 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
+} from "@/app/v1/components/ui/dialog";
+import { Badge } from "@/app/v1/components/ui/badge";
 import { useJobsiteData } from "./_components/useJobsiteData";
 import EditJobsiteModal from "./_components/EditJobsiteModal";
 import CreateJobsiteModal from "./_components/CreateJobsiteModal";
-import Spinner from "@/components/(animations)/spinner";
+import Spinner from "@/app/v1/components/(animations)/spinner";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/app/v1/components/ui/tooltip";
 import SearchBarPopover from "../_pages/searchBarPopover";
 import { PageHeaderContainer } from "../_pages/PageHeaderContainer";
 import { FooterPagination } from "../_pages/FooterPagination";

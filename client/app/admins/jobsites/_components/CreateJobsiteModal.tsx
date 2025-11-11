@@ -1,22 +1,24 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/app/v1/components/ui/button";
+import { Input } from "@/app/v1/components/ui/input";
+import { Label } from "@/app/v1/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/app/v1/components/ui/select";
 import { useEffect, useState } from "react";
-import { createJobsiteAdmin } from "@/actions/AssetActions";
-import { Textarea } from "@/components/ui/textarea";
+
+import { Textarea } from "@/app/v1/components/ui/textarea";
 import { toast } from "sonner";
-import { useSession } from "next-auth/react";
-import { StateOptions } from "@/data/stateValues";
-import { Combobox } from "@/components/ui/combobox";
+import { StateOptions } from "@/app/lib/data/stateValues";
+import { Combobox } from "@/app/v1/components/ui/combobox";
 import { X } from "lucide-react";
+import { useUserStore } from "@/app/lib/store/userStore";
+import { createJobsiteAdmin } from "@/app/lib/actions/adminActions";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
 type TagSummary = {
   id: string;
   name: string;
@@ -29,7 +31,7 @@ export default function CreateJobsiteModal({
   cancel: () => void;
   rerender: () => void;
 }) {
-  const { data: session } = useSession();
+  const { user } = useUserStore();
   const [tagSummaries, setTagSummaries] = useState<TagSummary[]>([]);
   // const [clients, setClients] = useState<ClientsSummary[]>([]);
 
@@ -57,14 +59,14 @@ export default function CreateJobsiteModal({
   useEffect(() => {
     const fetchTagSummaries = async () => {
       try {
-        const response = await fetch("/api/getTagSummary");
-        const data = await response.json();
-        const filteredTags = data.tags.map(
+        const data = await apiRequest("/api/v1/admins/tags", "GET");
+        const filteredTags = (data.tagSummary || []).map(
           (tag: { id: string; name: string }) => ({
             id: tag.id,
             name: tag.name,
-          }),
+          })
         );
+
         setTagSummaries(filteredTags);
       } catch (error) {
         console.error("Failed to fetch tag summaries:", error);
@@ -78,7 +80,7 @@ export default function CreateJobsiteModal({
   const handleAddressChange = (
     e:
       | React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-      | { name: string; value: string | number },
+      | { name: string; value: string | number }
   ) => {
     let name: string, value: string | number, type: string | undefined;
     if ("target" in e) {
@@ -129,7 +131,7 @@ export default function CreateJobsiteModal({
         },
         CCTags: formData.CCTags.map((tag) => ({ id: tag.id })),
         CreatedVia: formData.CreatedVia,
-        createdById: session?.user.id ? session.user.id : "",
+        createdById: user?.id ? user.id : "",
       };
 
       const result = await createJobsiteAdmin({ payload });
@@ -148,7 +150,7 @@ export default function CreateJobsiteModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-40 ">
       <div className="bg-white rounded-lg shadow-lg w-[600px] h-[80vh]  px-6 py-4 flex flex-col items-center">
         <div className="w-full flex flex-col border-b border-gray-100 pb-3 relative">
           <Button
@@ -230,7 +232,7 @@ export default function CreateJobsiteModal({
                     description: e.target.value,
                   }))
                 }
-                className="w-full text-xs min-h-[96px]"
+                className="w-full text-xs min-h-24"
                 placeholder="Enter jobsite description..."
                 style={{ resize: "none" }}
               />
@@ -355,10 +357,10 @@ export default function CreateJobsiteModal({
                         ? {
                             ...prev,
                             CCTags: tagSummaries.filter((tag) =>
-                              selectedIds.includes(tag.id),
+                              selectedIds.includes(tag.id)
                             ),
                           }
-                        : prev,
+                        : prev
                     );
                   }}
                 />
@@ -380,10 +382,10 @@ export default function CreateJobsiteModal({
                               ? {
                                   ...prev,
                                   CCTags: prev.CCTags.filter(
-                                    (j) => j.id !== js.id,
+                                    (j) => j.id !== js.id
                                   ),
                                 }
-                              : prev,
+                              : prev
                           );
                         }}
                         aria-label={`Remove ${js.name}`}

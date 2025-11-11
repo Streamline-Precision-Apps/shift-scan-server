@@ -18,6 +18,8 @@ import costCodesRoute from "./costCodesRoute.js";
 import adminsBaseRoutes from "./adminBaseRoute.js";
 import adminsPersonnelRoutes from "./adminsPersonnelRoutes.js";
 import adminsEquipmentRoutes from "./adminsEquipmentRoutes.js";
+import adminsJobsiteRoutes from "./adminsJobsiteRoutes.js";
+import adminsTagsRoutes from "./adminsTagsRoutes.js";
 
 const router = Router();
 
@@ -35,6 +37,8 @@ router.use("/v1", initRoutes);
 router.use("/v1/admins", adminsBaseRoutes);
 router.use("/v1/admins/personnel", adminsPersonnelRoutes);
 router.use("/v1/admins/equipment", adminsEquipmentRoutes);
+router.use("/v1/admins/jobsite", adminsJobsiteRoutes);
+router.use("/v1/admins/tags", adminsTagsRoutes);
 
 router.use("/notifications", notificationRoutes);
 router.use("/push-notifications", pushNotificationsRoute);

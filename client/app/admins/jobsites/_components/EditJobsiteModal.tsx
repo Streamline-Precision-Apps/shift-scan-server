@@ -1,18 +1,19 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/app/v1/components/ui/button";
+import { Input } from "@/app/v1/components/ui/input";
+import { Label } from "@/app/v1/components/ui/label";
 import { Jobsite, useJobsiteDataById } from "./useJobsiteDataById";
 import { useEffect, useState } from "react";
-import { Textarea } from "@/components/ui/textarea";
+import { Textarea } from "@/app/v1/components/ui/textarea";
 import { SquareCheck, SquareXIcon, X } from "lucide-react";
 import { format } from "date-fns";
-import { updateJobsiteAdmin } from "@/actions/AssetActions";
+import { updateJobsiteAdmin } from "@/app/lib/actions/adminActions";
 import { toast } from "sonner";
-import { Combobox } from "@/components/ui/combobox";
+import { Combobox } from "@/app/v1/components/ui/combobox";
 import { useDashboardData } from "../../_pages/sidebar/DashboardDataContext";
-import Spinner from "@/components/(animations)/spinner";
-import { Skeleton } from "@/components/ui/skeleton";
+import Spinner from "@/app/v1/components/(animations)/spinner";
+import { Skeleton } from "@/app/v1/components/ui/skeleton";
+import { useUserStore } from "@/app/lib/store/userStore";
 
 export default function EditJobsiteModal({
   cancel,
@@ -23,6 +24,7 @@ export default function EditJobsiteModal({
   pendingEditId: string;
   rerender: () => void;
 }) {
+  const { user } = useUserStore();
   const { jobSiteDetails, tagSummaries, loading } =
     useJobsiteDataById(pendingEditId);
   const { refresh } = useDashboardData();
@@ -37,7 +39,7 @@ export default function EditJobsiteModal({
   }, [jobSiteDetails]);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value, type } = e.target;
     setFormData((prev) =>
@@ -47,7 +49,7 @@ export default function EditJobsiteModal({
             [name]:
               type === "number" ? (value === "" ? null : Number(value)) : value,
           }
-        : prev,
+        : prev
     );
   };
 
@@ -58,6 +60,7 @@ export default function EditJobsiteModal({
     }
     try {
       const fd = new FormData();
+      fd.append("userId", user?.id || "");
       fd.append("id", formData.id);
       fd.append("code", formData.code || ""); // Ensure code is included
       fd.append("name", formData.name);
@@ -67,7 +70,7 @@ export default function EditJobsiteModal({
       fd.append("status", String(formData.status));
       fd.append(
         "CCTags",
-        JSON.stringify(formData.CCTags.map((tag) => ({ id: tag.id }))),
+        JSON.stringify(formData.CCTags.map((tag) => ({ id: tag.id })))
       );
 
       const result = await updateJobsiteAdmin(fd);
@@ -90,7 +93,7 @@ export default function EditJobsiteModal({
 
   if (loading || !formData || !originalForm || !tagSummaries) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-40 ">
         <div className="bg-white rounded-lg shadow-lg w-[600px] h-[80vh]  px-6 py-4 flex flex-col items-center">
           <div className="w-full flex flex-col border-b border-gray-100 pb-1 relative">
             <Button
@@ -145,7 +148,7 @@ export default function EditJobsiteModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-40 ">
       <div className="bg-white rounded-lg shadow-lg w-[600px] h-[80vh]  px-6 py-4 flex flex-col items-center">
         <div className="w-full flex flex-col border-b border-gray-100 pb-1 relative">
           <Button
@@ -169,8 +172,8 @@ export default function EditJobsiteModal({
                 originalForm.approvalStatus === "APPROVED"
                   ? "bg-green-100 text-green-600"
                   : originalForm.approvalStatus === "PENDING"
-                    ? "bg-sky-100 text-sky-600"
-                    : "bg-red-100 text-red-600"
+                  ? "bg-sky-100 text-sky-600"
+                  : "bg-red-100 text-red-600"
               }`}
             >
               {originalForm.approvalStatus
@@ -262,10 +265,10 @@ export default function EditJobsiteModal({
                           ? {
                               ...prev,
                               CCTags: tagSummaries.filter((tag) =>
-                                selectedIds.includes(tag.id),
+                                selectedIds.includes(tag.id)
                               ),
                             }
-                          : prev,
+                          : prev
                       );
                     }}
                   />
@@ -287,10 +290,10 @@ export default function EditJobsiteModal({
                                 ? {
                                     ...prev,
                                     CCTags: prev.CCTags.filter(
-                                      (j) => j.id !== js.id,
+                                      (j) => j.id !== js.id
                                     ),
                                   }
-                                : prev,
+                                : prev
                             );
                           }}
                           aria-label={`Remove ${js.name}`}

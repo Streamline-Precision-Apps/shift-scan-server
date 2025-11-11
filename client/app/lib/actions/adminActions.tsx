@@ -1,5 +1,6 @@
 "use client";
 import { apiRequest } from "@/app/lib/utils/api-Utils";
+import { update } from "lodash";
 
 export async function createCrew(formData: FormData) {
   try {
@@ -405,6 +406,153 @@ export async function restoreEquipment(id: string) {
     return { success: true };
   } catch (error) {
     console.error("Error restoring equipment:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error occurred",
+    };
+  }
+}
+
+export async function createJobsiteAdmin({
+  payload,
+}: {
+  payload: {
+    code: string;
+    name: string;
+    description: string;
+    ApprovalStatus: string;
+    status: string;
+    Address: {
+      street: string;
+      city: string;
+      state: string;
+      zipCode: string;
+    };
+    Client?: {
+      id: string;
+    } | null;
+    CCTags?: Array<{ id: string }>;
+    CreatedVia: string;
+    createdById: string;
+  };
+}) {
+  try {
+    const result = await apiRequest("/api/v1/admins/jobsite", "POST", payload);
+    return {
+      success: true,
+      message: "Jobsite created successfully",
+      data: result,
+    };
+  } catch (error) {
+    console.error("Error creating jobsite:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error occurred",
+    };
+  }
+}
+
+export async function updateJobsiteAdmin(formData: FormData) {
+  try {
+    const id = formData.get("id") as string;
+    if (!id) {
+      throw new Error("Jobsite ID is required");
+    }
+    const updateData: Record<string, any> = {};
+    if (formData.has("userId"))
+      updateData.userId = formData.get("userId") as string; // add userId to updateData
+    if (formData.has("code"))
+      updateData.code = (formData.get("code") as string)?.trim();
+    if (formData.has("name")) {
+      const code = (formData.get("code") as string)?.trim();
+      const name = (formData.get("name") as string)?.trim();
+      updateData.name = `${code} - ${name}`;
+    }
+    if (formData.has("description"))
+      updateData.description =
+        (formData.get("description") as string)?.trim() || "";
+    if (formData.has("approvalStatus"))
+      updateData.approvalStatus = formData.get("approvalStatus");
+    if (formData.has("status")) updateData.status = formData.get("status");
+    if (formData.has("creationReason"))
+      updateData.creationReason = formData.get("creationReason");
+    updateData.updatedAt = new Date();
+    if (formData.has("CCTags")) {
+      const cCTagsString = formData.get("CCTags") as string;
+      const cCTagsArray = JSON.parse(cCTagsString || "[]");
+      updateData.CCTags = cCTagsArray;
+    }
+    const result = await apiRequest(
+      `/api/v1/admins/jobsite/${id}`,
+      "PUT",
+      updateData
+    );
+    return {
+      success: true,
+      data: result,
+      message: "Jobsite updated successfully",
+    };
+  } catch (error) {
+    console.error("Error updating jobsite:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error occurred",
+    };
+  }
+}
+
+export async function deleteJobsite(id: string) {
+  try {
+    const result = await apiRequest(`/api/v1/admins/jobsite/${id}`, "DELETE");
+    return {
+      success: true,
+      message: "Jobsite deleted successfully",
+      data: result,
+    };
+  } catch (error) {
+    console.error("Error deleting jobsite:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error occurred",
+    };
+  }
+}
+
+export async function archiveJobsite(id: string) {
+  try {
+    const result = await apiRequest(
+      `/api/v1/admins/jobsite/${id}/archive`,
+      "PUT",
+      { status: "ARCHIVED" }
+    );
+    return {
+      success: true,
+      message: "Jobsite archived successfully",
+      data: result,
+    };
+  } catch (error) {
+    console.error("Error archiving jobsite:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error occurred",
+    };
+  }
+}
+
+export async function restoreJobsite(id: string) {
+  try {
+    const result = await apiRequest(
+      `/api/v1/admins/jobsite/${id}/restore`,
+      "PUT",
+      { status: "ACTIVE" }
+    );
+    return {
+      success: true,
+      message: "Jobsite restored successfully",
+      data: result,
+    };
+  } catch (error) {
+    console.error("Error restoring jobsite:", error);
     return {
       success: false,
       error: error instanceof Error ? error.message : "Unknown error occurred",
