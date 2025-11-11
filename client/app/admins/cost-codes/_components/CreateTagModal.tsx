@@ -194,7 +194,7 @@ export default function CreateTagModal({
       const payload = {
         name: formData.name.trim(),
         description: formData.description.trim(),
-        CostCode: formData.CostCodes.map((costCode) => ({
+        CostCodes: formData.CostCodes.map((costCode) => ({
           id: costCode.id,
           name: costCode.name,
         })),
