@@ -1,0 +1,40 @@
+import { Router } from "express";
+import {
+  listEquipment,
+  getEquipmentById,
+  createEquipment,
+  updateEquipment,
+  archiveEquipment,
+  restoreEquipment,
+  listArchivedEquipment,
+  deleteEquipment,
+} from "../controllers/adminEquipmentController.js";
+
+const router = Router();
+
+// Equipment Management REST API routes (handlers to be implemented)
+
+// GET /api/v1/admins/equipment - List all equipment
+router.get("/", listEquipment);
+
+// GET /api/v1/admins/equipment/:id - Get equipment by ID
+router.get("/:id", getEquipmentById);
+
+// POST /api/v1/admins/equipment - Create new equipment
+router.post("/", createEquipment);
+
+// PUT /api/v1/admins/equipment/:id - Update equipment by ID
+router.put("/:id", updateEquipment);
+
+// DELETE /api/v1/admins/equipment/:id - Delete equipment by ID
+router.delete("/:id", deleteEquipment);
+
+// PUT /api/v1/admins/equipment/:id/archive - Archive equipment by ID
+router.put("/:id/archive", archiveEquipment);
+// PUT /api/v1/admins/equipment/:id/restore - Restore archived equipment by ID
+router.put("/:id/restore", restoreEquipment);
+
+// GET /api/v1/admins/equipment/archived - List all archived equipment
+router.get("/archived", listArchivedEquipment);
+
+export default router;

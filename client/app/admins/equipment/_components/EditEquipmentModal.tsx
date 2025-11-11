@@ -1,25 +1,26 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/app/v1/components/ui/button";
+import { Input } from "@/app/v1/components/ui/input";
+import { Label } from "@/app/v1/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/app/v1/components/ui/select";
 import { useEquipmentDataById } from "./useEquipmentDataById";
 import { useEffect, useState } from "react";
-import { Textarea } from "@/components/ui/textarea";
+import { Textarea } from "@/app/v1/components/ui/textarea";
 import { SquareCheck, SquareXIcon, X } from "lucide-react";
 import { format } from "date-fns";
-import { updateEquipmentAsset } from "@/actions/AssetActions";
+
 import { toast } from "sonner";
 import { useDashboardData } from "../../_pages/sidebar/DashboardDataContext";
-import Spinner from "@/components/(animations)/spinner";
-import { Skeleton } from "@/components/ui/skeleton";
+import Spinner from "@/app/v1/components/(animations)/spinner";
+import { Skeleton } from "@/app/v1/components/ui/skeleton";
+import { updateEquipmentAsset } from "@/app/lib/actions/adminActions";
 
 type Equipment = {
   id: string;
@@ -79,7 +80,7 @@ export default function EditEquipmentModal({
   }, [equipmentDetails]);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value, type } = e.target;
     setFormData((prev) =>
@@ -89,7 +90,7 @@ export default function EditEquipmentModal({
             [name]:
               type === "number" ? (value === "" ? null : Number(value)) : value,
           }
-        : prev,
+        : prev
     );
   };
 
@@ -175,10 +176,10 @@ export default function EditEquipmentModal({
         if (formData.acquiredDate) {
           fd.append(
             "acquiredDate",
-            new Date(formData.acquiredDate).toISOString(),
+            new Date(formData.acquiredDate).toISOString()
           );
           changedFields["acquiredDate"] = new Date(
-            formData.acquiredDate,
+            formData.acquiredDate
           ).toISOString();
         } else {
           fd.append("acquiredDate", "");
@@ -209,10 +210,10 @@ export default function EditEquipmentModal({
         if (formData.registrationExpiration) {
           fd.append(
             "registrationExpiration",
-            new Date(formData.registrationExpiration).toISOString(),
+            new Date(formData.registrationExpiration).toISOString()
           );
           changedFields["registrationExpiration"] = new Date(
-            formData.registrationExpiration,
+            formData.registrationExpiration
           ).toISOString();
         } else {
           fd.append("registrationExpiration", "");
@@ -341,8 +342,8 @@ export default function EditEquipmentModal({
                     originalForm.approvalStatus === "APPROVED"
                       ? "text-green-600 bg-green-100 rounded-lg"
                       : originalForm.approvalStatus === "PENDING"
-                        ? "text-sky-600 bg-sky-100 rounded-lg"
-                        : "text-red-600 bg-red-100 rounded-lg"
+                      ? "text-sky-600 bg-sky-100 rounded-lg"
+                      : "text-red-600 bg-red-100 rounded-lg"
                   }`}
                 >
                   {originalForm.approvalStatus
@@ -454,7 +455,7 @@ export default function EditEquipmentModal({
                       name="description"
                       value={formData.description || ""}
                       onChange={handleInputChange}
-                      className="w-full text-xs min-h-[80px] bg-white"
+                      className="w-full text-xs min-h-20 bg-white"
                       style={{ resize: "none" }}
                     />
                   </div>
@@ -484,11 +485,7 @@ export default function EditEquipmentModal({
                       onValueChange={(value) =>
                         handleSelectChange(
                           "equipmentTag",
-                          value as
-                            | "TRUCK"
-                            | "TRAILER"
-                            | "VEHICLE"
-                            | "EQUIPMENT",
+                          value as "TRUCK" | "TRAILER" | "VEHICLE" | "EQUIPMENT"
                         )
                       }
                     >

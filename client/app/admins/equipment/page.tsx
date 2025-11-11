@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/v1/components/ui/button";
 import { useEquipmentData } from "./_components/useEquipmentData";
 import {
   Dialog,
@@ -8,17 +8,17 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/app/v1/components/ui/dialog";
 import EditEquipmentModal from "./_components/EditEquipmentModal";
 import CreateEquipmentModal from "./_components/CreateEquipmentModal";
-import { Badge } from "@/components/ui/badge";
-import Spinner from "@/components/(animations)/spinner";
+import { Badge } from "@/app/v1/components/ui/badge";
+import Spinner from "@/app/v1/components/(animations)/spinner";
 import SearchBarPopover from "../_pages/searchBarPopover";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/app/v1/components/ui/tooltip";
 import { PageHeaderContainer } from "../_pages/PageHeaderContainer";
 import { FooterPagination } from "../_pages/FooterPagination";
 import { EquipmentDataTable } from "./_components/ViewAll/EquipmentDataTable";

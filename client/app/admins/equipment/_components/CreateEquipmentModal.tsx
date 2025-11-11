@@ -1,22 +1,24 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/app/v1/components/ui/button";
+import { Input } from "@/app/v1/components/ui/input";
+import { Label } from "@/app/v1/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/app/v1/components/ui/select";
 import { useState } from "react";
-import { registerEquipment } from "@/actions/AssetActions";
-import { Textarea } from "@/components/ui/textarea";
+
+import { Textarea } from "@/app/v1/components/ui/textarea";
 import { toast } from "sonner";
-import { useSession } from "next-auth/react";
-import { Checkbox } from "@/components/ui/checkbox";
-import { US_STATES } from "@/data/stateValues";
+import { Checkbox } from "@/app/v1/components/ui/checkbox";
+
 import { X } from "lucide-react";
+import { useUserStore } from "@/app/lib/store/userStore";
+import { US_STATES } from "@/app/lib/data/stateValues";
+import { registerEquipment } from "@/app/lib/actions/adminActions";
 
 export default function CreateEquipmentModal({
   cancel,
@@ -25,7 +27,7 @@ export default function CreateEquipmentModal({
   cancel: () => void;
   rerender: () => void;
 }) {
-  const { data: session } = useSession();
+  const { user } = useUserStore();
   const [formData, setFormData] = useState({
     code: "",
     name: "",
@@ -50,7 +52,7 @@ export default function CreateEquipmentModal({
   });
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value, type } = e.target;
     setFormData((prev) => ({
@@ -67,15 +69,15 @@ export default function CreateEquipmentModal({
           ? value === "true"
             ? true
             : value === "false"
-              ? false
-              : null
+            ? false
+            : null
           : value,
     }));
   };
 
   const handleCheckboxChange = (
     name: string,
-    checked: boolean | "indeterminate",
+    checked: boolean | "indeterminate"
   ) => {
     setFormData((prev) => ({
       ...prev,
@@ -132,7 +134,7 @@ export default function CreateEquipmentModal({
         overWeight: formData.overWeight,
         currentWeight: formData.currentWeight,
       };
-      const createdById = session?.user.id;
+      const createdById = user?.id;
       if (!createdById) {
         toast.error("You must be logged in to create equipment.", {
           duration: 3000,
@@ -222,7 +224,7 @@ export default function CreateEquipmentModal({
                       rows={3}
                       value={formData.description}
                       onChange={handleInputChange}
-                      className="w-full text-xs min-h-[80px] bg-white"
+                      className="w-full text-xs min-h-20 bg-white"
                       placeholder="Enter equipment description..."
                       style={{ resize: "none" }}
                       required

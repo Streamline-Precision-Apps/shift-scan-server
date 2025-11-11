@@ -24,7 +24,7 @@ import {
   TableRow,
 } from "@/app/v1/components/ui/table";
 import { bg } from "date-fns/locale";
-import { formatPhoneNumber } from "@/app/lib/utils/phoneNumberFormater";
+import { formatPhoneNumber } from "@/app/lib/utils/phoneNumberFormatter";
 
 // Define the column configuration
 export const personnelTableColumns: ColumnDef<PersonnelSummary>[] = [
@@ -100,7 +100,7 @@ export const personnelTableColumns: ColumnDef<PersonnelSummary>[] = [
       return (
         <div className="flex items-center gap-3 w-full">
           {/* Avatar */}
-          <div className="flex-shrink-0">
+          <div className="shrink-0">
             {personnel.image ? (
               <img
                 src={personnel.image}
@@ -134,7 +134,7 @@ export const personnelTableColumns: ColumnDef<PersonnelSummary>[] = [
                 {getActiveStatusTag(!personnel.terminationDate)}
               </div>
 
-              <div className="flex-shrink-0">
+              <div className="shrink-0">
                 {!personnel.accountSetup && (
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -175,7 +175,7 @@ export const personnelTableColumns: ColumnDef<PersonnelSummary>[] = [
                 )}
               </div>
 
-              <div className="flex-shrink-0">
+              <div className="shrink-0">
                 {/* Spacer to maintain layout balance */}
               </div>
             </div>
