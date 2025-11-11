@@ -138,7 +138,7 @@ export default function CreateCrewModal({
 
   if (loading) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-40  ">
         <div className="bg-white rounded-lg shadow-lg max-w-[1000px] w-full max-h-[80vh] overflow-y-auto no-scrollbar p-8 flex flex-col items-center">
           <div className="flex flex-col gap-4 w-full">
             <div className="flex flex-col gap-1">
@@ -152,7 +152,7 @@ export default function CreateCrewModal({
             </div>
           </div>
         </div>
-        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40">
+        <div className="absolute inset-0 flex items-center justify-center  ">
           <Spinner />
         </div>
       </div>
@@ -160,11 +160,11 @@ export default function CreateCrewModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-40">
       <div className="bg-white rounded-lg shadow-lg max-w-[1000px] w-full max-h-[80vh] overflow-y-auto no-scrollbar p-8 flex flex-col items-center relative">
         {/* Loading overlay when submitting */}
         {submitting && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-80 rounded-lg z-10">
+          <div className="absolute inset-0 flex items-center justify-center bg-white-80 rounded-lg z-10">
             <Spinner />
           </div>
         )}
@@ -331,7 +331,7 @@ export default function CreateCrewModal({
                 <Button
                   variant="outline"
                   type="submit"
-                  className="bg-sky-500 hover:bg-sky-400 text-white px-4 py-2 rounded"
+                  className="bg-sky-500 hover:bg-sky-400 hover:text-white text-white px-4 py-2 rounded"
                   disabled={submitting}
                 >
                   Create Crew

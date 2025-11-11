@@ -31,17 +31,17 @@ export const PageHeaderContainer = ({
           <Button
             variant="ghost"
             size="icon"
-            className={`h-8 w-8 p-0 hover:bg-slate-500 hover:bg-opacity-20 ${
-              open ? "bg-slate-500 bg-opacity-20" : "bg-app-blue "
+            className={`h-8 w-8 p-0 hover:bg-[hsl(215_20.2%_65.1%/0.2)] ${
+              open
+                ? "bg-[hsl(215_20.2%_65.1%/0.2)]"
+                : "bg-[hsl(198.08_76.84%_62.75%/1)]"
             }`}
-            onClick={() => {
-              setOpen(!open);
-            }}
+            onClick={() => setOpen(!open)}
           >
             <img
               src={open ? "/condense-white.svg" : "/condense.svg"}
               alt="logo"
-              className="w-4 h-auto object-contain "
+              className="w-4 h-auto object-contain"
             />
           </Button>
         </div>

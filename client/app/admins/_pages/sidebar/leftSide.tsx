@@ -115,17 +115,17 @@ export default function LeftSidebar() {
                 return (
                   <SidebarMenuItem
                     key={item.id}
-                    className={`flex flex-row items-center  px-2 rounded-lg ${
+                    className={`flex flex-row items-center rounded-lg ${
                       isActive
-                        ? "bg-app-dark-blue hover:bg-app-dark-blue/90 "
-                        : "hover:bg-white/20"
+                        ? "bg-app-dark-blue  hover:bg-app-dark-blue/80 "
+                        : "hover:bg-white-40"
                     } `}
                   >
                     <SidebarMenuButton asChild>
                       <Link
                         href={item.link}
                         prefetch={true}
-                        className="h-full w-full gap-4"
+                        className="h-full w-full bg-transparent/10 gap-4 px-2 hover:bg-transparent"
                       >
                         <img
                           src={`/${isActive ? item.white : item.img}.svg`}

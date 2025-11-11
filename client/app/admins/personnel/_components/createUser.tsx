@@ -144,11 +144,11 @@ export default function CreateUserModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-40 ">
       <div className="bg-white rounded-lg shadow-lg max-w-[1000px] w-full max-h-[80vh] overflow-y-auto no-scrollbar p-8 flex flex-col items-center relative">
         {/* Loading overlay when submitting */}
         {submitting && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-80 rounded-lg z-10">
+          <div className="absolute inset-0 flex items-center justify-center bg-white-80 rounded-lg z-10">
             <Spinner />
           </div>
         )}

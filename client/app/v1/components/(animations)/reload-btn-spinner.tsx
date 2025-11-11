@@ -23,14 +23,16 @@ export default function ReloadBtnSpinner({
               variant="ghost"
               size="icon"
               disabled={isRefreshing}
-              className={`h-8 w-8 p-0 hover:bg-slate-500 hover:bg-opacity-20 bg-slate-500 bg-opacity-20`}
+              className={`h-8 w-8 p-0 hover:bg-slate-500/30  bg-slate-500/20 `}
               onClick={fetchData}
             >
               <div className="relative">
                 <img
                   src={"/statusOngoing-white.svg"}
                   alt="logo"
-                  className={`w-4 h-auto object-contain ${isRefreshing ? "animate-spin-custom" : ""}`}
+                  className={`w-4 h-auto object-contain ${
+                    isRefreshing ? "animate-spin-custom" : ""
+                  }`}
                 />
               </div>
             </Button>
