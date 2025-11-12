@@ -32,8 +32,8 @@ export const tascoReportColumns: ColumnDef<TascoReportRow>[] = [
           {shiftType === "ABCD Shift"
             ? "TASCO - A, B, C, D Shift"
             : shiftType === "E shift"
-              ? "TASCO - E Shift Mud Conditioning"
-              : shiftType}
+            ? "TASCO - E Shift Mud Conditioning"
+            : shiftType}
         </div>
       );
     },
@@ -79,10 +79,10 @@ export const tascoReportColumns: ColumnDef<TascoReportRow>[] = [
           {laborType === "tascoAbcdEquipment"
             ? "Equipment Operator"
             : laborType === "tascoEEquipment"
-              ? "Equipment Operator" // Changed from "-" to "Equipment Operator"
-              : laborType === "tascoAbcdLabor"
-                ? "Manual Labor" // Changed from "Equipment Operator" to "Manual Labor" for clarity
-                : laborType || "-"}
+            ? "Equipment Operator" // Changed from "-" to "Equipment Operator"
+            : laborType === "tascoAbcdLabor"
+            ? "Manual Labor" // Changed from "Equipment Operator" to "Manual Labor" for clarity
+            : laborType || "-"}
         </div>
       );
     },
@@ -163,8 +163,8 @@ export const tascoReportColumns: ColumnDef<TascoReportRow>[] = [
           {loadType === "SCREENED"
             ? "Screened"
             : loadType === "UNSCREENED"
-              ? "Unscreened"
-              : "-"}
+            ? "Unscreened"
+            : "-"}
         </div>
       );
     },

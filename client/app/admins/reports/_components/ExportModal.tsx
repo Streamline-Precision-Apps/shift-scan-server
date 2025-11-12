@@ -8,12 +8,12 @@ interface ExportModalProps {
       from?: Date;
       to?: Date;
     },
-    selectedFields?: string[],
+    selectedFields?: string[]
   ) => void;
 }
 
 import { Download, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/v1/components/ui/button";
 
 const ExportReportModal = ({ onClose, onExport }: ExportModalProps) => {
   const [exportFormat, setExportFormat] = useState<"csv" | "xlsx" | "">("");

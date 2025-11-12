@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-
 import { MechanicReportRow } from "./_mechanicReport/mechanicReportTableColumns";
 import { ExportReportModal } from "./ExportModal";
 import { format } from "date-fns";
 import { MechanicDataTable } from "./_mechanicReport/MechanicDataTable";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
 
 interface MechanicReportProps {
   showExportModal: boolean;
@@ -35,12 +35,8 @@ export default function MechanicReport({
   const fetchData = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/reports/mechanic");
-      const json = await response.json();
-      if (!response.ok) {
-        throw new Error(json.message || "Failed to fetch Mechanic report data");
-      }
-      setAllData(json);
+      const result = await apiRequest("/api/v1/admins/report/mechanic", "GET");
+      setAllData(result.data || []);
     } catch (error) {
       console.error("Error fetching Mechanic report data:", error);
     } finally {
@@ -108,7 +104,7 @@ export default function MechanicReport({
   const onExport = (
     exportFormat: "csv" | "xlsx",
     _dateRange?: { from?: Date; to?: Date },
-    selectedFields?: string[],
+    selectedFields?: string[]
   ) => {
     if (!filteredData.length) return;
     // Use the already filtered data for export
@@ -141,7 +137,7 @@ export default function MechanicReport({
               // Always quote, and escape quotes inside
               return '"' + str.replace(/"/g, '""') + '"';
             })
-            .join(","),
+            .join(",")
         ),
       ];
       const blob = new Blob([csvRows.join("\n")], { type: "text/csv" });
@@ -164,7 +160,7 @@ export default function MechanicReport({
               Hours: row.hours.toFixed(2),
               Comments: row.comments || "-",
               "Date Worked": format(new Date(row.dateWorked), "yyyy/MM/dd"),
-            })),
+            }))
           );
           const wb = XLSX.utils.book_new();
           XLSX.utils.book_append_sheet(wb, ws, "Mechanic Report");

@@ -17,14 +17,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/app/v1/components/ui/table";
 import { useState } from "react";
 import {
   TruckingReportRow,
   truckingReportColumns,
 } from "./truckingReportTableColumns";
-import { Skeleton } from "@/components/ui/skeleton";
-import Spinner from "@/components/(animations)/spinner";
+import { Skeleton } from "@/app/v1/components/ui/skeleton";
+import Spinner from "@/app/v1/components/(animations)/spinner";
 import { FooterPagination } from "../../../_pages/FooterPagination";
 import React, { Suspense } from "react";
 import LoadingTruckingReportTableState from "./loadingTruckingReportTableState";
@@ -100,7 +100,7 @@ export function TruckingDataTable({ data, loading }: TruckingDataTableProps) {
                           ? null
                           : flexRender(
                               header.column.columnDef.header,
-                              header.getContext(),
+                              header.getContext()
                             )}
                       </TableHead>
                     ))}
@@ -140,7 +140,7 @@ export function TruckingDataTable({ data, loading }: TruckingDataTableProps) {
                             >
                               {flexRender(
                                 cell.column.columnDef.cell,
-                                cell.getContext(),
+                                cell.getContext()
                               )}
                             </TableCell>
                           ))}
