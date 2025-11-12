@@ -11,6 +11,7 @@ import {
   editUserAdmin,
   deleteUser,
   getPersonnelManager,
+  getAllActiveEmployees,
 } from "../services/adminPersonnelServices.js";
 
 export const getCrewEmployeesController = async (
@@ -33,6 +34,20 @@ export const getCrewEmployeesController = async (
 export const getAllCrewsController = async (req: Request, res: Response) => {
   try {
     const result = await getAllCrews();
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({
+      error: error instanceof Error ? error.message : "Failed to fetch crews",
+    });
+  }
+};
+
+export const getAllActiveEmployeesController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const result = await getAllActiveEmployees();
     res.json(result);
   } catch (error) {
     res.status(500).json({

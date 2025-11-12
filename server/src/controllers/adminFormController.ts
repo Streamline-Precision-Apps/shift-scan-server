@@ -3,6 +3,7 @@ import {
   getAllFormTemplates,
   getFormTemplateById,
   getFormSubmissions,
+  getFormSubmissionByTemplateId,
   createFormTemplate,
   updateFormTemplate,
   deleteFormTemplate,
@@ -55,6 +56,8 @@ export async function getAllFormTemplatesController(
     });
   }
 }
+
+
 
 export async function getFormTemplateByIdController(
   req: Request,
@@ -111,6 +114,50 @@ export async function getFormSubmissionsController(
     res.status(500).json({
       success: false,
       message: "Failed to fetch form submissions",
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
+}
+
+export async function getFormSubmissionByTemplateIdController(
+  req: Request,
+  res: Response
+) {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Missing required parameter: id" });
+    }
+
+    // Parse query parameters
+    const page = req.query.page 
+      ? parseInt(req.query.page as string, 10) 
+      : 1;
+    const pageSize = req.query.pageSize 
+      ? parseInt(req.query.pageSize as string, 10) 
+      : 25;
+    const pendingOnly = req.query.pendingOnly === "true";
+    const statusFilter = (req.query.statusFilter as string) || "ALL";
+    const dateRangeStart = req.query.startDate as string | null;
+    const dateRangeEnd = req.query.endDate as string | null;
+
+    const result = await getFormSubmissionByTemplateId(
+      id,
+      page,
+      pageSize,
+      pendingOnly,
+      statusFilter,
+      dateRangeStart || null,
+      dateRangeEnd || null
+    );
+
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch form submissions by template",
       error: error instanceof Error ? error.message : "Unknown error",
     });
   }

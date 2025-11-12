@@ -8,6 +8,7 @@ import {
   restoreEquipment,
   listArchivedEquipment,
   deleteEquipment,
+  getEquipmentSummary,
 } from "../controllers/adminEquipmentController.js";
 
 const router = Router();
@@ -16,6 +17,9 @@ const router = Router();
 
 // GET /api/v1/admins/equipment - List all equipment
 router.get("/", listEquipment);
+
+// GET /api/v1/admins/equipment/summary - List all equipment but only important fields
+router.get("/summary", getEquipmentSummary);
 
 // GET /api/v1/admins/equipment/:id - Get equipment by ID
 router.get("/:id", getEquipmentById);

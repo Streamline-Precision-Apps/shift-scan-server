@@ -5,6 +5,7 @@ import {
   getAllFormTemplatesController,
   getFormTemplateByIdController,
   getFormSubmissionsController,
+  getFormSubmissionByTemplateIdController,
   createFormTemplateController,
   updateFormTemplateController,
   deleteFormTemplateController,
@@ -56,38 +57,36 @@ router.delete("/template/:id", deleteFormTemplateController);
 
 // GET /api/v1/admins/forms/template/:id/submissions
 // Returns all submissions for a given form template (supports date range)
-router.get("/template/:id/submissions", getFormSubmissionsController);
+router.get("/template/:id/submissions/export", getFormSubmissionsController);
+
+// GET /api/v1/admins/forms/template/:id/submissions-detailed
+// Returns all submissions for a given form template with full details (supports pagination, status filter, date range)
+router.get(
+  "/template/:id/submissions",
+  getFormSubmissionByTemplateIdController
+);
 
 // POST /api/v1/admins/forms/template/:id/submissions
 // Creates a new form submission for a given template
 router.post("/template/:id/submissions", createFormSubmissionController);
 
-// GET /api/v1/admins/forms/template/:id/submission/:submissionId
+// GET /api/v1/admins/forms/submissions/:submissionId
 // Returns a single form submission by submission ID
-router.get(
-  "/template/:id/submission/:submissionId",
-  getFormSubmissionByIdController
-);
+router.get("/submissions/:submissionId", getFormSubmissionByIdController);
 
-// PUT /api/v1/admins/forms/template/:id/submission/:submissionId
+// PUT /api/v1/admins/forms/submissions/:submissionId
 // Updates a form submission by submission ID
-router.put(
-  "/template/:id/submission/:submissionId",
-  updateFormSubmissionController
-);
+router.put("/submissions/:submissionId", updateFormSubmissionController);
 
-// PUT /api/v1/admins/forms/template/:id/submission/:submissionId/approve
+// PUT /api/v1/admins/forms/submissions/:submissionId/approve
 // Approves or rejects a form submission by submission ID
 router.put(
-  "/template/:id/submission/:submissionId/approve",
+  "/submissions/:submissionId/approve",
   approveFormSubmissionController
 );
 
-// DELETE /api/v1/admins/forms/template/:id/submission/:submissionId
+// DELETE /api/v1/admins/forms/submissions/:submissionId
 // Deletes a form submission by submission ID
-router.delete(
-  "/template/:id/submission/:submissionId",
-  deleteFormSubmissionController
-);
+router.delete("/submissions/:submissionId", deleteFormSubmissionController);
 
 export default router;

@@ -6,6 +6,7 @@ import {
   deleteUserController,
   editCrewController,
   editUserAdminController,
+  getAllActiveEmployeesController,
   getAllCrewsController,
   getCrewByIdAdminController,
   getCrewEmployeesController,
@@ -18,6 +19,9 @@ const router = Router();
 
 // get all users in crew
 router.get("/getAllEmployees", getCrewEmployeesController);
+
+// /api/v1/admins/employees/getAllActiveEmployees  - get all active users in crew
+router.get("/getAllActiveEmployees", getAllActiveEmployeesController);
 // get all crews
 router.get("/getAllCrews", getAllCrewsController);
 // get employee Info by id

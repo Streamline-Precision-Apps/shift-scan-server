@@ -559,3 +559,16 @@ export async function deleteUser(id: string) {
   await prisma.user.delete({ where: { id } });
   return { success: true };
 }
+
+export async function getAllActiveEmployees() {
+  return await prisma.user.findMany({
+    where: {
+      OR: [{ terminationDate: null }, { terminationDate: { gt: new Date() } }],
+    },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+    },
+  });
+}

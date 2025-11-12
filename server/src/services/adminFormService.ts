@@ -209,13 +209,129 @@ export async function getAllFormTemplates(
   }
 }
 
+export async function getFormSubmissionByTemplateId(
+  id: string,
+  page: number,
+  pageSize: number,
+  pendingOnly: boolean,
+  statusFilter: string,
+  dateRangeStart: string | null,
+  dateRangeEnd: string | null
+) {
+  // If pendingOnly, do not paginate (return all pending submissions)
+  const skip = pendingOnly ? undefined : (page - 1) * pageSize;
+  const take = pendingOnly ? undefined : pageSize;
+
+  // (moved up)
+
+  // Determine the status condition for queries
+  let statusCondition: FormStatus | undefined;
+  if (pendingOnly) {
+    statusCondition = "PENDING";
+  } else if (statusFilter && statusFilter !== "ALL") {
+    statusCondition = statusFilter as FormStatus;
+  }
+
+  const total = await prisma.formSubmission.count({
+    where: {
+      formTemplateId: id,
+      NOT: {
+        status: "DRAFT",
+      },
+      ...(statusCondition && { status: statusCondition }),
+    },
+  });
+
+  // Count of pending submissions for inbox
+  const pendingForms = await prisma.formSubmission.count({
+    where: {
+      formTemplateId: id,
+      status: "PENDING",
+    },
+  });
+
+  const formTemplate = await prisma.formTemplate.findUnique({
+    where: { id },
+    include: {
+      FormGrouping: {
+        select: {
+          id: true,
+          title: true,
+          order: true,
+          Fields: {
+            select: {
+              id: true,
+              label: true,
+              type: true,
+              required: true,
+              order: true,
+              placeholder: true,
+              minLength: true,
+              maxLength: true,
+              multiple: true,
+              content: true,
+              filter: true,
+              Options: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const submissions = await prisma.formSubmission.findMany({
+    where: {
+      formTemplateId: id,
+      NOT: {
+        status: "DRAFT",
+      },
+      ...(statusCondition && { status: statusCondition }),
+      ...(dateRangeStart || dateRangeEnd
+        ? {
+            submittedAt: {
+              ...(dateRangeStart && { gte: new Date(dateRangeStart) }),
+              ...(dateRangeEnd && { lte: new Date(dateRangeEnd) }),
+            },
+          }
+        : {}),
+    },
+    ...(skip !== undefined ? { skip } : {}),
+    ...(take !== undefined ? { take } : {}),
+    orderBy: { submittedAt: "desc" },
+    include: {
+      User: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          signature: true,
+        },
+      },
+    },
+  });
+
+  return {
+    ...formTemplate,
+    Submissions: submissions,
+    total,
+    page: pendingOnly ? 1 : page,
+    pageSize: pendingOnly ? submissions.length : pageSize,
+    totalPages: pendingOnly ? 1 : Math.ceil(total / pageSize),
+    pendingForms,
+  };
+}
+
 export async function getFormTemplateById(id: string) {
   return await prisma.formTemplate.findUnique({
     where: { id },
     include: {
       FormGrouping: {
         include: {
-          Fields: true,
+          Fields: {
+            include: {
+              Options: true,
+            },
+          },
         },
       },
     },

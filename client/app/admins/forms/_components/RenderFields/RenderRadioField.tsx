@@ -57,7 +57,7 @@ export default function RenderRadioField({
             <span
               className={`${
                 useNativeInput
-                  ? "text-sm max-w-[200px] break-words"
+                  ? "text-sm max-w-[200px] wrap-break-word"
                   : "text-sm font-medium"
               } `}
             >

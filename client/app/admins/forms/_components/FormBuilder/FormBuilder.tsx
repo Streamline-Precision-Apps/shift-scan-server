@@ -29,6 +29,7 @@ import {
   updateFormTemplate,
 } from "@/app/lib/actions/adminActions";
 import Spinner from "@/app/v1/components/(animations)/spinner";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
 
 export default function FormBuilder({
   onCancel,
@@ -84,9 +85,11 @@ export default function FormBuilder({
       const fetchForm = async () => {
         setLoading(true);
         try {
-          const response = await fetch(`/api/getForms/${formId}`);
-          if (!response.ok) throw new Error("Failed to fetch form");
-          const data = await response.json();
+          const data = await apiRequest(
+            `/api/v1/admins/forms/template/${formId}`,
+            "GET"
+          );
+          console.log("Fetched form data:", data);
 
           // Map the response data to the form state
           const formGrouping = data.FormGrouping.map((group: FormGrouping) => ({
@@ -463,7 +466,7 @@ export default function FormBuilder({
 
         {/* Loading overlay */}
         {loadingSave && (
-          <div className="absolute inset-0 z-40 w-full h-full bg-white bg-opacity-20 flex items-center justify-center rounded-lg">
+          <div className="absolute inset-0 z-40 w-full h-full bg-white-20  flex items-center justify-center rounded-lg">
             <Spinner size={40} />
           </div>
         )}

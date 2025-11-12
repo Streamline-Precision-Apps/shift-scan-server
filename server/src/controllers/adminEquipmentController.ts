@@ -7,6 +7,7 @@ import {
   deleteEquipmentService,
   getAllEquipmentService,
   getEquipmentByIdService,
+  getEquipmentSummaryService,
 } from "../services/adminsEquipmentService.js";
 import type { GetAllEquipmentServiceParams } from "../services/adminsEquipmentService.js";
 
@@ -24,6 +25,15 @@ export async function listEquipment(req: Request, res: Response) {
     };
 
     const result = await getAllEquipmentService(params);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch equipment", error });
+  }
+}
+
+export async function getEquipmentSummary(req: Request, res: Response) {
+  try {
+    const result = await getEquipmentSummaryService();
     res.json(result);
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch equipment", error });

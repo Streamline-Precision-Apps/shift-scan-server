@@ -408,3 +408,16 @@ export async function getEquipmentByIdService(id: string) {
     },
   });
 }
+
+export async function getEquipmentSummaryService() {
+  return await prisma.equipment.findMany({
+    select: {
+      id: true,
+      name: true,
+      approvalStatus: true,
+    },
+    orderBy: {
+      name: "asc",
+    },
+  });
+}
