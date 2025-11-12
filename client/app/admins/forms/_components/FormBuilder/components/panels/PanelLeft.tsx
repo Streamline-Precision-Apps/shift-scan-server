@@ -1,28 +1,46 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/app/v1/components/ui/input";
+import { Textarea } from "@/app/v1/components/ui/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from "@/app/v1/components/ui/select";
+import { Label } from "@/app/v1/components/ui/label";
+import { Switch } from "@/app/v1/components/ui/switch";
+import { ScrollArea } from "@/app/v1/components/ui/scroll-area";
 import { FormSettings, FormField, fieldTypes } from "../../types";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { FormTemplateCategory } from "../../../../../../../../../prisma/generated/prisma/client";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/app/v1/components/ui/tabs";
+import { Button } from "@/app/v1/components/ui/button";
+
+type FormTemplateCategory =
+  | "MAINTENANCE"
+  | "GENERAL"
+  | "SAFETY"
+  | "INSPECTION"
+  | "INCIDENT"
+  | "FINANCE"
+  | "OTHER"
+  | "HR"
+  | "OPERATIONS"
+  | "COMPLIANCE"
+  | "CLIENTS"
+  | "IT";
 
 interface FormEditorPanelLeftProps {
   formSettings: FormSettings;
   formFields: FormField[];
   updateFormSettings: (
     key: keyof FormSettings,
-    value: string | boolean,
+    value: string | boolean
   ) => void;
 }
 
@@ -101,7 +119,20 @@ export const PanelLeft: React.FC<FormEditorPanelLeftProps> = ({
                 <SelectValue placeholder="Select Category" />
               </SelectTrigger>
               <SelectContent>
-                {Object.values(FormTemplateCategory).map((category) => (
+                {[
+                  "MAINTENANCE",
+                  "GENERAL",
+                  "SAFETY",
+                  "INSPECTION",
+                  "INCIDENT",
+                  "FINANCE",
+                  "OTHER",
+                  "HR",
+                  "OPERATIONS",
+                  "COMPLIANCE",
+                  "CLIENTS",
+                  "IT",
+                ].map((category) => (
                   <SelectItem key={category} value={category}>
                     {category.charAt(0) + category.slice(1).toLowerCase()}
                   </SelectItem>
@@ -196,7 +227,9 @@ export const PanelLeft: React.FC<FormEditorPanelLeftProps> = ({
                     className={`flex flex-row items-center w-full gap-1 mb-2 rounded-lg bg-slate-100 p-1  relative `}
                   >
                     <div
-                      className={`flex flex-row items-center w-full gap-2 px-1   ${field.required && "mt-4"}`}
+                      className={`flex flex-row items-center w-full gap-2 px-1   ${
+                        field.required && "mt-4"
+                      }`}
                     >
                       {field.required && (
                         <span className="bg-red-100  w-fit px-2 py-0.5  rounded-md text-red-500 flex flex-row items-center text-xs absolute left-1 top-1">
@@ -221,7 +254,7 @@ export const PanelLeft: React.FC<FormEditorPanelLeftProps> = ({
                         size="sm"
                         className={`flex flex-row items-center  justify-start  ${(() => {
                           const typeDef = fieldTypes.find(
-                            (t) => t.name === field.type,
+                            (t) => t.name === field.type
                           );
                           return typeDef
                             ? `${typeDef.color} hover:${typeDef.color

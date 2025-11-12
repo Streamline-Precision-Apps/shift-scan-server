@@ -2,6 +2,7 @@ import { Router } from "express";
 import type { Request, Response } from "express";
 import { getFirebaseAdmin } from "../lib/firebase.js";
 import NotificationService from "../services/notificationService.js";
+import { markReadController } from "../controllers/pushNotifcationController.js";
 import type { FirebaseError } from "firebase-admin";
 
 const router = Router();
@@ -333,5 +334,7 @@ router.post(
     }
   }
 );
+
+router.post("/mark-read", markReadController);
 
 export default router;

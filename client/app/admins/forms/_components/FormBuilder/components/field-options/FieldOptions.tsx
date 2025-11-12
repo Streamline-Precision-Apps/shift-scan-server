@@ -1,6 +1,6 @@
 "use client";
 
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@/app/v1/components/ui/separator";
 import { FormField } from "../../types";
 import { TextFieldOptions } from "./TextFieldOptions";
 import { NumberFieldOptions } from "./NumberFieldOptions";
@@ -46,7 +46,7 @@ export const FieldOptions: React.FC<FieldOptionsProps> = ({
   return (
     <>
       <Separator className="my-2" />
-      
+
       {/* Display validation errors if any */}
       {fieldValidationErrors.length > 0 && (
         <div className="mb-3 p-2 bg-red-50 rounded-md border border-red-200">
@@ -55,11 +55,11 @@ export const FieldOptions: React.FC<FieldOptionsProps> = ({
           ))}
         </div>
       )}
-      
+
       {field.type === "TEXT" && (
-        <TextFieldOptions 
-          field={field} 
-          updateField={updateField} 
+        <TextFieldOptions
+          field={field}
+          updateField={updateField}
           validationErrors={validationErrors}
           setValidationErrors={setValidationErrors}
         />
@@ -79,9 +79,9 @@ export const FieldOptions: React.FC<FieldOptionsProps> = ({
       )}
 
       {field.type === "TEXTAREA" && (
-        <TextareaFieldOptions 
-          field={field} 
-          updateField={updateField} 
+        <TextareaFieldOptions
+          field={field}
+          updateField={updateField}
           validationErrors={validationErrors}
           setValidationErrors={setValidationErrors}
         />

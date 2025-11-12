@@ -2,20 +2,22 @@
 
 import { format, isToday, isYesterday } from "date-fns";
 // Helper to get day label
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
+import { Label } from "@/app/v1/components/ui/label";
+import { Switch } from "@/app/v1/components/ui/switch";
 import { ResolvedNotification } from "../page";
 import { Bell, BookCheck, SearchCheck, Verified } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import { updateNotificationReadStatus } from "@/actions/NotificationActions";
-import { markAllNotificationsAsRead } from "@/actions/NotificationActions";
+import {
+  updateNotificationReadStatus,
+  markAllNotificationsAsRead,
+} from "@/app/lib/actions/NotificationActions";
 import { Fragment, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/v1/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/app/v1/components/ui/tooltip";
 import { useRouter } from "next/navigation";
 
 export default function NotificationActionsList({
@@ -38,7 +40,10 @@ export default function NotificationActionsList({
   // Async function to mark notification as read
   const markNotificationAsRead = async (notificationId: number) => {
     try {
-      await updateNotificationReadStatus({ notificationId });
+      await updateNotificationReadStatus({
+        notificationId,
+        userId: currentUserId,
+      });
       setReadIds((prev) => {
         const updated = new Set(prev);
         updated.add(notificationId);
@@ -52,7 +57,9 @@ export default function NotificationActionsList({
   // Mark all visible unread notifications as read
   const markAllAsRead = async () => {
     try {
-      await markAllNotificationsAsRead();
+      await markAllNotificationsAsRead({
+        userId: currentUserId,
+      });
       // Update local state to mark all as read
       if (resolved) {
         setReadIds(new Set(resolved.map((item) => item.id)));
@@ -81,7 +88,7 @@ export default function NotificationActionsList({
               id="unread-notifications"
               checked={showOnlyUnread}
               onCheckedChange={setShowOnlyUnread}
-              className="data-[state=checked]:bg-blue-500"
+              className="data-[state=checked]:bg-blue-500 data-[state=unchecked]:bg-gray-200"
             />
             <Label
               htmlFor="unread-notifications"
@@ -99,7 +106,7 @@ export default function NotificationActionsList({
               .filter((item) => {
                 const isRead =
                   item.Reads?.some(
-                    (r: { userId: string }) => r.userId === currentUserId,
+                    (r: { userId: string }) => r.userId === currentUserId
                   ) || readIds.has(item.id);
                 return showOnlyUnread ? !isRead : true;
               })
@@ -131,7 +138,7 @@ export default function NotificationActionsList({
               .sort(
                 (a, b) =>
                   new Date(b.replace(/^(Today|Yesterday) /, "")).getTime() -
-                  new Date(a.replace(/^(Today|Yesterday) /, "")).getTime(),
+                  new Date(a.replace(/^(Today|Yesterday) /, "")).getTime()
               );
 
             // If showOnlyUnread is on and there are no unread notifications, show message and hide today label/notifications, but keep Mark All as Read
@@ -189,7 +196,7 @@ export default function NotificationActionsList({
                   todayNotifications.map((item) => {
                     const isRead =
                       item.Reads?.some(
-                        (r: { userId: string }) => r.userId === currentUserId,
+                        (r: { userId: string }) => r.userId === currentUserId
                       ) || readIds.has(item.id);
                     if (!item.Response) return null;
                     const respondedDate = new Date(item.Response.respondedAt);
@@ -197,7 +204,9 @@ export default function NotificationActionsList({
                       <Fragment key={item.id}>
                         <div
                           className={`relative border rounded-md transition-colors duration-200 hover:bg-neutral-50 
-            ${isRead ? "bg-white border-gray-200" : "bg-blue-50 border-blue-300"}`}
+            ${
+              isRead ? "bg-white border-gray-200" : "bg-blue-50 border-blue-300"
+            }`}
                         >
                           <div className="w-full flex flex-row justify-between p-2">
                             {/* Response title and time */}
@@ -207,7 +216,13 @@ export default function NotificationActionsList({
                                   <TooltipTrigger>
                                     <div className="relative group w-8 h-8">
                                       <div className="flex items-center justify-center rounded-full bg-blue-200 text-blue-900 font-bold text-xs w-8 h-8 cursor-pointer">
-                                        {`${item.Response.user?.firstName?.[0] ?? ""}${item.Response.user?.lastName?.[0] ?? ""}`}
+                                        {`${
+                                          item.Response.user?.firstName?.[0] ??
+                                          ""
+                                        }${
+                                          item.Response.user?.lastName?.[0] ??
+                                          ""
+                                        }`}
                                       </div>
                                       {item.Response.response === "Verified" ? (
                                         <span className="absolute -bottom-1 -right-1">
@@ -230,13 +245,19 @@ export default function NotificationActionsList({
                                     sideOffset={10}
                                     className="bg-white text-blue-700 border border-blue-300 font-semibold text-xs p-3"
                                   >
-                                    {`${item.Response.response} by ${item.Response.user?.firstName ?? ""} ${item.Response.user?.lastName ?? ""}`}
+                                    {`${item.Response.response} by ${
+                                      item.Response.user?.firstName ?? ""
+                                    } ${item.Response.user?.lastName ?? ""}`}
                                   </TooltipContent>
                                 </Tooltip>
                                 <div className="w-full flex flex-col gap-1">
                                   <div className="flex flex-row justify-between gap-4 ">
                                     <p
-                                      className={`text-xs font-semibold ${!isRead ? "text-blue-700" : "text-gray-800"}`}
+                                      className={`text-xs font-semibold ${
+                                        !isRead
+                                          ? "text-blue-700"
+                                          : "text-gray-800"
+                                      }`}
                                     >
                                       {item.title === "Timecard Approval Needed"
                                         ? "Timecard Approved"
@@ -273,7 +294,7 @@ export default function NotificationActionsList({
                                           setExpandedBodyId(
                                             expandedBodyId === item.id
                                               ? null
-                                              : item.id,
+                                              : item.id
                                           )
                                         }
                                         aria-label={
@@ -372,7 +393,7 @@ export default function NotificationActionsList({
                     {groups[dayLabel].map((item) => {
                       const isRead =
                         item.Reads?.some(
-                          (r: { userId: string }) => r.userId === currentUserId,
+                          (r: { userId: string }) => r.userId === currentUserId
                         ) || readIds.has(item.id);
                       if (!item.Response) return null;
                       const respondedDate = new Date(item.Response.respondedAt);
@@ -380,7 +401,9 @@ export default function NotificationActionsList({
                         <Fragment key={item.id}>
                           <div
                             className={`relative border rounded-md transition-colors duration-200 hover:bg-neutral-50 
-            ${isRead ? "bg-white border-gray-200" : "bg-blue-50 border-blue-300"}`}
+            ${
+              isRead ? "bg-white border-gray-200" : "bg-blue-50 border-blue-300"
+            }`}
                           >
                             <div className="flex flex-row justify-between p-2">
                               {/* Response title and time */}
@@ -390,7 +413,13 @@ export default function NotificationActionsList({
                                     <TooltipTrigger>
                                       <div className="relative group w-8 h-8">
                                         <div className="flex items-center justify-center rounded-full bg-blue-200 text-blue-900 font-bold text-xs w-8 h-8 cursor-pointer">
-                                          {`${item.Response.user?.firstName?.[0] ?? ""}${item.Response.user?.lastName?.[0] ?? ""}`}
+                                          {`${
+                                            item.Response.user
+                                              ?.firstName?.[0] ?? ""
+                                          }${
+                                            item.Response.user?.lastName?.[0] ??
+                                            ""
+                                          }`}
                                         </div>
                                         {item.Response.response ===
                                           "Verified" ||
@@ -412,14 +441,20 @@ export default function NotificationActionsList({
                                       sideOffset={10}
                                       className="bg-white text-blue-700 border border-blue-300 font-semibold text-xs p-3"
                                     >
-                                      {`${item.Response.response} by ${item.Response.user?.firstName ?? ""} ${item.Response.user?.lastName ?? ""}`}
+                                      {`${item.Response.response} by ${
+                                        item.Response.user?.firstName ?? ""
+                                      } ${item.Response.user?.lastName ?? ""}`}
                                     </TooltipContent>
                                   </Tooltip>
 
                                   <div className="w-full flex flex-col gap-1 ">
                                     <div className="flex flex-row justify-between gap-4 ">
                                       <p
-                                        className={`text-xs font-semibold ${!isRead ? "text-blue-700" : "text-gray-800"}`}
+                                        className={`text-xs font-semibold ${
+                                          !isRead
+                                            ? "text-blue-700"
+                                            : "text-gray-800"
+                                        }`}
                                       >
                                         {item.title ===
                                         "Timecard Approval Needed"
@@ -457,7 +492,7 @@ export default function NotificationActionsList({
                                             setExpandedBodyId(
                                               expandedBodyId === item.id
                                                 ? null
-                                                : item.id,
+                                                : item.id
                                             )
                                           }
                                           aria-label={

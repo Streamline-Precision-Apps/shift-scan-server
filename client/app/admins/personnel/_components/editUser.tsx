@@ -1,21 +1,19 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/app/v1/components/ui/button";
+import { Input } from "@/app/v1/components/ui/input";
+import { Label } from "@/app/v1/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/app/v1/components/ui/select";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { useSession } from "next-auth/react";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Permission } from "../../../../../../prisma/generated/prisma";
-
+import { Checkbox } from "@/app/v1/components/ui/checkbox";
+import { Skeleton } from "@/app/v1/components/ui/skeleton";
+type Permission = "ADMIN" | "USER" | "MANAGER" | "SUPERADMIN";
 // Utility function to get allowed permissions based on current user's permission level
 const getAllowedPermissions = (currentUserPermission: string): string[] => {
   const permissionHierarchy = ["USER", "MANAGER", "ADMIN", "SUPERADMIN"];
@@ -27,8 +25,9 @@ const getAllowedPermissions = (currentUserPermission: string): string[] => {
   return permissionHierarchy.slice(0, currentIndex + 1);
 };
 import { useUserData } from "./useUserData";
-import Spinner from "@/components/(animations)/spinner";
-import { editUserAdmin } from "@/actions/adminActions";
+import Spinner from "@/app/v1/components/(animations)/spinner";
+import { editUserAdmin } from "@/app/lib/actions/adminActions";
+import { useUserStore } from "@/app/lib/store/userStore";
 
 export default function EditUserModal({
   cancel,
@@ -39,15 +38,15 @@ export default function EditUserModal({
   rerender: () => void;
   pendingEditId: string;
 }) {
-  const { data: session } = useSession();
+  const { user } = useUserStore();
   const [submitting, setSubmitting] = useState(false);
   const { userData, setUserData, loading, crew } = useUserData({
     userid: pendingEditId,
   });
 
   // Get allowed permissions based on current user's permission level
-  const allowedPermissions = session?.user?.permission
-    ? getAllowedPermissions(session.user.permission)
+  const allowedPermissions = user?.permission
+    ? getAllowedPermissions(user?.permission)
     : ["USER"];
 
   // Check if the user being edited has a permission level higher than what current user can assign
@@ -84,7 +83,7 @@ export default function EditUserModal({
 
   if (loading || !userData || !crew) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-40 ">
         <div className="bg-white rounded-lg shadow-lg max-w-[1000px] w-full max-h-[80vh] overflow-y-auto no-scrollbar p-8 flex flex-col items-center">
           <div className="flex flex-col gap-4 w-full">
             <div className="flex flex-col gap-1">
@@ -104,11 +103,11 @@ export default function EditUserModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-40 ">
       <div className="bg-white rounded-lg shadow-lg max-w-[1000px] w-full max-h-[80vh] overflow-y-auto no-scrollbar p-8 flex flex-col items-center relative">
         {/* Loading overlay when submitting */}
         {submitting && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-80 rounded-lg z-10">
+          <div className="absolute inset-0 flex items-center justify-center bg-white-80  rounded-lg z-10">
             <Spinner />
           </div>
         )}
@@ -406,7 +405,7 @@ export default function EditUserModal({
                                     return {
                                       ...prev,
                                       Crews: crews.filter(
-                                        (sel) => sel.id !== c.id,
+                                        (sel) => sel.id !== c.id
                                       ),
                                     };
                                   }

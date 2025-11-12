@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/v1/components/ui/button";
 import { use } from "react";
 import {
   Dialog,
@@ -8,11 +8,11 @@ import {
   DialogFooter,
   DialogTitle,
   DialogDescription,
-} from "@/components/ui/dialog";
+} from "@/app/v1/components/ui/dialog";
 import { ExportModal } from "../_components/Table/exportModal";
 import EditFormSubmissionModal from "./_component/editFormSubmissionModal";
 import CreateFormSubmissionModal from "./_component/CreateFormSubmissionModal";
-import Spinner from "@/components/(animations)/spinner";
+import Spinner from "@/app/v1/components/(animations)/spinner";
 import useSubmissionDataById from "./_component/hooks/useSubmissionDataById";
 import RenderTitleDescriptionStatus from "./_component/RenderTitleDescriptionStatus";
 import RenderButtonsAndFilters from "./_component/RenderButtonsAndFilters";

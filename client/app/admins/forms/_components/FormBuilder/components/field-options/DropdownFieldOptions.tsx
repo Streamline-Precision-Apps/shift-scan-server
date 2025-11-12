@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/app/v1/components/ui/button";
+import { Input } from "@/app/v1/components/ui/input";
 import { Plus, X } from "lucide-react";
 import { FormField } from "../../types";
 
@@ -25,14 +25,14 @@ export const DropdownFieldOptions: React.FC<DropdownFieldOptionsProps> = ({
 
   const updateOption = (optionId: string, value: string) => {
     const updatedOptions = (field.Options || []).map((option) =>
-      option.id === optionId ? { ...option, value } : option,
+      option.id === optionId ? { ...option, value } : option
     );
     updateField(field.id, { Options: updatedOptions });
   };
 
   const removeOption = (optionId: string) => {
     const updatedOptions = (field.Options || []).filter(
-      (option) => option.id !== optionId,
+      (option) => option.id !== optionId
     );
     updateField(field.id, { Options: updatedOptions });
   };
@@ -60,11 +60,11 @@ export const DropdownFieldOptions: React.FC<DropdownFieldOptionsProps> = ({
             const newOptions = [
               ...(field.Options || []).filter(
                 (
-                  opt,
+                  opt
                 ): opt is {
                   id: string;
                   value: string;
-                } => typeof opt !== "string",
+                } => typeof opt !== "string"
               ),
               {
                 id: Date.now().toString(),
@@ -86,11 +86,11 @@ export const DropdownFieldOptions: React.FC<DropdownFieldOptionsProps> = ({
           {(field.Options || [])
             .filter(
               (
-                opt,
+                opt
               ): opt is {
                 id: string;
                 value: string;
-              } => typeof opt !== "string",
+              } => typeof opt !== "string"
             )
             .map((option, optionIndex) => (
               <div key={option.id || optionIndex} className="flex gap-2">
@@ -103,11 +103,11 @@ export const DropdownFieldOptions: React.FC<DropdownFieldOptionsProps> = ({
                     const newOptions = (field.Options || [])
                       .filter(
                         (
-                          opt,
+                          opt
                         ): opt is {
                           id: string;
                           value: string;
-                        } => typeof opt !== "string",
+                        } => typeof opt !== "string"
                       )
                       .map((opt, idx) =>
                         idx === optionIndex
@@ -115,7 +115,7 @@ export const DropdownFieldOptions: React.FC<DropdownFieldOptionsProps> = ({
                               ...opt,
                               value: e.target.value,
                             }
-                          : opt,
+                          : opt
                       );
                     updateField(field.id, {
                       Options: newOptions,
@@ -131,11 +131,11 @@ export const DropdownFieldOptions: React.FC<DropdownFieldOptionsProps> = ({
                     const newOptions = (field.Options || [])
                       .filter(
                         (
-                          opt,
+                          opt
                         ): opt is {
                           id: string;
                           value: string;
-                        } => typeof opt !== "string",
+                        } => typeof opt !== "string"
                       )
                       .filter((_, i) => i !== optionIndex);
                     updateField(field.id, {

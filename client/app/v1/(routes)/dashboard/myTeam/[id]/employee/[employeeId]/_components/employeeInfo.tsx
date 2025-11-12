@@ -23,7 +23,7 @@ import { Holds } from "@/app/v1/components/(reusable)/holds";
 import { Inputs } from "@/app/v1/components/(reusable)/inputs";
 import { Labels } from "@/app/v1/components/(reusable)/labels";
 import { Texts } from "@/app/v1/components/(reusable)/texts";
-import { formatPhoneNumber } from "@/app/lib/utils/phoneNumberFormater";
+import { formatPhoneNumber } from "@/app/lib/utils/phoneNumberFormatter";
 import { format } from "date-fns";
 import { useTranslations } from "next-intl";
 import { PhoneCall } from "lucide-react";

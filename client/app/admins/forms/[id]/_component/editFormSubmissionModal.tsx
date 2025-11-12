@@ -1,23 +1,20 @@
 "use client";
-import {
-  getFormSubmissionById,
-  updateFormSubmission,
-} from "@/actions/records-forms";
-import { Button } from "@/components/ui/button";
+
+import { Button } from "@/app/v1/components/ui/button";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
+} from "@/app/v1/components/ui/accordion";
 import { useEffect, useState } from "react";
 import {
   FormIndividualTemplate,
   FormSubmissionWithTemplate,
 } from "./hooks/types";
 import React from "react";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { Label } from "@/app/v1/components/ui/label";
+import { Input } from "@/app/v1/components/ui/input";
 import { toast } from "sonner";
 import RenderTextArea from "../../_components/RenderFields/RenderTextAreaField";
 import RenderNumberField from "../../_components/RenderFields/RenderNumberField";
@@ -29,10 +26,15 @@ import RenderCheckboxField from "../../_components/RenderFields/RenderCheckboxFi
 import RenderMultiselectField from "../../_components/RenderFields/RenderMultiselectField";
 import RenderSearchPersonField from "../../_components/RenderFields/RenderSearchPersonField";
 import RenderSearchAssetField from "../../_components/RenderFields/RenderSearchAssetField";
-import { useSession } from "next-auth/react";
-import { Textarea } from "@/components/ui/textarea";
+import { Textarea } from "@/app/v1/components/ui/textarea";
 import { ChevronDown, X } from "lucide-react";
 import { useDashboardData } from "../../../_pages/sidebar/DashboardDataContext";
+import {
+  getFormSubmissionById,
+  updateFormSubmission,
+} from "@/app/lib/actions/adminActions";
+import { useUserStore } from "@/app/lib/store/userStore";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
 
 export default function EditFormSubmissionModal({
   id,
@@ -46,9 +48,9 @@ export default function EditFormSubmissionModal({
   onSuccess: () => void;
 }) {
   const { refresh } = useDashboardData();
-  const { data: session } = useSession();
+  const { user } = useUserStore();
 
-  const adminUserId = session?.user.id || null;
+  const adminUserId = user?.id || null;
 
   const [loading, setLoading] = useState(true);
   const [formSubmission, setFormSubmission] =
@@ -63,11 +65,11 @@ export default function EditFormSubmissionModal({
 
   // State for different asset types
   const [equipment, setEquipment] = useState<{ id: string; name: string }[]>(
-    [],
+    []
   );
   const [jobsites, setJobsites] = useState<{ id: string; name: string }[]>([]);
   const [costCodes, setCostCodes] = useState<{ id: string; name: string }[]>(
-    [],
+    []
   );
 
   const [users, setUsers] = useState<
@@ -136,8 +138,10 @@ export default function EditFormSubmissionModal({
   // Fetch users data
   useEffect(() => {
     const fetchUsers = async () => {
-      const res = await fetch("/api/getAllActiveEmployeeName");
-      const users = await res.json();
+      const users = await apiRequest(
+        "/api/v1/admins/personnel/getAllActiveEmployees",
+        "GET"
+      );
       setUsers(users);
     };
     fetchUsers();
@@ -147,10 +151,11 @@ export default function EditFormSubmissionModal({
   useEffect(() => {
     const fetchEquipment = async () => {
       try {
-        const res = await fetch("/api/getEquipmentSummary");
-        if (!res.ok) throw new Error("Failed to fetch equipment");
-        const data = await res.json();
-        setEquipment(data);
+        const data = await apiRequest(
+          "/api/v1/admins/equipment/summary",
+          "GET"
+        );
+        setEquipment(data || []);
       } catch (error) {
         console.error("Error fetching equipment:", error);
       }
@@ -162,11 +167,9 @@ export default function EditFormSubmissionModal({
   useEffect(() => {
     const fetchJobsites = async () => {
       try {
-        const res = await fetch("/api/getJobsiteSummary");
-        if (!res.ok) throw new Error("Failed to fetch jobsites");
-        const data = await res.json();
+        const data = await apiRequest("/api/v1/admins/jobsite", "GET");
 
-        setJobsites(data);
+        setJobsites(data.jobsiteSummary || []);
       } catch (error) {
         console.error("Error fetching jobsites:", error);
       }
@@ -177,10 +180,8 @@ export default function EditFormSubmissionModal({
   useEffect(() => {
     const fetchCostCodes = async () => {
       try {
-        const res = await fetch("/api/getCostCodeSummary");
-        if (!res.ok) throw new Error("Failed to fetch cost codes");
-        const data = await res.json();
-        setCostCodes(data);
+        const data = await apiRequest("/api/v1/admins/cost-codes", "GET");
+        setCostCodes(data.costCodes || []);
       } catch (error) {
         console.error("Error fetching cost codes:", error);
       }
@@ -189,7 +190,7 @@ export default function EditFormSubmissionModal({
   }, []);
 
   const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>(
-    {},
+    {}
   );
   const [errors, setErrors] = useState<Record<string, string | null>>({});
 
@@ -208,7 +209,7 @@ export default function EditFormSubmissionModal({
       | string[]
       | object
       | undefined,
-    required: boolean,
+    required: boolean
   ) => {
     if (required && (value === null || value === undefined || value === "")) {
       return "This field is required.";
@@ -223,7 +224,7 @@ export default function EditFormSubmissionModal({
 
   const handleFieldChange = (
     fieldId: string,
-    value: string | Date | string[] | object | boolean | number | null,
+    value: string | Date | string[] | object | boolean | number | null
   ) => {
     // Convert value to compatible type for our state
     let compatibleValue: string | number | boolean | null = null;
@@ -283,7 +284,7 @@ export default function EditFormSubmissionModal({
         adminUserId,
         comment: managerComment,
         signature: managerSignature
-          ? `${session?.user.firstName} ${session?.user.lastName}`
+          ? `${user?.firstName} ${user?.lastName}`
           : undefined,
         // If the status is PENDING and manager has signed, update status to APPROVED
         updateStatus:
@@ -309,7 +310,7 @@ export default function EditFormSubmissionModal({
 
   if (loading) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-40 ">
         <div className="bg-white rounded-lg shadow-lg w-[600px] h-[80vh] overflow-y-auto no-scrollbar px-6 py-4 flex flex-col items-center">
           <div className="w-full flex flex-col border-b border-gray-100 pb-3 relative">
             <Button
@@ -363,7 +364,7 @@ export default function EditFormSubmissionModal({
                     <span className="font-semibold text-xs text-gray-700 ">
                       Approval History
                     </span>
-                    <div className="flex-grow">
+                    <div className="grow">
                       <ChevronDown className="w-4 h-4 ml-auto" />
                     </div>
                   </div>
@@ -460,45 +461,45 @@ export default function EditFormSubmissionModal({
                       | "RADIO"
                       | "SEARCH_PERSON"
                       | "SEARCH_ASSET"
-                      | "TEXT",
+                      | "TEXT"
                   ): string;
                   function getFieldValue(
-                    type: string,
+                    type: string
                   ): string | boolean | string[] {
                     if (rawValue === null || rawValue === undefined)
                       return type === "CHECKBOX"
                         ? false
                         : type === "MULTISELECT"
-                          ? []
-                          : defaultValue;
+                        ? []
+                        : defaultValue;
 
                     switch (type) {
                       case "NUMBER":
                         return typeof rawValue === "number"
                           ? rawValue.toString()
                           : typeof rawValue === "string"
-                            ? rawValue
-                            : defaultValue;
+                          ? rawValue
+                          : defaultValue;
                       case "CHECKBOX":
                         return typeof rawValue === "boolean"
                           ? rawValue
                           : rawValue === "true"
-                            ? true
-                            : rawValue === "false"
-                              ? false
-                              : false;
+                          ? true
+                          : rawValue === "false"
+                          ? false
+                          : false;
                       case "MULTISELECT":
                         return typeof rawValue === "string"
                           ? rawValue.split(",").filter(Boolean)
                           : Array.isArray(rawValue)
-                            ? rawValue
-                            : [String(rawValue)];
+                          ? rawValue
+                          : [String(rawValue)];
                       default:
                         return typeof rawValue === "string"
                           ? rawValue
                           : rawValue !== null
-                            ? String(rawValue)
-                            : defaultValue;
+                          ? String(rawValue)
+                          : defaultValue;
                     }
                   }
 
@@ -696,7 +697,7 @@ export default function EditFormSubmissionModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-40 ">
       <div className="bg-white rounded-lg shadow-lg w-[600px] h-[80vh] px-6 py-4 flex flex-col items-center">
         <div className="w-full flex flex-col border-b border-gray-100 pb-3 relative">
           <Button
@@ -716,9 +717,21 @@ export default function EditFormSubmissionModal({
               Submission ID: {id}
             </span>
             <span
-              className={`w-fit text-xs px-2 py-1 rounded-lg ${formSubmission?.status === "APPROVED" ? "bg-green-100 text-green-800" : formSubmission?.status === "DENIED" ? "bg-red-100 text-red-800" : "bg-blue-100 text-blue-800"}`}
+              className={`w-fit text-xs px-2 py-1 rounded-lg ${
+                formSubmission?.status === "APPROVED"
+                  ? "bg-green-100 text-green-800"
+                  : formSubmission?.status === "DENIED"
+                  ? "bg-red-100 text-red-800"
+                  : "bg-blue-100 text-blue-800"
+              }`}
             >
-              {`${formSubmission?.status.slice(0, 1).toUpperCase()}${formSubmission?.status.slice(1).toLowerCase()}`}
+              {formSubmission?.status
+                ? `${formSubmission.status
+                    .slice(0, 1)
+                    .toUpperCase()}${formSubmission.status
+                    .slice(1)
+                    .toLowerCase()}`
+                : "Pending"}
             </span>
           </div>
         </div>
@@ -761,17 +774,19 @@ export default function EditFormSubmissionModal({
                           .sort(
                             (a, b) =>
                               new Date(b.updatedAt).getTime() -
-                              new Date(a.updatedAt).getTime(),
+                              new Date(a.updatedAt).getTime()
                           )
                           .map((approval, index) => (
                             <div
                               key={approval.id}
-                              className={`py-1.5 ${index !== 0 ? "border-t border-gray-100" : ""}`}
+                              className={`py-1.5 ${
+                                index !== 0 ? "border-t border-gray-100" : ""
+                              }`}
                             >
                               <div className="flex items-center text-xs">
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
-                                  className="h-3 w-3 text-emerald-500 mr-1 flex-shrink-0"
+                                  className="h-3 w-3 text-emerald-500 mr-1 shrink-0"
                                   viewBox="0 0 20 20"
                                   fill="currentColor"
                                 >
@@ -795,11 +810,11 @@ export default function EditFormSubmissionModal({
                                   <span className="text-xs ml-1 text-gray-500">
                                     (
                                     {new Date(
-                                      approval.updatedAt,
+                                      approval.updatedAt
                                     ).toLocaleDateString()}{" "}
                                     at{" "}
                                     {new Date(
-                                      approval.updatedAt,
+                                      approval.updatedAt
                                     ).toLocaleTimeString([], {
                                       hour: "2-digit",
                                       minute: "2-digit",
@@ -843,7 +858,7 @@ export default function EditFormSubmissionModal({
                     <span className="font-semibold text-xs text-gray-700">
                       Approval History
                     </span>
-                    <div className="flex-grow">
+                    <div className="grow">
                       <ChevronDown className="w-4 h-4 ml-auto" />
                     </div>
                   </div>
@@ -904,7 +919,7 @@ export default function EditFormSubmissionModal({
                     >
                       I,{" "}
                       <span className="font-semibold">
-                        {session?.user.firstName} {session?.user.lastName}
+                        {user?.firstName} {user?.lastName}
                       </span>
                       , electronically sign and approve this submission.
                     </label>
@@ -927,7 +942,11 @@ export default function EditFormSubmissionModal({
             size={"sm"}
             onClick={saveChanges}
             variant="outline"
-            className={`${formSubmission?.status === "PENDING" ? "bg-sky-500 text-white hover:bg-sky-400 hover:text-white" : "bg-sky-500 text-white hover:bg-sky-400 hover:text-white"}`}
+            className={`${
+              formSubmission?.status === "PENDING"
+                ? "bg-sky-500 text-white hover:bg-sky-400 hover:text-white"
+                : "bg-sky-500 text-white hover:bg-sky-400 hover:text-white"
+            }`}
             disabled={
               formSubmission?.status === "PENDING" &&
               !managerSignature &&

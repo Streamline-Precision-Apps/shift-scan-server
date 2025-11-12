@@ -1,7 +1,7 @@
 "use client";
 
 import { FormField } from "../../types";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/app/v1/components/ui/input";
 
 interface SearchAssetFieldOptionsProps {
   field: FormField;

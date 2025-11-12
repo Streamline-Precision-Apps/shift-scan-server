@@ -1,25 +1,27 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/app/v1/components/ui/button";
+import { Input } from "@/app/v1/components/ui/input";
+import { Label } from "@/app/v1/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/app/v1/components/ui/select";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { createCrew } from "@/actions/adminActions";
-import { WorkType } from "../../../../../../prisma/generated/prisma";
-import Spinner from "@/components/(animations)/spinner";
+
+import Spinner from "@/app/v1/components/(animations)/spinner";
 import { CrewMemberCheckboxList } from "./CrewMemberCheckboxList";
 import {
   SingleCombobox,
   ComboboxOption,
-} from "@/components/ui/single-combobox";
+} from "@/app/v1/components/ui/single-combobox";
+import { createCrew } from "@/app/lib/actions/adminActions";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
 
+type WorkType = "MECHANIC" | "TRUCK_DRIVER" | "LABOR" | "TASCO";
 type User = {
   id: string;
   firstName: string;
@@ -60,8 +62,10 @@ export default function CreateCrewModal({
     // Fetch users from the server or context
     const fetchUsers = async () => {
       try {
-        const response = await fetch("/api/getAllEmployees?filter=all");
-        const data = await response.json();
+        const data = await apiRequest(
+          "/api/v1/admins/personnel/getAllEmployees",
+          "GET"
+        );
         setUsers(data as User[]);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -76,8 +80,11 @@ export default function CreateCrewModal({
   // Create user options for the combobox
   const userOptions = users.map((user) => ({
     value: user.id,
-    label:
-      `${user.firstName ? `${user.firstName}` : ""}${user.middleName ? ` ${user.middleName}` : ""}${user.lastName ? ` ${user.lastName}` : ""}${user.secondLastName ? ` ${user.secondLastName}` : ""}`.trim(),
+    label: `${user.firstName ? `${user.firstName}` : ""}${
+      user.middleName ? ` ${user.middleName}` : ""
+    }${user.lastName ? ` ${user.lastName}` : ""}${
+      user.secondLastName ? ` ${user.secondLastName}` : ""
+    }`.trim(),
   }));
 
   // Helper to ensure lead is always in Users
@@ -131,7 +138,7 @@ export default function CreateCrewModal({
 
   if (loading) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-40  ">
         <div className="bg-white rounded-lg shadow-lg max-w-[1000px] w-full max-h-[80vh] overflow-y-auto no-scrollbar p-8 flex flex-col items-center">
           <div className="flex flex-col gap-4 w-full">
             <div className="flex flex-col gap-1">
@@ -145,7 +152,7 @@ export default function CreateCrewModal({
             </div>
           </div>
         </div>
-        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40">
+        <div className="absolute inset-0 flex items-center justify-center  ">
           <Spinner />
         </div>
       </div>
@@ -153,11 +160,11 @@ export default function CreateCrewModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-40">
       <div className="bg-white rounded-lg shadow-lg max-w-[1000px] w-full max-h-[80vh] overflow-y-auto no-scrollbar p-8 flex flex-col items-center relative">
         {/* Loading overlay when submitting */}
         {submitting && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-80 rounded-lg z-10">
+          <div className="absolute inset-0 flex items-center justify-center bg-white-80 rounded-lg z-10">
             <Spinner />
           </div>
         )}
@@ -251,19 +258,23 @@ export default function CreateCrewModal({
                       .map(
                         (user): ComboboxOption => ({
                           value: user.id,
-                          label: `${user.firstName} ${user.lastName}${user.middleName ? ` ${user.middleName}` : ""}${user.secondLastName ? ` ${user.secondLastName}` : ""}${user.permission ? ` (${user.permission})` : ""}`,
+                          label: `${user.firstName} ${user.lastName}${
+                            user.middleName ? ` ${user.middleName}` : ""
+                          }${
+                            user.secondLastName ? ` ${user.secondLastName}` : ""
+                          }${user.permission ? ` (${user.permission})` : ""}`,
                           firstName: user.firstName,
                           lastName: user.lastName,
                           middleName: user.middleName || "",
                           permission: user.permission,
-                        }),
+                        })
                       )}
                     value={formData.leadId}
                     onChange={(value) => {
                       setFormData((prev) => {
                         // Remove previous lead from Users if present
                         let updatedUsers = prev.Users.filter(
-                          (u) => u.id !== prev.leadId,
+                          (u) => u.id !== prev.leadId
                         );
                         // Add new lead if not present
                         if (value) {
@@ -320,7 +331,7 @@ export default function CreateCrewModal({
                 <Button
                   variant="outline"
                   type="submit"
-                  className="bg-sky-500 hover:bg-sky-400 text-white px-4 py-2 rounded"
+                  className="bg-sky-500 hover:bg-sky-400 hover:text-white text-white px-4 py-2 rounded"
                   disabled={submitting}
                 >
                   Create Crew

@@ -14,13 +14,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/app/v1/components/ui/table";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Button } from "@/components/ui/button";
+} from "@/app/v1/components/ui/tooltip";
+import { Button } from "@/app/v1/components/ui/button";
 import React, {
   Dispatch,
   SetStateAction,
@@ -28,7 +28,7 @@ import React, {
   useState,
   Suspense,
 } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/app/v1/components/ui/skeleton";
 import { EquipmentSummary } from "../useEquipmentData";
 import { createEquipmentTableColumns } from "./equipmentTableColumns";
 import LoadingEquipmentTableState from "./loadingEquipmentTableState";
@@ -139,7 +139,7 @@ export function EquipmentDataTable({
                           ? null
                           : flexRender(
                               header.column.columnDef.header,
-                              header.getContext(),
+                              header.getContext()
                             )}
                       </TableHead>
                     );
@@ -170,7 +170,7 @@ export function EquipmentDataTable({
                           >
                             {flexRender(
                               cell.column.columnDef.cell,
-                              cell.getContext(),
+                              cell.getContext()
                             )}
                           </TableCell>
                         ))}

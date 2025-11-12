@@ -1,21 +1,22 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/app/v1/components/ui/button";
+import { Input } from "@/app/v1/components/ui/input";
+import { Label } from "@/app/v1/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/app/v1/components/ui/select";
 import { useEffect, useState } from "react";
-import { createCostCode } from "@/actions/AssetActions";
+import { createCostCode } from "@/app/lib/actions/adminActions";
 import { toast } from "sonner";
-import { Combobox } from "@/components/ui/combobox";
+import { Combobox } from "@/app/v1/components/ui/combobox";
 import { TagSummary } from "./useTagData";
 import { X } from "lucide-react";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
 
 // Validation function with detailed error messages
 const validateFormData = (formData: {
@@ -61,9 +62,8 @@ export default function CreateCostCodeModal({
   useEffect(() => {
     const fetchTags = async () => {
       try {
-        const res = await fetch("/api/getTagSummary");
-        const data = await res.json();
-        setTagSummaries(data.tags || []);
+        const data = await apiRequest("/api/v1/admins/tags", "GET");
+        setTagSummaries(data.tagSummary || []);
       } catch (error) {
         console.error("Failed to fetch tags:", error);
       }
@@ -178,7 +178,7 @@ export default function CreateCostCodeModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-40">
       <div className="bg-white rounded-lg shadow-lg w-[600px] h-[80vh]  px-6 py-4 flex flex-col items-center">
         <div className="w-full flex flex-col border-b border-gray-100 pb-3 relative">
           <Button
@@ -331,7 +331,7 @@ export default function CreateCostCodeModal({
                   setFormData((prev) => ({
                     ...prev,
                     CCTags: tagSummaries.filter((tag) =>
-                      selectedIds.includes(tag.id),
+                      selectedIds.includes(tag.id)
                     ),
                   }));
                 }}

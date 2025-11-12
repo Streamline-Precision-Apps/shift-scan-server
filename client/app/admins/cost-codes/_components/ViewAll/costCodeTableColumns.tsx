@@ -3,12 +3,12 @@ import { CostCodeSummary } from "../useCostCodeData";
 import { format } from "date-fns";
 import { highlight } from "../../../_pages/highlight";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/v1/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/app/v1/components/ui/tooltip";
 import { Archive, ArchiveRestore } from "lucide-react";
 import { on } from "events";
 
@@ -17,7 +17,7 @@ export const getCostCodeTableColumns = (
   onEdit: (id: string) => void,
   onDelete: (id: string) => void,
   onArchive: (id: string) => void,
-  onRestore: (id: string) => void,
+  onRestore: (id: string) => void
 ): ColumnDef<CostCodeSummary>[] => [
   {
     accessorKey: "nameAndStatus",
@@ -54,7 +54,7 @@ export const getCostCodeTableColumns = (
     cell: ({ row }) => {
       const tags = row.original.CCTags || [];
       const filteredTags = tags.filter(
-        (tag) => tag.name.toLowerCase() !== "all",
+        (tag) => tag.name.toLowerCase() !== "all"
       );
 
       return (

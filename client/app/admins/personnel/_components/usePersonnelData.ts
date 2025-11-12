@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
-import { deleteUser } from "@/actions/adminActions";
-import { isAuthenticationError } from "@/utils/authErrorUtils";
+import { deleteUser } from "@/app/lib/actions/adminActions";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
 
 export interface PersonnelFilterOptions {
   roles: string[];
@@ -42,7 +42,7 @@ export type PersonnelSummary = {
 
 export const usePersonnelData = () => {
   const [personnelDetails, setPersonnelDetails] = useState<PersonnelSummary[]>(
-    [],
+    []
   );
   const [loading, setLoading] = useState<boolean>(true);
   const [refreshKey, setRefreshKey] = useState(0);
@@ -132,13 +132,13 @@ export const usePersonnelData = () => {
           if (appliedFilters.accessLevel.length > 0) {
             filterParams.append(
               "accessLevel",
-              appliedFilters.accessLevel.join(","),
+              appliedFilters.accessLevel.join(",")
             );
           }
           if (appliedFilters.accountSetup.length > 0) {
             filterParams.append(
               "accountSetup",
-              appliedFilters.accountSetup.join(","),
+              appliedFilters.accountSetup.join(",")
             );
           }
           if (appliedFilters.crews.length > 0) {
@@ -146,39 +146,29 @@ export const usePersonnelData = () => {
           }
         }
 
+        // Use new admin personnel API route
         if (showInactive) {
-          url = `/api/personnelManager?status=inactive${searchTerm ? `&search=${encodedSearch}` : ""}`;
+          url = `/api/v1/admins/personnel/personnelManager?status=inactive${
+            searchTerm ? `&search=${encodedSearch}` : ""
+          }`;
           if (filterParams.toString()) {
             url += `&${filterParams.toString()}`;
           }
         } else {
-          url = `/api/personnelManager?page=${page}&pageSize=${pageSize}${searchTerm ? `&search=${encodedSearch}` : ""}`;
+          url = `/api/v1/admins/personnel/personnelManager?page=${page}&pageSize=${pageSize}${
+            searchTerm ? `&search=${encodedSearch}` : ""
+          }`;
           if (filterParams.toString()) {
             url += `&${filterParams.toString()}`;
           }
         }
 
-        const response = await fetch(url);
-        if (!response.ok) {
-          // Check if we're being redirected to sign-in
-          if (
-            response.status === 200 &&
-            response.headers.get("content-type")?.includes("text/html")
-          ) {
-            throw new Error("Authentication required - please sign in");
-          }
-          throw new Error(`HTTP error ${response.status}`);
-        }
-        const data = await response.json();
-        setPersonnelDetails(data.users);
-        setTotal(data.total);
-        setTotalPages(data.totalPages);
+        const data = await apiRequest(url, "GET");
+        setPersonnelDetails(data.users || data);
+        setTotal(data.total || 0);
+        setTotalPages(data.totalPages || 0);
       } catch (error) {
         // Silently handle authentication errors during sign-out
-        if (isAuthenticationError(error)) {
-          // User is likely being redirected to sign-in, don't log these errors
-          return;
-        }
         // Log other errors that are not related to authentication
         console.error("Failed to fetch personnel details:", error);
       } finally {

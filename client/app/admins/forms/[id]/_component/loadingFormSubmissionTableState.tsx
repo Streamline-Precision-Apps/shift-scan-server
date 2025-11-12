@@ -1,11 +1,13 @@
-import { TableCell, TableRow } from "@/components/ui/table";
-import { Skeleton } from "@/components/ui/skeleton";
+import { TableCell, TableRow } from "@/app/v1/components/ui/table";
+import { Skeleton } from "@/app/v1/components/ui/skeleton";
 
 type Props = {
   columnsCount: number;
 };
 
-export default function LoadingFormSubmissionTableState({ columnsCount }: Props) {
+export default function LoadingFormSubmissionTableState({
+  columnsCount,
+}: Props) {
   return (
     <>
       {Array.from({ length: 10 }).map((_, index) => (

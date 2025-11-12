@@ -1,21 +1,22 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/app/v1/components/ui/button";
+import { Input } from "@/app/v1/components/ui/input";
+import { Label } from "@/app/v1/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/app/v1/components/ui/select";
 import { useEffect, useState } from "react";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
 import { toast } from "sonner";
-import { useSession } from "next-auth/react";
-import { createUserAdmin } from "@/actions/adminActions";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Skeleton } from "@/components/ui/skeleton";
-import Spinner from "@/components/(animations)/spinner";
+import { createUserAdmin } from "@/app/lib/actions/adminActions";
+import { Checkbox } from "@/app/v1/components/ui/checkbox";
+import { Skeleton } from "@/app/v1/components/ui/skeleton";
+import Spinner from "@/app/v1/components/(animations)/spinner";
+import { useUserStore } from "@/app/lib/store/userStore";
 
 // Utility function to get allowed permissions based on current user's permission level
 const getAllowedPermissions = (currentUserPermission: string): string[] => {
@@ -61,14 +62,14 @@ export default function CreateUserModal({
   cancel: () => void;
   rerender: () => void;
 }) {
-  const { data: session } = useSession();
+  const { user } = useUserStore();
   const [submitting, setSubmitting] = useState(false);
   const [crew, setCrew] = useState<CrewData[]>([]);
   const [showPassword, setShowPassword] = useState(false);
 
   // Get allowed permissions based on current user's permission level
-  const allowedPermissions = session?.user?.permission
-    ? getAllowedPermissions(session.user.permission)
+  const allowedPermissions = user?.permission
+    ? getAllowedPermissions(user.permission)
     : ["USER"];
   const [formData, setFormData] = useState<CreatePersonnel>({
     username: "",
@@ -88,11 +89,15 @@ export default function CreateUserModal({
 
   useEffect(() => {
     const fetchCrews = async () => {
-      const response = await fetch("/api/getAllCrews", {
-        next: { tags: ["crews"] },
-      });
-      const data = await response.json();
-      setCrew(data || []);
+      try {
+        const data = await apiRequest(
+          "/api/v1/admins/personnel/getAllCrews",
+          "GET"
+        );
+        setCrew(data || []);
+      } catch (error) {
+        console.error("Failed to fetch crews:", error);
+      }
     };
     fetchCrews();
   }, []);
@@ -119,7 +124,7 @@ export default function CreateUserModal({
         terminationDate: formData.terminationDate
           ? new Date(formData.terminationDate)
           : null,
-        createdById: session?.user.id ?? "",
+        createdById: user?.id ?? "",
       };
 
       // TODO: Replace with correct personnel creation action if available
@@ -139,11 +144,11 @@ export default function CreateUserModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-40 ">
       <div className="bg-white rounded-lg shadow-lg max-w-[1000px] w-full max-h-[80vh] overflow-y-auto no-scrollbar p-8 flex flex-col items-center relative">
         {/* Loading overlay when submitting */}
         {submitting && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-80 rounded-lg z-10">
+          <div className="absolute inset-0 flex items-center justify-center bg-white-80 rounded-lg z-10">
             <Spinner />
           </div>
         )}
@@ -448,19 +453,19 @@ export default function CreateUserModal({
                           >
                             <Checkbox
                               checked={formData.crews.some(
-                                (sel) => sel.id === c.id,
+                                (sel) => sel.id === c.id
                               )}
                               onCheckedChange={(checked) => {
                                 setFormData((prev) => {
                                   const already = prev.crews.some(
-                                    (sel) => sel.id === c.id,
+                                    (sel) => sel.id === c.id
                                   );
                                   return {
                                     ...prev,
                                     crews: checked
                                       ? [...prev.crews, { id: c.id }]
                                       : prev.crews.filter(
-                                          (sel) => sel.id !== c.id,
+                                          (sel) => sel.id !== c.id
                                         ),
                                   };
                                 });

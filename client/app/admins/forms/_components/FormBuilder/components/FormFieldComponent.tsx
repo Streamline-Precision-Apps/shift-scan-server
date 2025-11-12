@@ -2,16 +2,16 @@
 
 import { Dispatch, SetStateAction, useState, useMemo } from "react";
 import { X, TriangleAlert, CircleAlert } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
+import { Textarea } from "@/app/v1/components/ui/textarea";
 
 import { FormField } from "../types";
 
-import { Toggle } from "@/components/ui/toggle";
-import { Button } from "@/components/ui/button";
+import { Toggle } from "@/app/v1/components/ui/toggle";
+import { Button } from "@/app/v1/components/ui/button";
 import { SortableItem } from "./SortableItem";
 import { FieldTypePopover } from "./FieldTypePopover";
 import { FieldOptions } from "./field-options/FieldOptions";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/app/v1/components/ui/badge";
 import { hasValidationErrors } from "../utils/fieldValidation";
 
 interface FormFieldProps {

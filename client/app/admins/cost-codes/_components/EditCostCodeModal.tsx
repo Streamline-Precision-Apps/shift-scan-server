@@ -1,23 +1,23 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/app/v1/components/ui/button";
+import { Input } from "@/app/v1/components/ui/input";
+import { Label } from "@/app/v1/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/app/v1/components/ui/select";
 import { useEffect, useState } from "react";
-import { updateCostCodeAdmin } from "@/actions/AssetActions";
+import { updateCostCodeAdmin } from "@/app/lib/actions/adminActions";
 import { toast } from "sonner";
-import { Combobox } from "@/components/ui/combobox";
+import { Combobox } from "@/app/v1/components/ui/combobox";
 import { CostCode, useCostCodeDataById } from "./useCostCodeDataById";
 import { format } from "date-fns";
 import { X } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
-import Spinner from "@/components/(animations)/spinner";
+import { Skeleton } from "@/app/v1/components/ui/skeleton";
+import Spinner from "@/app/v1/components/(animations)/spinner";
 
 export default function EditCostCodeModal({
   cancel,
@@ -72,7 +72,7 @@ export default function EditCostCodeModal({
 
   if (loading || !formData || !originalForm) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-40">
         <div className="bg-white rounded-lg shadow-lg w-[600px] h-[80vh]  px-6 py-4 flex flex-col items-center">
           <div className="w-full flex flex-col border-b border-gray-100 pb-3 relative">
             <Button
@@ -182,12 +182,12 @@ export default function EditCostCodeModal({
   const allTags = [
     ...safeTagSummaries,
     ...formData.CCTags.filter(
-      (tag) => !safeTagSummaries.some((t) => t.id === tag.id),
+      (tag) => !safeTagSummaries.some((t) => t.id === tag.id)
     ),
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-40">
       <div className="bg-white rounded-lg shadow-lg w-[600px] h-[80vh]  px-6 py-4 flex flex-col items-center">
         <div className="w-full flex flex-col border-b border-gray-100 pb-3 relative">
           <Button
@@ -332,7 +332,7 @@ export default function EditCostCodeModal({
                           ...prev,
                           CCTags: [
                             ...safeTagSummaries.filter((tag) =>
-                              finalSelectedIds.includes(tag.id),
+                              finalSelectedIds.includes(tag.id)
                             ),
                             // Ensure "All" tag is always present
                             ...(finalSelectedIds.includes("All") &&
@@ -341,7 +341,7 @@ export default function EditCostCodeModal({
                               : []),
                           ],
                         }
-                      : prev,
+                      : prev
                   );
                 }}
               />

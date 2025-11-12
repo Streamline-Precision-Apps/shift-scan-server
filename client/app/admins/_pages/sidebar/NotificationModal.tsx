@@ -22,6 +22,8 @@ import { toast } from "sonner";
 import { Skeleton } from "@/app/v1/components/ui/skeleton";
 import { getUserTopicPreferences } from "@/app/lib/actions/NotificationActions";
 import { useFcmContext } from "./FcmContext";
+import { useUserStore } from "@/app/lib/store/userStore";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
 
 type Props = {
   open: boolean;
@@ -63,6 +65,7 @@ const AVAILABLE_TOPICS = [
 ];
 
 export default function NotificationModal({ open, setOpen }: Props) {
+  const { user } = useUserStore();
   const [preferences, setPreferences] = useState<Record<string, boolean>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [isDataLoading, setIsDataLoading] = useState(true);
@@ -116,9 +119,15 @@ export default function NotificationModal({ open, setOpen }: Props) {
           }
           return;
         }
+        const userId = user?.id || "";
 
+        if (!userId) {
+          toast.error("You must be logged in to load notification preferences");
+          setIsDataLoading(false);
+          return;
+        }
         // We have permission and token, load preferences
-        const userPrefs = await getUserTopicPreferences();
+        const userPrefs = await getUserTopicPreferences(userId);
 
         if (!isMounted) return;
 
@@ -184,7 +193,7 @@ export default function NotificationModal({ open, setOpen }: Props) {
       console.log("Saving notification preferences2");
 
       // Get topics to unsubscribe from (disabled preferences)
-      const userPrefs = await getUserTopicPreferences();
+      const userPrefs = await getUserTopicPreferences(user?.id || "");
 
       console.log("Current user prefs:", userPrefs); // Debug log
       console.log("Topics to subscribe:", topicsToSubscribe); // Debug log
@@ -195,40 +204,36 @@ export default function NotificationModal({ open, setOpen }: Props) {
       );
       // First, handle subscriptions if there are any
       if (topicsToSubscribe.length > 0) {
-        const subscribeResponse = await fetch("/api/notifications/topics", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
+        const subscribeResponse = await apiRequest(
+          "/api/notifications/topics",
+          "POST",
+          {
             action: "subscribe",
             topics: topicsToSubscribe,
             token,
-            // userId: "session-user", // The API will get the actual userId from the session
-          }),
-        });
+            userId: user?.id || "",
+          }
+        );
 
-        if (!subscribeResponse.ok) {
+        if (!subscribeResponse.success) {
           throw new Error(`Error: ${subscribeResponse.statusText}`);
         }
       }
 
       // Then, handle un-subscriptions if there are any
       if (topicsToUnsubscribe.length > 0) {
-        const unsubscribeResponse = await fetch("/api/notifications/topics", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
+        const unsubscribeResponse = await apiRequest(
+          "/api/notifications/topics",
+          "POST",
+          {
             action: "unsubscribe",
             topics: topicsToUnsubscribe,
             token,
-            // userId: "session-user", // The API will get the actual userId from the session
-          }),
-        });
+            userId: user?.id || "",
+          }
+        );
 
-        if (!unsubscribeResponse.ok) {
+        if (!unsubscribeResponse.success) {
           throw new Error(`Error: ${unsubscribeResponse.statusText}`);
         }
       }

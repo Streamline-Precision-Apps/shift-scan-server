@@ -1,13 +1,13 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/v1/components/ui/button";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/app/v1/components/ui/popover";
 import { Dispatch, SetStateAction } from "react";
 import { FormIndividualTemplate } from "./hooks/types";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/app/v1/components/ui/skeleton";
 import { PageHeaderContainer } from "../../../_pages/PageHeaderContainer";
 
 interface PageProps {
@@ -15,7 +15,7 @@ interface PageProps {
   loading: boolean;
   setStatusPopoverOpen: Dispatch<SetStateAction<boolean>>;
   handleStatusChange: (
-    status: "ACTIVE" | "ARCHIVED" | "DRAFT",
+    status: "ACTIVE" | "ARCHIVED" | "DRAFT"
   ) => Promise<void>;
   setRefreshKey: Dispatch<SetStateAction<number>>;
   actionLoading: "archive" | "publish" | "draft" | null;
@@ -110,8 +110,8 @@ export default function RenderTitleDescriptionStatus({
                     ? actionLoading === "archive"
                       ? "Archiving..."
                       : actionLoading === "publish"
-                        ? "Publishing..."
-                        : "Updating..."
+                      ? "Publishing..."
+                      : "Updating..."
                     : currentStatus?.label}
                 </span>
                 <svg
@@ -139,7 +139,7 @@ export default function RenderTitleDescriptionStatus({
                     }`}
                     onClick={() =>
                       handleStatusChange(
-                        status.value as "ACTIVE" | "ARCHIVED" | "DRAFT",
+                        status.value as "ACTIVE" | "ARCHIVED" | "DRAFT"
                       )
                     }
                     disabled={

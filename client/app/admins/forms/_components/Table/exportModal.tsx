@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { Calendar } from "@/components/ui/calendar";
+import { Calendar } from "@/app/v1/components/ui/calendar";
 import { format } from "date-fns";
 
 type DateRange = { from: Date | undefined; to: Date | undefined };
@@ -12,20 +12,20 @@ interface ExportModalProps {
       from?: Date;
       to?: Date;
     },
-    selectedFields?: string[],
+    selectedFields?: string[]
   ) => void;
   setDateRange: Dispatch<SetStateAction<DateRange>>;
   dateRange: DateRange;
 }
 
 import { ChevronDownIcon, Download, X } from "lucide-react";
-import { Label } from "@/components/ui/label";
+import { Label } from "@/app/v1/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
+} from "@/app/v1/components/ui/popover";
+import { Button } from "@/app/v1/components/ui/button";
 
 const ExportModal = ({
   onClose,
@@ -40,7 +40,7 @@ const ExportModal = ({
     onClose();
   };
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-40 ">
       <div className="bg-white rounded-lg shadow-lg w-[600px] h-[65vh] px-6 py-4 flex flex-col items-center">
         {/* Modal title Content */}
         <div className="flex flex-col w-full border-b border-gray-200 pb-3">
@@ -76,7 +76,10 @@ const ExportModal = ({
                     className="w-full justify-between font-normal"
                   >
                     {dateRange.from && dateRange.to
-                      ? `${format(dateRange.from, "PPP")} - ${format(dateRange.to, "PPP")}`
+                      ? `${format(dateRange.from, "PPP")} - ${format(
+                          dateRange.to,
+                          "PPP"
+                        )}`
                       : "Select date range"}
                     <ChevronDownIcon />
                   </Button>

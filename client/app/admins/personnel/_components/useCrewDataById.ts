@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
 export interface CrewData {
   id: string;
   name: string;
@@ -33,9 +34,10 @@ export const useCrewDataById = ({ id }: { id: string }) => {
   const fetchCrewData = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`/api/getCrewByIdAdmin/${id}`);
-      if (!res.ok) throw new Error("Failed to fetch user data");
-      const data = await res.json();
+      const data = await apiRequest(
+        `/api/v1/admins/personnel/getCrewByIdAdmin/${id}`,
+        "GET"
+      );
       setCrewData(data as CrewData);
     } catch (error) {
       console.error("Failed to fetch personnel details:", error);
@@ -46,9 +48,10 @@ export const useCrewDataById = ({ id }: { id: string }) => {
 
   const fetchCrewMembers = async () => {
     try {
-      const res = await fetch(`/api/getAllEmployees`);
-      if (!res.ok) throw new Error("Failed to fetch crew members");
-      const data = await res.json();
+      const data = await apiRequest(
+        `/api/v1/admins/personnel/getAllEmployees`,
+        "GET"
+      );
       setUsers(data as User[]);
     } catch (error) {
       console.error("Failed to fetch crew members:", error);
@@ -63,7 +66,7 @@ export const useCrewDataById = ({ id }: { id: string }) => {
   // Utility function to update any field in crewData
   function updateCrewData<K extends keyof CrewData>(
     key: K,
-    value: CrewData[K],
+    value: CrewData[K]
   ) {
     setCrewData((prev) => {
       if (!prev) return prev;

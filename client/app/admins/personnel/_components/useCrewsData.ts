@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
-import { deleteCrew } from "@/actions/adminActions";
+import { deleteCrew } from "@/app/lib/actions/adminActions";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
+
 export interface CrewData {
   id: string;
   name: string;
@@ -54,19 +56,18 @@ export const useCrewsData = () => {
         let url = "";
         const encodedSearch = encodeURIComponent(searchTerm);
         if (showInactive) {
-          url = `/api/crewManager?status=inactive${searchTerm ? `&search=${encodedSearch}` : ""}`;
+          url = `/api/v1/admins/personnel/getAllCrews?status=inactive${
+            searchTerm ? `&search=${encodedSearch}` : ""
+          }`;
         } else {
-          url = `/api/crewManager?page=${page}&pageSize=${pageSize}${searchTerm ? `&search=${encodedSearch}` : ""}`;
+          url = `/api/v1/admins/personnel/getAllCrews?page=${page}&pageSize=${pageSize}${
+            searchTerm ? `&search=${encodedSearch}` : ""
+          }`;
         }
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error(`HTTP error ${response.status}`);
-        }
-        const data = await response.json();
-
-        setTotal(data.total);
-        setTotalPages(data.totalPages);
-        setCrew(data.crews || []);
+        const data = await apiRequest(url, "GET");
+        setTotal(data.total || 0);
+        setTotalPages(data.totalPages || 0);
+        setCrew(data.crews || data || []);
       } catch (error) {
         console.error("Failed to fetch crew details:", error);
       } finally {

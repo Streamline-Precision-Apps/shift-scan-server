@@ -17,7 +17,7 @@ import {
 } from "@/app/v1/components/ui/dialog";
 
 import { getRawPhoneNumber } from "@/app/lib/utils/getRawPhoneNumber";
-import { formatPhoneNumber } from "@/app/lib/utils/phoneNumberFormater";
+import { formatPhoneNumber } from "@/app/lib/utils/phoneNumberFormatter";
 import { formatPhoneNumberSetter } from "@/app/lib/utils/phoneNumberSetFormatter";
 import { useSignOut } from "@/app/lib/hooks/useSignOut";
 import SignatureSetUpModal from "@/app/v1/components/(signup)/signatureSetupModal";

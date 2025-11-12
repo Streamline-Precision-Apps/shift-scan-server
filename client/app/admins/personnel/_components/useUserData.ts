@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
 
 export type userInfo = {
   id: string;
@@ -43,9 +44,10 @@ export const useUserData = ({ userid }: { userid: string }) => {
     const fetchUserData = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`/api/employeeInfo/${userid}`);
-        if (!res.ok) throw new Error("Failed to fetch user data");
-        const data = await res.json();
+        const data = await apiRequest(
+          `/api/v1/admins/personnel/getEmployeeInfo/${userid}`,
+          "GET"
+        );
         setUserData(data);
       } catch (error) {
         console.error("Failed to fetch personnel details:", error);
@@ -58,11 +60,15 @@ export const useUserData = ({ userid }: { userid: string }) => {
 
   useEffect(() => {
     const fetchCrews = async () => {
-      const response = await fetch("/api/getAllCrews", {
-        next: { tags: ["crews"] },
-      });
-      const data = await response.json();
-      setCrew(data || []);
+      try {
+        const data = await apiRequest(
+          "/api/v1/admins/personnel/getAllCrews",
+          "GET"
+        );
+        setCrew(data || []);
+      } catch (error) {
+        console.error("Failed to fetch crews:", error);
+      }
     };
     fetchCrews();
   }, []);

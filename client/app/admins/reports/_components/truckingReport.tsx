@@ -1,16 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { 
-  TruckingReportRow, 
-  EquipmentItem, 
-  MaterialItem, 
-  FuelItem, 
-  StateMileageItem 
+import {
+  TruckingReportRow,
+  EquipmentItem,
+  MaterialItem,
+  FuelItem,
+  StateMileageItem,
 } from "./_truckingReport/truckingReportTableColumns";
 import { ExportReportModal } from "./ExportModal";
 import { format } from "date-fns";
 import { TruckingDataTable } from "./_truckingReport/TruckingDataTable";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
 
 interface TruckingReportProps {
   showExportModal: boolean;
@@ -40,12 +41,8 @@ export default function TruckingReport({
   const fetchData = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/reports/trucking");
-      const json = await response.json();
-      if (!response.ok) {
-        throw new Error(json.message || "Failed to fetch Trucking report data");
-      }
-      setAllData(json);
+      const result = await apiRequest("/api/v1/admins/report/trucking", "GET");
+      setAllData(result.data || []);
     } catch (error) {
       console.error("Error fetching Trucking report data:", error);
     } finally {
@@ -113,7 +110,7 @@ export default function TruckingReport({
   const onExport = (
     exportFormat: "csv" | "xlsx",
     _dateRange?: { from?: Date; to?: Date },
-    selectedFields?: string[],
+    selectedFields?: string[]
   ) => {
     if (!filteredData.length) return;
     // Use the already filtered data for export
@@ -122,32 +119,39 @@ export default function TruckingReport({
     // Helper functions for formatting each type of data
     const formatEquipment = (equipment: EquipmentItem[]) => {
       if (!Array.isArray(equipment) || equipment.length === 0) return "-";
-      return equipment.map(
-        (eq: EquipmentItem) =>
-          `[${eq.name}: ${eq.source} → ${eq.destination} (${eq.startMileage}-${eq.endMileage} mi)]`,
-      ).join(" | ");
+      return equipment
+        .map(
+          (eq: EquipmentItem) =>
+            `[${eq.name}: ${eq.source} → ${eq.destination} (${eq.startMileage}-${eq.endMileage} mi)]`
+        )
+        .join(" | ");
     };
 
     const formatMaterials = (materials: MaterialItem[]) => {
       if (!Array.isArray(materials) || materials.length === 0) return "-";
-      return materials.map(
-        (mat: MaterialItem) =>
-          `[${mat.name}: ${mat.quantity} ${mat.unit} at ${mat.location}]`,
-      ).join(" | ");
+      return materials
+        .map(
+          (mat: MaterialItem) =>
+            `[${mat.name}: ${mat.quantity} ${mat.unit} at ${mat.location}]`
+        )
+        .join(" | ");
     };
 
     const formatFuel = (fuel: FuelItem[]) => {
       if (!Array.isArray(fuel) || fuel.length === 0) return "-";
-      return fuel.map(
-        (f: FuelItem) => `[${f.milesAtFueling} mi: ${f.gallonsRefueled} gal]`,
-      ).join(" | ");
+      return fuel
+        .map(
+          (f: FuelItem) => `[${f.milesAtFueling} mi: ${f.gallonsRefueled} gal]`
+        )
+        .join(" | ");
     };
 
     const formatStateMileages = (stateMileages: StateMileageItem[]) => {
-      if (!Array.isArray(stateMileages) || stateMileages.length === 0) return "-";
-      return stateMileages.map(
-        (s: StateMileageItem) => `[${s.state}: ${s.stateLineMileage} mi]`,
-      ).join(" | ");
+      if (!Array.isArray(stateMileages) || stateMileages.length === 0)
+        return "-";
+      return stateMileages
+        .map((s: StateMileageItem) => `[${s.state}: ${s.stateLineMileage} mi]`)
+        .join(" | ");
     };
 
     const tableHeaders = [
@@ -216,12 +220,14 @@ export default function TruckingReport({
             "Job #": row.jobId || "-",
             "Starting Mileage": row.StartingMileage || "-",
             "Ending Mileage": row.EndingMileage || "-",
-            "Equipment Details [equipment moved: starting location -> ending location (mileage)]": formatEquipment(row.Equipment || []),
-            "Material Hauled Details [Material: Quantity - Location]": formatMaterials(row.Materials || []),
+            "Equipment Details [equipment moved: starting location -> ending location (mileage)]":
+              formatEquipment(row.Equipment || []),
+            "Material Hauled Details [Material: Quantity - Location]":
+              formatMaterials(row.Materials || []),
             "Refuel Details": formatFuel(row.Fuel || []),
             "State Line Details": formatStateMileages(row.StateMileages || []),
             Notes: row.notes || "-",
-          })),
+          }))
         );
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Trucking Report");

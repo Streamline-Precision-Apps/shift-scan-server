@@ -8,12 +8,12 @@ interface ExportModalProps {
       from?: Date;
       to?: Date;
     },
-    selectedFields?: string[],
+    selectedFields?: string[]
   ) => void;
 }
 
 import { Download, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/v1/components/ui/button";
 
 const ExportReportModal = ({ onClose, onExport }: ExportModalProps) => {
   const [exportFormat, setExportFormat] = useState<"csv" | "xlsx" | "">("");
@@ -24,7 +24,7 @@ const ExportReportModal = ({ onClose, onExport }: ExportModalProps) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-40 ">
       <div className="bg-white rounded-lg shadow-lg w-[500px] max-h-[80vh] overflow-y-auto no-scrollbar px-6 py-4">
         <div className="flex flex-col gap-4 items-center w-full relative">
           {/* Modal title Content */}

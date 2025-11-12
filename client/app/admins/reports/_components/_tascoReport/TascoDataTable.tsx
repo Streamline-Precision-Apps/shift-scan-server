@@ -17,12 +17,12 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/app/v1/components/ui/table";
 import { useState } from "react";
 import { TascoReportRow, tascoReportColumns } from "./tascoReportTableColumns";
 
-import { Skeleton } from "@/components/ui/skeleton";
-import Spinner from "@/components/(animations)/spinner";
+import { Skeleton } from "@/app/v1/components/ui/skeleton";
+import Spinner from "@/app/v1/components/(animations)/spinner";
 import { FooterPagination } from "../../../_pages/FooterPagination";
 import React, { Suspense } from "react";
 import LoadingTascoReportTableState from "./loadingTascoReportTableState";
@@ -98,7 +98,7 @@ export function TascoDataTable({ data, loading }: TascoDataTableProps) {
                           ? null
                           : flexRender(
                               header.column.columnDef.header,
-                              header.getContext(),
+                              header.getContext()
                             )}
                       </TableHead>
                     ))}
@@ -138,7 +138,7 @@ export function TascoDataTable({ data, loading }: TascoDataTableProps) {
                             >
                               {flexRender(
                                 cell.column.columnDef.cell,
-                                cell.getContext(),
+                                cell.getContext()
                               )}
                             </TableCell>
                           ))}

@@ -54,9 +54,7 @@ export async function getEquipmentMileageService(equipmentId: string) {
 
 // Find an equipment by QR code (for QR code uniqueness check)
 export async function getEquipmentByQrId(qrId: string) {
-  const equipment = await prisma.equipment.findFirst({ where: { qrId } });
-  console.log("Equipment found by QR ID:", equipment);
-  return equipment;
+  return await prisma.equipment.findFirst({ where: { qrId } });
 }
 
 // Create equipment (POST)

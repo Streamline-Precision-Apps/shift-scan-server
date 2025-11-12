@@ -12,7 +12,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/app/v1/components/ui/table";
 import React, { Dispatch, SetStateAction, useMemo, Suspense } from "react";
 import { FormItem } from "./hooks/types";
 import { getFormsTableColumns } from "./formsTableColumns";
@@ -62,7 +62,7 @@ export function FormsDataTable({
       openHandleUnarchive,
       openHandleDelete,
       handleShowExportModal,
-    ],
+    ]
   );
 
   const table = useReactTable({
@@ -114,7 +114,7 @@ export function FormsDataTable({
                           ? null
                           : flexRender(
                               header.column.columnDef.header,
-                              header.getContext(),
+                              header.getContext()
                             )}
                       </TableHead>
                     );
@@ -140,7 +140,7 @@ export function FormsDataTable({
                         >
                           {flexRender(
                             cell.column.columnDef.cell,
-                            cell.getContext(),
+                            cell.getContext()
                           )}
                         </TableCell>
                       ))}

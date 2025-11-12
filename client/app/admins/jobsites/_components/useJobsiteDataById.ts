@@ -1,12 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  ApprovalStatus,
-  FormStatus,
-  FormTemplateStatus,
-} from "../../../../../../prisma/generated/prisma";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
 
+type ApprovalStatus = "DRAFT" | "PENDING" | "APPROVED" | "REJECTED";
+type FormTemplateStatus = "DRAFT" | "ACTIVE" | "ARCHIVED";
 export type Jobsite = {
   id: string;
   code?: string;
@@ -56,10 +54,11 @@ export const useJobsiteDataById = (id: string) => {
     const fetchEquipmentSummaries = async () => {
       try {
         setLoading(true);
-        const [jobsiteDetails, tag] = await Promise.all([
-          fetch("/api/getJobsiteById/" + id),
-          fetch("/api/getTagSummary"),
-        ]).then((res) => Promise.all(res.map((r) => r.json())));
+
+        const [jobsiteDetails, tagSummary] = await Promise.all([
+          apiRequest(`/api/v1/admins/jobsite/${id}`, "GET"),
+          apiRequest("/api/v1/admins/tags", "GET"),
+        ]);
 
         // If there's a dash, remove code from the start of the name; otherwise, leave as is
         if (jobsiteDetails.name.includes("-")) {
@@ -71,11 +70,13 @@ export const useJobsiteDataById = (id: string) => {
           setJobSiteDetails(jobsiteDetails);
         }
 
-        const filteredTags = tag.tags.map(
+        console.log("Fetched tag summary:", tagSummary);
+
+        const filteredTags = (tagSummary.tagSummary || []).map(
           (tag: { id: string; name: string }) => ({
             id: tag.id,
             name: tag.name,
-          }),
+          })
         );
         setTagSummaries(filteredTags);
       } catch (error) {

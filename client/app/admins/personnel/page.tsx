@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/v1/components/ui/button";
 import React, { useState } from "react";
 import {
   Dialog,
@@ -8,13 +8,13 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import Spinner from "@/components/(animations)/spinner";
+} from "@/app/v1/components/ui/dialog";
+import Spinner from "@/app/v1/components/(animations)/spinner";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/app/v1/components/ui/tooltip";
 import SearchBarPopover from "../_pages/searchBarPopover";
 import { usePersonnelData } from "./_components/usePersonnelData";
 import CreateUserModal from "./_components/createUser";
@@ -31,7 +31,7 @@ import { Users, User } from "lucide-react";
 
 export default function PersonnelPage() {
   const [pageState, setPageState] = useState<"Personnel" | "Crews">(
-    "Personnel",
+    "Personnel"
   );
 
   const {
@@ -196,7 +196,7 @@ export default function PersonnelPage() {
       <div className="h-[85vh] rounded-lg w-full relative bg-white overflow-hidden">
         {/* Loading overlay */}
         {currentLoading && (
-          <div className="absolute inset-0 z-20 flex flex-row items-center gap-2 justify-center bg-white bg-opacity-70 rounded-lg">
+          <div className="absolute inset-0 z-20 flex flex-row items-center gap-2 justify-center bg-white-70  rounded-lg">
             <Spinner size={20} />
             <span className="text-lg text-gray-500">Loading...</span>
           </div>

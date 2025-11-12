@@ -1,5 +1,5 @@
-import { Holds } from "@/components/(reusable)/holds";
-import { Inputs } from "@/components/(reusable)/inputs";
+import { Holds } from "@/app/v1/components/(reusable)/holds";
+import { Inputs } from "@/app/v1/components/(reusable)/inputs";
 
 interface SearchBarProps {
   term: string;

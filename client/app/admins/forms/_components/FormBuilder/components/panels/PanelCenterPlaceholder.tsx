@@ -1,7 +1,7 @@
 "use client";
 
-import Spinner from "@/components/(animations)/spinner";
-import { Button } from "@/components/ui/button";
+import Spinner from "@/app/v1/components/(animations)/spinner";
+import { Button } from "@/app/v1/components/ui/button";
 
 interface FormBuilderPlaceholderProps {
   loading: boolean;

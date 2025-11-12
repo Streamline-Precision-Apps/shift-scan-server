@@ -13,15 +13,15 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/app/v1/components/ui/table";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Button } from "@/components/ui/button";
+} from "@/app/v1/components/ui/tooltip";
+import { Button } from "@/app/v1/components/ui/button";
 import React, { Dispatch, SetStateAction, Suspense, useMemo } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/app/v1/components/ui/skeleton";
 import { PersonnelSummary } from "./usePersonnelData";
 import { personnelTableColumns } from "./personnelTableColumns";
 import LoadingPersonnelTableState from "./loadingPersonnelTableState";
@@ -158,7 +158,7 @@ export function PersonnelDataTable({
                           ? null
                           : flexRender(
                               header.column.columnDef.header,
-                              header.getContext(),
+                              header.getContext()
                             )}
                       </TableHead>
                     );
@@ -167,47 +167,49 @@ export function PersonnelDataTable({
               ))}
             </TableHeader>
             <TableBody className="h-full divide-y divide-gray-200 bg-white">
-              <Suspense fallback={<LoadingPersonnelTableState columns={columns} />}>
-              {loading ? (
-                <LoadingPersonnelTableState columns={columns} />
-              ) : table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  className="odd:bg-white even:bg-gray-100 border-r border-gray-200 text-xs text-center py-2"
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell
-                      key={cell.id}
-                      className="whitespace-nowrap border-r border-gray-200 text-xs text-center"
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
+              <Suspense
+                fallback={<LoadingPersonnelTableState columns={columns} />}
+              >
+                {loading ? (
+                  <LoadingPersonnelTableState columns={columns} />
+                ) : table.getRowModel().rows?.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
+                      className="odd:bg-white even:bg-gray-100 border-r border-gray-200 text-xs text-center py-2"
                     >
-                    {showInactive ? (
-                      <p className="text-gray-500 italic">
-                        No Inactive Personnel.
-                      </p>
-                    ) : (
-                      <p className="text-gray-500 italic">
-                        No Personnel found. Click Plus to add new Personnel.
-                      </p>
-                    )}
-                  </TableCell>
-                </TableRow>
-              )}
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell
+                          key={cell.id}
+                          className="whitespace-nowrap border-r border-gray-200 text-xs text-center"
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={columns.length}
+                      className="h-24 text-center"
+                    >
+                      {showInactive ? (
+                        <p className="text-gray-500 italic">
+                          No Inactive Personnel.
+                        </p>
+                      ) : (
+                        <p className="text-gray-500 italic">
+                          No Personnel found. Click Plus to add new Personnel.
+                        </p>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                )}
               </Suspense>
             </TableBody>
           </Table>

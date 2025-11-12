@@ -99,7 +99,7 @@ export default function Home() {
         <img
           src="/windows11/StoreLogo.scale-400.png"
           alt="Shift Scan Store Logo"
-          className="h-32 md:h-56 w-auto mb-6 mt-2 drop-shadow-2xl rounded-2xl bg-white bg-opacity-90 border-4 border-white shadow-lg animate-fade-in"
+          className="h-32 md:h-56 w-auto mb-6 mt-2 drop-shadow-2xl rounded-2xl bg-white-90 border-4 border-white shadow-lg animate-fade-in"
           style={{ maxWidth: "220px", height: "auto", objectFit: "contain" }}
         />
         <h1 className="text-3xl md:text-6xl font-extrabold text-white text-center mb-3 drop-shadow-lg animate-fade-in">

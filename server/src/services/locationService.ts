@@ -43,8 +43,6 @@ export async function fetchLatestLocation(
     return null;
   }
 
-  console.log(`[Location] Fetching latest for user ${userId}: location found`);
-
   return {
     uid: userId,
     ts: marker.createdAt,

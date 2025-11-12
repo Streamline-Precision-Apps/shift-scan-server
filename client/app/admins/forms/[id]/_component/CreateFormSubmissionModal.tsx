@@ -1,15 +1,17 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/v1/components/ui/button";
 import { toast } from "sonner";
-import { createFormSubmission } from "@/actions/records-forms";
-import RenderFields from "../../_components/RenderFields/RenderFields"; // Import the RenderFields component
-import Spinner from "@/components/(animations)/spinner";
+import { createFormSubmission } from "@/app/lib/actions/adminActions";
+// Import the RenderFields component
+import Spinner from "@/app/v1/components/(animations)/spinner";
 import { FormIndividualTemplate } from "./hooks/types";
 import { X } from "lucide-react";
-import { useSession } from "next-auth/react";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/app/v1/components/ui/label";
+import { Textarea } from "@/app/v1/components/ui/textarea";
+import { useUserStore } from "@/app/lib/store/userStore";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
+import RenderFields from "@/app/admins/forms/_components/RenderFields/RenderFields";
 
 export interface Submission {
   id: string;
@@ -69,8 +71,8 @@ const CreateFormSubmissionModal: React.FC<CreateFormSubmissionModalProps> = ({
   closeModal,
   onSuccess,
 }) => {
-  const { data: session } = useSession();
-  const adminUserId = session?.user?.id || null;
+  const { user } = useUserStore();
+  const adminUserId = user?.id || null;
 
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<
@@ -89,11 +91,11 @@ const CreateFormSubmissionModal: React.FC<CreateFormSubmissionModalProps> = ({
 
   // State for different asset types
   const [equipment, setEquipment] = useState<{ id: string; name: string }[]>(
-    [],
+    []
   );
   const [jobsites, setJobsites] = useState<{ id: string; name: string }[]>([]);
   const [costCodes, setCostCodes] = useState<{ id: string; name: string }[]>(
-    [],
+    []
   );
 
   const [users, setUsers] = useState<
@@ -122,8 +124,10 @@ const CreateFormSubmissionModal: React.FC<CreateFormSubmissionModalProps> = ({
 
   useEffect(() => {
     const fetchEmployees = async () => {
-      const res = await fetch("/api/getAllActiveEmployeeName");
-      const employees = await res.json();
+      const employees = await apiRequest(
+        "/api/v1/admins/personnel/getAllActiveEmployees",
+        "GET"
+      );
       setUsers(employees);
     };
     fetchEmployees();
@@ -133,10 +137,11 @@ const CreateFormSubmissionModal: React.FC<CreateFormSubmissionModalProps> = ({
   useEffect(() => {
     const fetchEquipment = async () => {
       try {
-        const res = await fetch("/api/getEquipmentSummary");
-        if (!res.ok) throw new Error("Failed to fetch equipment");
-        const data = await res.json();
-        setEquipment(data);
+        const data = await apiRequest(
+          "/api/v1/admins/equipment/summary",
+          "GET"
+        );
+        setEquipment(data || []);
       } catch (error) {
         console.error("Error fetching equipment:", error);
       }
@@ -148,11 +153,8 @@ const CreateFormSubmissionModal: React.FC<CreateFormSubmissionModalProps> = ({
   useEffect(() => {
     const fetchJobsites = async () => {
       try {
-        const res = await fetch("/api/getJobsiteSummary");
-        if (!res.ok) throw new Error("Failed to fetch jobsites");
-        const data = await res.json();
-
-        setJobsites(data);
+        const data = await apiRequest("/api/v1/admins/jobsite", "GET");
+        setJobsites(data.jobsiteSummary || []);
       } catch (error) {
         console.error("Error fetching jobsites:", error);
       }
@@ -164,10 +166,8 @@ const CreateFormSubmissionModal: React.FC<CreateFormSubmissionModalProps> = ({
   useEffect(() => {
     const fetchCostCodes = async () => {
       try {
-        const res = await fetch("/api/getCostCodeSummary");
-        if (!res.ok) throw new Error("Failed to fetch cost codes");
-        const data = await res.json();
-        setCostCodes(data);
+        const data = await apiRequest("/api/v1/admins/cost-codes", "GET");
+        setCostCodes(data.costCodes || []);
       } catch (error) {
         console.error("Error fetching cost codes:", error);
       }
@@ -177,7 +177,7 @@ const CreateFormSubmissionModal: React.FC<CreateFormSubmissionModalProps> = ({
 
   const handleFieldChange = (
     fieldId: string,
-    value: string | Date | string[] | object | boolean | number | null,
+    value: string | Date | string[] | object | boolean | number | null
   ) => {
     // Convert value to a format compatible with our formData state
     let compatibleValue: string | number | boolean | null = null;
@@ -243,7 +243,7 @@ const CreateFormSubmissionModal: React.FC<CreateFormSubmissionModalProps> = ({
         },
         adminUserId,
         comment: managerComment,
-        signature: `${session?.user.firstName} ${session?.user.lastName}`,
+        signature: `${user?.firstName} ${user?.lastName}`,
         status: "APPROVED",
         // Include manager approval data if signed by manager
       });
@@ -265,7 +265,7 @@ const CreateFormSubmissionModal: React.FC<CreateFormSubmissionModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-40 ">
       <div className="bg-white rounded-lg shadow-lg w-[600px] h-[80vh] overflow-y-auto no-scrollbar px-6 py-4 flex flex-col items-center">
         <div className="w-full flex flex-col border-b border-gray-100 pb-3 relative">
           <Button
@@ -362,7 +362,7 @@ const CreateFormSubmissionModal: React.FC<CreateFormSubmissionModalProps> = ({
                   >
                     I,{" "}
                     <span className="font-semibold">
-                      {session?.user.firstName} {session?.user.lastName}
+                      {user?.firstName} {user?.lastName}
                     </span>
                     , electronically sign and approve this submission.
                   </label>
@@ -422,7 +422,7 @@ const CreateFormSubmissionModal: React.FC<CreateFormSubmissionModalProps> = ({
                   >
                     I,{" "}
                     <span className="font-semibold">
-                      {session?.user.firstName} {session?.user.lastName}
+                      {user?.firstName} {user?.lastName}
                     </span>
                     , electronically sign and approve this submission.
                   </label>
@@ -466,7 +466,7 @@ const CreateFormSubmissionModal: React.FC<CreateFormSubmissionModalProps> = ({
                   >
                     I,{" "}
                     <span className="font-semibold">
-                      {session?.user.firstName} {session?.user.lastName}
+                      {user?.firstName} {user?.lastName}
                     </span>
                     , electronically sign and approve this submission.
                   </label>

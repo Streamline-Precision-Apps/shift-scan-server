@@ -1,6 +1,6 @@
 "use client";
 
-import RenderFields from "./RenderFields";
+import RenderFields from "../../../../../admins/forms/_components/RenderFields/RenderFields";
 
 import { useEffect, useState } from "react";
 import { useEquipmentStore } from "@/app/lib/store/equipmentStore";

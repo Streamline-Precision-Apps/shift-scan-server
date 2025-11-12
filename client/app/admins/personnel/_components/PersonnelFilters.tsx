@@ -1,19 +1,19 @@
 "use client";
 
 import React, { useState, useEffect, SetStateAction, Dispatch } from "react";
-import { Combobox } from "@/components/ui/combobox";
+import { Combobox } from "@/app/v1/components/ui/combobox";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/app/v1/components/ui/popover";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+} from "@/app/v1/components/ui/tooltip";
+import { Button } from "@/app/v1/components/ui/button";
+import { Badge } from "@/app/v1/components/ui/badge";
 
 export interface PersonnelFilterOptions {
   roles: string[];
@@ -105,8 +105,8 @@ const PersonnelFilters: React.FC<PersonnelFilterPopoverProps> = ({
                   open
                     ? "border-slate-400"
                     : getActiveFilterCount() > 0
-                      ? "bg-blue-50 border-blue-300"
-                      : ""
+                    ? "bg-blue-50 border-blue-300"
+                    : ""
                 }`}
               >
                 <img src="/filterFunnel.svg" alt="Filter" className="h-4 w-4" />

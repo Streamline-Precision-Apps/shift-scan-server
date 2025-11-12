@@ -28,3 +28,121 @@ export async function setFCMToken({ token }: { token: string }) {
     return false;
   }
 }
+
+export async function getUserTopicPreferences(
+  userId: string
+): Promise<{ topic: string }[]> {
+  // You must provide userId from your session or context when calling this function
+  // For now, try to get it from localStorage or another client-side method if needed
+
+  if (!userId) {
+    console.warn(
+      "Attempted to fetch topic preferences for unauthenticated user."
+    );
+    return [];
+  }
+
+  try {
+    const response = await apiRequest(
+      `/api/v1/admins/notification-preferences?userId=${userId}`,
+      "GET"
+    );
+    if (response && Array.isArray(response.preferences)) {
+      return response.preferences;
+    }
+    // fallback if response is array itself
+    if (Array.isArray(response)) {
+      return response;
+    }
+    return [];
+  } catch (error) {
+    console.error("Error fetching user topic preferences:", error);
+    return [];
+  }
+}
+
+export async function updateNotificationReadStatus({
+  notificationId,
+  userId,
+}: {
+  notificationId: number;
+  userId: string;
+}) {
+  try {
+    const response = await apiRequest(
+      "/api/push-notifications/mark-read",
+      "POST",
+      {
+        notificationId,
+        userId,
+      }
+    );
+    if (response && response.success) {
+      return true;
+    } else {
+      throw new Error(response?.error || "Failed to update read status");
+    }
+  } catch (error) {
+    console.error("Error updating notification read status:", error);
+    throw new Error("Failed to update read status");
+  }
+}
+
+export async function markAllNotificationsAsRead({
+  userId,
+}: {
+  userId: string;
+}) {
+  try {
+    const response = await apiRequest(
+      "/api/push-notifications/mark-read",
+      "POST",
+      {
+        markAll: true,
+        userId,
+      }
+    );
+    if (response && response.success) {
+      return true;
+    } else {
+      throw new Error(response?.error || "Failed to mark all as read");
+    }
+  } catch (error) {
+    console.error("Error marking all notifications as read:", error);
+    throw new Error("Failed to mark all as read");
+  }
+}
+
+export async function markBrokenEquipmentNotificationsAsRead({
+  notificationId,
+  userId,
+}: {
+  notificationId: number;
+  userId: string;
+}) {
+  try {
+    const response = await apiRequest(
+      "/api/push-notifications/mark-read",
+      "POST",
+      {
+        notificationId,
+        brokenEquipment: true,
+        userId,
+      }
+    );
+    if (response && response.success) {
+      return response;
+    } else {
+      throw new Error(
+        response?.error ||
+          "Failed to mark broken equipment notifications as read"
+      );
+    }
+  } catch (error) {
+    console.error(
+      "Error marking broken equipment notifications as read:",
+      error
+    );
+    throw new Error("Failed to mark broken equipment notifications as read");
+  }
+}

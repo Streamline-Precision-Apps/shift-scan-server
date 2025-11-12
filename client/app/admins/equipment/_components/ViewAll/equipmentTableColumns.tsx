@@ -7,11 +7,12 @@ import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
-} from "@/components/ui/tooltip";
-import { Button } from "@/components/ui/button";
-import { highlight } from "@/app/(routes)/admins/_pages/highlight";
+} from "@/app/v1/components/ui/tooltip";
+import { Button } from "@/app/v1/components/ui/button";
+
 import { ArchiveIcon, ArchiveRestore } from "lucide-react";
 import { format } from "date-fns";
+import { highlight } from "@/app/admins/_pages/highlight";
 
 // Define types for action handlers
 interface EquipmentActionHandlers {
@@ -24,7 +25,7 @@ interface EquipmentActionHandlers {
 
 // Define the column configuration as a function that accepts handlers
 export const createEquipmentTableColumns = (
-  actionHandlers?: EquipmentActionHandlers,
+  actionHandlers?: EquipmentActionHandlers
 ): ColumnDef<EquipmentSummary>[] => [
   {
     accessorKey: "nameAndDescription",
@@ -82,12 +83,12 @@ export const createEquipmentTableColumns = (
                       tag === "VEHICLE"
                         ? "text-blue-600 bg-blue-100"
                         : tag === "TRUCK"
-                          ? "text-blue-600 bg-blue-100"
-                          : tag === "TRAILER"
-                            ? "text-blue-600 bg-blue-100"
-                            : tag === "EQUIPMENT"
-                              ? "text-blue-600 bg-blue-100"
-                              : ""
+                        ? "text-blue-600 bg-blue-100"
+                        : tag === "TRAILER"
+                        ? "text-blue-600 bg-blue-100"
+                        : tag === "EQUIPMENT"
+                        ? "text-blue-600 bg-blue-100"
+                        : ""
                     } px-2 py-1 rounded-lg text-xs `}
                   >
                     {tag ? tag.charAt(0) + tag.slice(1).toLowerCase() : " "}
@@ -100,8 +101,8 @@ export const createEquipmentTableColumns = (
                           condition === "NEW"
                             ? "bg-green-100 text-green-800"
                             : condition === "USED"
-                              ? "bg-orange-100 text-orange-600"
-                              : ""
+                            ? "bg-orange-100 text-orange-600"
+                            : ""
                         }`}
                       >
                         {condition
@@ -117,10 +118,10 @@ export const createEquipmentTableColumns = (
                       os === "OWNED"
                         ? "bg-indigo-100 text-indigo-600"
                         : os === "LEASED"
-                          ? "bg-purple-100 text-purple-600"
-                          : os === "RENTAL"
-                            ? "bg-cyan-100 text-cyan-600"
-                            : ""
+                        ? "bg-purple-100 text-purple-600"
+                        : os === "RENTAL"
+                        ? "bg-cyan-100 text-cyan-600"
+                        : ""
                     }`}
                   >
                     {os ? os.charAt(0) + os.slice(1).toLowerCase() : " "}
@@ -146,11 +147,11 @@ export const createEquipmentTableColumns = (
         <div className="text-xs text-center text-gray-400 italic max-w-[100px]">
           <Tooltip>
             <TooltipTrigger asChild>
-              <p className="whitespace-normal break-words overflow-hidden text-ellipsis line-clamp-2">
+              <p className="whitespace-normal wrap-break-word overflow-hidden text-ellipsis line-clamp-2">
                 {equipment.memo || ""}
               </p>
             </TooltipTrigger>
-            <TooltipContent className="max-w-[300px] whitespace-normal break-words">
+            <TooltipContent className="max-w-[300px] whitespace-normal wrap-break-word">
               {equipment.memo || ""}
             </TooltipContent>
           </Tooltip>

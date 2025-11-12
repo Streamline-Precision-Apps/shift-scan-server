@@ -1,14 +1,16 @@
 "use client";
 import { useState, useEffect } from "react";
 import QRCode from "qrcode";
+
+import { useDashboardData } from "../../_pages/sidebar/DashboardDataContext";
+import { FilterOptions } from "./ViewAll/EquipmentFilter";
+import { useSearchParams } from "next/navigation";
 import {
   archiveEquipment,
   deleteEquipment,
   restoreEquipment,
-} from "@/actions/AssetActions";
-import { useDashboardData } from "../../_pages/sidebar/DashboardDataContext";
-import { FilterOptions } from "./ViewAll/EquipmentFilter";
-import { useSearchParams } from "next/navigation";
+} from "@/app/lib/actions/adminActions";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
 
 /**
  * EquipmentSummary type for equipment/vehicle/truck/trailer asset
@@ -61,7 +63,7 @@ export const useEquipmentData = () => {
 
   const { refresh } = useDashboardData();
   const [equipmentDetails, setEquipmentDetails] = useState<EquipmentSummary[]>(
-    [],
+    []
   );
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState<boolean>(true);
@@ -128,18 +130,8 @@ export const useEquipmentData = () => {
         }
 
         // Build the URL with all applicable parameters
-        const url = `/api/getEquipmentDetails?${queryParams.toString()}`;
-
-        const response = await fetch(url, {
-          cache: "no-store",
-          // Add a cache-busting parameter to prevent duplicate requests
-          headers: {
-            pragma: "no-cache",
-            "cache-control": "no-cache",
-          },
-        });
-
-        const data = await response.json();
+        const url = `/api/v1/admins/equipment?${queryParams.toString()}`;
+        const data = await apiRequest(url, "GET");
 
         setEquipmentDetails(data.equipment);
         setTotal(data.total);

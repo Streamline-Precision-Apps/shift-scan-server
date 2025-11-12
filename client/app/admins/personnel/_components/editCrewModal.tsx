@@ -1,25 +1,25 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/app/v1/components/ui/button";
+import { Input } from "@/app/v1/components/ui/input";
+import { Label } from "@/app/v1/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/app/v1/components/ui/select";
 import { useState } from "react";
 import { toast } from "sonner";
-import Spinner from "@/components/(animations)/spinner";
+import Spinner from "@/app/v1/components/(animations)/spinner";
 import { useCrewDataById } from "./useCrewDataById";
 import { CrewData } from "./useCrewDataById";
-import { editCrew } from "@/actions/adminActions";
+import { editCrew } from "@/app/lib/actions/adminActions";
 import { CrewMemberCheckboxList } from "./CrewMemberCheckboxList";
 import {
   SingleCombobox,
   ComboboxOption,
-} from "@/components/ui/single-combobox";
+} from "@/app/v1/components/ui/single-combobox";
 
 export default function EditCrewModal({
   cancel,
@@ -67,8 +67,11 @@ export default function EditCrewModal({
   const userOptions = users
     ? users.map((user) => ({
         value: user.id,
-        label:
-          `${user.firstName ? `${user.firstName}` : ""}${user.middleName ? ` ${user.middleName}` : ""}${user.lastName ? ` ${user.lastName}` : ""}${user.secondLastName ? ` ${user.secondLastName}` : ""}`.trim(),
+        label: `${user.firstName ? `${user.firstName}` : ""}${
+          user.middleName ? ` ${user.middleName}` : ""
+        }${user.lastName ? ` ${user.lastName}` : ""}${
+          user.secondLastName ? ` ${user.secondLastName}` : ""
+        }`.trim(),
       }))
     : [];
 
@@ -119,7 +122,7 @@ export default function EditCrewModal({
 
   if (loading || !crewData || !users) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-40">
         <div className="bg-white rounded-lg shadow-lg max-w-[1000px] w-full  max-h-[80vh] overflow-y-auto no-scrollbar p-8 flex flex-col items-center">
           <div className="flex flex-col gap-4 w-full">
             <div className="flex flex-col gap-1">
@@ -133,7 +136,7 @@ export default function EditCrewModal({
             </div>
           </div>
         </div>
-        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40">
+        <div className="absolute inset-0 flex items-center justify-center ">
           <Spinner />
         </div>
       </div>
@@ -141,11 +144,11 @@ export default function EditCrewModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-40 ">
       <div className="bg-white rounded-lg shadow-lg max-w-[1000px] w-full max-h-[80vh] overflow-y-auto no-scrollbar p-8 flex flex-col items-center relative">
         {/* Loading overlay when submitting */}
         {submitting && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-80 rounded-lg z-10">
+          <div className="absolute inset-0 flex items-center justify-center bg-white-40  rounded-lg z-10">
             <Spinner />
           </div>
         )}
@@ -200,7 +203,7 @@ export default function EditCrewModal({
                           | "TRUCK_DRIVER"
                           | "LABOR"
                           | "TASCO"
-                          | "",
+                          | ""
                       )
                     }
                     disabled={loading}
@@ -236,12 +239,16 @@ export default function EditCrewModal({
                       .map(
                         (user): ComboboxOption => ({
                           value: user.id,
-                          label: `${user.firstName} ${user.lastName}${user.middleName ? ` ${user.middleName}` : ""}${user.secondLastName ? ` ${user.secondLastName}` : ""}${user.permission ? ` (${user.permission})` : ""}`,
+                          label: `${user.firstName} ${user.lastName}${
+                            user.middleName ? ` ${user.middleName}` : ""
+                          }${
+                            user.secondLastName ? ` ${user.secondLastName}` : ""
+                          }${user.permission ? ` (${user.permission})` : ""}`,
                           firstName: user.firstName,
                           lastName: user.lastName,
                           middleName: user.middleName || "",
                           permission: user.permission,
-                        }),
+                        })
                       )}
                     value={crewData?.leadId || ""}
                     onChange={(value) => {
@@ -254,7 +261,7 @@ export default function EditCrewModal({
 
                         // Check if new lead is already in the crew
                         const leadAlreadyInCrew = prev.Users.some(
-                          (u) => u.id === value,
+                          (u) => u.id === value
                         );
 
                         if (!leadAlreadyInCrew && value) {
@@ -314,7 +321,7 @@ export default function EditCrewModal({
                         // Create updated users array with full user data
                         const updatedUsers = Array.from(uniqueIds).map((id) => {
                           const existingUser = prev.Users.find(
-                            (u) => u.id === id,
+                            (u) => u.id === id
                           );
                           if (existingUser) return existingUser;
 

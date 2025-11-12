@@ -18,6 +18,7 @@ type Props = {
 
 export default function SignOutModal({ open, setOpen }: Props) {
   const t = useTranslations("Admins");
+  const signOut = useSignOut(); // <-- Call the hook here
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="w-[500px] h-[200px] rounded-lg">
@@ -41,10 +42,10 @@ export default function SignOutModal({ open, setOpen }: Props) {
             variant="destructive"
             onClick={async () => {
               setOpen(false);
-              useSignOut();
+              await signOut(); // <-- Use the function returned by the hook
             }}
           >
-            {t("Logout")}
+            <p className="text-primary-foreground">{t("Logout")}</p>
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -1,10 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
 import {
-  deleteCostCode,
   archiveCostCode,
   restoreCostCode,
-} from "@/actions/AssetActions";
+  deleteCostCode,
+} from "@/app/lib/actions/adminActions";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
 export type CostCodeSummary = {
   id: string;
   code: string;
@@ -60,13 +61,11 @@ export const useCostCodeData = () => {
       try {
         setLoading(true);
         const encodedSearch = encodeURIComponent(searchTerm.trim());
-        const response = await fetch(
-          `/api/getCostCodeDetails?page=${page}&pageSize=${pageSize}&search=${encodedSearch}`,
+        const data = await apiRequest(
+          `/api/v1/admins/cost-codes?page=${page}&pageSize=${pageSize}&search=${encodedSearch}`,
+          "GET"
         );
-        if (!response.ok) {
-          throw new Error(`HTTP error ${response.status}`);
-        }
-        const data = await response.json();
+
         setCostCodeDetails(data.costCodes);
         setTotal(data.total);
         setTotalPages(data.totalPages);
@@ -137,7 +136,7 @@ export const useCostCodeData = () => {
   };
 
   const filteredCostCodes = CostCodeDetails.filter((costCode) =>
-    costCode.name.toLowerCase().includes(inputValue.toLowerCase()),
+    costCode.name.toLowerCase().includes(inputValue.toLowerCase())
   );
 
   // Reset to page 1 if search or filter changes

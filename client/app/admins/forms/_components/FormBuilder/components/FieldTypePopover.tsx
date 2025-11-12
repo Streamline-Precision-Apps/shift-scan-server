@@ -4,10 +4,9 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/app/v1/components/ui/popover";
 import { fieldTypes, FormField } from "../types";
-import { Button } from "@/components/ui/button";
-import { o } from "framer-motion/dist/types.d-Cjd591yU";
+import { Button } from "@/app/v1/components/ui/button";
 
 interface FieldTypePopoverProps {
   fieldId: string;
@@ -26,7 +25,7 @@ export const FieldTypePopover: React.FC<FieldTypePopoverProps> = ({
 }) => {
   // Find the current field type from the fieldTypes array
   const currentFieldType = fieldTypes.find(
-    (type) => type.name === fieldType,
+    (type) => type.name === fieldType
   ) || {
     name: "",
     label: "Select Type",

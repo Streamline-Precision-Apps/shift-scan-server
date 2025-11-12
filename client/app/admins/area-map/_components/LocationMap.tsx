@@ -706,7 +706,7 @@ const LocationMap: React.FC = () => {
 
       {/* Error Message */}
       {error && showError && (
-        <div className="bg-red-50 border-l-4 border-red-500 p-4 m-4 flex justify-between items-center">
+        <div className="bg-red-50 border-l-4 border-red-500 p-4 m-4 flex justify-between items-center z-30">
           <p className="text-red-700 text-sm">{error}</p>
           <button
             onClick={() => setShowError(false)}
@@ -722,13 +722,13 @@ const LocationMap: React.FC = () => {
         {/* Map Container */}
         <div
           ref={mapContainer}
-          className="flex-1 min-h-0"
+          className="flex-1 min-h-0 z-30"
           style={{ height: "calc(100vh - 150px)" }}
         />
 
         {/* Sidebar */}
         {sidebarOpen && selectedCluster && (
-          <div className="w-80 bg-white border-l border-gray-200 shadow-lg flex flex-col overflow-hidden">
+          <div className="w-80 bg-white border-l border-gray-200 shadow-lg flex flex-col overflow-hidden z-20">
             {/* Sidebar Header - Only show if more than 1 user */}
             {selectedCluster.length > 1 && (
               <div className="bg-indigo-600 h-8 px-4 text-white flex justify-between items-center">

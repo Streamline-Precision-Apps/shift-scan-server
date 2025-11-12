@@ -15,21 +15,21 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/app/v1/components/ui/table";
 
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/app/v1/components/ui/tooltip";
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-} from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
+} from "@/app/v1/components/ui/popover";
+import { Button } from "@/app/v1/components/ui/button";
 import React, { Dispatch, SetStateAction, useMemo, Suspense } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/app/v1/components/ui/skeleton";
 import { FormIndividualTemplate, Submission } from "./hooks/types";
 import { format } from "date-fns";
 import { highlight } from "../../../_pages/highlight";
@@ -73,7 +73,7 @@ export function FormSubmissionDataTable({
   const fields = useMemo(() => {
     if (!formTemplate?.FormGrouping) return [];
     return formTemplate.FormGrouping.flatMap((g) => g.Fields).sort(
-      (a, b) => a.order - b.order,
+      (a, b) => a.order - b.order
     );
   }, [formTemplate]);
 
@@ -117,7 +117,7 @@ export function FormSubmissionDataTable({
             <div className="text-xs text-center">
               {highlight(
                 `${submission.User.firstName} ${submission.User.lastName}`,
-                searchTerm || "",
+                searchTerm || ""
               )}
             </div>
           );
@@ -202,7 +202,7 @@ export function FormSubmissionDataTable({
                   <PopoverTrigger asChild>
                     <button
                       type="button"
-                      className="bg-blue-50 rounded-lg px-2 py-1 border border-blue-200 text-xs text-blue-700 cursor-pointer min-w-[48px]"
+                      className="bg-blue-50 rounded-lg px-2 py-1 border border-blue-200 text-xs text-blue-700 cursor-pointer min-w-12"
                     >
                       {val.length} items
                     </button>
@@ -217,7 +217,7 @@ export function FormSubmissionDataTable({
                           >
                             {item.name || ""}
                           </div>
-                        ),
+                        )
                       )}
                     </div>
                   </PopoverContent>
@@ -235,7 +235,7 @@ export function FormSubmissionDataTable({
                 </div>
               )
             ) : (
-              (display ?? "")
+              display ?? ""
             )}
           </div>
         );
@@ -280,10 +280,10 @@ export function FormSubmissionDataTable({
                     {row.original.status === "PENDING"
                       ? "Pending"
                       : row.original.status === "DRAFT"
-                        ? "In Progress"
-                        : row.original.status === "APPROVED"
-                          ? "Approved"
-                          : "Rejected"}
+                      ? "In Progress"
+                      : row.original.status === "APPROVED"
+                      ? "Approved"
+                      : "Rejected"}
                   </div>
                 </TooltipContent>
               </Tooltip>
@@ -469,7 +469,7 @@ export function FormSubmissionDataTable({
                           ? null
                           : flexRender(
                               header.column.columnDef.header,
-                              header.getContext(),
+                              header.getContext()
                             )}
                       </TableHead>
                     );
@@ -503,7 +503,7 @@ export function FormSubmissionDataTable({
                         >
                           {flexRender(
                             cell.column.columnDef.cell,
-                            cell.getContext(),
+                            cell.getContext()
                           )}
                         </TableCell>
                       ))}

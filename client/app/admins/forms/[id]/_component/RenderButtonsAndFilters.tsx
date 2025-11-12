@@ -3,9 +3,9 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+} from "@/app/v1/components/ui/tooltip";
+import { Badge } from "@/app/v1/components/ui/badge";
+import { Button } from "@/app/v1/components/ui/button";
 import SearchBarPopover from "../../../_pages/searchBarPopover";
 import { Dispatch, SetStateAction } from "react";
 import { FormIndividualTemplate } from "./hooks/types";

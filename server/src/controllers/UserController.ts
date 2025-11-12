@@ -8,10 +8,8 @@ export async function getUserSettingsByQuery(req: Request, res: Response) {
   try {
     // Accept userId from body (POST)
     const userId = req.body.userId;
-    console.log("📝 getUserSettingsByQuery called with userId:", userId);
 
     if (!userId || typeof userId !== "string") {
-      console.log("❌ Invalid userId:", userId);
       return res.status(400).json({
         success: false,
         error: "User ID is required",
@@ -33,10 +31,7 @@ export async function getUserSettingsByQuery(req: Request, res: Response) {
       },
     });
 
-    console.log("🔍 Found UserSettings:", data);
-
     if (!data) {
-      console.log("❌ UserSettings not found for userId:", userId);
       return res.status(404).json({
         success: false,
         error: "User settings not found",
@@ -58,10 +53,8 @@ export async function getUserSettingsByQuery(req: Request, res: Response) {
 export async function getUserContact(req: Request, res: Response) {
   try {
     const userId = req.body.userId;
-    console.log("📝 getUserContact called with userId:", userId);
 
     if (!userId || typeof userId !== "string") {
-      console.log("❌ Invalid userId:", userId);
       return res.status(400).json({
         success: false,
         error: "User ID is required",
@@ -89,10 +82,7 @@ export async function getUserContact(req: Request, res: Response) {
       },
     });
 
-    console.log("🔍 Found employee:", employee);
-
     if (!employee) {
-      console.log("❌ User not found for userId:", userId);
       return res.status(404).json({
         success: false,
         error: "User not found",
@@ -225,9 +215,6 @@ export async function createUser(req: CreateUserRequest, res: Response) {
     );
     const newUser: User = await UserService.createUser(userData);
 
-    // Additional action: log creation
-    console.log(`User created: ${newUser.id}`);
-
     res.status(201).json({
       success: true,
       data: newUser,
@@ -267,9 +254,6 @@ export async function updateUser(req: Request, res: Response) {
 
     const updatedUser = await UserService.updateUser(id, userData);
 
-    // Additional action: log update
-    console.log(`User updated: ${id}`);
-
     res.status(200).json({
       success: true,
       data: updatedUser,
@@ -306,9 +290,6 @@ export async function deleteUser(req: Request, res: Response) {
       });
     }
     await UserService.deleteUser(id);
-
-    // Additional action: log deletion
-    console.log(`User deleted: ${id}`);
 
     res.status(200).json({
       success: true,
@@ -355,11 +336,6 @@ export async function updateSettings(req: Request, res: Response) {
   try {
     // Extract userId from authenticated token (req.user set by verifyToken middleware)
     const authenticatedUserId = (req as any).user?.id;
-    console.log(
-      "🔍 updateSettings called - authenticatedUserId:",
-      authenticatedUserId
-    );
-    console.log("📝 Request body:", JSON.stringify(req.body, null, 2));
 
     // Verify user is authenticated
     if (!authenticatedUserId) {
@@ -452,9 +428,6 @@ export async function updateSettings(req: Request, res: Response) {
       await UserService.updateUserSettings(userId, sanitizedSettings);
     }
 
-    // Additional action: log settings update
-    console.log(`User settings updated: ${userId}`);
-
     res.status(200).json({
       success: true,
       message: "User settings updated successfully",
@@ -531,9 +504,7 @@ export async function getTeamsByUserId(req: Request, res: Response) {
 export async function getCrewMembers(req: Request, res: Response) {
   try {
     const { crewId } = req.params;
-    console.log("[UserController] getCrewMembers called with crewId:", crewId);
     if (!crewId) {
-      console.log("[UserController] No crewId provided in params");
       return res.status(400).json({
         success: false,
         error: "Crew ID is required",
@@ -541,9 +512,7 @@ export async function getCrewMembers(req: Request, res: Response) {
       });
     }
     const crew = await UserService.getCrewMembers(crewId);
-    console.log("[UserController] getCrewMembers service result:", crew);
     if (!crew) {
-      console.log("[UserController] No crew found for crewId:", crewId);
       return res.status(404).json({
         success: false,
         error: "Crew not found",

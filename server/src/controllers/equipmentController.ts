@@ -30,7 +30,6 @@ export async function getEquipmentMileageController(
 // Create equipment (POST)
 export async function createEquipment(req: Request, res: Response) {
   try {
-    console.log("Received createEquipment request:", req.body);
     const result = await equipmentService.createEquipment(req.body);
     res.status(201).json({ success: true, data: result });
   } catch (error: any) {

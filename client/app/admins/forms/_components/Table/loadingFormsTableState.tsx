@@ -1,5 +1,5 @@
-import { TableCell, TableRow } from "@/components/ui/table";
-import { Skeleton } from "@/components/ui/skeleton";
+import { TableCell, TableRow } from "@/app/v1/components/ui/table";
+import { Skeleton } from "@/app/v1/components/ui/skeleton";
 import { getFormsTableColumns } from "./formsTableColumns";
 
 type Props = {

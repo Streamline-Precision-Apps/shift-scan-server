@@ -1,8 +1,8 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
+import { Input } from "@/app/v1/components/ui/input";
 import { FormField } from "../../types";
-import { Label } from "@/components/ui/label";
+import { Label } from "@/app/v1/components/ui/label";
 
 interface TextFieldOptionsProps {
   field: FormField;

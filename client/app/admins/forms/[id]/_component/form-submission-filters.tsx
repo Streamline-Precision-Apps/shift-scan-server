@@ -1,19 +1,19 @@
 import React, { useState } from "react";
-import { Calendar } from "@/components/ui/calendar";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Calendar } from "@/app/v1/components/ui/calendar";
+import { Button } from "@/app/v1/components/ui/button";
+import { Badge } from "@/app/v1/components/ui/badge";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/app/v1/components/ui/popover";
 import {
   Select,
   SelectTrigger,
   SelectContent,
   SelectItem,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/app/v1/components/ui/select";
 
 interface DateRange {
   from?: Date;
@@ -72,8 +72,8 @@ export default function FormSubmissionFilters({
             open
               ? "border-slate-400"
               : getActiveFilterCount() > 0
-                ? "bg-blue-50 border-blue-300"
-                : ""
+              ? "bg-blue-50 border-blue-300"
+              : ""
           }`}
         >
           <img src="/filterFunnel.svg" alt="Filter" className="h-4 w-4" />
@@ -142,7 +142,7 @@ export default function FormSubmissionFilters({
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="p-2 flex-shrink-0"
+                    className="p-2 shrink-0"
                     onClick={() => setDateRange({})}
                     aria-label="Clear date range"
                   >

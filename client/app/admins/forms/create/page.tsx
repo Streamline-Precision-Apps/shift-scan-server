@@ -1,6 +1,6 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { useSidebar } from "@/components/ui/sidebar";
+import { Button } from "@/app/v1/components/ui/button";
+import { useSidebar } from "@/app/v1/components/ui/sidebar";
 import { useRouter } from "next/navigation";
 import FormBuilder from "../_components/FormBuilder/FormBuilder";
 

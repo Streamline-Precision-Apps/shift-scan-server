@@ -1,7 +1,7 @@
 "use client";
-import { SingleCombobox } from "@/components/ui/single-combobox";
-import { Label } from "@/components/ui/label";
-import type { ComboboxOption } from "@/components/ui/single-combobox";
+import { SingleCombobox } from "@/app/v1/components/ui/single-combobox";
+import { Label } from "@/app/v1/components/ui/label";
+import type { ComboboxOption } from "@/app/v1/components/ui/single-combobox";
 export interface Fields {
   id: string;
   formGroupingId: string;

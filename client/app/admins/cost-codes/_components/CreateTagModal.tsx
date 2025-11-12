@@ -1,16 +1,19 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/app/v1/components/ui/button";
+import { Input } from "@/app/v1/components/ui/input";
+import { Label } from "@/app/v1/components/ui/label";
 import { useEffect, useState } from "react";
-import { createTag } from "@/actions/AssetActions";
+
 import { toast } from "sonner";
-import { Combobox } from "@/components/ui/combobox";
-import { Textarea } from "@/components/ui/textarea";
-import { ApprovalStatus } from "../../../../../../prisma/generated/prisma/client";
+import { Combobox } from "@/app/v1/components/ui/combobox";
+import { Textarea } from "@/app/v1/components/ui/textarea";
 import { X } from "lucide-react";
 import { validate } from "uuid";
+import { createTag } from "@/app/lib/actions/adminActions";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
+
+type ApprovalStatus = "DRAFT" | "PENDING" | "APPROVED" | "REJECTED";
 
 type JobsiteSummary = {
   id: string;
@@ -81,15 +84,15 @@ export default function CreateTagModal({
   useEffect(() => {
     const fetchJobsites = async () => {
       try {
-        const res = await fetch("/api/getJobsiteSummary");
-        const data = await res.json();
-        const filteredJobsites = data
+        const data = await apiRequest("/api/v1/admins/jobsite", "GET");
+
+        const filteredJobsites = data.jobsiteSummary
           .filter(
             (jobsite: {
               id: string;
               name: string;
               approvalStatus: ApprovalStatus;
-            }) => jobsite.approvalStatus !== ApprovalStatus.REJECTED,
+            }) => jobsite.approvalStatus !== "REJECTED"
           )
           .map((jobsite: { id: string; name: string }) => ({
             id: jobsite.id,
@@ -107,12 +110,12 @@ export default function CreateTagModal({
   useEffect(() => {
     const fetchCostCodes = async () => {
       try {
-        const res = await fetch("/api/getCostCodeSummary");
-        const data = await res.json();
-        const filteredCostCodes = data
+        const data = await apiRequest("/api/v1/admins/cost-codes", "GET");
+
+        const filteredCostCodes = data.costCodes
           .filter(
             (costCode: { id: string; name: string; isActive: boolean }) =>
-              costCode.isActive === true,
+              costCode.isActive === true
           )
           .map((costCode: { id: string; name: string }) => ({
             id: costCode.id,
@@ -191,7 +194,7 @@ export default function CreateTagModal({
       const payload = {
         name: formData.name.trim(),
         description: formData.description.trim(),
-        CostCode: formData.CostCodes.map((costCode) => ({
+        CostCodes: formData.CostCodes.map((costCode) => ({
           id: costCode.id,
           name: costCode.name,
         })),
@@ -220,7 +223,7 @@ export default function CreateTagModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-40 ">
       <div className="bg-white rounded-lg shadow-lg w-[600px] h-[80vh]  px-6 py-4 flex flex-col items-center">
         <div className="w-full flex flex-col border-b border-gray-100 pb-3 relative">
           <Button
@@ -315,7 +318,7 @@ export default function CreateTagModal({
                     setFormData((prev) => ({
                       ...prev,
                       Jobsites: jobsite.filter((j) =>
-                        selectedIds.includes(j.id),
+                        selectedIds.includes(j.id)
                       ),
                     }));
                   }}
@@ -337,7 +340,7 @@ export default function CreateTagModal({
                           setFormData((prev) => ({
                             ...prev,
                             Jobsites: prev.Jobsites.filter(
-                              (j) => j.id !== js.id,
+                              (j) => j.id !== js.id
                             ),
                           }));
                         }}
@@ -372,7 +375,7 @@ export default function CreateTagModal({
                     setFormData((prev) => ({
                       ...prev,
                       CostCodes: costCode.filter((c) =>
-                        selectedIds.includes(c.id),
+                        selectedIds.includes(c.id)
                       ),
                     }));
                   }}
@@ -394,7 +397,7 @@ export default function CreateTagModal({
                           setFormData((prev) => ({
                             ...prev,
                             CostCodes: prev.CostCodes.filter(
-                              (c) => c.id !== cc.id,
+                              (c) => c.id !== cc.id
                             ),
                           }));
                         }}

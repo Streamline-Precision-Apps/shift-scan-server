@@ -14,7 +14,6 @@ export function getCookie(req: express.Request, res: express.Response) {
   }
 
   const value = req.cookies?.[name];
-  console.log(`📖 GET cookie: ${name} = ${value || "(not found)"}`);
 
   if (value === undefined) {
     if (name === "currentPageView") {
@@ -45,11 +44,6 @@ export function getCookieList(req: express.Request, res: express.Response) {
   const values: Record<string, string | undefined> = {};
   name.forEach((cookieName) => {
     values[cookieName] = req.cookies?.[cookieName];
-    console.log(
-      `📖 GET cookie: ${cookieName} = ${
-        values[cookieName] ? values[cookieName] : "(not found)"
-      }`
-    );
   });
 
   res.json({ value: values });
@@ -64,19 +58,9 @@ export function setCookie(req: express.Request, res: express.Response) {
     console.error("❌ Missing name or value in request");
     return res.status(400).json({ error: "Missing name or value" });
   }
-
-  console.log(`📝 Setting cookie (UPSERT): ${name} = ${value}`);
-  console.log(`   Client options:`, options);
-
   // Get current cookie value to check if it exists
   const existingValue = req.cookies?.[name];
   const isUpdate = existingValue !== undefined;
-
-  if (isUpdate) {
-    console.log(`   Action: UPDATE (existing value was: ${existingValue})`);
-  } else {
-    console.log(`   Action: CREATE (new cookie)`);
-  }
 
   // IMPORTANT: Set proper cookie options to ensure browser receives it
   const cookieOptions = {
@@ -86,17 +70,8 @@ export function setCookie(req: express.Request, res: express.Response) {
     ...options, // Merge with provided options
   };
 
-  console.log(`   Final cookie options:`, cookieOptions);
-
   // Set the cookie
   res.cookie(name, value, cookieOptions);
-
-  console.log(
-    `✅ Cookie ${
-      isUpdate ? "updated" : "created"
-    } successfully: ${name} = ${value}`
-  );
-  console.log(`   Set-Cookie header should be sent to browser`);
 
   res.json({
     message: `Cookie ${isUpdate ? "updated" : "created"}`,

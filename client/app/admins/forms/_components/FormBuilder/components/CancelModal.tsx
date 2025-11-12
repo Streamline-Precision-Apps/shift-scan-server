@@ -7,8 +7,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+} from "@/app/v1/components/ui/dialog";
+import { Button } from "@/app/v1/components/ui/button";
 
 interface CancelModalProps {
   isOpen: boolean;
@@ -27,23 +27,16 @@ export const CancelModal: React.FC<CancelModalProps> = ({
         <DialogHeader>
           <DialogTitle>Exit Form Builder</DialogTitle>
           <DialogDescription>
-            Are you sure you want to exit the form builder? All unsaved
-            changes will be lost.
+            Are you sure you want to exit the form builder? All unsaved changes
+            will be lost.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <div className="flex flex-row gap-2">
-            <Button
-              variant="outline"
-              className="bg-gray-100"
-              onClick={onClose}
-            >
+            <Button variant="outline" className="bg-gray-100" onClick={onClose}>
               Cancel
             </Button>
-            <Button
-              variant="destructive"
-              onClick={onConfirm}
-            >
+            <Button variant="destructive" onClick={onConfirm}>
               Exit Without Saving
             </Button>
           </div>

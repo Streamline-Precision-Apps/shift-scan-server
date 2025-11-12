@@ -12,7 +12,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/app/v1/components/ui/table";
 import React, { Dispatch, SetStateAction, useMemo, Suspense } from "react";
 import { CostCodeSummary } from "../useCostCodeData";
 import { getCostCodeTableColumns } from "./costCodeTableColumns";
@@ -56,9 +56,9 @@ export default function CostCodeDataTable({
         openHandleEdit,
         openHandleDelete,
         openHandleArchive,
-        openHandleRestore,
+        openHandleRestore
       ),
-    [openHandleEdit, openHandleDelete, openHandleArchive, openHandleRestore],
+    [openHandleEdit, openHandleDelete, openHandleArchive, openHandleRestore]
   );
 
   const table = useReactTable({
@@ -105,7 +105,7 @@ export default function CostCodeDataTable({
                           ? null
                           : flexRender(
                               header.column.columnDef.header,
-                              header.getContext(),
+                              header.getContext()
                             )}
                       </TableHead>
                     );
@@ -135,7 +135,7 @@ export default function CostCodeDataTable({
                         >
                           {flexRender(
                             cell.column.columnDef.cell,
-                            cell.getContext(),
+                            cell.getContext()
                           )}
                         </TableCell>
                       ))}

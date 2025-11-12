@@ -6,12 +6,13 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { highlight } from "@/app/(routes)/admins/_pages/highlight";
+} from "@/app/v1/components/ui/tooltip";
+
 import Link from "next/link";
 import { format } from "date-fns";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/v1/components/ui/button";
 import { ArchiveIcon, ArchiveRestore } from "lucide-react";
+import { highlight } from "@/app/admins/_pages/highlight";
 
 // Define the column configuration as a function that takes action handlers
 export const getJobsiteTableColumns = (
@@ -19,7 +20,7 @@ export const getJobsiteTableColumns = (
   onDeleteClick?: (id: string) => void,
   onQrClick?: (id: string) => void,
   onArchiveClick?: (id: string) => void,
-  onRestoreClick?: (id: string) => void,
+  onRestoreClick?: (id: string) => void
 ): ColumnDef<JobsiteSummary>[] => [
   {
     accessorKey: "nameAndDescription",

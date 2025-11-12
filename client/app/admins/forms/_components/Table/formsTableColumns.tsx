@@ -1,11 +1,11 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { FormItem } from "./hooks/types";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/v1/components/ui/button";
 import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
-} from "@/components/ui/tooltip";
+} from "@/app/v1/components/ui/tooltip";
 import { highlight } from "../../../_pages/highlight";
 import Link from "next/link";
 import { Archive, ArchiveRestore } from "lucide-react";
@@ -37,15 +37,27 @@ export function getFormsTableColumns({
                   <div className="flex flex-row gap-2 items-center">
                     {row.original.isActive === "ACTIVE" ? (
                       <span className="bg-green-100 text-green-600 px-2 py-1 rounded-lg text-xs">
-                        {`${row.original.isActive.slice(0, 1).toUpperCase()}${row.original.isActive.slice(1).toLowerCase()}`}
+                        {`${row.original.isActive
+                          .slice(0, 1)
+                          .toUpperCase()}${row.original.isActive
+                          .slice(1)
+                          .toLowerCase()}`}
                       </span>
                     ) : row.original.isActive === "DRAFT" ? (
                       <span className="bg-blue-100 text-blue-600 px-2 py-1 rounded-lg text-xs">
-                        {`${row.original.isActive.slice(0, 1).toUpperCase()}${row.original.isActive.slice(1).toLowerCase()}`}
+                        {`${row.original.isActive
+                          .slice(0, 1)
+                          .toUpperCase()}${row.original.isActive
+                          .slice(1)
+                          .toLowerCase()}`}
                       </span>
                     ) : (
                       <span className="w-fit bg-gray-100 text-gray-600 px-2 py-1 rounded-lg text-xs">
-                        {`${row.original.isActive.slice(0, 1).toUpperCase()}${row.original.isActive.slice(1).toLowerCase()}`}
+                        {`${row.original.isActive
+                          .slice(0, 1)
+                          .toUpperCase()}${row.original.isActive
+                          .slice(1)
+                          .toLowerCase()}`}
                       </span>
                     )}
 

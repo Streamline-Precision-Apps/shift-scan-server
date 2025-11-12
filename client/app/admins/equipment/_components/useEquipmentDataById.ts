@@ -1,4 +1,5 @@
 "use client";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
 import { useState, useEffect, useCallback } from "react";
 
 /**
@@ -46,7 +47,7 @@ export type Equipment = {
 };
 export const useEquipmentDataById = (id: string) => {
   const [equipmentDetails, setEquipmentDetails] = useState<Equipment | null>(
-    null,
+    null
   );
   const [loading, setLoading] = useState<boolean>(true);
   const [refreshKey, setRefreshKey] = useState(0);
@@ -57,11 +58,8 @@ export const useEquipmentDataById = (id: string) => {
     const fetchEquipmentSummaries = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/api/getEquipmentByEquipmentId/" + id);
-        if (!response.ok) {
-          throw new Error(`HTTP error ${response.status}`);
-        }
-        const data = await response.json();
+        const data = await apiRequest(`/api/v1/admins/equipment/${id}`, "GET");
+
         setEquipmentDetails(data);
       } catch (error) {
         console.error("Failed to fetch equipment details:", error);

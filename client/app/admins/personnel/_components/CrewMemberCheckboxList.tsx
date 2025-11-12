@@ -2,8 +2,8 @@
 
 import * as React from "react";
 import { Star, ChevronsUpDown, Check } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+
+import { Button } from "@/app/v1/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -11,13 +11,14 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
+} from "@/app/v1/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/app/v1/components/ui/popover";
 import { useState } from "react";
+import { cn } from "@/app/lib/utils/utils";
 
 export interface CrewMemberOption {
   value: string;
@@ -110,7 +111,7 @@ export function CrewMemberCheckboxList({
                       onSelect={() => handleSelect(option.value)}
                       className={cn(
                         "py-2 px-2 cursor-pointer",
-                        isLeadAndSelected && "opacity-75",
+                        isLeadAndSelected && "opacity-75"
                       )}
                     >
                       <div className="flex items-center w-full gap-2">
@@ -119,13 +120,13 @@ export function CrewMemberCheckboxList({
                             "flex-shrink-0 h-5 w-5 rounded border flex items-center justify-center",
                             checked
                               ? "bg-green-500 border-green-500"
-                              : "border-gray-300",
+                              : "border-gray-300"
                           )}
                         >
                           <Check
                             className={cn(
                               "h-3.5 w-3.5 text-white",
-                              checked ? "opacity-100" : "opacity-0",
+                              checked ? "opacity-100" : "opacity-0"
                             )}
                           />
                         </div>

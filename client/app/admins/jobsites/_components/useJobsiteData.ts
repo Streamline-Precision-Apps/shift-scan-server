@@ -1,14 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { deleteJobsite, archiveJobsite, restoreJobsite } from "@/actions/AssetActions";
+import {
+  archiveJobsite,
+  deleteJobsite,
+  restoreJobsite,
+} from "@/app/lib/actions/adminActions";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
 import QRCode from "qrcode";
 import { useDashboardData } from "../../_pages/sidebar/DashboardDataContext";
-import {
-  ApprovalStatus,
-  FormTemplateStatus,
-} from "../../../../../../prisma/generated/prisma/client";
 
+type ApprovalStatus = "APPROVED" | "DRAFT" | "PENDING" | "REJECTED";
+type FormTemplateStatus = "DRAFT" | "ACTIVE" | "ARCHIVED";
 export type JobsiteSummary = {
   id: string;
   code: string;
@@ -44,7 +47,9 @@ export const useJobsiteData = (initialShowPendingOnly: boolean = false) => {
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(25);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const [showPendingOnly, setShowPendingOnly] = useState(initialShowPendingOnly);
+  const [showPendingOnly, setShowPendingOnly] = useState(
+    initialShowPendingOnly
+  );
   // State for modals
   const [editJobsiteModal, setEditJobsiteModal] = useState(false);
   const [createJobsiteModal, setCreateJobsiteModal] = useState(false);
@@ -71,16 +76,14 @@ export const useJobsiteData = (initialShowPendingOnly: boolean = false) => {
         setLoading(true);
         let url = "";
         if (showPendingOnly) {
-          url = `/api/jobsiteManager?status=pending`;
+          url = `/api/v1/admins/jobsite?status=pending`;
         } else {
-          url = `/api/jobsiteManager?page=${page}&pageSize=${pageSize}`;
+          url = `/api/v1/admins/jobsite?page=${page}&pageSize=${pageSize}`;
         }
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error(`HTTP error ${response.status}`);
-        }
-        const data = await response.json();
-        setJobsiteDetails(data.jobsites);
+
+        const data = await apiRequest(url, "GET");
+
+        setJobsiteDetails(data.jobsiteSummary || []);
         setTotal(data.total);
         setTotalPages(data.totalPages);
       } catch (error) {
@@ -173,7 +176,7 @@ export const useJobsiteData = (initialShowPendingOnly: boolean = false) => {
 
   // Count all pending items
   const pendingCount = jobsiteDetails.filter(
-    (item) => item.approvalStatus === "PENDING",
+    (item) => item.approvalStatus === "PENDING"
   ).length;
 
   // Filter job sites by name or client name and by approval status if showPendingOnly is active
@@ -188,7 +191,7 @@ export const useJobsiteData = (initialShowPendingOnly: boolean = false) => {
   const totalJobsites = filteredJobsites.length;
   const paginatedJobsites = filteredJobsites.slice(
     (page - 1) * pageSize,
-    page * pageSize,
+    page * pageSize
   );
 
   // Reset to page 1 if search or filter changes
