@@ -98,7 +98,7 @@ export default function LeftSidebar() {
       title: "Area Map",
       img: "map",
       white: "map-white",
-      link: "/admins/location-map",
+      link: "/admins/area-map",
     },
   ];
   return (
