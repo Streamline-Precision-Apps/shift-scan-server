@@ -67,8 +67,6 @@ export async function requestPasswordReset(req: Request, res: Response) {
       });
     }
 
-    console.log(`📧 Processing password reset for: ${email}`);
-
     // Delete any existing tokens for this email
     const existingToken = await prisma.passwordResetToken.findFirst({
       where: { email },
@@ -78,7 +76,6 @@ export async function requestPasswordReset(req: Request, res: Response) {
       await prisma.passwordResetToken.delete({
         where: { id: existingToken.id },
       });
-      console.log(`🗑️  Deleted existing token for: ${email}`);
     }
 
     // Generate new reset token
@@ -93,16 +90,9 @@ export async function requestPasswordReset(req: Request, res: Response) {
       },
     });
 
-    console.log(`✅ Password reset token created:`, {
-      email,
-      tokenId: passwordResetToken.id,
-      expiresAt: expiresAt.toISOString(),
-    });
-
     // Send reset email
     try {
       await sendPasswordResetEmail(email, resetToken);
-      console.log(`📨 Password reset email sent to: ${email}`);
     } catch (emailError) {
       console.error(
         `❌ Failed to send password reset email to ${email}:`,
@@ -147,8 +137,6 @@ export async function resetPassword(req: Request, res: Response) {
         .json({ error: "Password must be at least 6 characters" });
     }
 
-    console.log(`🔍 Verifying password reset token...`);
-
     // Find and validate token
     const resetTokenRecord = await prisma.passwordResetToken.findUnique({
       where: { token },
@@ -171,8 +159,6 @@ export async function resetPassword(req: Request, res: Response) {
       return res.status(400).json({ error: "Reset token has expired" });
     }
 
-    console.log(`✅ Token valid for email: ${resetTokenRecord.email}`);
-
     // Find user
     const user = await prisma.user.findUnique({
       where: { email: resetTokenRecord.email },
@@ -183,9 +169,6 @@ export async function resetPassword(req: Request, res: Response) {
       return res.status(400).json({ error: "User not found" });
     }
 
-    // Update password (you should hash this - see note below)
-    console.log(`🔐 Updating password for user: ${user.id}`);
-
     await prisma.user.update({
       where: { id: user.id },
       data: { password }, // ⚠️ TODO: Hash password before storing
@@ -195,8 +178,6 @@ export async function resetPassword(req: Request, res: Response) {
     await prisma.passwordResetToken.delete({
       where: { id: resetTokenRecord.id },
     });
-
-    console.log(`✅ Password reset successful for: ${resetTokenRecord.email}`);
 
     return res.status(200).json({
       success: true,
@@ -221,8 +202,6 @@ export async function verifyResetToken(req: Request, res: Response) {
       return res.status(400).json({ error: "Token is required" });
     }
 
-    console.log(`🔍 Verifying reset token...`);
-
     const resetTokenRecord = await prisma.passwordResetToken.findUnique({
       where: { token },
     });
@@ -240,7 +219,6 @@ export async function verifyResetToken(req: Request, res: Response) {
       return res.status(400).json({ valid: false, error: "Token expired" });
     }
 
-    console.log(`✅ Token valid`);
     return res.status(200).json({
       valid: true,
       email: resetTokenRecord.email,
@@ -264,8 +242,6 @@ export async function deleteResetToken(req: Request, res: Response) {
       return res.status(400).json({ error: "Token is required" });
     }
 
-    console.log(`🗑️  Attempting to delete reset token...`);
-
     // Find the token record
     const resetTokenRecord = await prisma.passwordResetToken.findUnique({
       where: { token },
@@ -280,10 +256,6 @@ export async function deleteResetToken(req: Request, res: Response) {
     await prisma.passwordResetToken.delete({
       where: { id: resetTokenRecord.id },
     });
-
-    console.log(
-      `✅ Reset token deleted successfully for email: ${resetTokenRecord.email}`
-    );
 
     return res.status(200).json({
       success: true,

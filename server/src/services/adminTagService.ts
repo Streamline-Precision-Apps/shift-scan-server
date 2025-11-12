@@ -169,7 +169,6 @@ export type UpdateTagPayload = {
 };
 
 export async function updateTag(id: string, payload: UpdateTagPayload) {
-  console.log("Updating tag with payload:", payload);
   const existingTag = await prisma.cCTag.findUnique({
     where: { id },
     include: {

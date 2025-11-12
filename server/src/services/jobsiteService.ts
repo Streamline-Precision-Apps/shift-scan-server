@@ -23,7 +23,6 @@ export async function getJobsites(query: { qrg?: boolean }) {
 // Find a jobsite by QR code (for QR code uniqueness check)
 export async function getJobsiteByQrId(qrId: string) {
   const jobsite = await prisma.jobsite.findFirst({ where: { qrId } });
-  console.log("Jobsite found by QR ID:", jobsite);
   return jobsite;
 }
 

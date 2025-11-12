@@ -401,7 +401,6 @@ export async function crewStatus(crewId: string) {
 
 // service to get employee in crew
 export async function getCrewMembers(crewId: string) {
-  console.log("[UserService] getCrewMembers called with crewId:", crewId);
   const crew = await prisma.crew.findUnique({
     where: {
       id: crewId,
@@ -420,7 +419,6 @@ export async function getCrewMembers(crewId: string) {
   });
 
   if (!crew) {
-    console.log("[UserService] No crew found for crewId:", crewId);
     throw new Error("Crew not found");
   }
 
@@ -430,9 +428,6 @@ export async function getCrewMembers(crewId: string) {
   );
 
   const crewType = crew.crewType;
-
-  console.log("[UserService] crewMembers:", crewMembers);
-  console.log("[UserService] crewType:", crewType);
 
   return { crewMembers, crewType };
 }

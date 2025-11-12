@@ -10,7 +10,6 @@ export const initHandler = async (
 ) => {
   const userId = req.body.userId as string;
   const token = req.body.token as string;
-  console.log("[initHandler] Received userId:", userId, "token:", token);
 
   if (!token) {
     return res.status(400).json({ error: "Missing token" });

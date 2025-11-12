@@ -52,7 +52,6 @@ export async function createJobsite(req: Request, res: Response) {
     if (!req.body) {
       return res.status(400).json({ error: "Missing jobsite data" });
     }
-    console.log("Creating jobsite with data:", req.body);
     const jobsite = await jobsiteService.createJobsite(req.body);
     res.status(201).json(jobsite);
   } catch (error: any) {

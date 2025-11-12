@@ -185,7 +185,6 @@ export async function editEquipmentHauledService(
 
 export async function deleteEquipmentHauledService(id: string) {
   try {
-    console.log("Deleting EquipmentHauled with ID:", id);
     const result = await prisma.equipmentHauled.delete({
       where: { id },
     });
@@ -282,7 +281,7 @@ export async function updateMaterialService(
   // Only add fields that are actually provided (not undefined)
   if (data.name !== undefined && data.name !== "") updateData.name = data.name;
   if (data.quantity !== undefined) updateData.quantity = data.quantity;
-  if (data.LocationOfMaterial !== undefined && data.LocationOfMaterial !== "") 
+  if (data.LocationOfMaterial !== undefined && data.LocationOfMaterial !== "")
     updateData.LocationOfMaterial = data.LocationOfMaterial;
   if (data.unit !== undefined && data.unit !== "") updateData.unit = data.unit;
   if (data.loadType !== undefined) updateData.loadType = data.loadType;
@@ -405,8 +404,7 @@ export async function updateEquipmentHauledService(
     updateData.startMileage = data.startMileage;
   if (data.endMileage !== undefined) updateData.endMileage = data.endMileage;
 
-  console.log("Updating EquipmentHauled with data:", updateData);
-  const result = await prisma.equipmentHauled.update({
+  return await prisma.equipmentHauled.update({
     where: { id: equipmentHauledId },
     data: updateData,
     include: {
@@ -418,6 +416,4 @@ export async function updateEquipmentHauledService(
       },
     },
   });
-  console.log("Update result:", result);
-  return result;
 }

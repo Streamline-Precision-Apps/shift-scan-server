@@ -135,7 +135,10 @@ export class NotificationService {
   /**
    * Subscribe user to a topic and save subscription in database
    */
-  static async subscribeUserToTopic(userId: string, topic: string): Promise<void> {
+  static async subscribeUserToTopic(
+    userId: string,
+    topic: string
+  ): Promise<void> {
     try {
       const admin = getFirebaseAdmin();
 
@@ -150,18 +153,15 @@ export class NotificationService {
       for (const tokenRecord of tokens) {
         try {
           await admin.messaging().subscribeToTopic(tokenRecord.token, topic);
-          console.log(`✅ Token subscribed to topic ${topic}: ${tokenRecord.token}`);
+          // console.log(`✅ Token subscribed to topic ${topic}: ${tokenRecord.token}`);
         } catch (error) {
-          console.error(
-            `Error subscribing token to topic ${topic}:`,
-            error
-          );
+          console.error(`Error subscribing token to topic ${topic}:`, error);
         }
       }
 
       // Save subscription record in database
       await this.createTopicSubscription(userId, topic);
-      console.log(`✅ User ${userId} subscribed to topic: ${topic}`);
+      // console.log(`✅ User ${userId} subscribed to topic: ${topic}`);
     } catch (error) {
       console.error("Error subscribing user to topic:", error);
       throw error;
@@ -171,7 +171,10 @@ export class NotificationService {
   /**
    * Unsubscribe user from a topic
    */
-  static async unsubscribeUserFromTopic(userId: string, topic: string): Promise<void> {
+  static async unsubscribeUserFromTopic(
+    userId: string,
+    topic: string
+  ): Promise<void> {
     try {
       const admin = getFirebaseAdmin();
 
@@ -181,8 +184,10 @@ export class NotificationService {
       // Unsubscribe each token from the topic via Firebase
       for (const tokenRecord of tokens) {
         try {
-          await admin.messaging().unsubscribeFromTopic(tokenRecord.token, topic);
-          console.log(`✅ Token unsubscribed from topic ${topic}: ${tokenRecord.token}`);
+          await admin
+            .messaging()
+            .unsubscribeFromTopic(tokenRecord.token, topic);
+          // console.log(`✅ Token unsubscribed from topic ${topic}: ${tokenRecord.token}`);
         } catch (error) {
           console.error(
             `Error unsubscribing token from topic ${topic}:`,
@@ -193,7 +198,7 @@ export class NotificationService {
 
       // Delete subscription record from database
       await this.deleteTopicSubscription(userId, topic);
-      console.log(`✅ User ${userId} unsubscribed from topic: ${topic}`);
+      // console.log(`✅ User ${userId} unsubscribed from topic: ${topic}`);
     } catch (error) {
       console.error("Error unsubscribing user from topic:", error);
       throw error;
@@ -223,16 +228,18 @@ export class NotificationService {
             notification,
           };
           if (data) message.data = data;
-          
-          return admin.messaging().send(message)
+
+          return admin
+            .messaging()
+            .send(message)
             .catch((err) => ({ error: err }));
         })
       );
 
-      const successCount = results.filter((r: any) => !('error' in r)).length;
-      console.log(
-        `✅ Sent notification to ${successCount} of ${tokens.length} devices for user ${userId}`
-      );
+      const successCount = results.filter((r: any) => !("error" in r)).length;
+      // console.log(
+      //   `✅ Sent notification to ${successCount} of ${tokens.length} devices for user ${userId}`
+      // );
 
       return results;
     } catch (error) {
@@ -259,9 +266,9 @@ export class NotificationService {
 
       const messageId = await admin.messaging().send(message);
 
-      console.log(
-        `✅ Sent notification to topic ${topic}. Message ID: ${messageId}`
-      );
+      // console.log(
+      //   `✅ Sent notification to topic ${topic}. Message ID: ${messageId}`
+      // );
       return messageId;
     } catch (error) {
       console.error("Error sending notification to topic:", error);
@@ -332,4 +339,3 @@ export class NotificationService {
 }
 
 export default NotificationService;
-
