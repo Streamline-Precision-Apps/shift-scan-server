@@ -7,6 +7,8 @@ import { LaborClockOut } from "./_components/laborClockOut";
 import { PreInjuryReport } from "./_components/no-injury";
 import Comment from "./_components/comment";
 import { useTimeSheetData } from "@/app/lib/context/TimeSheetIdContext";
+import { getStoredCoordinates } from "@/app/lib/client/locationTracking";
+import { enqueue } from "@/app/lib/queue/jobQueue";
 import { useUserStore } from "@/app/lib/store/userStore";
 import { usePermissions } from "@/app/lib/context/permissionContext";
 import { apiRequest } from "@/app/lib/utils/api-Utils";
@@ -68,6 +70,11 @@ export default function TempClockOutContent() {
   const [commentsValue, setCommentsValue] = useState("");
   const [timesheets, setTimesheets] = useState<TimeSheet[]>([]);
   // Removed reviewYourTeam state, not needed for manager flow
+  // Prefetched coordinates for clock-out and comments
+  const [coordinates, setCoordinates] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
   const [pendingTimeSheets, setPendingTimeSheets] = useState<TimeSheet>();
   const [editFilter, setEditFilter] = useState<TimesheetFilter | null>(null);
   const [editDate, setEditDate] = useState<string>("");
@@ -87,7 +94,15 @@ export default function TempClockOutContent() {
     setStep((prevStep) => prevStep - 1); // Increment function
   };
 
-  useEffect(() => {}, []);
+  // Prefetch coordinates as soon as possible on page mount
+  useEffect(() => {
+    enqueue(async () => {
+      const coords = await getStoredCoordinates();
+      setCoordinates(coords);
+    });
+    // Optionally, refresh coordinates if needed on focus, etc.
+    // eslint-disable-next-line
+  }, []);
 
   // on mount, request location permission and get stored coordinates
   useEffect(() => {
@@ -181,6 +196,7 @@ export default function TempClockOutContent() {
         loading={loading}
         setLoading={setLoading}
         currentTimesheetId={savedTimeSheetData?.id}
+        coordinates={coordinates}
       />
     );
   }
@@ -230,6 +246,7 @@ export default function TempClockOutContent() {
         wasInjured={wasInjured}
         timeSheetId={savedTimeSheetData?.id}
         refetchTimesheet={refetchTimesheet}
+        coordinates={coordinates}
       />
     );
   } else {

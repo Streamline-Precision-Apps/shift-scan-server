@@ -31,6 +31,7 @@ export default function Comment({
   setLoading,
   loading = false,
   currentTimesheetId,
+  coordinates,
 }: {
   commentsValue: string;
   handleClick: () => void;
@@ -41,6 +42,7 @@ export default function Comment({
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   loading: boolean;
   currentTimesheetId: number | undefined;
+  coordinates?: { lat: number; lng: number } | null;
 }) {
   const { user } = useUserStore();
 
@@ -74,16 +76,19 @@ export default function Comment({
         return;
       }
 
-      // Get current coordinates before stopping tracking
-      const coordinates = await getStoredCoordinates();
+      // Use prefetched coordinates if available, else fallback to fetching now
+      let coords = coordinates;
+      if (!coords) {
+        coords = await getStoredCoordinates();
+      }
 
       const body = {
         userId: user?.id,
         endTime: new Date().toISOString(),
         timeSheetComments: commentsValue,
         wasInjured: false,
-        clockOutLat: coordinates ? coordinates.lat : null,
-        clockOutLng: coordinates ? coordinates.lng : null,
+        clockOutLat: coords ? coords.lat : null,
+        clockOutLng: coords ? coords.lng : null,
       };
 
       // Use apiRequest to call the backend update route

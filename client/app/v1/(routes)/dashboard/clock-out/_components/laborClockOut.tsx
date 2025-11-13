@@ -22,7 +22,7 @@ import { Titles } from "@/app/v1/components/(reusable)/titles";
 import { Capacitor } from "@capacitor/core";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { enqueue } from "@/app/lib/queue/jobQueue";
 
 export type TimeSheet = {
@@ -51,6 +51,7 @@ export const LaborClockOut = ({
   wasInjured,
   timeSheetId,
   refetchTimesheet,
+  coordinates,
 }: {
   prevStep: () => void;
   commentsValue: string;
@@ -58,16 +59,19 @@ export const LaborClockOut = ({
   wasInjured: boolean;
   timeSheetId: number | undefined;
   refetchTimesheet: () => Promise<void>;
+  coordinates?: { lat: number; lng: number } | null;
 }) => {
   const ios = Capacitor.getPlatform() === "ios";
   const android = Capacitor.getPlatform() === "android";
   const t = useTranslations("ClockOut");
   const [date] = useState(new Date());
   const [loading, setLoading] = useState<boolean>(false);
+  // No need to prefetch here, now passed from page
   const router = useRouter();
   const { user } = useUserStore();
   const { reset } = useCookieStore();
-  // const { permissions, getStoredCoordinates } = usePermissions();
+  // Prefetch coordinates as soon as possible
+
   if (!user) return null;
   const fullName = user?.firstName + user?.lastName;
   async function handleSubmitTimeSheet() {
@@ -80,15 +84,16 @@ export const LaborClockOut = ({
     }
 
     try {
-      const coordinates = await getStoredCoordinates();
+      // Use prefetched coordinates if available, else fallback to fetching now
+      let coords = coordinates;
 
       const body = {
         userId: user?.id,
         endTime: new Date().toISOString(),
         timeSheetComments: commentsValue,
         wasInjured,
-        clockOutLat: coordinates?.lat ?? null,
-        clockOutLng: coordinates?.lng ?? null,
+        clockOutLat: coords?.lat ?? null,
+        clockOutLng: coords?.lng ?? null,
       };
 
       reset(); // Clear cookie store immediately

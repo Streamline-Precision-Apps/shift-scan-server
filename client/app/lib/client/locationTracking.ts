@@ -637,7 +637,7 @@ export async function getStoredCoordinates(): Promise<{
             }
             resolve(null);
           },
-          { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+          { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
         );
       });
     } else {
