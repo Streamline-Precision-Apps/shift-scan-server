@@ -1,5 +1,5 @@
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Input } from "@/app/v1/components/ui/input";
+import { Button } from "@/app/v1/components/ui/button";
 
 interface EquipmentLog {
   description: string;

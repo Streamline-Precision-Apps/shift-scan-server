@@ -1,9 +1,9 @@
-import { Combobox } from "@/components/ui/combobox";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Combobox } from "@/app/v1/components/ui/combobox";
+import { Input } from "@/app/v1/components/ui/input";
+import { Button } from "@/app/v1/components/ui/button";
 import React from "react";
 import { DateTimePicker } from "../../../_pages/DateTimePicker";
-import { SingleCombobox } from "@/components/ui/single-combobox";
+import { SingleCombobox } from "@/app/v1/components/ui/single-combobox";
 
 export type MaintenanceLogDraft = {
   startTime: string;

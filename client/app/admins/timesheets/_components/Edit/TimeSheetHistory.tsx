@@ -5,7 +5,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
+} from "@/app/v1/components/ui/accordion";
 
 // Define types for our change log data
 interface ChangeLogEntry {

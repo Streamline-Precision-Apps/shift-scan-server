@@ -13,7 +13,10 @@ import {
   useCallback,
   useMemo,
 } from "react";
-import { ApprovalStatus } from "../../../../../../../../prisma/generated/prisma/client";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
+
+// Local type definition
+type ApprovalStatus = "APPROVED" | "DRAFT" | "PENDING" | "REJECTED";
 
 export interface EditTimesheetModalProps {
   timesheetId: number;
@@ -47,6 +50,13 @@ export interface RefuelLog {
   gallonsRefueled: number;
   milesAtFueling?: number;
 }
+
+export interface TascoFLoad {
+  id: string;
+  weight: number | null;
+  screenType: "SCREENED" | "UNSCREENED" | null;
+}
+
 export interface StateMileage {
   id: string;
   state: string;
@@ -70,6 +80,7 @@ export interface TascoLog {
   materialType: string;
   LoadQuantity: number;
   RefuelLogs: RefuelLog[];
+  TascoFLoads: TascoFLoad[];
   Equipment: { id: string; name: string } | null;
 }
 export interface EmployeeEquipmentLog {
@@ -172,23 +183,17 @@ export function useTimesheetData(form: TimesheetData | null) {
   const [equipment, setEquipment] = useState<EquipmentOption[]>([]);
   const [trucks, setTrucks] = useState<TruckOption[]>([]);
   const [trailers, setTrailers] = useState<TrailerOption[]>([]);
-  // Material types can be an array of objects with id and name
-  const [materialTypes, setMaterialTypes] = useState<MaterialType[]>([]);
+  const [tascoMaterialTypes, setTascoMaterialTypes] = useState<MaterialType[]>([]);
   // Cache to store cost codes by jobsite ID
   const [costCodeCache, setCostCodeCache] = useState<
     Record<string, { data: CostCodeOption[]; timestamp: number }>
   >({});
-  // Cache for material types
-  const [materialTypesCache, setMaterialTypesCache] = useState<{
-    data: MaterialType[];
-    timestamp: number;
-  } | null>(null);
 
   // Memoized fetch functions for better performance
   const fetchUsers = useCallback(async () => {
     try {
-      const usersRes = await fetch("/api/getAllActiveEmployeeName");
-      const users = await usersRes.json();
+      const users = await apiRequest("/api/v1/admins/personnel/getAllEmployees", "GET");
+      // getAllEmployees returns users directly as an array, not wrapped in an object
       return users || [];
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -198,9 +203,8 @@ export function useTimesheetData(form: TimesheetData | null) {
 
   const fetchJobsites = useCallback(async () => {
     try {
-      const jobsitesRes = await fetch("/api/getJobsiteSummary");
-      const jobsites = await jobsitesRes.json();
-      const filteredJobsites = jobsites
+      const data = await apiRequest("/api/v1/admins/jobsite?pageSize=1000", "GET");
+      const filteredJobsites = data.jobsiteSummary
         .filter(
           (j: { approvalStatus: string }) => j.approvalStatus === "APPROVED",
         )
@@ -214,11 +218,20 @@ export function useTimesheetData(form: TimesheetData | null) {
 
   const fetchEquipment = useCallback(async () => {
     try {
-      const equipmentRes = await fetch("/api/getAllEquipment");
-      const equipment = await equipmentRes.json();
-      return equipment || [];
+      const data = await apiRequest("/api/v1/admins/equipment?pageSize=1000", "GET");
+      return data.equipment || [];
     } catch (error) {
       console.error("Error fetching equipment:", error);
+      return [];
+    }
+  }, []);
+
+  const fetchTascoMaterialTypes = useCallback(async () => {
+    try {
+      const data = await apiRequest("/api/v1/admins/timesheet/tasco-material-types", "GET");
+      return data.materialTypes || [];
+    } catch (error) {
+      console.error("Error fetching Tasco material types:", error);
       return [];
     }
   }, []);
@@ -227,15 +240,17 @@ export function useTimesheetData(form: TimesheetData | null) {
   const fetchAllData = useCallback(async () => {
     try {
       // Use Promise.all to fetch data concurrently for better performance
-      const [usersData, jobsitesData, equipmentData] = await Promise.all([
+      const [usersData, jobsitesData, equipmentData, materialTypesData] = await Promise.all([
         fetchUsers(),
         fetchJobsites(),
         fetchEquipment(),
+        fetchTascoMaterialTypes(),
       ]);
 
       setUsers(usersData);
       setJobsites(jobsitesData);
       setEquipment(equipmentData);
+      setTascoMaterialTypes(materialTypesData);
 
       // Process equipment to get trucks and trailers
       const filteredTrucks = equipmentData.filter(
@@ -250,7 +265,7 @@ export function useTimesheetData(form: TimesheetData | null) {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  }, [fetchUsers, fetchJobsites, fetchEquipment]);
+  }, [fetchUsers, fetchJobsites, fetchEquipment, fetchTascoMaterialTypes]);
 
   // Initial fetch on component mount
   useEffect(() => {
@@ -263,17 +278,22 @@ export function useTimesheetData(form: TimesheetData | null) {
       return [];
     }
     try {
-      const res = await fetch(
-        `/api/getAllCostCodesByJobSites?jobsiteId=${jobsiteId}`,
+      // Fetch ALL cost codes without pagination
+      const response = await apiRequest(
+        `/api/v1/admins/cost-codes?pageSize=1000`,
+        "GET",
       );
-      if (!res.ok) {
-        return [];
-      }
-      const codes = await res.json();
-      const options = codes.map((c: { id: string; name: string }) => ({
-        value: c.id,
-        label: c.name,
-      }));
+      
+      // Extract cost codes from the response - API returns { costCodes: [...] }
+      const codes = response.costCodes || [];
+      
+      const options = codes
+        .filter((c: { isActive: boolean }) => c.isActive === true)
+        .map((c: { id: string; code: string; name: string }) => ({
+          value: c.id,
+          label: `${c.code} - ${c.name}`,
+        }));
+      
       return options;
     } catch (error) {
       console.error("Error fetching cost codes:", error);
@@ -323,41 +343,40 @@ export function useTimesheetData(form: TimesheetData | null) {
     loadCostCodes();
   }, [form?.Jobsite?.id, fetchCostCodes, costCodeCache]);
 
-  // Memoized function to fetch material types
-  const fetchMaterialTypes = useCallback(async () => {
-    try {
-      // Check if we have a recent cache (less than 10 minutes old)
-      if (
-        materialTypesCache &&
-        Date.now() - materialTypesCache.timestamp < 10 * 60 * 1000
-      ) {
-        return materialTypesCache.data;
-      }
+  // Memoized function to fetch material types - DISABLED: endpoint not yet implemented
+  // const fetchMaterialTypes = useCallback(async () => {
+  //   try {
+  //     // Check if we have a recent cache (less than 10 minutes old)
+  //     if (
+  //       materialTypesCache &&
+  //       Date.now() - materialTypesCache.timestamp < 10 * 60 * 1000
+  //     ) {
+  //       return materialTypesCache.data;
+  //     }
 
-      const res = await fetch("/api/getMaterialTypes");
-      const data = await res.json();
+  //     const data = await apiRequest("/api/v1/admins/material-types", "GET");
 
-      // Update the cache
-      setMaterialTypesCache({
-        data,
-        timestamp: Date.now(),
-      });
+  //     // Update the cache
+  //     setMaterialTypesCache({
+  //       data,
+  //       timestamp: Date.now(),
+  //     });
 
-      return data;
-    } catch (error) {
-      console.error("Error fetching material types:", error);
-      return [];
-    }
-  }, [materialTypesCache]);
+  //     return data;
+  //   } catch (error) {
+  //     console.error("Error fetching material types:", error);
+  //     return [];
+  //   }
+  // }, [materialTypesCache]);
 
-  // Fetch material types
-  useEffect(() => {
-    async function loadMaterialTypes() {
-      const types = await fetchMaterialTypes();
-      setMaterialTypes(types);
-    }
-    loadMaterialTypes();
-  }, [fetchMaterialTypes]);
+  // Fetch material types - DISABLED: endpoint not yet implemented
+  // useEffect(() => {
+  //   async function loadMaterialTypes() {
+  //     const types = await fetchMaterialTypes();
+  //     setMaterialTypes(types);
+  //   }
+  //   loadMaterialTypes();
+  // }, [fetchMaterialTypes]);
 
   // Memoize dropdown options to prevent unnecessary re-rendering
   const userOptions = useMemo(
@@ -394,9 +413,9 @@ export function useTimesheetData(form: TimesheetData | null) {
     [trailers],
   );
 
-  const materialTypeOptions = useMemo(
-    () => materialTypes.map((m) => ({ value: m.id, label: m.name })),
-    [materialTypes],
+  const tascoMaterialTypeOptions = useMemo(
+    () => tascoMaterialTypes.map((m) => ({ value: m.name, label: m.name })),
+    [tascoMaterialTypes],
   );
 
   return {
@@ -405,7 +424,7 @@ export function useTimesheetData(form: TimesheetData | null) {
     jobsites,
     costCodes,
     equipment,
-    materialTypes,
+    tascoMaterialTypes,
     trucks,
     trailers,
     // Memoized formatted options for dropdowns
@@ -415,6 +434,6 @@ export function useTimesheetData(form: TimesheetData | null) {
     equipmentOptions,
     truckOptions,
     trailerOptions,
-    materialTypeOptions,
+    tascoMaterialTypeOptions,
   };
 }

@@ -1,10 +1,10 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { SingleCombobox } from "@/components/ui/single-combobox";
+import { Button } from "@/app/v1/components/ui/button";
+import { Input } from "@/app/v1/components/ui/input";
+import { Textarea } from "@/app/v1/components/ui/textarea";
+import { SingleCombobox } from "@/app/v1/components/ui/single-combobox";
 import { X, Plus } from "lucide-react";
-import { Label } from "@/components/ui/label";
+import { Label } from "@/app/v1/components/ui/label";
 
 export interface MechanicProject {
   id: number;

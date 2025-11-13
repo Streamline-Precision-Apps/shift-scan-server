@@ -1,16 +1,16 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { StateOptions } from "@/data/stateValues";
+import { Button } from "@/app/v1/components/ui/button";
+import { Input } from "@/app/v1/components/ui/input";
+import { StateOptions } from "@/app/lib/data/stateValues";
 import {
   Select,
   SelectTrigger,
   SelectContent,
   SelectItem,
   SelectValue,
-} from "@/components/ui/select";
-import { SingleCombobox } from "@/components/ui/single-combobox";
-import { Label } from "@/components/ui/label";
+} from "@/app/v1/components/ui/select";
+import { SingleCombobox } from "@/app/v1/components/ui/single-combobox";
+import { Label } from "@/app/v1/components/ui/label";
 import { X, Plus } from "lucide-react";
 
 export type TruckingMaterialDraft = {

@@ -15,6 +15,22 @@ const nextConfig: NextConfig = {
     "192.168.1.102:3000",
     "localhost:3000",
   ],
+  // Suppress WebSocket HMR console warnings
+  webpack: (config, { dev, isServer }) => {
+    if (dev && !isServer) {
+      // Reduce console noise from webpack HMR
+      const originalWarn = console.warn;
+      console.warn = (...args) => {
+        const msg = args[0]?.toString() || '';
+        // Filter out WebSocket connection warnings
+        if (msg.includes('WebSocket') || msg.includes('webpack-hmr')) {
+          return;
+        }
+        originalWarn.apply(console, args);
+      };
+    }
+    return config;
+  },
 };
 
 const withNextIntl = createNextIntlPlugin("./i18n.ts");

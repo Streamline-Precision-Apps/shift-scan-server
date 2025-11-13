@@ -407,6 +407,57 @@ export function useTimesheetLogs(
     },
     [setForm],
   );
+  
+  // Tasco F-Load handlers
+  const addTascoFLoad = useCallback(
+    (logIdx: number) => {
+      setForm((prev) =>
+        prev
+          ? {
+              ...prev,
+              TascoLogs: prev.TascoLogs.map((log, idx) =>
+                idx === logIdx
+                  ? {
+                      ...log,
+                      TascoFLoads: [
+                        ...log.TascoFLoads,
+                        {
+                          id: Date.now().toString(),
+                          weight: 0,
+                          screenType: "UNSCREENED" as const,
+                        },
+                      ],
+                    }
+                  : log,
+              ),
+            }
+          : prev,
+      );
+    },
+    [setForm],
+  );
+
+  const deleteTascoFLoad = useCallback(
+    (logIdx: number, fLoadIdx: number) => {
+      setForm((prev) =>
+        prev
+          ? {
+              ...prev,
+              TascoLogs: prev.TascoLogs.map((log, idx) =>
+                idx === logIdx
+                  ? {
+                      ...log,
+                      TascoFLoads: log.TascoFLoads.filter((_, i) => i !== fLoadIdx),
+                    }
+                  : log,
+              ),
+            }
+          : prev,
+      );
+    },
+    [setForm],
+  );
+  
   // Tasco nested log change handler (alias)
   const handleTascoNestedLogChange = handleNestedLogChange;
 
@@ -596,6 +647,8 @@ export function useTimesheetLogs(
     removeTascoLog,
     addTascoRefuelLog,
     deleteTascoRefuelLog,
+    addTascoFLoad,
+    deleteTascoFLoad,
     addEmployeeEquipmentLog,
     removeEmployeeEquipmentLog,
     handleTascoNestedLogChange,

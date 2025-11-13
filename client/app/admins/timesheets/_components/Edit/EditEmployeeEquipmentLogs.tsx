@@ -1,7 +1,7 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/v1/components/ui/button";
 import { DateTimePicker } from "../../../_pages/DateTimePicker";
-import { SingleCombobox } from "@/components/ui/single-combobox";
+import { SingleCombobox } from "@/app/v1/components/ui/single-combobox";
 import { X, Plus } from "lucide-react";
 
 interface EmployeeEquipmentLog {

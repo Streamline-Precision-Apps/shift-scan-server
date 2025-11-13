@@ -1,19 +1,20 @@
 "use client";
-import {
-  ApprovalStatus,
-  WorkType,
-} from "../../../../../../prisma/generated/prisma/client";
+// Local type definitions (replacing Prisma imports)
+type ApprovalStatus = "APPROVED" | "DRAFT" | "PENDING" | "REJECTED";
+type WorkType = "MECHANIC" | "TRUCK_DRIVER" | "TASCO" | "LABOR";
+
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-  adminUpdateTimesheetStatus,
-  adminExportTimesheets,
-  adminDeleteTimesheet,
-} from "@/actions/records-timesheets";
+  updateTimesheetStatus,
+  deleteTimesheet,
+  exportTimesheets,
+} from "@/app/lib/actions/adminActions";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
 import { toast } from "sonner";
 import { saveAs } from "file-saver";
 import * as XLSX from "xlsx";
 import { format } from "date-fns";
-import { EXPORT_FIELDS } from "@/app/(routes)/admins/timesheets/_components/Export/ExportModal";
+import { EXPORT_FIELDS } from "@/app/admins/timesheets/_components/Export/ExportModal";
 import { useDashboardData } from "../../_pages/sidebar/DashboardDataContext";
 import { useRouter } from "next/navigation";
 
@@ -142,6 +143,7 @@ export default function useAllTimeSheetData({
   const [approvalInbox, setApprovalInbox] = useState<number>(0);
   const [showPendingOnly, setShowPendingOnly] = useState(false);
   const [exportModal, setExportModal] = useState(false);
+  const [exportingTimesheets, setExportingTimesheets] = useState(false);
   // Loading state for status change
   const [statusLoading, setStatusLoading] = useState<
     Record<string, "APPROVED" | "REJECTED" | undefined>
@@ -249,73 +251,79 @@ export default function useAllTimeSheetData({
 
   useEffect(() => {
     const fetchCostCodes = async () => {
-      // Replace with your API call
-      const res = await fetch("/api/getCostCodeSummary");
-      const data = await res.json();
-      const filteredCostCodes = data
-        .filter(
-          (costCode: {
-            id: string;
-            code: string;
-            name: string;
-            isActive: boolean;
-          }) => costCode.isActive === true,
-        )
-        .map((costCode: { code: string; name: string }) => ({
-          code: costCode.code,
-          name: costCode.name,
-        }));
-      setCostCodes(filteredCostCodes || []);
+      try {
+        const data = await apiRequest("/api/v1/admins/cost-codes", "GET");
+        if (data?.costCodeSummary && Array.isArray(data.costCodeSummary)) {
+          const filteredCostCodes = data.costCodeSummary
+            .filter((costCode: { isActive: boolean }) => costCode.isActive === true)
+            .map((costCode: { code: string; name: string }) => ({
+              code: costCode.code,
+              name: costCode.name,
+            }));
+          setCostCodes(filteredCostCodes || []);
+        } else {
+          setCostCodes([]);
+        }
+      } catch (error) {
+        console.error("Failed to fetch cost codes:", error);
+        setCostCodes([]);
+      }
     };
     fetchCostCodes();
   }, []);
 
   useEffect(() => {
     const fetchJobsites = async () => {
-      // Replace with your API call
-      const res = await fetch("/api/getJobsiteSummary");
-      const data = await res.json();
-      const filteredJobsites = data
-        .filter(
-          (jobsite: {
-            id: string;
-            name: string;
-            code: string;
-            approvalStatus: ApprovalStatus;
-          }) => jobsite.approvalStatus !== ApprovalStatus.REJECTED,
-        )
-        .map((jobsite: { code: string; name: string }) => ({
-          code: jobsite.code,
-          name: jobsite.name,
-        }));
-      setJobsites(filteredJobsites || []);
+      try {
+        const data = await apiRequest("/api/v1/admins/jobsite", "GET");
+        const filteredJobsites = data.jobsiteSummary
+          .filter(
+            (jobsite: { approvalStatus: ApprovalStatus }) =>
+              jobsite.approvalStatus !== "REJECTED"
+          )
+          .map((jobsite: { code: string; name: string }) => ({
+            code: jobsite.code,
+            name: jobsite.name,
+          }));
+        setJobsites(filteredJobsites || []);
+      } catch (error) {
+        console.error("Failed to fetch jobsites:", error);
+      }
     };
     fetchJobsites();
   }, []);
 
   useEffect(() => {
     const fetchEquipment = async () => {
-      // Replace with your API call
-      const res = await fetch("/api/equipmentIdNameQrIdAndCode");
-      const data = await res.json();
-      const filteredEquipment = data.map(
-        (equipment: { id: string; name: string }) => ({
-          id: equipment.id,
-          name: equipment.name,
-        }),
-      );
-      setEquipment(filteredEquipment || []);
+      try {
+        const data = await apiRequest("/api/v1/admins/equipment", "GET");
+        if (data?.equipmentSummary && Array.isArray(data.equipmentSummary)) {
+          const filteredEquipment = data.equipmentSummary.map(
+            (equipment: { id: string; name: string }) => ({
+              id: equipment.id,
+              name: equipment.name,
+            })
+          );
+          setEquipment(filteredEquipment || []);
+        } else {
+          setEquipment([]);
+        }
+      } catch (error) {
+        console.error("Failed to fetch equipment:", error);
+        setEquipment([]);
+      }
     };
     fetchEquipment();
   }, []);
 
   useEffect(() => {
     const fetchCrews = async () => {
-      const response = await fetch("/api/getAllCrews", {
-        next: { tags: ["crews"] },
-      });
-      const data = await response.json();
-      setCrew(data || []);
+      try {
+        const data = await apiRequest("/api/v1/admins/personnel/getAllCrews", "GET");
+        setCrew(data.crews || []);
+      } catch (error) {
+        console.error("Failed to fetch crews:", error);
+      }
     };
     fetchCrews();
   }, []);
@@ -323,9 +331,12 @@ export default function useAllTimeSheetData({
   useEffect(() => {
     // Fetch users from the server or context
     const fetchUsers = async () => {
-      const response = await fetch("/api/getAllEmployees?filter=all");
-      const data = await response.json();
-      setUsers(data as User[]);
+      try {
+        const data = await apiRequest("/api/v1/admins/personnel/getAllEmployees", "GET");
+        setUsers(data.employees as User[]);
+      } catch (error) {
+        console.error("Failed to fetch users:", error);
+      }
     };
 
     fetchUsers();
@@ -391,19 +402,19 @@ export default function useAllTimeSheetData({
       const filterQuery = buildFilterQuery();
       const encodedSearch = encodeURIComponent(searchTerm.trim());
 
-      const response = await fetch(
-        `/api/getAllTimesheetInfo?status=${showPendingOnly ? "pending" : "all"}&page=${page}&pageSize=${pageSize}&search=${encodedSearch}${filterQuery ? `&${filterQuery}` : ""}`,
-        {
-          next: { tags: ["timesheets"] },
-        },
-      );
-      const data = await response.json();
-      setAllTimesheets(data.timesheets);
-      setTotalPages(data.totalPages);
-      setTotal(data.total);
+      const url = `/api/v1/admins/timesheet?status=${showPendingOnly ? "pending" : "all"}&page=${page}&pageSize=${pageSize}&search=${encodedSearch}${filterQuery ? `&${filterQuery}` : ""}`;
+
+      const data = await apiRequest(url, "GET");
+      
+      setAllTimesheets(data.timesheets || []);
+      setTotalPages(data.totalPages || 1);
+      setTotal(data.total || 0);
       setApprovalInbox(data.pendingTimesheets || 0);
     } catch (error) {
       console.error("Error fetching timesheets:", error);
+      setAllTimesheets([]);
+      setTotalPages(1);
+      setTotal(0);
     } finally {
       setLoading(false);
     }
@@ -474,7 +485,7 @@ export default function useAllTimeSheetData({
         old: "PENDING",
         new: action,
       };
-      const res = await adminUpdateTimesheetStatus(id, action, changes);
+      const res = await updateTimesheetStatus(id, action, changes);
       if (!res || res.success !== true)
         throw new Error("Failed to update timesheet status");
       setAllTimesheets((prev) =>
@@ -513,7 +524,7 @@ export default function useAllTimeSheetData({
     if (!deletingId) return;
     setIsDeleting(true);
     try {
-      await adminDeleteTimesheet(deletingId);
+      await deleteTimesheet(deletingId);
       setAllTimesheets((prev) => prev.filter((t) => t.id !== deletingId));
       setDeletingId(null);
       toast.success("Timesheet deleted successfully!", { duration: 3000 });
@@ -627,15 +638,40 @@ export default function useAllTimeSheetData({
     filterByUser?: boolean,
   ) => {
     try {
-      // Call server action to get filtered data with only the selected fields
-      const exportedData = await adminExportTimesheets(
+      setExportingTimesheets(true);
+      
+      // Build filters object for the export
+      const exportFilters: {
+        users?: string[];
+        crews?: string[];
+        profitCenters?: string[];
+      } = {};
+      
+      if (selectedUsers && selectedUsers.length > 0) {
+        exportFilters.users = selectedUsers;
+      }
+      
+      if (selectedCrew && selectedCrew.length > 0) {
+        exportFilters.crews = selectedCrew;
+      }
+      
+      if (selectedProfitCenters && selectedProfitCenters.length > 0) {
+        exportFilters.profitCenters = selectedProfitCenters;
+      }
+      
+      // Call export with date range and filters instead of specific IDs
+      const exportResponse = await exportTimesheets(
+        [], // Empty array - we'll use date range and filters instead
+        selectedFields || [],
         dateRange,
-        selectedFields,
-        selectedUsers,
-        selectedCrew,
-        selectedProfitCenters,
-        filterByUser,
+        Object.keys(exportFilters).length > 0 ? exportFilters : undefined
       );
+
+      if (!exportResponse.success || !exportResponse.data) {
+        throw new Error("Failed to export timesheets");
+      }
+
+      const exportedData = exportResponse.data.timesheets;
 
       if (!exportedData || exportedData.length === 0) {
         toast.error("No timesheets found matching your filters.");
