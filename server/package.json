@@ -8,6 +8,7 @@
     "build": "tsc && npm run sentry:sourcemaps",
     "start": "node --import ./src/instrument.mjs dist/index.js",
     "docker:deploy": "./deploy-to-cloudrun.sh",
+    "docker:deploy-win": "bash ./deploy-to-cloudrun.sh",
     "db:deploy": "npx prisma migrate deploy && npx prisma generate",
     "prisma:generate": "npx dotenv-cli -e .env -- npx prisma generate",
     "prisma:push": "npx dotenv-cli -e .env -- npx prisma db push",

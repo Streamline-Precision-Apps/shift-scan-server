@@ -1,6 +1,6 @@
 // server/src/services/initService.ts
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="25aa6c11-374d-5ab0-8a97-68f0cc9102fd")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="0e782a11-7a6b-526a-b4aa-4abcc2c72870")}catch(e){}}();
 import prisma from "../lib/prisma.js";
 export async function getUserWithSettingsById(userId) {
     const user = await prisma.user.findUnique({
@@ -77,10 +77,6 @@ export async function getUserWithSettingsById(userId) {
             },
         },
     });
-    console.log("user:", user);
-    console.log("jobsites:", jobsites);
-    console.log("equipments:", equipments);
-    console.log("costCodes:", costCodes);
     return {
         user,
         jobsites,
@@ -89,4 +85,4 @@ export async function getUserWithSettingsById(userId) {
     };
 }
 //# sourceMappingURL=initService.js.map
-//# debugId=25aa6c11-374d-5ab0-8a97-68f0cc9102fd
+//# debugId=0e782a11-7a6b-526a-b4aa-4abcc2c72870

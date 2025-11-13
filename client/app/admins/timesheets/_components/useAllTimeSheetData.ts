@@ -680,11 +680,11 @@ export default function useAllTimeSheetData({
       }
 
       // Format dates and times for display
-      const formattedTimesheets = exportedData.map((ts) => {
+      const formattedTimesheets = exportedData.map((ts: Record<string, string | number | Date | null | undefined>) => {
         const result: Record<
           string,
           string | number | Date | null | undefined
-        > = { ...ts };
+        > = {...ts};
 
         // Format date values if present
         if (result.Date) {
@@ -738,7 +738,7 @@ export default function useAllTimeSheetData({
 
         // Create CSV rows
         const rows = formattedTimesheets
-          .map((item) =>
+          .map((item: Record<string, string | number | Date | null | undefined>) =>
             availableFields
               .map((field) => {
                 let value = item[field] ?? "";
@@ -774,7 +774,7 @@ export default function useAllTimeSheetData({
       } else {
         // Export as XLSX
         // Create a clean object with properly formatted data to avoid type errors
-        const preparedData = formattedTimesheets.map((item) => {
+        const preparedData = formattedTimesheets.map((item: Record<string, string | number | Date | null | undefined>) => {
           // Create a new object with all the existing properties
           const prepared: Record<string, unknown> = {};
 

@@ -148,9 +148,9 @@ export declare function getUserByIdQuery(id: string, query: string): Promise<{
         sessionId: number | null;
         startTime: Date;
         endTime: Date | null;
+        date: Date;
         comment: string | null;
         status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
-        date: Date;
         jobsiteId: string;
         costcode: string;
         nu: string;
@@ -264,9 +264,9 @@ export declare function getUsersTimeSheetByDate(userId: string, dateParam: strin
     sessionId: number | null;
     startTime: Date;
     endTime: Date | null;
+    date: Date;
     comment: string | null;
     status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
-    date: Date;
     jobsiteId: string;
     costcode: string;
     nu: string;

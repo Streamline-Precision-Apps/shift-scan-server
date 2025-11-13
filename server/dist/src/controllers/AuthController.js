@@ -36,14 +36,12 @@ export const loginUser = async (req, res) => {
         // name the cookie `token`; this allows the middleware to read it as a fallback
         res.cookie("session", token, cookieOptions);
         // Return simplified user object with ID (full user will be fetched via /api/v1/init)
-        return res
-            .status(200)
-            .json({
+        return res.status(200).json({
             message: "Login successful",
             token,
             user: {
                 id: user.id,
-            }
+            },
         });
     }
     catch (err) {
@@ -53,11 +51,17 @@ export const loginUser = async (req, res) => {
 };
 export const signOutUser = async (req, res) => {
     try {
-        // Clear the session cookie
-        res.clearCookie("session", {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "none",
+        // Get all cookies from the request
+        const cookies = req.cookies || {};
+        // Clear all cookies except 'locale'
+        Object.keys(cookies).forEach((cookieName) => {
+            if (cookieName !== "locale") {
+                res.clearCookie(cookieName, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === "production",
+                    sameSite: "none",
+                });
+            }
         });
         return res.status(200).json({ message: "Sign out successful" });
     }
@@ -66,6 +70,6 @@ export const signOutUser = async (req, res) => {
         return res.status(500).json({ error: "Internal server error" });
     }
 };
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="ff4ac816-1366-59c6-a286-357fd115e41c")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="0c319b78-a926-5ffd-9a08-a88d13ac61f3")}catch(e){}}();
 //# sourceMappingURL=authController.js.map
-//# debugId=ff4ac816-1366-59c6-a286-357fd115e41c
+//# debugId=0c319b78-a926-5ffd-9a08-a88d13ac61f3

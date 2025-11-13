@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="88748765-b74c-5bad-93d8-3739ac1164ae")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="8316aba8-c022-527d-9aed-b8abeba359b5")}catch(e){}}();
 import prisma from "../lib/prisma.js";
 export async function getTruckingLogService(userId) {
     return await prisma.timeSheet.findFirst({
@@ -162,7 +162,6 @@ export async function editEquipmentHauledService(id, body) {
 }
 export async function deleteEquipmentHauledService(id) {
     try {
-        console.log("Deleting EquipmentHauled with ID:", id);
         const result = await prisma.equipmentHauled.delete({
             where: { id },
         });
@@ -321,8 +320,7 @@ export async function updateEquipmentHauledService(equipmentHauledId, data) {
         updateData.startMileage = data.startMileage;
     if (data.endMileage !== undefined)
         updateData.endMileage = data.endMileage;
-    console.log("Updating EquipmentHauled with data:", updateData);
-    const result = await prisma.equipmentHauled.update({
+    return await prisma.equipmentHauled.update({
         where: { id: equipmentHauledId },
         data: updateData,
         include: {
@@ -334,8 +332,6 @@ export async function updateEquipmentHauledService(equipmentHauledId, data) {
             },
         },
     });
-    console.log("Update result:", result);
-    return result;
 }
 //# sourceMappingURL=truckingLogService.js.map
-//# debugId=88748765-b74c-5bad-93d8-3739ac1164ae
+//# debugId=8316aba8-c022-527d-9aed-b8abeba359b5

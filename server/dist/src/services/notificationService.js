@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="d2372468-1939-55df-a58b-ba1c19d180ac")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="560ecc5f-1409-5185-a006-9545f7bb1744")}catch(e){}}();
 import { createNotification, updateNotificationUrl, findTopicSubscription, createTopicSubscription, deleteTopicSubscription, } from "../models/notificationModel.js";
 import { getFirebaseAdmin } from "../lib/firebase.js";
 import prisma from "../lib/prisma.js";
@@ -128,7 +128,7 @@ export class NotificationService {
             for (const tokenRecord of tokens) {
                 try {
                     await admin.messaging().subscribeToTopic(tokenRecord.token, topic);
-                    console.log(`✅ Token subscribed to topic ${topic}: ${tokenRecord.token}`);
+                    // console.log(`✅ Token subscribed to topic ${topic}: ${tokenRecord.token}`);
                 }
                 catch (error) {
                     console.error(`Error subscribing token to topic ${topic}:`, error);
@@ -136,7 +136,7 @@ export class NotificationService {
             }
             // Save subscription record in database
             await this.createTopicSubscription(userId, topic);
-            console.log(`✅ User ${userId} subscribed to topic: ${topic}`);
+            // console.log(`✅ User ${userId} subscribed to topic: ${topic}`);
         }
         catch (error) {
             console.error("Error subscribing user to topic:", error);
@@ -154,8 +154,10 @@ export class NotificationService {
             // Unsubscribe each token from the topic via Firebase
             for (const tokenRecord of tokens) {
                 try {
-                    await admin.messaging().unsubscribeFromTopic(tokenRecord.token, topic);
-                    console.log(`✅ Token unsubscribed from topic ${topic}: ${tokenRecord.token}`);
+                    await admin
+                        .messaging()
+                        .unsubscribeFromTopic(tokenRecord.token, topic);
+                    // console.log(`✅ Token unsubscribed from topic ${topic}: ${tokenRecord.token}`);
                 }
                 catch (error) {
                     console.error(`Error unsubscribing token from topic ${topic}:`, error);
@@ -163,7 +165,7 @@ export class NotificationService {
             }
             // Delete subscription record from database
             await this.deleteTopicSubscription(userId, topic);
-            console.log(`✅ User ${userId} unsubscribed from topic: ${topic}`);
+            // console.log(`✅ User ${userId} unsubscribed from topic: ${topic}`);
         }
         catch (error) {
             console.error("Error unsubscribing user from topic:", error);
@@ -187,11 +189,15 @@ export class NotificationService {
                 };
                 if (data)
                     message.data = data;
-                return admin.messaging().send(message)
+                return admin
+                    .messaging()
+                    .send(message)
                     .catch((err) => ({ error: err }));
             }));
-            const successCount = results.filter((r) => !('error' in r)).length;
-            console.log(`✅ Sent notification to ${successCount} of ${tokens.length} devices for user ${userId}`);
+            const successCount = results.filter((r) => !("error" in r)).length;
+            // console.log(
+            //   `✅ Sent notification to ${successCount} of ${tokens.length} devices for user ${userId}`
+            // );
             return results;
         }
         catch (error) {
@@ -212,7 +218,9 @@ export class NotificationService {
             if (data)
                 message.data = data;
             const messageId = await admin.messaging().send(message);
-            console.log(`✅ Sent notification to topic ${topic}. Message ID: ${messageId}`);
+            // console.log(
+            //   `✅ Sent notification to topic ${topic}. Message ID: ${messageId}`
+            // );
             return messageId;
         }
         catch (error) {
@@ -281,4 +289,4 @@ export class NotificationService {
 }
 export default NotificationService;
 //# sourceMappingURL=notificationService.js.map
-//# debugId=d2372468-1939-55df-a58b-ba1c19d180ac
+//# debugId=560ecc5f-1409-5185-a006-9545f7bb1744

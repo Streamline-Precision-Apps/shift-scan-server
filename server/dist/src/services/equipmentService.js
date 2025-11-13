@@ -1,6 +1,6 @@
 // server/src/services/equipmentService.ts
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="db8f8cfa-308c-5a3c-b14f-87992b9ec755")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="6440712e-1865-5494-a587-b4e4e918807d")}catch(e){}}();
 import prisma from "../lib/prisma.js";
 import { EquipmentTags, OwnershipType } from "../../generated/prisma/client.js";
 export async function getEquipment(query) {
@@ -54,9 +54,7 @@ export async function getEquipmentMileageService(equipmentId) {
 }
 // Find an equipment by QR code (for QR code uniqueness check)
 export async function getEquipmentByQrId(qrId) {
-    const equipment = await prisma.equipment.findFirst({ where: { qrId } });
-    console.log("Equipment found by QR ID:", equipment);
-    return equipment;
+    return await prisma.equipment.findFirst({ where: { qrId } });
 }
 // Create equipment (POST)
 export async function createEquipment(data) {
@@ -99,4 +97,4 @@ export async function createEquipment(data) {
     return result;
 }
 //# sourceMappingURL=equipmentService.js.map
-//# debugId=db8f8cfa-308c-5a3c-b14f-87992b9ec755
+//# debugId=6440712e-1865-5494-a587-b4e4e918807d

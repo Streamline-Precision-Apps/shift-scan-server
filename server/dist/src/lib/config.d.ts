@@ -7,7 +7,7 @@
  *
  * The expression evaluator is guarded with a regex to only allow numeric characters and math operators.
  */
-export declare const config: {
+declare const config: {
     readonly port: number;
     readonly nodeEnv: string;
     readonly databaseUrl: string;

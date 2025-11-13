@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="8ffb02ad-233b-5e23-ab73-ee237bd84d93")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="4e05e8a7-a971-5c45-bb6b-adf2a0fce247")}catch(e){}}();
 import "./instrument.mjs";
 import * as Sentry from "@sentry/node";
 import express from "express";
@@ -26,7 +26,7 @@ async function main() {
         app.use(helmet());
         // CORS middleware
         app.use(cors({
-            origin: process.env.CORS_ORIGIN || ["http://localhost:3000"],
+            origin: process.env.CORS_ORIGIN || "http://localhost:3000",
             credentials: true,
             methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
             allowedHeaders: ["Content-Type", "Authorization"],
@@ -64,12 +64,15 @@ async function main() {
         app.use(notFoundHandler);
         // Error handling middleware (must be last)
         app.use(errorHandler);
+        const PORT = parseInt(process.env.PORT || "8080", 10) || 8080;
         // Start server
-        const server = app.listen(config.port, "0.0.0.0", () => {
-            console.log(`🌟 Server is running on port ${config.port}`);
-            console.log(`🌐 Accessible at http://0.0.0.0:${config.port}`);
-            console.log(`📱 Accessible from Android at http://192.168.1.102:${config.port}`);
-            console.log(`📖 API documentation available at http://localhost:${config.port}/api-docs`);
+        const server = app.listen(PORT, "0.0.0.0", () => {
+            console.log(`🌟 Server is running on port ${PORT}`);
+            console.log(`🌐 Accessible at http://0.0.0.0:${PORT}`);
+            if (process.env.NODE_ENV !== "production") {
+                console.log(`📱 Accessible from test at http://192.168.1.102:${PORT}`);
+                console.log(`📖 API documentation available at http://localhost:${PORT}/api-docs`);
+            }
         });
         // Handle server shutdown
         const gracefulShutdown = async (signal) => {
@@ -95,4 +98,4 @@ main().catch(async (error) => {
     process.exit(1);
 });
 //# sourceMappingURL=index.js.map
-//# debugId=8ffb02ad-233b-5e23-ab73-ee237bd84d93
+//# debugId=4e05e8a7-a971-5c45-bb6b-adf2a0fce247

@@ -1,6 +1,6 @@
 // server/src/services/jobsiteService.ts
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="93988ae8-ff39-5bac-9493-0872cc2ae482")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="5793e2bb-1aea-54bc-9d60-135296831d58")}catch(e){}}();
 import prisma from "../lib/prisma.js";
 export async function getJobsites(query) {
     if (query.qrg) {
@@ -24,7 +24,6 @@ export async function getJobsites(query) {
 // Find a jobsite by QR code (for QR code uniqueness check)
 export async function getJobsiteByQrId(qrId) {
     const jobsite = await prisma.jobsite.findFirst({ where: { qrId } });
-    console.log("Jobsite found by QR ID:", jobsite);
     return jobsite;
 }
 export async function getJobsiteById(id) {
@@ -101,4 +100,4 @@ export async function deleteJobsite(id) {
     }
 }
 //# sourceMappingURL=jobsiteService.js.map
-//# debugId=93988ae8-ff39-5bac-9493-0872cc2ae482
+//# debugId=5793e2bb-1aea-54bc-9d60-135296831d58

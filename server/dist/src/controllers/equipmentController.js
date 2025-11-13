@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="aa6748c0-7125-5fa8-b40b-9eb5b61cb9e0")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="209d1e42-4380-5d79-9fb2-7ccfb5fc5ac5")}catch(e){}}();
 import * as equipmentService from "../services/equipmentService.js";
 export async function getEquipment(req, res) {
     try {
@@ -26,7 +26,6 @@ export async function getEquipmentMileageController(req, res) {
 // Create equipment (POST)
 export async function createEquipment(req, res) {
     try {
-        console.log("Received createEquipment request:", req.body);
         const result = await equipmentService.createEquipment(req.body);
         res.status(201).json({ success: true, data: result });
     }
@@ -59,4 +58,4 @@ export async function getEquipmentByQrId(req, res) {
     }
 }
 //# sourceMappingURL=equipmentController.js.map
-//# debugId=aa6748c0-7125-5fa8-b40b-9eb5b61cb9e0
+//# debugId=209d1e42-4380-5d79-9fb2-7ccfb5fc5ac5

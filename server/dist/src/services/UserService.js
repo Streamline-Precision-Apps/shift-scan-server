@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="4008501c-fe38-5d71-b7f6-854801c89778")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="f2f1d2d6-a0f1-5ee4-950d-412cc7380997")}catch(e){}}();
 import prisma from "../lib/prisma.js";
 import { hash } from "bcryptjs";
 const ALLOWED_USER_FIELDS = [
@@ -335,7 +335,6 @@ export async function crewStatus(crewId) {
 }
 // service to get employee in crew
 export async function getCrewMembers(crewId) {
-    console.log("[UserService] getCrewMembers called with crewId:", crewId);
     const crew = await prisma.crew.findUnique({
         where: {
             id: crewId,
@@ -353,14 +352,11 @@ export async function getCrewMembers(crewId) {
         },
     });
     if (!crew) {
-        console.log("[UserService] No crew found for crewId:", crewId);
         throw new Error("Crew not found");
     }
     // Sort crew members alphabetically by first name
     const crewMembers = crew.Users.map((member) => member).sort((a, b) => a.firstName.localeCompare(b.firstName));
     const crewType = crew.crewType;
-    console.log("[UserService] crewMembers:", crewMembers);
-    console.log("[UserService] crewType:", crewType);
     return { crewMembers, crewType };
 }
 export async function getUserInfo(userId) {
@@ -431,4 +427,4 @@ export async function EndSession(id) {
     return newSession;
 }
 //# sourceMappingURL=UserService.js.map
-//# debugId=4008501c-fe38-5d71-b7f6-854801c89778
+//# debugId=f2f1d2d6-a0f1-5ee4-950d-412cc7380997

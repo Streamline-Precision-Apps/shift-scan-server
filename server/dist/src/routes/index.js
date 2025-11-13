@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="63d96ac8-79ad-5ee5-a132-641ab5872544")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="35df6ace-87b3-5f8f-9be9-6c6cb0673fc3")}catch(e){}}();
 import { Router } from "express";
 import notificationRoutes from "./notificationsRoute.js";
 import pushNotificationsRoute from "./pushNotificationsRoute.js";
@@ -17,6 +17,15 @@ import mechanicLogsRoutes from "./mechanicLogsRoutes.js";
 import truckingLogsRoutes from "./truckingLogsRoutes.js";
 import tascoLogsRoutes from "./tascoLogRoutes.js";
 import costCodesRoute from "./costCodesRoute.js";
+import adminsBaseRoutes from "./adminBaseRoute.js";
+import adminsPersonnelRoutes from "./adminsPersonnelRoutes.js";
+import adminsEquipmentRoutes from "./adminsEquipmentRoutes.js";
+import adminsJobsiteRoutes from "./adminsJobsiteRoutes.js";
+import adminsTagsRoutes from "./adminsTagsRoutes.js";
+import adminsCostCodesRoutes from "./adminsCostCodesRoutes.js";
+import adminsReportRoutes from "./adminsReportRoutes.js";
+import adminsFormRoutes from "./adminsFormRoutes.js";
+import adminsTimesheetRoutes from "./adminsTimesheetRoutes.js";
 const router = Router();
 // all app routes
 router.use("/v1/forms", formsRoutes);
@@ -29,6 +38,15 @@ router.use("/v1/mechanic-logs", mechanicLogsRoutes);
 router.use("/v1/trucking-logs", truckingLogsRoutes);
 router.use("/v1/tasco-logs", tascoLogsRoutes);
 router.use("/v1", initRoutes);
+router.use("/v1/admins", adminsBaseRoutes);
+router.use("/v1/admins/personnel", adminsPersonnelRoutes);
+router.use("/v1/admins/equipment", adminsEquipmentRoutes);
+router.use("/v1/admins/jobsite", adminsJobsiteRoutes);
+router.use("/v1/admins/tags", adminsTagsRoutes);
+router.use("/v1/admins/cost-codes", adminsCostCodesRoutes);
+router.use("/v1/admins/report", adminsReportRoutes);
+router.use("/v1/admins/forms", adminsFormRoutes);
+router.use("/v1/admins/timesheet", adminsTimesheetRoutes);
 router.use("/notifications", notificationRoutes);
 router.use("/push-notifications", pushNotificationsRoute);
 router.use("/storage", blobRoutes);
@@ -37,4 +55,4 @@ router.use("/location", locationRoutes);
 router.use("/cookies", cookiesRoutes);
 export default router;
 //# sourceMappingURL=index.js.map
-//# debugId=63d96ac8-79ad-5ee5-a132-641ab5872544
+//# debugId=35df6ace-87b3-5f8f-9be9-6c6cb0673fc3

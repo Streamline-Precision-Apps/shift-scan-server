@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="b9c863fa-5f6e-5029-bfb9-8b9947045a43")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="9c2ede55-a887-5fa0-ad66-77597d7d6115")}catch(e){}}();
 import Express from "express";
 import { getTruckEndingMileage, getTruckEquipmentHauled, getTruckingLogService, getTruckMaterial, getTruckNotes, getTruckStartingMileage, getStateMileage, getRefueledLogs, getAllTruckingLogData, createEquipmentHauledService, createHaulingLogsService, createStateMileageService, createRefuelLogService, createMaterialService, deleteEquipmentHauledService, deleteStateMileageService, deleteRefuelLogService, deleteMaterialService, editEquipmentHauledService, updateEquipmentHauledService, updateTruckingLogEndingMileageService, updateTruckingLogStartingMileageService, updateTruckingLogNotesService, updateStateMileageService, updateRefuelLogService, updateMaterialService, } from "../services/truckingLogService.js";
 import prisma from "../lib/prisma.js";
@@ -291,4 +291,4 @@ export async function deleteTruckingLogController(req, res) {
     }
 }
 //# sourceMappingURL=truckingLogsController.js.map
-//# debugId=b9c863fa-5f6e-5029-bfb9-8b9947045a43
+//# debugId=9c2ede55-a887-5fa0-ad66-77597d7d6115

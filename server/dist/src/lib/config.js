@@ -8,10 +8,11 @@
  * The expression evaluator is guarded with a regex to only allow numeric characters and math operators.
  */
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="2f1e8304-0cdd-506a-8f27-44f267b51a12")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="862e760c-8895-5bd2-a1de-02b83b505e54")}catch(e){}}();
 import parseEnvSeconds from "./tokenExpirationParser.js";
-export const config = {
-    port: parseInt(process.env.PORT || "3001", 10),
+// Default to 8080 for Cloud Run compatibility
+const config = {
+    port: parseInt(process.env.PORT || "8080", 10),
     nodeEnv: process.env.NODE_ENV || "development",
     databaseUrl: process.env.POSTGRES_PRISMA_URL || "",
     jwtSecret: process.env.JWT_SECRET || "your_jwt_secret",
@@ -19,4 +20,4 @@ export const config = {
 };
 export default config;
 //# sourceMappingURL=config.js.map
-//# debugId=2f1e8304-0cdd-506a-8f27-44f267b51a12
+//# debugId=862e760c-8895-5bd2-a1de-02b83b505e54

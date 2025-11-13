@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/app/v1/components/ui/button";
+import { ScrollArea } from "@/app/v1/components/ui/scroll-area";
 import { fieldTypes } from "../../types";
 
 interface FormBuilderPanelRightProps {

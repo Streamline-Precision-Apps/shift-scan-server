@@ -115,8 +115,8 @@ export async function getAllTimesheetsController(req: Request, res: Response) {
  */
 export async function getTimesheetByIdController(req: Request, res: Response) {
   try {
-    const id = parseInt(req.params.id, 10);
-    if (isNaN(id)) {
+    const {id} = req.params;
+    if (!id) {
       return res.status(400).json({
         success: false,
         message: "Invalid timesheet ID",
@@ -151,8 +151,8 @@ export async function getTimesheetChangeLogsController(
   res: Response
 ) {
   try {
-    const id = parseInt(req.params.id, 10);
-    if (isNaN(id)) {
+    const {id} = req.params;
+    if (!id) {
       return res.status(400).json({
         success: false,
         message: "Invalid timesheet ID",
@@ -240,8 +240,8 @@ export async function exportTimesheetsController(req: Request, res: Response) {
  */
 export async function updateTimesheetController(req: Request, res: Response) {
   try {
-    const id = parseInt(req.params.id, 10);
-    if (isNaN(id)) {
+    const {id} = req.params;
+    if (!id) {
       return res.status(400).json({
         success: false,
         message: "Invalid timesheet ID",
@@ -292,8 +292,8 @@ export async function updateTimesheetStatusController(
   res: Response
 ) {
   try {
-    const id = parseInt(req.params.id, 10);
-    if (isNaN(id)) {
+    const {id} = req.params;
+    if (!id) {
       return res.status(400).json({
         success: false,
         message: "Invalid timesheet ID",
@@ -331,8 +331,8 @@ export async function updateTimesheetStatusController(
  */
 export async function deleteTimesheetController(req: Request, res: Response) {
   try {
-    const id = parseInt(req.params.id, 10);
-    if (isNaN(id)) {
+    const {id} = req.params;
+    if (!id) {
       return res.status(400).json({
         success: false,
         message: "Invalid timesheet ID",

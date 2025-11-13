@@ -44,9 +44,9 @@ export declare function getTascoLogById(tascoLogId: string): Promise<({
         sessionId: number | null;
         startTime: Date;
         endTime: Date | null;
+        date: Date;
         comment: string | null;
         status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
-        date: Date;
         jobsiteId: string;
         costcode: string;
         nu: string;
@@ -259,9 +259,9 @@ export declare function updateTascoLogComment(tascoLogId: string, comment: strin
         sessionId: number | null;
         startTime: Date;
         endTime: Date | null;
+        date: Date;
         comment: string | null;
         status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
-        date: Date;
         jobsiteId: string;
         costcode: string;
         nu: string;
@@ -430,9 +430,9 @@ export declare function getCompleteTascoLogData(tascoLogId: string): Promise<({
         sessionId: number | null;
         startTime: Date;
         endTime: Date | null;
+        date: Date;
         comment: string | null;
         status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
-        date: Date;
         jobsiteId: string;
         costcode: string;
         nu: string;

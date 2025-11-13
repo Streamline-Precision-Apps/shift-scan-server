@@ -321,7 +321,7 @@ export async function updateEquipmentAsset(formData: FormData) {
             throw new Error("Equipment ID is required");
         }
 
-        const updateData: Record<string, any> = {};
+        const updateData: Record<string, unknown> = {};
 
         // Process all possible equipment fields
         if (formData.has("name"))
@@ -542,7 +542,7 @@ export async function updateJobsiteAdmin(formData: FormData) {
         if (!id) {
             throw new Error("Jobsite ID is required");
         }
-        const updateData: Record<string, any> = {};
+        const updateData: Record<string, unknown> = {};
         if (formData.has("userId"))
             updateData.userId = formData.get("userId") as string; // add userId to updateData
         if (formData.has("code"))
@@ -764,7 +764,7 @@ export async function updateTagAdmin(formData: FormData) {
         if (!id) {
             throw new Error("Tag ID is required");
         }
-        const updateData: any = {};
+        const updateData: Record<string, unknown> = {};
         if (formData.has("name")) {
             updateData.name = (formData.get("name") as string)?.trim();
         }
@@ -835,7 +835,7 @@ export async function updateCostCodeAdmin(formData: FormData) {
         if (!id) {
             throw new Error("Cost code ID is required");
         }
-        const updateData: any = {};
+        const updateData: Record<string, unknown> = {};
         if (formData.has("code")) {
             updateData.code = (formData.get("code") as string)?.trim();
         }
@@ -1155,35 +1155,49 @@ export async function getFormSubmissionById(submissionId: number) {
 
 export async function draftFormTemplate(formId: string) {
   try {
-    const {
-      formTemplateId,
-      data,
-      submittedBy,
-      adminUserId,
-      comment,
-      signature,
-    } = input;
-    if (!submittedBy.id) {
-      throw new Error("Submitted By is required");
-    }
-
     const result = await apiRequest(
-      `/api/v1/admins/forms/template/${formTemplateId}/submissions`,
-      "POST",
-      input as unknown as Record<string, unknown>
+      `/api/v1/admins/forms/template/${formId}/draft`,
+      "PUT"
     );
-
-    return { success: true, submission: result };
+    return {
+      success: true,
+      message: "Form drafted successfully",
+      data: result,
+    };
   } catch (error) {
-    console.error("Error creating form submission:", error);
+    console.error("Error drafting form template:", error);
     return {
       success: false,
       error:
         error instanceof Error
           ? error.message
-          : "Failed to create form submission",
+          : "Failed to draft form template",
     };
   }
+}
+
+export async function createTimesheetAdmin(payload: FormData | Record<string, unknown> | undefined) {
+    try {
+        const result = await apiRequest(
+            "/api/v1/admins/timesheet",
+            "POST",
+            payload
+        );
+        return {
+            success: true,
+            message: "Timesheet created successfully",
+            data: result,
+        };
+    } catch (error) {
+        console.error("Error creating timesheet:", error);
+        return {
+            success: false,
+            error:
+                error instanceof Error
+                    ? error.message
+                    : "Unknown error occurred",
+        };
+    }
 }
 
 export async function updateTimesheetAdmin(formData: FormData) {
@@ -1292,80 +1306,6 @@ export async function exportTimesheets(
         profitCenters?: string[];
     }
 ) {
-  try {
-    const comment = formData.get("comment") as string;
-    const adminUserId = formData.get("adminUserId") as string;
-
-    const body = {
-      action,
-      comment,
-      adminUserId,
-    };
-
-    const result = await apiRequest(
-      `/api/v1/admins/forms/submissions/${submissionId}/approve`,
-      "PUT",
-      body
-    );
-
-    return { success: true, submission: result };
-  } catch (error) {
-    console.error("Error approving/rejecting form submission:", error);
-    return {
-      success: false,
-      error:
-        error instanceof Error
-          ? error.message
-          : "Failed to approve/reject form submission",
-    };
-  }
-}
-export async function getFormSubmissionById(submissionId: number) {
-  try {
-    const result = await apiRequest(
-      `/api/v1/admins/forms/submissions/${submissionId}`,
-      "GET"
-    );
-    return result;
-  } catch (error) {
-    console.error("Error fetching form submission:", error);
-    return null;
-  }
-}
-
-export async function deleteTimesheet(id: number) {
-    try {
-        const result = await apiRequest(
-            `/api/v1/admins/timesheet/${id}`,
-            "DELETE"
-        );
-        return {
-            success: true,
-            message: "Timesheet deleted successfully",
-            data: result,
-        };
-    } catch (error) {
-        console.error("Error deleting timesheet:", error);
-        return {
-            success: false,
-            error:
-                error instanceof Error
-                    ? error.message
-                    : "Unknown error occurred",
-        };
-    }
-}
-
-export async function exportTimesheets(
-    timesheetIds: number[],
-    fields: string[],
-    dateRange?: { from?: Date; to?: Date },
-    filters?: {
-        users?: string[];
-        crews?: string[];
-        profitCenters?: string[];
-    }
-) {
     try {
         const result = await apiRequest(
             "/api/v1/admins/timesheet/export",
@@ -1392,3 +1332,5 @@ export async function exportTimesheets(
         };
     }
 }
+
+

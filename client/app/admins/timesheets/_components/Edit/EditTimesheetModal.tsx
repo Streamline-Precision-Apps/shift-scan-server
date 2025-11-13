@@ -26,6 +26,7 @@ import { format } from "date-fns";
 import Spinner from "@/app/v1/components/(animations)/spinner";
 import { Skeleton } from "@/app/v1/components/ui/skeleton";
 import { apiRequest } from "@/app/lib/utils/api-Utils";
+import { get } from "lodash";
 
 // Define types for change logs
 interface ChangeLogEntry {
@@ -131,6 +132,7 @@ export const EditTimesheetModal: React.FC<EditTimesheetModalProps> = ({
     });
 
     useEffect(() => {
+        const getData = async () => {
         if (!isOpen || !timesheetId) return;
         setLoading(true);
         setError(null);
@@ -153,6 +155,8 @@ export const EditTimesheetModal: React.FC<EditTimesheetModalProps> = ({
                 console.error("Error fetching change logs:", e);
                 // Don't set the error state for this, as it's not critical
             });
+        }
+        getData();
     }, [isOpen, timesheetId]);
 
     // Work type options and log section mapping
@@ -305,12 +309,14 @@ export const EditTimesheetModal: React.FC<EditTimesheetModalProps> = ({
 
     // Call ensureSingleLog when workType changes to TRUCK_DRIVER or TASCO
     useEffect(() => {
+        const getEnsureSingleLog = () => {
         if (!form) return;
         if (form.workType === "TRUCK_DRIVER") {
             ensureSingleLog("TruckingLogs");
         } else if (form.workType === "TASCO") {
             ensureSingleLog("TascoLogs");
-        }
+        }}
+        getEnsureSingleLog();
     }, [form?.workType]);
 
     // Using memoized dropdown options from the hook

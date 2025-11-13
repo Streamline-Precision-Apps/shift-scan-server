@@ -10,7 +10,7 @@ interface FilterOptions {
   changes: string[];
   id: string[];
   notificationId: string[];
-  dateRange: { from?: Date; to?: Date };
+  dateRange: { from?: Date | undefined; to?: Date | undefined };
 }
 
 interface GetAllTimesheetsParams {
@@ -282,10 +282,10 @@ export async function getAllTimesheets(params: GetAllTimesheetsParams) {
   }
 }
 
-export async function getTimesheetById(id: number) {
+export async function getTimesheetById(id: string | undefined) {
   try {
     return await prisma.timeSheet.findUnique({
-      where: { id },
+      where: { id: parseInt(id as string, 10) },
       include: {
         User: {
           select: {
@@ -391,10 +391,10 @@ export async function getTimesheetById(id: number) {
   }
 }
 
-export async function getTimesheetChangeLogs(timesheetId: number) {
+export async function getTimesheetChangeLogs(timesheetId: string | undefined) {
   try {
     return await prisma.timeSheetChangeLog.findMany({
-      where: { timeSheetId: timesheetId },
+      where: { timeSheetId: parseInt(timesheetId as string, 10) },
       include: {
         User: {
           select: {
@@ -554,7 +554,7 @@ export async function createTimesheet(payload: any) {
 }
 
 export async function updateTimesheet(
-  id: number,
+  id: string | undefined,
   updateData: {
     data: any;
     originalData: any;
@@ -606,7 +606,7 @@ export async function updateTimesheet(
     if (data.EmployeeEquipmentLogs) {
       // Delete existing logs
       await prisma.employeeEquipmentLog.deleteMany({
-        where: { timeSheetId: id },
+        where: { timeSheetId: parseInt(id as string, 10) },
       });
       // Create new logs
       if (data.EmployeeEquipmentLogs.length > 0) {
@@ -625,7 +625,7 @@ export async function updateTimesheet(
     if (data.Maintenance) {
       // Delete existing mechanic projects
       await prisma.mechanicProjects.deleteMany({
-        where: { timeSheetId: id },
+        where: { timeSheetId: parseInt(id as string, 10) },
       });
       // Create new mechanic projects
       if (data.Maintenance.length > 0) {
@@ -644,14 +644,14 @@ export async function updateTimesheet(
     if (data.TruckingLogs) {
       // Delete existing trucking logs (cascade will handle nested data)
       await prisma.truckingLog.deleteMany({
-        where: { timeSheetId: id },
+        where: { timeSheetId: parseInt(id as string, 10) },
       });
       // Create new trucking logs with nested data
       if (data.TruckingLogs.length > 0) {
         for (const log of data.TruckingLogs) {
           await prisma.truckingLog.create({
             data: {
-              timeSheetId: id,
+              timeSheetId: parseInt(id as string, 10),
               laborType: log.laborType || "",
               equipmentId: log.equipmentId || null,
               truckNumber: log.truckNumber || null,
@@ -699,14 +699,14 @@ export async function updateTimesheet(
     if (data.TascoLogs) {
       // Delete existing tasco logs (cascade will handle refuel logs and TascoFLoads)
       await prisma.tascoLog.deleteMany({
-        where: { timeSheetId: id },
+        where: { timeSheetId: parseInt(id as string, 10) },
       });
       // Create new tasco logs
       if (data.TascoLogs.length > 0) {
         for (const log of data.TascoLogs) {
           await prisma.tascoLog.create({
             data: {
-              timeSheetId: id,
+              timeSheetId: parseInt(id as string, 10),
               shiftType: log.shiftType,
               laborType: log.laborType || "",
               materialType: log.materialType || null,
@@ -732,7 +732,7 @@ export async function updateTimesheet(
 
     // Update main timesheet fields
     const timesheet = await prisma.timeSheet.update({
-      where: { id },
+      where: { id: parseInt(id as string, 10) },
       data: updateFields,
       include: {
         User: {
@@ -748,7 +748,7 @@ export async function updateTimesheet(
     if (Object.keys(changes).length > 0) {
       await prisma.timeSheetChangeLog.create({
         data: {
-          timeSheetId: id,
+          timeSheetId: parseInt(id as string, 10),
           changedBy: editorId,
           changes: changes as any,
           changeReason,
@@ -785,13 +785,13 @@ export async function updateTimesheet(
 }
 
 export async function updateTimesheetStatus(
-  id: number,
+  id: string | undefined,
   status: string,
   changes: Record<string, { old: unknown; new: unknown }>
 ) {
   try {
     await prisma.timeSheet.update({
-      where: { id },
+      where: { id: parseInt(id as string, 10) },
       data: {
         status: status as ApprovalStatus,
       },
@@ -801,7 +801,7 @@ export async function updateTimesheetStatus(
     if (Object.keys(changes).length > 0) {
       await prisma.timeSheetChangeLog.create({
         data: {
-          timeSheetId: id,
+          timeSheetId: parseInt(id as string, 10),
           changedBy: "system", // or pass admin ID
           changes: changes as any,
           changeReason: `Status changed to ${status}`,
@@ -814,11 +814,11 @@ export async function updateTimesheetStatus(
   }
 }
 
-export async function deleteTimesheet(id: number) {
+export async function deleteTimesheet(id: string | undefined) {
   try {
     // Cascade delete will handle related records
     await prisma.timeSheet.delete({
-      where: { id },
+      where: { id: parseInt(id as string, 10) },
     });
   } catch (error) {
     console.error("Error deleting timesheet:", error);

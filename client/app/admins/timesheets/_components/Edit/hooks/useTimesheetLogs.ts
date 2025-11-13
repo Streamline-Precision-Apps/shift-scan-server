@@ -344,6 +344,7 @@ export function useTimesheetLogs(
                 materialType: "",
                 LoadQuantity: 0,
                 RefuelLogs: [],
+                TascoFLoads: [],
                 Equipment: null,
               },
             ],
@@ -458,8 +459,40 @@ export function useTimesheetLogs(
     [setForm],
   );
   
-  // Tasco nested log change handler (alias)
-  const handleTascoNestedLogChange = handleNestedLogChange;
+  // Tasco nested log change handler (separate from TruckingNestedType handler)
+  const handleTascoNestedLogChange = useCallback(
+    <T extends TascoNestedType>(
+      logType: keyof TimesheetData,
+      logIndex: number,
+      nestedType: T,
+      nestedIndex: number,
+      field: keyof TascoNestedTypeMap[T],
+      value: string | number | null,
+    ) => {
+      setForm((prev) =>
+        prev
+          ? {
+              ...prev,
+              [logType]: (prev[logType] as TascoLog[]).map((log, idx) =>
+                idx === logIndex
+                  ? {
+                      ...log,
+                      [nestedType]: (
+                        log[nestedType] as TascoNestedTypeMap[T][]
+                      ).map((item, nidx) =>
+                        nidx === nestedIndex
+                          ? { ...item, [field]: value }
+                          : item,
+                      ),
+                    }
+                  : log,
+              ),
+            }
+          : prev,
+      );
+    },
+    [setForm],
+  );
 
   // Employee Equipment log handlers
   const addEmployeeEquipmentLog = useCallback(() => {

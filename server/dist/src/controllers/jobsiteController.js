@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="8cb49c89-d095-5b76-943c-f346209d224d")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="72b2161d-ad16-5397-9fb6-a5b316ce481a")}catch(e){}}();
 import * as jobsiteService from "../services/jobsiteService.js";
 export async function getJobsites(req, res) {
     try {
@@ -53,7 +53,6 @@ export async function createJobsite(req, res) {
         if (!req.body) {
             return res.status(400).json({ error: "Missing jobsite data" });
         }
-        console.log("Creating jobsite with data:", req.body);
         const jobsite = await jobsiteService.createJobsite(req.body);
         res.status(201).json(jobsite);
     }
@@ -99,4 +98,4 @@ export async function deleteJobsite(req, res) {
     }
 }
 //# sourceMappingURL=jobsiteController.js.map
-//# debugId=8cb49c89-d095-5b76-943c-f346209d224d
+//# debugId=72b2161d-ad16-5397-9fb6-a5b316ce481a

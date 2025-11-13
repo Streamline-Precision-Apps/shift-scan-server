@@ -1,11 +1,11 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Submission } from "./hooks/types";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/v1/components/ui/button";
 import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
-} from "@/components/ui/tooltip";
+} from "@/app/v1/components/ui/tooltip";
 import { highlight } from "../../../_pages/highlight";
 import { format } from "date-fns";
 import Link from "next/link";

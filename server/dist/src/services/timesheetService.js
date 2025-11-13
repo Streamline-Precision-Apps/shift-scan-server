@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="632f6db8-d0fc-5280-9aac-b096edcf4d6f")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="153e32ec-1120-53a0-96d0-99264c0964ac")}catch(e){}}();
 import { formatISO } from "date-fns";
 import prisma from "../lib/prisma.js";
 export async function updateTimesheetService({ id, editorId, changes, changeReason, numberOfChanges, startTime, endTime, Jobsite, CostCode, comment, }) {
@@ -398,7 +398,11 @@ export async function createGeneralTimesheetService({ data, type, }) {
             clockInLng: data.clockInLong || null,
         };
         if (data.sessionId !== null && data.sessionId !== undefined) {
-            createData.sessionId = data.sessionId;
+            createData.Session = {
+                connect: {
+                    id: data.sessionId,
+                },
+            };
         }
         // Step 1: Create a new TimeSheet
         const createdTimeSheet = await prisma.timeSheet.create({
@@ -453,7 +457,11 @@ export async function createMechanicTimesheetService({ data, type, }) {
             clockInLng: data.clockInLong || null,
         };
         if (data.sessionId !== null && data.sessionId !== undefined) {
-            createData.sessionId = data.sessionId;
+            createData.Session = {
+                connect: {
+                    id: data.sessionId,
+                },
+            };
         }
         // Step 1: Create a new TimeSheet
         const createdTimeSheet = await prisma.timeSheet.create({
@@ -516,7 +524,11 @@ export async function createTruckDriverTimesheetService({ data, type, }) {
             },
         };
         if (data.sessionId !== null && data.sessionId !== undefined) {
-            createData.sessionId = data.sessionId;
+            createData.Session = {
+                connect: {
+                    id: data.sessionId,
+                },
+            };
         }
         // Step 1: Create a new TimeSheet
         const createdTimeSheet = await prisma.timeSheet.create({
@@ -582,7 +594,11 @@ export async function createTascoTimesheetService({ data, type, }) {
             },
         };
         if (data.sessionId !== null && data.sessionId !== undefined) {
-            createData.sessionId = data.sessionId;
+            createData.Session = {
+                connect: {
+                    id: data.sessionId,
+                },
+            };
         }
         // Step 1: Create a new TimeSheet
         const createdTimeSheet = await prisma.timeSheet.create({
@@ -1447,4 +1463,4 @@ export async function deleteRefuelLogService(refuelLogId) {
     }
 }
 //# sourceMappingURL=timesheetService.js.map
-//# debugId=632f6db8-d0fc-5280-9aac-b096edcf4d6f
+//# debugId=153e32ec-1120-53a0-96d0-99264c0964ac

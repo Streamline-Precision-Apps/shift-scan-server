@@ -1,6 +1,6 @@
 // GET /api/cookies?name=key
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="44a887b2-b6ff-5db2-9efc-6a52ff24d49b")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="f1a674c9-7a66-5aac-8abc-e9eb0e4a465b")}catch(e){}}();
 import express from "express";
 export function getCookie(req, res) {
     let { name } = req.query;
@@ -15,7 +15,6 @@ export function getCookie(req, res) {
         return res.status(400).json({ error: "Invalid cookie name" });
     }
     const value = req.cookies?.[name];
-    console.log(`📖 GET cookie: ${name} = ${value || "(not found)"}`);
     if (value === undefined) {
         if (name === "currentPageView") {
             return res.status(200).json({ value: "" });
@@ -42,7 +41,6 @@ export function getCookieList(req, res) {
     const values = {};
     name.forEach((cookieName) => {
         values[cookieName] = req.cookies?.[cookieName];
-        console.log(`📖 GET cookie: ${cookieName} = ${values[cookieName] ? values[cookieName] : "(not found)"}`);
     });
     res.json({ value: values });
 }
@@ -54,17 +52,9 @@ export function setCookie(req, res) {
         console.error("❌ Missing name or value in request");
         return res.status(400).json({ error: "Missing name or value" });
     }
-    console.log(`📝 Setting cookie (UPSERT): ${name} = ${value}`);
-    console.log(`   Client options:`, options);
     // Get current cookie value to check if it exists
     const existingValue = req.cookies?.[name];
     const isUpdate = existingValue !== undefined;
-    if (isUpdate) {
-        console.log(`   Action: UPDATE (existing value was: ${existingValue})`);
-    }
-    else {
-        console.log(`   Action: CREATE (new cookie)`);
-    }
     // IMPORTANT: Set proper cookie options to ensure browser receives it
     const cookieOptions = {
         path: "/",
@@ -72,11 +62,8 @@ export function setCookie(req, res) {
         maxAge: 60 * 60 * 24 * 365, // 1 year
         ...options, // Merge with provided options
     };
-    console.log(`   Final cookie options:`, cookieOptions);
     // Set the cookie
     res.cookie(name, value, cookieOptions);
-    console.log(`✅ Cookie ${isUpdate ? "updated" : "created"} successfully: ${name} = ${value}`);
-    console.log(`   Set-Cookie header should be sent to browser`);
     res.json({
         message: `Cookie ${isUpdate ? "updated" : "created"}`,
         name,
@@ -133,4 +120,4 @@ export function deleteCookieList(req, res) {
     res.json({ message: `Cookies deleted: ${name.join(", ")}` });
 }
 //# sourceMappingURL=cookiesController.js.map
-//# debugId=44a887b2-b6ff-5db2-9efc-6a52ff24d49b
+//# debugId=f1a674c9-7a66-5aac-8abc-e9eb0e4a465b

@@ -73,9 +73,9 @@ export declare function getEquipmentMileageService(equipmentId: string): Promise
         sessionId: number | null;
         startTime: Date;
         endTime: Date | null;
+        date: Date;
         comment: string | null;
         status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
-        date: Date;
         jobsiteId: string;
         costcode: string;
         nu: string;

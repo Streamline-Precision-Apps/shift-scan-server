@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="3fb8603c-bfc7-527c-8578-a4286c512ff4")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="94ddb610-56b2-5f98-a836-a5a38f2b55c7")}catch(e){}}();
 import prisma from "../lib/prisma.js";
 import { v4 as uuidv4 } from "uuid";
 import { sendPasswordResetEmail } from "../lib/mail.js";
@@ -57,7 +57,6 @@ export async function requestPasswordReset(req, res) {
                 message: "If an account exists with this email, a reset link will be sent.",
             });
         }
-        console.log(`📧 Processing password reset for: ${email}`);
         // Delete any existing tokens for this email
         const existingToken = await prisma.passwordResetToken.findFirst({
             where: { email },
@@ -66,7 +65,6 @@ export async function requestPasswordReset(req, res) {
             await prisma.passwordResetToken.delete({
                 where: { id: existingToken.id },
             });
-            console.log(`🗑️  Deleted existing token for: ${email}`);
         }
         // Generate new reset token
         const resetToken = uuidv4();
@@ -78,15 +76,9 @@ export async function requestPasswordReset(req, res) {
                 expiration: expiresAt,
             },
         });
-        console.log(`✅ Password reset token created:`, {
-            email,
-            tokenId: passwordResetToken.id,
-            expiresAt: expiresAt.toISOString(),
-        });
         // Send reset email
         try {
             await sendPasswordResetEmail(email, resetToken);
-            console.log(`📨 Password reset email sent to: ${email}`);
         }
         catch (emailError) {
             console.error(`❌ Failed to send password reset email to ${email}:`, emailError);
@@ -124,7 +116,6 @@ export async function resetPassword(req, res) {
                 .status(400)
                 .json({ error: "Password must be at least 6 characters" });
         }
-        console.log(`🔍 Verifying password reset token...`);
         // Find and validate token
         const resetTokenRecord = await prisma.passwordResetToken.findUnique({
             where: { token },
@@ -142,7 +133,6 @@ export async function resetPassword(req, res) {
             });
             return res.status(400).json({ error: "Reset token has expired" });
         }
-        console.log(`✅ Token valid for email: ${resetTokenRecord.email}`);
         // Find user
         const user = await prisma.user.findUnique({
             where: { email: resetTokenRecord.email },
@@ -151,8 +141,6 @@ export async function resetPassword(req, res) {
             console.warn(`❌ User not found for email: ${resetTokenRecord.email}`);
             return res.status(400).json({ error: "User not found" });
         }
-        // Update password (you should hash this - see note below)
-        console.log(`🔐 Updating password for user: ${user.id}`);
         await prisma.user.update({
             where: { id: user.id },
             data: { password }, // ⚠️ TODO: Hash password before storing
@@ -161,7 +149,6 @@ export async function resetPassword(req, res) {
         await prisma.passwordResetToken.delete({
             where: { id: resetTokenRecord.id },
         });
-        console.log(`✅ Password reset successful for: ${resetTokenRecord.email}`);
         return res.status(200).json({
             success: true,
             message: "Password reset successfully. Please sign in with your new password.",
@@ -182,7 +169,6 @@ export async function verifyResetToken(req, res) {
         if (!token) {
             return res.status(400).json({ error: "Token is required" });
         }
-        console.log(`🔍 Verifying reset token...`);
         const resetTokenRecord = await prisma.passwordResetToken.findUnique({
             where: { token },
         });
@@ -197,7 +183,6 @@ export async function verifyResetToken(req, res) {
             });
             return res.status(400).json({ valid: false, error: "Token expired" });
         }
-        console.log(`✅ Token valid`);
         return res.status(200).json({
             valid: true,
             email: resetTokenRecord.email,
@@ -219,7 +204,6 @@ export async function deleteResetToken(req, res) {
             console.warn("❌ Delete reset token: Missing token");
             return res.status(400).json({ error: "Token is required" });
         }
-        console.log(`🗑️  Attempting to delete reset token...`);
         // Find the token record
         const resetTokenRecord = await prisma.passwordResetToken.findUnique({
             where: { token },
@@ -232,7 +216,6 @@ export async function deleteResetToken(req, res) {
         await prisma.passwordResetToken.delete({
             where: { id: resetTokenRecord.id },
         });
-        console.log(`✅ Reset token deleted successfully for email: ${resetTokenRecord.email}`);
         return res.status(200).json({
             success: true,
             message: "Token deleted successfully",
@@ -244,4 +227,4 @@ export async function deleteResetToken(req, res) {
     }
 }
 //# sourceMappingURL=tokenController.js.map
-//# debugId=3fb8603c-bfc7-527c-8578-a4286c512ff4
+//# debugId=94ddb610-56b2-5f98-a836-a5a38f2b55c7

@@ -1,6 +1,13 @@
 export declare function getUserWithSettingsById(userId: string): Promise<{
     user: {
         id: string;
+        accountSetupToken: {
+            id: string;
+            userId: string;
+            code: string;
+            expiresAt: Date;
+            used: boolean;
+        } | null;
         email: string | null;
         username: string;
         firstName: string;
@@ -20,13 +27,6 @@ export declare function getUserWithSettingsById(userId: string): Promise<{
         middleName: string | null;
         secondLastName: string | null;
         lastSeen: Date | null;
-        accountSetupToken: {
-            id: string;
-            userId: string;
-            code: string;
-            expiresAt: Date;
-            used: boolean;
-        } | null;
         Contact: {
             createdAt: Date;
             id: string;

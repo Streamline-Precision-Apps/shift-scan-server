@@ -1,0 +1,57 @@
+
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="5ebbe08a-a707-5627-ad0c-fbee8a65e358")}catch(e){}}();
+import express from "express";
+import { fetchNotificationServiceByUserId, getDashboardData, getUserTopicPreferences, } from "../services/adminBaseService.js";
+export const baseController = async (req, res) => {
+    try {
+        const { userId } = req.query;
+        if (!userId) {
+            return res.status(400).json({ error: "Missing userId parameter" });
+        }
+        if (typeof userId !== "string") {
+            return res.status(400).json({ error: "userId must be a string" });
+        }
+        const result = await fetchNotificationServiceByUserId(userId);
+        return res.json(result);
+    }
+    catch (error) {
+        console.error("Error fetching notifications:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+export const getDashboardDataController = async (req, res) => {
+    try {
+        const { userId } = req.query;
+        if (!userId) {
+            return res.status(400).json({ error: "Missing userId parameter" });
+        }
+        if (typeof userId !== "string") {
+            return res.status(400).json({ error: "userId must be a string" });
+        }
+        const result = await getDashboardData(userId);
+        return res.json(result);
+    }
+    catch (error) {
+        console.error("Error fetching notifications:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+export const getUserTopicPreferencesController = async (req, res) => {
+    try {
+        const { userId } = req.query;
+        if (!userId) {
+            return res.status(400).json({ error: "Missing userId parameter" });
+        }
+        if (typeof userId !== "string") {
+            return res.status(400).json({ error: "userId must be a string" });
+        }
+        const result = await getUserTopicPreferences(userId);
+        return res.json(result);
+    }
+    catch (error) {
+        console.error("Error fetching notifications:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+//# sourceMappingURL=adminBaseController.js.map
+//# debugId=5ebbe08a-a707-5627-ad0c-fbee8a65e358

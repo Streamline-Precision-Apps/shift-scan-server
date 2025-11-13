@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="706104a7-9dd9-5039-ad0f-b91ed14d11dc")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="41dde560-e000-56fa-b4e7-31b17833bcfe")}catch(e){}}();
 import { fetchLatestLocation, fetchLocationHistory, fetchAllUsersLatestLocations, saveUserLocation, validateLocationPayload, } from "../services/locationService.js";
 // get the latest location for a user
 export async function getUserLocations(req, res) {
@@ -8,7 +8,10 @@ export async function getUserLocations(req, res) {
         return res.status(400).json({ error: "Missing userId" });
     }
     try {
-        const location = await fetchLatestLocation(userId);
+        // Parse date from query parameter, default to today
+        const dateParam = req.query.date;
+        const date = dateParam ? new Date(dateParam) : new Date();
+        const location = await fetchLatestLocation(userId, date);
         if (!location) {
             return res.status(404).json({ error: "No location found for user" });
         }
@@ -22,7 +25,10 @@ export async function getUserLocations(req, res) {
 // Get all users' current locations for map view
 export async function getAllUsersLocations(req, res) {
     try {
-        const locations = await fetchAllUsersLatestLocations();
+        // Parse date from query parameter, default to today
+        const dateParam = req.query.date;
+        const date = dateParam ? new Date(dateParam) : new Date();
+        const locations = await fetchAllUsersLatestLocations(date);
         return res.json(locations);
     }
     catch (err) {
@@ -37,7 +43,10 @@ export async function getUserLocationHistory(req, res) {
         return res.status(400).json({ error: "Missing userId" });
     }
     try {
-        const locations = await fetchLocationHistory(userId);
+        // Parse date from query parameter, default to today
+        const dateParam = req.query.date;
+        const date = dateParam ? new Date(dateParam) : new Date();
+        const locations = await fetchLocationHistory(userId, date);
         return res.json(locations);
     }
     catch (err) {
@@ -68,4 +77,4 @@ export async function postUserLocation(req, res) {
     }
 }
 //# sourceMappingURL=locationController.js.map
-//# debugId=706104a7-9dd9-5039-ad0f-b91ed14d11dc
+//# debugId=41dde560-e000-56fa-b4e7-31b17833bcfe

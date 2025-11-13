@@ -1,3 +1,5 @@
+
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="c8275a2c-c83b-588a-827e-7fac15085694")}catch(e){}}();
 import * as UserService from "../services/UserService.js";
 import prisma from "../lib/prisma.js";
 // GET /api/v1/user/settings (GET, by query param or header)
@@ -5,9 +7,7 @@ export async function getUserSettingsByQuery(req, res) {
     try {
         // Accept userId from body (POST)
         const userId = req.body.userId;
-        console.log("📝 getUserSettingsByQuery called with userId:", userId);
         if (!userId || typeof userId !== "string") {
-            console.log("❌ Invalid userId:", userId);
             return res.status(400).json({
                 success: false,
                 error: "User ID is required",
@@ -27,9 +27,7 @@ export async function getUserSettingsByQuery(req, res) {
                 cookiesAccess: true,
             },
         });
-        console.log("🔍 Found UserSettings:", data);
         if (!data) {
-            console.log("❌ UserSettings not found for userId:", userId);
             return res.status(404).json({
                 success: false,
                 error: "User settings not found",
@@ -51,9 +49,7 @@ export async function getUserSettingsByQuery(req, res) {
 export async function getUserContact(req, res) {
     try {
         const userId = req.body.userId;
-        console.log("📝 getUserContact called with userId:", userId);
         if (!userId || typeof userId !== "string") {
-            console.log("❌ Invalid userId:", userId);
             return res.status(400).json({
                 success: false,
                 error: "User ID is required",
@@ -79,9 +75,7 @@ export async function getUserContact(req, res) {
                 },
             },
         });
-        console.log("🔍 Found employee:", employee);
         if (!employee) {
-            console.log("❌ User not found for userId:", userId);
             return res.status(404).json({
                 success: false,
                 error: "User not found",
@@ -183,8 +177,6 @@ export async function createUser(req, res) {
         // Convert request body to proper Prisma input
         const userData = UserService.createUserWithCompanyId(req.body);
         const newUser = await UserService.createUser(userData);
-        // Additional action: log creation
-        console.log(`User created: ${newUser.id}`);
         res.status(201).json({
             success: true,
             data: newUser,
@@ -222,8 +214,6 @@ export async function updateUser(req, res) {
                 userData.accountSetup = false;
         }
         const updatedUser = await UserService.updateUser(id, userData);
-        // Additional action: log update
-        console.log(`User updated: ${id}`);
         res.status(200).json({
             success: true,
             data: updatedUser,
@@ -260,8 +250,6 @@ export async function deleteUser(req, res) {
             });
         }
         await UserService.deleteUser(id);
-        // Additional action: log deletion
-        console.log(`User deleted: ${id}`);
         res.status(200).json({
             success: true,
             message: "User deleted successfully",
@@ -307,8 +295,6 @@ export async function updateSettings(req, res) {
     try {
         // Extract userId from authenticated token (req.user set by verifyToken middleware)
         const authenticatedUserId = req.user?.id;
-        console.log("🔍 updateSettings called - authenticatedUserId:", authenticatedUserId);
-        console.log("📝 Request body:", JSON.stringify(req.body, null, 2));
         // Verify user is authenticated
         if (!authenticatedUserId) {
             console.error("❌ No authenticated user found");
@@ -384,8 +370,6 @@ export async function updateSettings(req, res) {
             }
             await UserService.updateUserSettings(userId, sanitizedSettings);
         }
-        // Additional action: log settings update
-        console.log(`User settings updated: ${userId}`);
         res.status(200).json({
             success: true,
             message: "User settings updated successfully",
@@ -462,9 +446,7 @@ export async function getTeamsByUserId(req, res) {
 export async function getCrewMembers(req, res) {
     try {
         const { crewId } = req.params;
-        console.log("[UserController] getCrewMembers called with crewId:", crewId);
         if (!crewId) {
-            console.log("[UserController] No crewId provided in params");
             return res.status(400).json({
                 success: false,
                 error: "Crew ID is required",
@@ -472,9 +454,7 @@ export async function getCrewMembers(req, res) {
             });
         }
         const crew = await UserService.getCrewMembers(crewId);
-        console.log("[UserController] getCrewMembers service result:", crew);
         if (!crew) {
-            console.log("[UserController] No crew found for crewId:", crewId);
             return res.status(404).json({
                 success: false,
                 error: "Crew not found",
@@ -645,6 +625,5 @@ export async function endSessionController(req, res) {
         });
     }
 }
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="2a9bbaa3-62d6-5909-b52d-94c02cf3c565")}catch(e){}}();
-//# sourceMappingURL=userController.js.map
-//# debugId=2a9bbaa3-62d6-5909-b52d-94c02cf3c565
+//# sourceMappingURL=UserController.js.map
+//# debugId=c8275a2c-c83b-588a-827e-7fac15085694
