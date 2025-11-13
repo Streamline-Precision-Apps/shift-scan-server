@@ -20,6 +20,7 @@ import * as XLSX from "xlsx";
 import { Fields as FormField } from "./types";
 import { useDashboardData } from "@/app/admins/_pages/sidebar/DashboardDataContext";
 import { useUserStore } from "@/app/lib/store/userStore";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
 
 export default function useSubmissionDataById(id: string) {
   const { refresh } = useDashboardData();
@@ -112,13 +113,11 @@ export default function useSubmissionDataById(id: string) {
         params.push(`page=${page}`);
         params.push(`pageSize=${pageSize}`);
         const query = params.length ? `?${params.join("&")}` : "";
-        const response = await fetch(
-          `/api/getFormSubmissionsById/${id}${query}`
+        const data = await apiRequest(
+          `/api/v1/admins/forms/template/${id}/submissions${query}`,
+          "GET"
         );
-        if (!response.ok) {
-          throw new Error("Failed to fetch form template");
-        }
-        const data = await response.json();
+
         setFormTemplate(data);
         setApprovalInbox(data.pendingForms || 0);
         return data;
@@ -299,8 +298,13 @@ export default function useSubmissionDataById(id: string) {
         }
         const groupings = template.FormGrouping;
         const fields = groupings
-          .flatMap((group) => (Array.isArray(group.Fields) ? group.Fields : []))
-          .filter((field) => field && field.id && field.label);
+          .flatMap((group: { Fields?: FormField[] }) =>
+            Array.isArray(group.Fields) ? group.Fields : []
+          )
+          .filter(
+            (field: FormField | undefined): field is FormField =>
+              field !== undefined && !!field.id && !!field.label
+          );
 
         // Build headers: field labels, plus some submission metadata
         const headers = [
@@ -311,7 +315,7 @@ export default function useSubmissionDataById(id: string) {
         ];
 
         // Build rows from submissions
-        const rows = (submissions || []).map((submission) => {
+        const rows = (submissions || []).map((submission: unknown) => {
           const typedSubmission = submission as unknown as {
             id: string;
             User?: { firstName: string; lastName: string };
@@ -386,9 +390,12 @@ export default function useSubmissionDataById(id: string) {
 
         if (exportFormat === "csv") {
           const csv = exportData
-            .map((row) =>
+            .map((row: (string | number | boolean | null | undefined)[]) =>
               row
-                .map((cell) => `"${String(cell ?? "").replace(/"/g, '""')}"`)
+                .map(
+                  (cell: string | number | boolean | null | undefined) =>
+                    `"${String(cell ?? "").replace(/"/g, '""')}"`
+                )
                 .join(",")
             )
             .join("\n");

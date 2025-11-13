@@ -1,40 +1,92 @@
 import { Router } from "express";
-
 const router = Router();
 
-import { getAllFormTemplatesController } from "../controllers/adminFormController.js";
+import {
+  getAllFormTemplatesController,
+  getFormTemplateByIdController,
+  getFormSubmissionsController,
+  getFormSubmissionByTemplateIdController,
+  createFormTemplateController,
+  updateFormTemplateController,
+  deleteFormTemplateController,
+  archiveFormTemplateController,
+  publishFormTemplateController,
+  draftFormTemplateController,
+  createFormSubmissionController,
+  updateFormSubmissionController,
+  deleteFormSubmissionController,
+  getFormSubmissionByIdController,
+  approveFormSubmissionController,
+} from "../controllers/adminFormController.js";
+
+// --- Form Template Routes ---
 
 // GET /api/v1/admins/forms/template
+// Returns all form templates (supports filtering, pagination, search)
 router.get("/template", getAllFormTemplatesController);
 
-router.get("/template/:id", (req, res) => {
-  console.log("GET /template/:id - Not implemented");
-  res.status(501).json({ error: "Not implemented" });
-}); // get form template by id
+// POST /api/v1/admins/forms/template
+// Creates a new form template
+router.post("/template", createFormTemplateController);
 
-router.put("/template/:id", (req, res) => {
-  console.log("PUT /template/:id - Not implemented");
-  res.status(501).json({ error: "Not implemented" });
-}); // update form template by id
+// GET /api/v1/admins/forms/template/:id
+// Returns a single form template by ID
+router.get("/template/:id", getFormTemplateByIdController);
 
-router.put("/template/:id/archive", (req, res) => {
-  console.log("PUT /template/:id/archive - Not implemented");
-  res.status(501).json({ error: "Not implemented" });
-}); // archive form template by id
+// PUT /api/v1/admins/forms/template/:id
+// Updates a form template by ID
+router.put("/template/:id", updateFormTemplateController);
 
-router.put("/template/:id/publish", (req, res) => {
-  console.log("PUT /template/:id/publish - Not implemented");
-  res.status(501).json({ error: "Not implemented" });
-}); // publish form template by id
+// PUT /api/v1/admins/forms/template/:id/draft
+// Sets a form template to DRAFT status
+router.put("/template/:id/draft", draftFormTemplateController);
 
-router.get("/template/:id/submissions", (req, res) => {
-  console.log("GET /template/:id/submissions - Not implemented");
-  res.status(501).json({ error: "Not implemented" });
-}); //  get all form submissions by template id
+// PUT /api/v1/admins/forms/template/:id/archive
+// Archives a form template by ID
+router.put("/template/:id/archive", archiveFormTemplateController);
 
-router.get("/template/:id/submission/:id", (req, res) => {
-  console.log("GET /template/:id/submission/:id - Not implemented");
-  res.status(501).json({ error: "Not implemented" });
-}); //  gets a form submission by id
+// PUT /api/v1/admins/forms/template/:id/publish
+// Publishes a form template by ID
+router.put("/template/:id/publish", publishFormTemplateController);
+
+// DELETE /api/v1/admins/forms/template/:id
+// Deletes a form template by ID
+router.delete("/template/:id", deleteFormTemplateController);
+
+// --- Form Submission Routes ---
+
+// GET /api/v1/admins/forms/template/:id/submissions
+// Returns all submissions for a given form template (supports date range)
+router.get("/template/:id/submissions/export", getFormSubmissionsController);
+
+// GET /api/v1/admins/forms/template/:id/submissions-detailed
+// Returns all submissions for a given form template with full details (supports pagination, status filter, date range)
+router.get(
+  "/template/:id/submissions",
+  getFormSubmissionByTemplateIdController
+);
+
+// POST /api/v1/admins/forms/template/:id/submissions
+// Creates a new form submission for a given template
+router.post("/template/:id/submissions", createFormSubmissionController);
+
+// GET /api/v1/admins/forms/submissions/:submissionId
+// Returns a single form submission by submission ID
+router.get("/submissions/:submissionId", getFormSubmissionByIdController);
+
+// PUT /api/v1/admins/forms/submissions/:submissionId
+// Updates a form submission by submission ID
+router.put("/submissions/:submissionId", updateFormSubmissionController);
+
+// PUT /api/v1/admins/forms/submissions/:submissionId/approve
+// Approves or rejects a form submission by submission ID
+router.put(
+  "/submissions/:submissionId/approve",
+  approveFormSubmissionController
+);
+
+// DELETE /api/v1/admins/forms/submissions/:submissionId
+// Deletes a form submission by submission ID
+router.delete("/submissions/:submissionId", deleteFormSubmissionController);
 
 export default router;

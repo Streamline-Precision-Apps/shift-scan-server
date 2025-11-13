@@ -21,6 +21,7 @@ import {
   LogOut,
   BellPlus,
   ChevronLeft,
+  Map,
 } from "lucide-react";
 import NotificationModal from "./NotificationModal";
 import { useDashboardData } from "./DashboardDataContext";
@@ -91,6 +92,13 @@ export default function LeftSidebar() {
       img: "timecards",
       white: "timecards-white",
       link: "/admins/timesheets",
+    },
+    {
+      id: 9,
+      title: "Area Map",
+      img: "map",
+      white: "map-white",
+      link: "/admins/area-map",
     },
   ];
   return (

@@ -34,6 +34,7 @@ import {
   updateFormSubmission,
 } from "@/app/lib/actions/adminActions";
 import { useUserStore } from "@/app/lib/store/userStore";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
 
 export default function EditFormSubmissionModal({
   id,
@@ -137,8 +138,10 @@ export default function EditFormSubmissionModal({
   // Fetch users data
   useEffect(() => {
     const fetchUsers = async () => {
-      const res = await fetch("/api/getAllActiveEmployeeName");
-      const users = await res.json();
+      const users = await apiRequest(
+        "/api/v1/admins/personnel/getAllActiveEmployees",
+        "GET"
+      );
       setUsers(users);
     };
     fetchUsers();
@@ -148,10 +151,11 @@ export default function EditFormSubmissionModal({
   useEffect(() => {
     const fetchEquipment = async () => {
       try {
-        const res = await fetch("/api/getEquipmentSummary");
-        if (!res.ok) throw new Error("Failed to fetch equipment");
-        const data = await res.json();
-        setEquipment(data);
+        const data = await apiRequest(
+          "/api/v1/admins/equipment/summary",
+          "GET"
+        );
+        setEquipment(data || []);
       } catch (error) {
         console.error("Error fetching equipment:", error);
       }
@@ -163,11 +167,9 @@ export default function EditFormSubmissionModal({
   useEffect(() => {
     const fetchJobsites = async () => {
       try {
-        const res = await fetch("/api/getJobsiteSummary");
-        if (!res.ok) throw new Error("Failed to fetch jobsites");
-        const data = await res.json();
+        const data = await apiRequest("/api/v1/admins/jobsite", "GET");
 
-        setJobsites(data);
+        setJobsites(data.jobsiteSummary || []);
       } catch (error) {
         console.error("Error fetching jobsites:", error);
       }
@@ -178,10 +180,8 @@ export default function EditFormSubmissionModal({
   useEffect(() => {
     const fetchCostCodes = async () => {
       try {
-        const res = await fetch("/api/getCostCodeSummary");
-        if (!res.ok) throw new Error("Failed to fetch cost codes");
-        const data = await res.json();
-        setCostCodes(data);
+        const data = await apiRequest("/api/v1/admins/cost-codes", "GET");
+        setCostCodes(data.costCodes || []);
       } catch (error) {
         console.error("Error fetching cost codes:", error);
       }
@@ -310,7 +310,7 @@ export default function EditFormSubmissionModal({
 
   if (loading) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-40 ">
         <div className="bg-white rounded-lg shadow-lg w-[600px] h-[80vh] overflow-y-auto no-scrollbar px-6 py-4 flex flex-col items-center">
           <div className="w-full flex flex-col border-b border-gray-100 pb-3 relative">
             <Button
@@ -697,7 +697,7 @@ export default function EditFormSubmissionModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-40 ">
       <div className="bg-white rounded-lg shadow-lg w-[600px] h-[80vh] px-6 py-4 flex flex-col items-center">
         <div className="w-full flex flex-col border-b border-gray-100 pb-3 relative">
           <Button
@@ -725,11 +725,13 @@ export default function EditFormSubmissionModal({
                   : "bg-blue-100 text-blue-800"
               }`}
             >
-              {`${formSubmission?.status
-                .slice(0, 1)
-                .toUpperCase()}${formSubmission?.status
-                .slice(1)
-                .toLowerCase()}`}
+              {formSubmission?.status
+                ? `${formSubmission.status
+                    .slice(0, 1)
+                    .toUpperCase()}${formSubmission.status
+                    .slice(1)
+                    .toLowerCase()}`
+                : "Pending"}
             </span>
           </div>
         </div>
