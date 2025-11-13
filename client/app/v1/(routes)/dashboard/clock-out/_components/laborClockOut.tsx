@@ -69,15 +69,26 @@ export const LaborClockOut = ({
   // const { permissions, getStoredCoordinates } = usePermissions();
 
   async function handleSubmitTimeSheet() {
+    const startAll = Date.now();
+    console.log(
+      "[ClockOut] handleSubmitTimeSheet called at",
+      new Date().toISOString()
+    );
     if (!timeSheetId || isNaN(Number(timeSheetId))) {
       alert("Timesheet ID is missing or invalid. Cannot submit timesheet.");
       return;
     }
     try {
       setLoading(true);
-
+      const startCoords = Date.now();
+      console.log("[ClockOut] Getting current coordinates...");
       // Get current coordinates before stopping tracking
       const coordinates = await getStoredCoordinates();
+      const endCoords = Date.now();
+      console.log(
+        `[ClockOut] Got coordinates in ${endCoords - startCoords}ms:`,
+        coordinates
+      );
 
       // Prepare body for API request
       const body = {
@@ -88,54 +99,122 @@ export const LaborClockOut = ({
         clockOutLat: coordinates ? coordinates.lat : null,
         clockOutLng: coordinates ? coordinates.lng : null,
       };
+      console.log("[ClockOut] Prepared API body:", body);
 
+      const startApi = Date.now();
+      console.log(
+        `[ClockOut] Sending clock-out API request at ${new Date().toISOString()}`
+      );
       // Use apiRequest to call the backend update route
       const result = await apiRequest(
         `/api/v1/timesheet/${timeSheetId}/clock-out`,
         "PUT",
         body
       );
+      const endApi = Date.now();
+      console.log(
+        `[ClockOut] API request finished in ${endApi - startApi}ms. Result:`,
+        result
+      );
       if (result.success) {
-        // Stop location tracking only after successful clock-out
-        await stopClockOutTracking();
+        // Navigate immediately, then run non-critical tasks in background
+        reset();
+        router.push("/v1");
+        const navTime = Date.now();
+        console.log(
+          `[ClockOut] Navigation triggered at ${new Date().toISOString()} (elapsed: ${
+            navTime - startAll
+          }ms)`
+        );
 
-        try {
-          await sendNotification({
-            topic: "timecard-submission",
-            title: "Timecard Approval Needed",
-            message: `#${result.timesheetId} has been submitted by ${result.userFullName} for approval.`,
-            link: `/admins/timesheets?id=${result.timesheetId}`,
-            referenceId: result.timesheetId,
-          });
-        } catch (error) {
-          console.error("🔴 Failed to send notification:", error);
-          return;
-        } finally {
-          // List of cookie names to delete (add names as needed)
-          const cookiesToDelete: string[] = [
-            "currentPageView",
-            "costCode",
-            "equipment",
-            "jobSite",
-            "startingMileage",
-            "timeSheetId",
-            "truckId",
-            "adminAccess",
-            "laborType",
-            "workRole",
-          ];
-          // Build query string
-          const query = cookiesToDelete
-            .map((name) => `name=${encodeURIComponent(name)}`)
-            .join("&");
-          await apiRequest(
-            `/api/cookies/list${query ? `?${query}` : ""}`,
-            "DELETE"
+        // Run these in the background, don't block UI
+        setTimeout(() => {
+          const bgStart = Date.now();
+          console.log(
+            `[ClockOut] Starting background tasks at ${new Date().toISOString()}`
           );
-          localStorage.removeItem("timesheetId");
-          reset();
-          await Promise.all([refetchTimesheet(), router.push("/v1")]);
-        }
+          Promise.allSettled([
+            (async () => {
+              const t0 = Date.now();
+              try {
+                await stopClockOutTracking();
+                console.log(
+                  `[ClockOut] stopClockOutTracking finished in ${
+                    Date.now() - t0
+                  }ms`
+                );
+              } catch (error) {
+                console.error("🔴 Failed to stop clock out tracking:", error);
+              }
+            })(),
+            (async () => {
+              const t0 = Date.now();
+              try {
+                await sendNotification({
+                  topic: "timecard-submission",
+                  title: "Timecard Approval Needed",
+                  message: `#${result.timesheetId} has been submitted by ${result.userFullName} for approval.`,
+                  link: `/admins/timesheets?id=${result.timesheetId}`,
+                  referenceId: result.timesheetId,
+                });
+                console.log(
+                  `[ClockOut] sendNotification finished in ${Date.now() - t0}ms`
+                );
+              } catch (error) {
+                console.error("🔴 Failed to send notification:", error);
+              }
+            })(),
+            (async () => {
+              const t0 = Date.now();
+              // List of cookie names to delete (add names as needed)
+              const cookiesToDelete: string[] = [
+                "currentPageView",
+                "costCode",
+                "equipment",
+                "jobSite",
+                "startingMileage",
+                "timeSheetId",
+                "truckId",
+                "adminAccess",
+                "laborType",
+                "workRole",
+              ];
+              // Build query string
+              const query = cookiesToDelete
+                .map((name) => `name=${encodeURIComponent(name)}`)
+                .join("&");
+              try {
+                await apiRequest(
+                  `/api/cookies/list${query ? `?${query}` : ""}`,
+                  "DELETE"
+                );
+                console.log(
+                  `[ClockOut] Cookie deletion finished in ${Date.now() - t0}ms`
+                );
+              } catch (error) {
+                console.error("🔴 Failed to delete cookies:", error);
+              }
+              localStorage.removeItem("timesheetId");
+            })(),
+            (async () => {
+              const t0 = Date.now();
+              try {
+                await refetchTimesheet();
+                console.log(
+                  `[ClockOut] refetchTimesheet finished in ${Date.now() - t0}ms`
+                );
+              } catch (error) {
+                console.error("🔴 Failed to refetch timesheet:", error);
+              }
+            })(),
+          ]).then(() => {
+            console.log(
+              `[ClockOut] All background tasks finished in ${
+                Date.now() - bgStart
+              }ms`
+            );
+          });
+        }, 0);
       }
     } catch (error) {
       console.error("🔴 Failed to process the time sheet:", error);

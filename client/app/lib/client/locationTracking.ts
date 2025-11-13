@@ -140,69 +140,28 @@ export async function stopClockOutTracking() {
   try {
     console.log("User clocked out - stopping location tracking");
 
-    // Get final coordinates before stopping tracking
-    const finalCoords = await getStoredCoordinates();
-
-    if (finalCoords && currentUserId && currentSessionId) {
-      // Get accuracy, speed, and heading from current position
-      let accuracy: number | undefined = undefined;
-      let speed: number | null = null;
-      let heading: number | null = null;
-
-      try {
-        if (isNative) {
-          const pos = await Geolocation.getCurrentPosition();
-          if (pos) {
-            accuracy = pos.coords.accuracy ?? undefined;
-            speed = pos.coords.speed ?? null;
-            heading = pos.coords.heading ?? null;
-          }
-        } else if (typeof navigator !== "undefined" && navigator.geolocation) {
-          // Browser geolocation doesn't reliably provide these, but try if available
-          const pos = await new Promise<GeolocationPosition | null>(
-            (resolve) => {
-              navigator.geolocation.getCurrentPosition(
-                (pos) => resolve(pos),
-                () => resolve(null),
-                { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
-              );
-            }
-          );
-          if (pos) {
-            accuracy = pos.coords.accuracy ?? undefined;
-            speed = pos.coords.speed ?? null;
-            heading = pos.coords.heading ?? null;
-          }
-        }
-      } catch (err) {
-        console.warn("Could not retrieve accuracy/speed/heading details:", err);
-      }
-
-      // Post final location to end session
-      const payload: LocationLog = {
-        userId: currentUserId,
-        sessionId: currentSessionId,
-        coords: {
-          lat: finalCoords.lat,
-          lng: finalCoords.lng,
-          accuracy,
-          speed,
-          heading,
-        },
-        device: {
-          platform:
-            typeof navigator !== "undefined" ? navigator.userAgent : null,
-        },
-      };
-
+    // Only close the session, do not fetch or send location
+    if (currentUserId && currentSessionId) {
       const url = getApiUrl();
-      await fetch(`${url}/api/location?clockType=clockOut`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+      try {
+        await fetch(`${url}/api/location?clockType=clockOut`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: currentUserId,
+            sessionId: currentSessionId,
+            coords: null,
+            device: {
+              platform:
+                typeof navigator !== "undefined" ? navigator.userAgent : null,
+            },
+          }),
+        });
+      } catch (err) {
+        console.warn("Failed to post clock out session:", err);
+      }
     }
 
     isUserClockedIn = false;
@@ -451,7 +410,19 @@ export async function getStoredCoordinates(): Promise<{
             });
           },
           (err) => {
-            console.error("Browser geolocation error:", err);
+            if (
+              err &&
+              typeof err === "object" &&
+              "code" in err &&
+              "message" in err
+            ) {
+              console.error("Browser geolocation error:", err);
+            } else {
+              console.error(
+                "Browser geolocation error: Unknown or empty error",
+                err
+              );
+            }
             resolve(null);
           },
           { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }

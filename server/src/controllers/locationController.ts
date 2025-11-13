@@ -81,10 +81,8 @@ export async function postUserLocation(
   const { userId, sessionId, coords, device } = req.body;
   const clockType = req.query.clockType as string | undefined;
 
-  if (!userId || !sessionId || !coords) {
-    return res
-      .status(400)
-      .json({ error: "Missing userId, sessionId, or coordinates" });
+  if (!userId || !sessionId) {
+    return res.status(400).json({ error: "Missing userId or sessionId" });
   }
 
   if (!clockType || (clockType !== "clockIn" && clockType !== "clockOut")) {
@@ -94,9 +92,15 @@ export async function postUserLocation(
     });
   }
 
-  const validationError = validateLocationPayload({ coords });
-  if (validationError) {
-    return res.status(400).json({ error: validationError });
+  // For clockIn, coords are required and must be valid
+  if (clockType === "clockIn") {
+    if (!coords) {
+      return res.status(400).json({ error: "Missing coordinates for clockIn" });
+    }
+    const validationError = validateLocationPayload({ coords });
+    if (validationError) {
+      return res.status(400).json({ error: validationError });
+    }
   }
 
   try {
@@ -108,6 +112,7 @@ export async function postUserLocation(
         device
       );
     } else if (clockType === "clockOut") {
+      // For clockOut, coords are optional; always update session endTime
       await saveUserClockOutLocation(
         userId,
         parseInt(sessionId),

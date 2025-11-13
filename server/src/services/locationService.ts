@@ -503,22 +503,11 @@ export async function saveUserClockInLocation(
 export async function saveUserClockOutLocation(
   userId: string,
   sessionId: number,
-  coords: Location["coords"],
+  coords?: Location["coords"],
   device?: Location["device"]
 ): Promise<boolean> {
   try {
     await prisma.$transaction(async (tx) => {
-      await tx.locationMarker.create({
-        data: {
-          sessionId,
-          lat: coords.lat,
-          long: coords.lng,
-          accuracy: coords.accuracy ?? null,
-          speed: coords.speed ?? null,
-          heading: coords.heading ?? null,
-        },
-      });
-
       await tx.session.update({
         where: {
           id: sessionId,

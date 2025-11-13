@@ -104,18 +104,14 @@ export default function TruckVerificationStep({
       }
 
       // Get current coordinates
-      console.log("Getting current coordinates for clock in...");
       const coordinates = await getStoredCoordinates();
-      console.log("Coordinates:", coordinates);
 
       // Check for session data
       let sessionId = null;
       if (currentSessionId === null) {
         // No session exists, create a new one
-        console.log("No session exists, creating new session...");
         sessionId = await createNewSession(id);
         setCurrentSession(sessionId);
-        console.log("New session created:", sessionId);
       } else {
         // Session exists, check if it's ended
         const currentSession = useSessionStore
@@ -129,26 +125,16 @@ export default function TruckVerificationStep({
 
           if (currentTime - endTime > FOUR_HOURS_MS) {
             // More than 4 hours have passed, clear sessions and create a new one
-            console.log(
-              "Session expired (4+ hours since end), clearing storage and creating new session"
-            );
             useSessionStore.getState().clearSessions();
             sessionId = await createNewSession(id);
             setCurrentSession(sessionId);
-            console.log("New session created after expiration:", sessionId);
           } else {
             // Less than 4 hours, create a new session but keep old one in history
-            console.log("Session still valid, creating new session...");
             sessionId = await createNewSession(id);
             setCurrentSession(sessionId);
-            console.log("New session created:", sessionId);
           }
         } else {
           // Session is still active, reuse it
-          console.log(
-            "Session still active, reusing session:",
-            currentSessionId
-          );
           sessionId = currentSessionId;
         }
       }
@@ -216,10 +202,7 @@ export default function TruckVerificationStep({
           : null;
       }
 
-      console.log("Submitting truck timesheet payload:", payload);
       const responseAction = await handleTruckTimeSheet(payload);
-
-      console.log("Truck TimeSheet action response:", responseAction);
 
       // Add timesheet ID to session store after successful creation
       if (
@@ -231,10 +214,6 @@ export default function TruckVerificationStep({
         useSessionStore
           .getState()
           .setTimesheetId(sessionId, responseAction.createdTimeSheet.id);
-        console.log(
-          "Timesheet ID set in session store:",
-          responseAction.createdTimeSheet.id
-        );
       }
 
       if (
@@ -250,15 +229,12 @@ export default function TruckVerificationStep({
           link: `/admins/timesheets?id=${responseAction.createdTimeSheet.id}`,
           referenceId: responseAction.createdTimeSheet.id,
         });
-        console.log("Notification sent for timesheet approval.");
       }
 
       // Start location tracking for clock in
       let trackingResult = { success: true };
       if (type !== "switchJobs" && sessionId) {
-        console.log("Starting clock in tracking...");
         trackingResult = await startClockInTracking(id, sessionId);
-        console.log("Clock in tracking result:", trackingResult);
       }
 
       // Update state and redirect
@@ -266,12 +242,11 @@ export default function TruckVerificationStep({
       localStorage.removeItem("savedCommentData");
 
       if (trackingResult?.success) {
-        console.log("Redirecting to dashboard...");
         setCurrentPageView("dashboard");
         setWorkRole(role);
         setLaborType(clockInRoleTypes || "");
         await refetchTimesheet();
-        setTimeout(() => router.push("/v1/dashboard"), 500);
+        router.push("/v1/dashboard");
       } else {
         console.error("Clock in tracking failed, not redirecting.");
       }

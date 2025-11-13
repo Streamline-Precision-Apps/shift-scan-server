@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="e5a62299-32b1-5839-88a4-dc419d39a666")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="f926564a-156c-5598-ba6a-afae281d20b4")}catch(e){}}();
 import prisma from "../lib/prisma.js";
 // Helper function to get start and end of day in user's local timezone
 function getDayRange(date = new Date()) {
@@ -447,16 +447,6 @@ export async function saveUserClockInLocation(userId, sessionId, coords, device)
 export async function saveUserClockOutLocation(userId, sessionId, coords, device) {
     try {
         await prisma.$transaction(async (tx) => {
-            await tx.locationMarker.create({
-                data: {
-                    sessionId,
-                    lat: coords.lat,
-                    long: coords.lng,
-                    accuracy: coords.accuracy ?? null,
-                    speed: coords.speed ?? null,
-                    heading: coords.heading ?? null,
-                },
-            });
             await tx.session.update({
                 where: {
                     id: sessionId,
@@ -474,4 +464,4 @@ export async function saveUserClockOutLocation(userId, sessionId, coords, device
     }
 }
 //# sourceMappingURL=locationService.js.map
-//# debugId=e5a62299-32b1-5839-88a4-dc419d39a666
+//# debugId=f926564a-156c-5598-ba6a-afae281d20b4
