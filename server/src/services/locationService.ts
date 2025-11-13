@@ -477,7 +477,7 @@ export function validateLocationPayload(
   return null;
 }
 
-export async function saveUserLocation(
+export async function saveUserClockInLocation(
   userId: string,
   sessionId: number,
   coords: Location["coords"],
@@ -493,6 +493,40 @@ export async function saveUserLocation(
         speed: coords.speed ?? null,
         heading: coords.heading ?? null,
       },
+    });
+    return true;
+  } catch (err) {
+    console.error("Error saving location marker:", err);
+    throw err;
+  }
+}
+export async function saveUserClockOutLocation(
+  userId: string,
+  sessionId: number,
+  coords: Location["coords"],
+  device?: Location["device"]
+): Promise<boolean> {
+  try {
+    await prisma.$transaction(async (tx) => {
+      await tx.locationMarker.create({
+        data: {
+          sessionId,
+          lat: coords.lat,
+          long: coords.lng,
+          accuracy: coords.accuracy ?? null,
+          speed: coords.speed ?? null,
+          heading: coords.heading ?? null,
+        },
+      });
+
+      await tx.session.update({
+        where: {
+          id: sessionId,
+        },
+        data: {
+          endTime: new Date(),
+        },
+      });
     });
     return true;
   } catch (err) {

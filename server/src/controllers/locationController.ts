@@ -5,7 +5,8 @@ import {
   fetchLatestLocation,
   fetchLocationHistory,
   fetchAllUsersLatestLocations,
-  saveUserLocation,
+  saveUserClockInLocation,
+  saveUserClockOutLocation,
   validateLocationPayload,
 } from "../services/locationService.js";
 
@@ -78,11 +79,19 @@ export async function postUserLocation(
 ) {
   // Extract userId, sessionId, and location data from request body
   const { userId, sessionId, coords, device } = req.body;
+  const clockType = req.query.clockType as string | undefined;
 
   if (!userId || !sessionId || !coords) {
     return res
       .status(400)
       .json({ error: "Missing userId, sessionId, or coordinates" });
+  }
+
+  if (!clockType || (clockType !== "clockIn" && clockType !== "clockOut")) {
+    return res.status(400).json({
+      error:
+        "Missing or invalid clockType query parameter (must be 'clockIn' or 'clockOut')",
+    });
   }
 
   const validationError = validateLocationPayload({ coords });
@@ -91,7 +100,21 @@ export async function postUserLocation(
   }
 
   try {
-    await saveUserLocation(userId, parseInt(sessionId), coords, device);
+    if (clockType === "clockIn") {
+      await saveUserClockInLocation(
+        userId,
+        parseInt(sessionId),
+        coords,
+        device
+      );
+    } else if (clockType === "clockOut") {
+      await saveUserClockOutLocation(
+        userId,
+        parseInt(sessionId),
+        coords,
+        device
+      );
+    }
     return res.status(201).json({ success: true });
   } catch (err) {
     console.error("Error posting user location:", err);
