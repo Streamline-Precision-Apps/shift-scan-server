@@ -1,5 +1,5 @@
+"use client";
 import { useCookieStore } from "@/app/lib/store/cookieStore";
-("use client");
 import React, { useState } from "react";
 import { useTranslations } from "next-intl";
 import {
