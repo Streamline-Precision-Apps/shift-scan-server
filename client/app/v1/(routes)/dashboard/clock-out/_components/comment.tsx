@@ -1,6 +1,6 @@
 "use client";
 import { useTranslations } from "next-intl";
-import { setCurrentPageView } from "@/app/lib/actions/cookieActions";
+import { useCookieStore } from "@/app/lib/store/cookieStore";
 import { useRouter } from "next/navigation";
 import { Holds } from "@/app/v1/components/(reusable)/holds";
 import { TextAreas } from "@/app/v1/components/(reusable)/textareas";
@@ -53,6 +53,10 @@ export default function Comment({
     window.history.back();
   };
 
+  const setCurrentPageView = useCookieStore(
+    (state) => state.setCurrentPageView
+  );
+
   const processOne = async () => {
     try {
       let timeSheetId = currentTimesheetId;
@@ -92,7 +96,7 @@ export default function Comment({
       if (isUpdated) {
         // Stop location tracking only after successful clock-out
         await stopClockOutTracking();
-        await setCurrentPageView("break");
+        setCurrentPageView("break");
         setTimeSheetData(null);
         router.push("/v1");
       }

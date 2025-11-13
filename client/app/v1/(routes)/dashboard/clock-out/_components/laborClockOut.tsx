@@ -7,7 +7,7 @@ import {
   stopClockOutTracking,
   getStoredCoordinates,
 } from "@/app/lib/client/locationTracking";
-
+import { useCookieStore } from "@/app/lib/store/cookieStore";
 import Spinner from "@/app/v1/components/(animations)/spinner";
 import { Bases } from "@/app/v1/components/(reusable)/bases";
 import { Buttons } from "@/app/v1/components/(reusable)/buttons";
@@ -65,6 +65,7 @@ export const LaborClockOut = ({
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
   const { user } = useUserStore();
+  const { reset } = useCookieStore();
   // const { permissions, getStoredCoordinates } = usePermissions();
 
   async function handleSubmitTimeSheet() {
@@ -132,6 +133,7 @@ export const LaborClockOut = ({
             "DELETE"
           );
           localStorage.removeItem("timesheetId");
+          reset();
           await Promise.all([refetchTimesheet(), router.push("/v1")]);
         }
       }
