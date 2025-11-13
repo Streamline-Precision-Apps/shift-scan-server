@@ -71,40 +71,6 @@ export default function NewClockProcess({
 
   const [clockInRole, setClockInRole] = useState<string | undefined>(workRole);
   const [step, setStep] = useState<number>(0);
-  const [isLocationOn, setIsLocationOn] = useState<boolean>(false);
-  const [hasRequestedLocation, setHasRequestedLocation] = useState(false);
-
-  // // Update location status based on permissions (only when initialized)
-  // // comment out for no required location services
-  // useEffect(() => {
-  //   if (!initialized) {
-  //     return;
-  //   }
-
-  //   if (permissions && permissions.location) {
-  //     console.log("Location permission granted");
-  //     setIsLocationOn(true);
-  //   } else {
-  //     console.log("Location permission not granted");
-  //     setIsLocationOn(false);
-
-  //     // Only request location once on initial load
-  //     if (!hasRequestedLocation) {
-  //       console.log("Requesting location permission");
-  //       requestLocationPermission();
-  //       setHasRequestedLocation(true);
-  //     }
-  //   }
-  // }, [initialized]); // Only depend on initialized, not permissions or requestLocationPermission
-
-  // // Update location status when permissions change
-  // useEffect(() => {
-  //   if (permissions?.location) {
-  //     setIsLocationOn(true);
-  //   } else {
-  //     setIsLocationOn(false);
-  //   }
-  // }, [permissions?.location]);
 
   const [clockInRoleTypes, setClockInRoleTypes] = useState<string | undefined>(
     switchLaborType

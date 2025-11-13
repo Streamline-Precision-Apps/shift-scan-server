@@ -84,8 +84,30 @@ export const LaborClockOut = ({
     }
 
     try {
-      // Use prefetched coordinates if available, else fallback to fetching now
+      // Always attempt a fresh coordinate with a 4-second timeout
       let coords = coordinates;
+      let locationTimestamp = Date.now();
+
+      try {
+        const timeoutPromise = new Promise<null>((_, reject) =>
+          setTimeout(() => reject(new Error("Geolocation timeout")), 4000)
+        );
+        const freshCoords = await Promise.race([
+          getStoredCoordinates(),
+          timeoutPromise,
+        ]);
+        if (freshCoords) {
+          coords = freshCoords;
+          locationTimestamp = Date.now();
+          console.log("[ClockOut] Fresh coordinates obtained");
+        }
+      } catch (err) {
+        console.warn(
+          "[ClockOut] Fresh coordinate attempt failed, using prefetched:",
+          err
+        );
+        // Fall back to prefetched coordinates (already set above)
+      }
 
       const body = {
         userId: user?.id,
@@ -94,6 +116,7 @@ export const LaborClockOut = ({
         wasInjured,
         clockOutLat: coords?.lat ?? null,
         clockOutLng: coords?.lng ?? null,
+        locationTimestamp,
       };
 
       reset(); // Clear cookie store immediately

@@ -8,7 +8,6 @@ import { PreInjuryReport } from "./_components/no-injury";
 import Comment from "./_components/comment";
 import { useTimeSheetData } from "@/app/lib/context/TimeSheetIdContext";
 import { getStoredCoordinates } from "@/app/lib/client/locationTracking";
-import { enqueue } from "@/app/lib/queue/jobQueue";
 import { useUserStore } from "@/app/lib/store/userStore";
 import { usePermissions } from "@/app/lib/context/permissionContext";
 import { apiRequest } from "@/app/lib/utils/api-Utils";
@@ -69,8 +68,6 @@ export default function TempClockOutContent() {
   const { currentView } = useCurrentView();
   const [commentsValue, setCommentsValue] = useState("");
   const [timesheets, setTimesheets] = useState<TimeSheet[]>([]);
-  // Removed reviewYourTeam state, not needed for manager flow
-  // Prefetched coordinates for clock-out and comments
   const [coordinates, setCoordinates] = useState<{
     lat: number;
     lng: number;
@@ -96,12 +93,20 @@ export default function TempClockOutContent() {
 
   // Prefetch coordinates as soon as possible on page mount
   useEffect(() => {
-    enqueue(async () => {
+    const fetchCoordinates = async () => {
       const coords = await getStoredCoordinates();
       setCoordinates(coords);
-    });
-    // Optionally, refresh coordinates if needed on focus, etc.
-    // eslint-disable-next-line
+    };
+    fetchCoordinates();
+
+    // Refresh coordinates every 30 seconds while on the page
+    const refreshInterval = setInterval(async () => {
+      const coords = await getStoredCoordinates();
+      setCoordinates(coords);
+      console.log("[ClockOut] Location refreshed");
+    }, 30000); // 30 seconds
+
+    return () => clearInterval(refreshInterval);
   }, []);
 
   // on mount, request location permission and get stored coordinates
