@@ -252,7 +252,8 @@ export default function VerificationStep({
           setWorkRole(role),
           setLaborType(clockInRoleTypes || ""),
           refetchTimesheet(),
-        ]).then(() => router.push("/v1/dashboard"));
+        ]);
+        setTimeout(() => router.push("/v1/dashboard"), 500); // 500ms delay
       } else {
         console.error("Clock in tracking failed, not redirecting.");
       }
