@@ -21,6 +21,8 @@ import {
   stopClockOutTracking,
   getStoredCoordinates,
 } from "@/app/lib/client/locationTracking";
+import { sendNotification } from "@/app/lib/actions/generatorActions";
+import { enqueue } from "@/app/lib/queue/jobQueue";
 
 export default function Comment({
   handleClick,
@@ -60,6 +62,7 @@ export default function Comment({
   );
 
   const processOne = async () => {
+    console.log("[Comment] Starting process one");
     try {
       let timeSheetId = currentTimesheetId;
 
@@ -68,15 +71,16 @@ export default function Comment({
         const ts = savedTimeSheetData?.id;
         if (!ts) {
           console.error("No active timesheet found for job switch.");
+          return;
         }
-        return (timeSheetId = ts);
+        timeSheetId = ts;
       }
+
       if (!permissions.location) {
         console.error("Location permissions are required to clock in.");
         return;
       }
 
-      // Use prefetched coordinates if available, else fallback to fetching now
       const coordinates = await getStoredCoordinates();
 
       const body = {
@@ -88,22 +92,41 @@ export default function Comment({
         clockOutLng: coordinates ? coordinates.lng : null,
       };
 
-      // Use apiRequest to call the backend update route
-      const isUpdated = await apiRequest(
-        `/api/v1/timesheet/${timeSheetId}/clock-out`,
-        "PUT",
-        body
-      );
+      // 🔴 CRITICAL: Stop tracking FIRST before doing anything else
+      console.log("[Comment] Stopping location tracking");
+      await stopClockOutTracking();
 
-      if (isUpdated) {
-        // Stop location tracking only after successful clock-out
-        await stopClockOutTracking();
-        setCurrentPageView("break");
-        setTimeSheetData(null);
-        router.push("/v1");
-      }
+      // Now update state and redirect
+      setCurrentPageView("break");
+      setTimeSheetData(null);
+      // 🟢 INSTANT — Navigate after tracking is stopped
+      router.push("/v1");
+
+      // 🟡 Queue API call after redirect
+      enqueue(async () => {
+        console.log("[Queue] Clock-out API");
+        await apiRequest(
+          `/api/v1/timesheet/${timeSheetId}/clock-out`,
+          "PUT",
+          body
+        );
+      });
+
+      enqueue(async () => {
+        console.log("[Queue] Send notification");
+        const fullName = user?.firstName + " " + user?.lastName;
+        await sendNotification({
+          topic: "timecard-submission",
+          title: "Timecard Approval Needed",
+          message: `#${timeSheetId} has been submitted by ${fullName}.`,
+          link: `/admins/timesheets?id=${timeSheetId}`,
+          referenceId: timeSheetId,
+        });
+      });
+
+      console.log("[Comment] All tasks queued");
     } catch (err) {
-      console.error(err);
+      console.error("[Comment] Error:", err);
     }
   };
   const ios = Capacitor.getPlatform() === "ios";

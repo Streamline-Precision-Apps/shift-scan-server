@@ -15,7 +15,8 @@ export default function SwitchJobs() {
   const [cookieValues, setCookieValues] = useState<Record<string, any>>({});
   const [clockOutComment, setClockOutComment] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-
+  const ios = Capacitor.getPlatform() === "ios";
+  const android = Capacitor.getPlatform() === "android";
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -54,7 +55,11 @@ export default function SwitchJobs() {
     return (
       <Bases>
         <Contents>
-          <Holds background={"white"} className="h-full">
+          <Holds
+            className={
+              ios ? "pt-12 h-full" : android ? "pt-4 h-full" : "h-full"
+            }
+          >
             <div className="flex rounded-[10px]  justify-center items-center h-full w-full bg-neutral-50 animate-pulse">
               <Spinner color="border-app-dark-blue" />
             </div>
@@ -74,8 +79,6 @@ export default function SwitchJobs() {
   const workRole = cookieValues.workRole;
   const switchLaborType = cookieValues.switchLaborType;
 
-  const ios = Capacitor.getPlatform() === "ios";
-  const android = Capacitor.getPlatform() === "android";
   return (
     <Bases>
       <Contents>
