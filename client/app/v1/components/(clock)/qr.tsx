@@ -133,9 +133,30 @@ export default function QR({
         processScanData(result.ScanResult);
       }
     } catch (error) {
-      console.error("Native scanner error:", error);
+      // Handle Promise rejection - empty error object means user cancelled
+      if (!error || Object.keys(error as object).length === 0) {
+        // Silently handle user cancellation (empty error object)
+        setStartCamera(false);
+        return;
+      }
+
+      // Check if the error is due to user cancellation
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      const isCancelled =
+        errorMessage.includes("cancelled") ||
+        errorMessage.includes("Cancelled") ||
+        errorMessage.includes("User cancelled") ||
+        (error as any)?.message?.includes("cancelled");
+
+      // Only show error UI if it's not a user cancellation
+      if (!isCancelled) {
+        console.error("Native scanner error:", errorMessage);
+        setFailedToScan(true);
+      }
+
+      // Always stop the camera on any exception
       setStartCamera(false);
-      setFailedToScan(true);
     }
   }, [processScanData, setStartCamera, setFailedToScan]);
 
@@ -182,10 +203,21 @@ export default function QR({
         const { data } = result;
         processScanData(data);
       } catch (error) {
-        console.error("QR Code Processing Error:", error);
+        // Check if this is a validation error (invalid QR code) vs actual error
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        const isValidationError = errorMessage.includes("Invalid QR code");
+
+        if (errorMessage.trim() !== "" && errorMessage !== "{}") {
+          console.error("QR Code Processing Error:", errorMessage);
+        }
         qrScannerRef.current?.stop();
         setStartCamera(false);
-        setFailedToScan(true);
+
+        // Only show the failed scan UI for validation errors
+        if (isValidationError) {
+          setFailedToScan(true);
+        }
       }
     },
     [processScanData, setStartCamera, setFailedToScan]

@@ -41,6 +41,9 @@ let lastFirestoreWriteTime: number = 0;
 // Set to 5 minutes to prevent excessive API calls during continuous tracking.
 const WRITE_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
 
+// Track if a location send is currently in flight to prevent concurrent sends
+let locationSendInProgress = false;
+
 // LOCAL STORAGE KEY for permissions and queue
 const LOCATION_PERMISSION_REQUESTED_KEY = "location_permission_requested";
 const LOCATION_QUEUE_KEY = "location_request_queue_v1";
@@ -297,6 +300,7 @@ export function hasLocationPermissionBeenRequested(): boolean {
 /**
  * Start FOREGROUND location tracking (when app is open)
  * Uses Capacitor Geolocation's watchPosition for continuous updates
+ * NOTE: watchPosition fires frequently; throttling is enforced by WRITE_INTERVAL_MS
  */
 async function startForegroundLocationWatch() {
   if (!isUserClockedIn) {
@@ -334,6 +338,17 @@ async function startForegroundLocationWatch() {
         const currentTime = Date.now();
         // Throttle writes - only send every WRITE_INTERVAL_MS
         if (currentTime - lastFirestoreWriteTime < WRITE_INTERVAL_MS) {
+          console.debug(
+            `Throttling foreground location (${
+              currentTime - lastFirestoreWriteTime
+            }ms since last write)`
+          );
+          return;
+        }
+
+        // Prevent concurrent location sends
+        if (locationSendInProgress) {
+          console.debug("Location send already in progress, skipping");
           return;
         }
 
@@ -345,6 +360,8 @@ async function startForegroundLocationWatch() {
             );
             return;
           }
+
+          locationSendInProgress = true;
 
           const payload: LocationLog = {
             userId: currentUserId,
@@ -367,8 +384,11 @@ async function startForegroundLocationWatch() {
           await sendLocation(`${url}/api/location?clockType=clockIn`, payload);
 
           lastFirestoreWriteTime = currentTime;
+          console.debug("Foreground location sent successfully");
         } catch (err) {
           console.error("Failed to handle foreground location:", err);
+        } finally {
+          locationSendInProgress = false;
         }
       }
     );
@@ -436,6 +456,23 @@ export async function startBackgroundLocationWatch() {
           console.log("Using simulated location (testing environment)");
         }
 
+        const currentTime = Date.now();
+        // Throttle writes - only send every WRITE_INTERVAL_MS (shared with foreground)
+        if (currentTime - lastFirestoreWriteTime < WRITE_INTERVAL_MS) {
+          console.debug(
+            `Throttling background location (${
+              currentTime - lastFirestoreWriteTime
+            }ms since last write)`
+          );
+          return;
+        }
+
+        // Prevent concurrent location sends
+        if (locationSendInProgress) {
+          console.debug("Location send already in progress, skipping");
+          return;
+        }
+
         try {
           if (!currentUserId || !currentSessionId) {
             console.error(
@@ -443,6 +480,8 @@ export async function startBackgroundLocationWatch() {
             );
             return;
           }
+
+          locationSendInProgress = true;
 
           const payload: LocationLog = {
             userId: currentUserId,
@@ -462,8 +501,13 @@ export async function startBackgroundLocationWatch() {
 
           const url = getApiUrl();
           await sendLocation(`${url}/api/location?clockType=clockIn`, payload);
+
+          lastFirestoreWriteTime = currentTime;
+          console.debug("Background location sent successfully");
         } catch (err) {
           console.error("Failed to send background location to backend:", err);
+        } finally {
+          locationSendInProgress = false;
         }
       }
     );
@@ -471,7 +515,17 @@ export async function startBackgroundLocationWatch() {
     isBackgroundTrackingActive = true;
     console.log("Background location tracking started successfully");
   } catch (err) {
-    console.error("Failed to start background geolocation:", err);
+    // Catch "Location Tracking Already Started" error
+    const errorMsg = err instanceof Error ? err.message : String(err);
+    if (errorMsg.includes("already") || errorMsg.includes("already started")) {
+      console.warn(
+        "BackgroundGeolocation already started, marking as active:",
+        errorMsg
+      );
+      isBackgroundTrackingActive = true;
+    } else {
+      console.error("Failed to start background geolocation:", err);
+    }
   }
 }
 
@@ -492,11 +546,20 @@ export async function startClockInTracking(userId: string, sessionId: number) {
       throw new Error("User ID and Session ID are required to start tracking");
     }
 
+    // 🔴 GUARD: Prevent duplicate tracking initialization
+    // Check BEFORE setting flags to catch re-entrance
+    if (isUserClockedIn && watchId && isBackgroundTrackingActive) {
+      console.warn(
+        "Tracking already started - ignoring duplicate startClockInTracking call"
+      );
+      return { success: true };
+    }
+
     // Store the user ID and session ID for use in callbacks
     currentUserId = userId;
     currentSessionId = sessionId;
 
-    // Mark user as clocked in
+    // Mark user as clocked in IMMEDIATELY to prevent race conditions
     isUserClockedIn = true;
     console.log("User clocked in - starting location tracking");
 
@@ -560,6 +623,9 @@ export async function stopClockOutTracking() {
     currentUserId = null;
     currentSessionId = null;
 
+    // Reset the in-flight flag
+    locationSendInProgress = false;
+
     // Stop both tracking methods
     if (watchId) {
       try {
@@ -594,6 +660,20 @@ export async function stopClockOutTracking() {
 export function isTrackingActive(): boolean {
   return isUserClockedIn;
 }
+
+/**
+ * Reset tracking state (useful for testing or cleanup)
+ * WARNING: Only call this if you know tracking needs to be force-reset
+ */
+// export function resetTrackingState(): void {
+//   console.warn("Force resetting tracking state");
+//   isUserClockedIn = false;
+//   isBackgroundTrackingActive = false;
+//   watchId = null;
+//   currentUserId = null;
+//   currentSessionId = null;
+//   lastFirestoreWriteTime = 0;
+// }
 
 //=============================================================================
 // Get current coordinates (for immediate clock-in snapshot)

@@ -31,6 +31,7 @@ import { sendNotification } from "@/app/lib/actions/generatorActions";
 import {
   startClockInTracking,
   getStoredCoordinates,
+  isTrackingActive,
 } from "@/app/lib/client/locationTracking";
 import { useSessionStore } from "@/app/lib/store/sessionStore";
 
@@ -202,6 +203,25 @@ export default function TruckVerificationStep({
           : null;
       }
 
+      // Start location tracking FIRST for clock in (before submitting timesheet)
+      let trackingResult = { success: true };
+      if (type !== "switchJobs" && sessionId) {
+        // Check if tracking is already active to prevent duplicate tracking
+        if (!isTrackingActive()) {
+          trackingResult = await startClockInTracking(id, sessionId);
+        } else {
+          console.log("Location tracking already active, skipping start");
+          trackingResult = { success: true };
+        }
+      }
+
+      // Only proceed with timesheet submission if tracking succeeded or is not required
+      if (!trackingResult?.success && type !== "switchJobs") {
+        console.error("Location tracking failed, not submitting timesheet");
+        setLoading(false);
+        return;
+      }
+
       const responseAction = await handleTruckTimeSheet(payload);
 
       // Add timesheet ID to session store after successful creation
@@ -229,12 +249,6 @@ export default function TruckVerificationStep({
           link: `/admins/timesheets?id=${responseAction.createdTimeSheet.id}`,
           referenceId: responseAction.createdTimeSheet.id,
         });
-      }
-
-      // Start location tracking for clock in
-      let trackingResult = { success: true };
-      if (type !== "switchJobs" && sessionId) {
-        trackingResult = await startClockInTracking(id, sessionId);
       }
 
       // Update state and redirect

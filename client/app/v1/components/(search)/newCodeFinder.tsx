@@ -174,15 +174,15 @@ const OptionsList = ({
                   option.status === "ARCHIVED"
                     ? "bg-gray-200 text-gray-600"
                     : option.status === "DRAFT"
-                      ? "bg-blue-100 text-blue-600"
-                      : "bg-gray-200 text-gray-700"
+                    ? "bg-blue-100 text-blue-600"
+                    : "bg-gray-200 text-gray-700"
                 }`}
               >
                 {option.status === "ARCHIVED"
                   ? "Archived"
                   : option.status === "DRAFT"
-                    ? "Draft"
-                    : option.status}
+                  ? "Draft"
+                  : option.status}
               </span>
             )}
           </div>

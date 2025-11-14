@@ -51,7 +51,6 @@ export const LaborClockOut = ({
   wasInjured,
   timeSheetId,
   refetchTimesheet,
-  coordinates,
 }: {
   prevStep: () => void;
   commentsValue: string;
@@ -59,7 +58,6 @@ export const LaborClockOut = ({
   wasInjured: boolean;
   timeSheetId: number | undefined;
   refetchTimesheet: () => Promise<void>;
-  coordinates?: { lat: number; lng: number } | null;
 }) => {
   const ios = Capacitor.getPlatform() === "ios";
   const android = Capacitor.getPlatform() === "android";
@@ -73,7 +71,7 @@ export const LaborClockOut = ({
   // Prefetch coordinates as soon as possible
 
   if (!user) return null;
-  const fullName = user?.firstName + user?.lastName;
+  const fullName = user?.firstName + " " + user?.lastName;
   async function handleSubmitTimeSheet() {
     console.log("[ClockOut] Starting clock-out");
     setLoading(true);
@@ -95,11 +93,17 @@ export const LaborClockOut = ({
         clockOutLong: coordinates?.lng ?? null,
       };
 
+      // 🔴 CRITICAL: Stop tracking FIRST before doing anything else
+      // This must complete before component unmounts
+      console.log("[ClockOut] Stopping location tracking");
+      await stopClockOutTracking();
+
+      // Now update state and redirect
       reset(); // Clear cookie store immediately
-      // 🟢 INSTANT — No waiting for API or GPS
+      // 🟢 INSTANT — Navigate after tracking is stopped
       router.push("/v1");
 
-      // 🟡 Queue heavy work
+      // 🟡 Queue API call after redirect
       enqueue(async () => {
         console.log("[Queue] Clock-out API");
         await apiRequest(
@@ -107,11 +111,6 @@ export const LaborClockOut = ({
           "PUT",
           body
         );
-      });
-
-      enqueue(async () => {
-        console.log("[Queue] Stop ClockOut tracking");
-        await stopClockOutTracking();
       });
 
       enqueue(async () => {

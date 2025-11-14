@@ -425,6 +425,7 @@ export async function createTimesheetAndSwitchJobsController(
     });
   }
 }
+
 // GET /v1/timesheet/:id/user/:userId
 export async function getBannerDataController(
   req: Express.Request,

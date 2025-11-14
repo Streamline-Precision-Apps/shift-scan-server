@@ -103,17 +103,13 @@ export default function AddJobsiteForm() {
       formDataToSend.append("createdById", userId);
       formDataToSend.append("submitterName", submitterName);
       const response = await createJobsite(formDataToSend);
-      if (response) {
+      if (response.success) {
         await sendNotification({
           topic: "items",
           title: "Jobsite Created",
           message: `${
             response.data?.name || "A jobsite"
-          } has been submitted by ${
-            response.data?.createdBy?.firstName || ""
-          } ${
-            response.data?.createdBy?.lastName || "a user"
-          } and is pending approval.`,
+          } has been submitted by ${submitterName} and is pending approval.`,
           link: `/admins/jobsites?isPendingApproval=true`,
           referenceId: response.data?.id,
         });

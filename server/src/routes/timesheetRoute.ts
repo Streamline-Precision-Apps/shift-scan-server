@@ -30,7 +30,8 @@ const router = Router();
 router.post("/approve-batch", approveTimesheetsBatchController);
 //create a timesheet
 router.post("/create", createTimesheetAndSwitchJobsController);
-// Specific user routes (must come BEFORE generic /user/:userId route)
+
+// Specific user routes (must come AFTER generic /user/:userId route)
 router.get("/user/:userId/recent", getRecentTimesheetController);
 router.get("/user/:userId/return", getRecentReturnTimesheetController);
 // Get active timesheet status for a user
