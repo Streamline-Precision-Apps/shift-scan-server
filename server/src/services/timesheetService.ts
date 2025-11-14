@@ -1222,26 +1222,19 @@ export async function getClockOutComment(userId: string) {
 }
 
 export async function getEquipmentLogs(userId: string) {
-  const currentDate = new Date();
-  const past24Hours = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000);
-
-  const timeSheetId = await prisma.timeSheet.findFirst({
-    where: {
-      userId: userId,
-      endTime: null,
-    },
-  });
-  if (!timeSheetId) {
-    throw new Error("No active timesheet found.");
-  }
-
+  // Get all equipment logs for the user, regardless of timesheet status
+  // This will show both active and completed equipment logs
   const logs = await prisma.employeeEquipmentLog.findMany({
     where: {
-      startTime: { gte: past24Hours, lte: currentDate },
-      timeSheetId: timeSheetId.id,
+      TimeSheet: {
+        userId: userId,
+      },
     },
     include: {
       Equipment: true,
+    },
+    orderBy: {
+      startTime: "desc",
     },
   });
 
