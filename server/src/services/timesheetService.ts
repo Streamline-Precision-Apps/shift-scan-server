@@ -432,6 +432,7 @@ export async function approveTimesheetsBatchService({
               userId: editorId,
               readAt: new Date(),
             })),
+            skipDuplicates: true,
           });
         }
         await tx.notificationResponse.createMany({
@@ -441,6 +442,7 @@ export async function approveTimesheetsBatchService({
             response: "Approved",
             respondedAt: new Date(),
           })),
+          skipDuplicates: true,
         });
       });
     }

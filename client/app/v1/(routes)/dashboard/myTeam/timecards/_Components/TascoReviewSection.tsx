@@ -10,7 +10,7 @@ import {
 } from "@/app/v1/components/ui/accordion";
 
 type TimeSheet = {
-  id: string;
+  id: number;
   date: string;
   startTime: string;
   endTime: string;

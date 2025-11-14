@@ -616,6 +616,8 @@
     }
   },
   "TimeCardSwiper": {
+    "Approve": "Approve",
+    "Submitted": "Submitted",
     "highlight": "Time Sheet Highlights",
     "Trucking": "Trucking",
     "Tasco": "Tasco",

@@ -1,7 +1,7 @@
 "use client";
 
 type TimeSheet = {
-  id: string;
+  id: number;
   date: string;
   startTime: string;
   endTime: string;
@@ -92,6 +92,7 @@ type TimeSheet = {
 import { Holds } from "@/app/v1/components/(reusable)/holds";
 import { Images } from "@/app/v1/components/(reusable)/images";
 import { Texts } from "@/app/v1/components/(reusable)/texts";
+import { Button } from "@/app/v1/components/ui/button";
 import { useTranslations } from "next-intl";
 import {
   Accordion,
@@ -100,11 +101,13 @@ import {
   AccordionContent,
 } from "@/app/v1/components/ui/accordion";
 import React, { useState } from "react";
+import { format } from "date-fns/format";
 
 export default function GeneralReviewSection({
   currentTimeSheets,
   isScrolling, // Default to 'verticle' if not provided
   scrollSwipeHandlers,
+  onEditTimesheet,
 }: {
   currentTimeSheets: TimeSheet[];
   isScrolling: boolean;
@@ -113,6 +116,7 @@ export default function GeneralReviewSection({
     onTouchMove: (e: React.TouchEvent) => void;
     onTouchEnd: (e: React.TouchEvent) => void;
   };
+  onEditTimesheet?: (timesheetId: string) => void;
 }) {
   const t = useTranslations("TimeCardSwiper");
 
@@ -146,7 +150,7 @@ export default function GeneralReviewSection({
             })
             .map((timesheet, index) => (
               <AccordionItem
-                value={timesheet.id}
+                value={String(timesheet.id)}
                 key={timesheet.id}
                 className="bg-white rounded-lg mb-2"
               >
@@ -175,6 +179,12 @@ export default function GeneralReviewSection({
                       titleImgAlt="WorkType Icon"
                       className="w-7 h-7 mb-1 absolute top-1 right-1"
                     />
+                    <Texts size="sm" className="text-xs">
+                      <strong>{t("Submitted")}:</strong>{" "}
+                      {timesheet.startTime
+                        ? format(new Date(timesheet.date), "MM/dd/yyyy")
+                        : "-"}
+                    </Texts>
                     <Texts size="sm" className="text-xs">
                       <strong>{t("Start")}:</strong>{" "}
                       {timesheet.startTime
@@ -205,6 +215,15 @@ export default function GeneralReviewSection({
                       <strong>{t("Costcode")}:</strong>{" "}
                       {timesheet.CostCode.name.split(" ")[0]}
                     </Texts>
+                    {onEditTimesheet && (
+                      <Button
+                        onClick={() => onEditTimesheet(String(timesheet.id))}
+                        className="mt-2 w-full bg-app-orange hover:bg-app-orange/80 text-black font-medium"
+                      >
+                        <img src="/formEdit.svg" alt="Edit" className="w-4 h-4 mr-2" />
+                        Edit
+                      </Button>
+                    )}
                   </Holds>
                 </AccordionContent>
               </AccordionItem>

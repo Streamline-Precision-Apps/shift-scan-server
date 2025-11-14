@@ -175,7 +175,7 @@ export default function AppManagerEditTimesheetModal(
     <div className="fixed inset-0 z-50  flex items-center justify-center bg-black bg-opacity-60 overflow-x-hidden">
       <div className="bg-white shadow-2xl  w-full max-w-md h-full flex flex-col overflow-hidden transition-all duration-300 overflow-x-hidden">
         {/* Header */}
-        <div className="px-4 pt-4 border-b bg-neutral-200">
+        <div className="px-4 pt-10 border-b bg-neutral-200">
           <div className="flex items-center justify-between pb-1 relative">
             <h2 className="text-lg font-bold text-center absolute left-1/2 -translate-x-1/2 w-full pointer-events-none tracking-wide">
               <span className="inline-flex items-center gap-2">

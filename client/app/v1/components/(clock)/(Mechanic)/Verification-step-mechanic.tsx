@@ -204,9 +204,7 @@ export default function MechanicVerificationStep({
 
       // Only proceed with timesheet submission if tracking succeeded or is not required
       if (!trackingResult?.success && type !== "switchJobs") {
-        console.error("Location tracking failed, not submitting timesheet");
-        setLoading(false);
-        return;
+        throw new Error("Failed to start location tracking. Cannot clock in.");
       }
 
       const responseAction = await handleMechanicTimeSheet(payload);

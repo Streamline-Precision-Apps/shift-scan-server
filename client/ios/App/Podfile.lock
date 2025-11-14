@@ -10,6 +10,8 @@ PODS:
     - OSBarcodeLib (= 2.0.1)
   - CapacitorCamera (7.0.2):
     - Capacitor
+  - CapacitorClipboard (7.0.2):
+    - Capacitor
   - CapacitorCordova (7.4.4)
   - CapacitorDevice (7.0.2):
     - Capacitor
@@ -47,6 +49,7 @@ DEPENDENCIES:
   - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
   - "CapacitorBarcodeScanner (from `../../node_modules/@capacitor/barcode-scanner`)"
   - "CapacitorCamera (from `../../node_modules/@capacitor/camera`)"
+  - "CapacitorClipboard (from `../../node_modules/@capacitor/clipboard`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorDevice (from `../../node_modules/@capacitor/device`)"
   - "CapacitorFileTransfer (from `../../node_modules/@capacitor/file-transfer`)"
@@ -78,6 +81,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/barcode-scanner"
   CapacitorCamera:
     :path: "../../node_modules/@capacitor/camera"
+  CapacitorClipboard:
+    :path: "../../node_modules/@capacitor/clipboard"
   CapacitorCordova:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorDevice:
@@ -107,6 +112,7 @@ SPEC CHECKSUMS:
   CapacitorApp: 26587c2ce485d88ddb39adb21cac64f8e481afe3
   CapacitorBarcodeScanner: 4b6d4ecfff4133af982d09acd423610c14ac0c3f
   CapacitorCamera: f9e54db0a18bb218a8dc360907d63aaefe9209ff
+  CapacitorClipboard: 7e227702976d4435a5a40df54f65e154d0dfc1f3
   CapacitorCordova: bf648a636f3c153f652d312ae145fb508b6ffced
   CapacitorDevice: 81ae78d5d1942707caad79276badd458bf6ec603
   CapacitorFileTransfer: 591bdf4cbb809fbdaf85aba6ddfa93ff1c4c1b2d
@@ -124,6 +130,6 @@ SPEC CHECKSUMS:
   OSBarcodeLib: 57987d2eb1f916f701f4554e20e349b3cb83f023
   SwiftKeychainWrapper: 807ba1d63c33a7d0613288512399cd1eda1e470c
 
-PODFILE CHECKSUM: f544811af87b4992fa3951923d2f51854a3f4883
+PODFILE CHECKSUM: 9ebbf5a50ab2f2408fdd24ba3431a946d5928abb
 
 COCOAPODS: 1.16.2

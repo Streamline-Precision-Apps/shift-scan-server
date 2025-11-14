@@ -611,6 +611,8 @@
     }
   },
   "TimeCardSwiper": {
+    "Approve": "Aprobar",
+    "Submitted": "Enviado",
     "highlight": "Destacados de la hoja de tiempo",
     "Trucking": "Camionaje",
     "Tasco": "Tasco",
