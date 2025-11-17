@@ -28,6 +28,8 @@ import TascoEquipmentSelector from "./(Tasco)/TascoEquipmentSelector";
 import { useUserStore } from "@/app/lib/store/userStore";
 import { useEquipmentStore } from "@/app/lib/store/equipmentStore";
 import { apiRequest } from "@/app/lib/utils/api-Utils";
+import { usePermissions } from "@/app/lib/context/permissionContext";
+import { preStartLocationTracking } from "@/app/lib/client/locationTracking";
 
 type NewClockProcessProps = {
   mechanicView: boolean;
@@ -119,6 +121,14 @@ export default function NewClockProcess({
   const [returnPathUsed, setReturnPathUsed] = useState(false);
   const [isNavigatingBack, setIsNavigatingBack] = useState(false);
   const [manuallyOnStep4, setManuallyOnStep4] = useState(false);
+  const { permissionStatus } = usePermissions();
+
+  //warms up location tracking
+  useEffect(() => {
+    if (user?.id && permissionStatus.location) {
+      preStartLocationTracking(user.id).catch(console.error);
+    }
+  }, [user, permissionStatus]);
 
   useEffect(() => {
     setStep(0);
@@ -158,58 +168,6 @@ export default function NewClockProcess({
     }
   }, [user, mechanicView, laborView, truckView, tascoView, type, option]);
 
-  // Auto-advance F-shift from step 2 to step 4 (equipment selection)
-  useEffect(() => {
-    if (
-      step === 2 &&
-      clockInRole === "tasco" &&
-      clockInRoleTypes === "tascoFEquipment" &&
-      equipmentResults && // Wait for equipment to be loaded
-      equipmentResults.length > 0 // Make sure we have equipment
-    ) {
-      const timer = setTimeout(() => {
-        setStep(4);
-      }, 100);
-
-      return () => clearTimeout(timer);
-    }
-  }, [step, clockInRole, clockInRoleTypes, equipmentResults]);
-
-  // Auto-advance E and F shifts from step 3 to step 4 (equipment selection)
-  useEffect(() => {
-    if (
-      step === 3 &&
-      clockInRole === "tasco" &&
-      (clockInRoleTypes === "tascoEEquipment" ||
-        clockInRoleTypes === "tascoFEquipment") &&
-      !isNavigatingBack
-    ) {
-      const timer = setTimeout(() => {
-        setIsNavigatingBack(false);
-        setStep(4);
-      }, 100);
-
-      return () => clearTimeout(timer);
-    }
-  }, [step, clockInRole, clockInRoleTypes, isNavigatingBack]);
-
-  // Auto-advance ABCD Labor from step 4 to step 5 (verification)
-  useEffect(() => {
-    if (
-      step === 4 &&
-      clockInRole === "tasco" &&
-      clockInRoleTypes === "tascoAbcdLabor" &&
-      !isNavigatingBack &&
-      !manuallyOnStep4
-    ) {
-      const timer = setTimeout(() => {
-        setStep(5);
-      }, 100);
-
-      return () => clearTimeout(timer);
-    }
-  }, [step, clockInRole, clockInRoleTypes, isNavigatingBack, manuallyOnStep4]);
-
   //------------------------------------------------------------------
   // Helper functions
 
@@ -221,6 +179,27 @@ export default function NewClockProcess({
   const handlePrevStep = () => {
     setIsNavigatingBack(true);
     const newStep = step - 1;
+
+    // Special handling for E and F Equipment shifts - skip material selection and go back to step 2 since materials are infer
+    if (
+      step === 4 &&
+      clockInRole === "tasco" &&
+      (clockInRoleTypes === "tascoEEquipment" ||
+        clockInRoleTypes === "tascoFEquipment")
+    ) {
+      setMaterialType("");
+      setStep(2);
+      return;
+    }
+    // special handling for tasco ABCD labor
+    if (
+      step === 5 &&
+      clockInRole === "tasco" &&
+      clockInRoleTypes === "tascoAbcdLabor"
+    ) {
+      setStep(3);
+      return;
+    }
 
     // Special handling for ABCD Labor manual step 4
     if (
@@ -504,6 +483,7 @@ export default function NewClockProcess({
               setMaterialType={setMaterialType}
               setShiftType={setShiftType}
               setLaborType={setLaborType}
+              setStep={setStep}
             />
           )}
         </>
@@ -681,6 +661,8 @@ export default function NewClockProcess({
             materialType={materialType}
             setMaterialType={setMaterialType}
             setJobsite={setJobsite}
+            clockInRoleTypes={clockInRoleTypes}
+            setStep={setStep}
           />
         )}
 
@@ -700,8 +682,6 @@ export default function NewClockProcess({
             setEquipment={setEquipment}
           />
         )}
-
-      {/* For ABCD Labor: Auto-advance logic moved to useEffect hook */}
 
       {/* Show step 4 interface for ABCD Labor when manually navigated */}
       {step === 4 &&

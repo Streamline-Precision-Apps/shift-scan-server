@@ -14,7 +14,7 @@ import DashboardLoadingView from "./UI/_dashboards/dashboardLoadingView";
 import LoadingHamburgerMenuNew from "@/app/v1/components/(animations)/loadingHamburgerMenuNew";
 import { useUserStore } from "@/app/lib/store/userStore";
 import { getCookies } from "@/app/lib/actions/cookieActions";
-import { useCookieStore } from '@/app/lib/store/cookieStore';
+import { useCookieStore } from "@/app/lib/store/cookieStore";
 import { useRouter } from "next/navigation";
 import { Capacitor } from "@capacitor/core";
 
@@ -24,26 +24,25 @@ export default function Dashboard() {
   const ios = Capacitor.getPlatform() === "ios";
   const android = Capacitor.getPlatform() === "android";
 
-
   // Zustand cookie store values
   const currentPageView = useCookieStore((state) => state.currentPageView);
-  const workRole = useCookieStore((state) => state.workRole) || 'general';
-  const laborType = useCookieStore((state) => state.laborType) || '';
-  const [mechanicProjectID, setMechanicProjectID] = useState('');
+  const workRole = useCookieStore((state) => state.workRole) || "general";
+  const laborType = useCookieStore((state) => state.laborType) || "";
+  const [mechanicProjectID, setMechanicProjectID] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchMechanicProjectID() {
-      const id = await getCookies({ cookieName: 'mechanicProjectID' });
-      setMechanicProjectID(id || '');
+      const id = await getCookies({ cookieName: "mechanicProjectID" });
+      setMechanicProjectID(id || "");
       setLoading(false);
     }
     fetchMechanicProjectID();
   }, []);
 
   useEffect(() => {
-    if (!loading && currentPageView !== 'dashboard') {
-      router.push('/v1');
+    if (!loading && currentPageView !== "dashboard") {
+      router.push("/v1");
     }
   }, [loading, currentPageView, router]);
 
@@ -51,7 +50,7 @@ export default function Dashboard() {
     return <div>Loading...</div>;
   }
 
-  if (currentPageView !== 'dashboard') {
+  if (currentPageView !== "dashboard") {
     return <div>Redirecting...</div>;
   }
 

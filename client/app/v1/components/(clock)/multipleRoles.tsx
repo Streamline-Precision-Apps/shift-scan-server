@@ -56,7 +56,8 @@ export default function MultipleRoles({
     if (
       selectedRoleType === "tascoAbcdLabor" ||
       selectedRoleType === "tascoAbcdEquipment" ||
-      selectedRoleType === "tascoEEquipment"
+      selectedRoleType === "tascoEEquipment" ||
+      selectedRoleType === "tascoFEquipment"
     ) {
       setClockInRole("tasco");
     } else if (

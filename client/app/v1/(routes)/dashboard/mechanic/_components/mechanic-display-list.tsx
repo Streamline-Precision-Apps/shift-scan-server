@@ -51,7 +51,13 @@ type Equipment = {
   code: string | null;
 };
 
-export function MechanicDisplayList() {
+export function MechanicDisplayList({
+  ios,
+  android,
+}: {
+  ios: boolean;
+  android: boolean;
+}) {
   const [modalOpen, setModalOpen] = useState(false);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [form, setForm] = useState({
@@ -462,7 +468,7 @@ export function MechanicDisplayList() {
           </Dialog>
         </>
       )}
-      <Grids rows="7" gap="5">
+      <Grids rows="7" gap="5" className={ios ? "pt-12" : android ? "pt-4" : ""}>
         {/* Header */}
         <Holds background={"white"} className={`row-start-1 row-end-2 h-full `}>
           <TitleBoxes onClick={() => router.push("/v1/dashboard")}>

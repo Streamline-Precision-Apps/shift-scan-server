@@ -44,6 +44,8 @@ const WRITE_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
 // Track if a location send is currently in flight to prevent concurrent sends
 let locationSendInProgress = false;
 
+let lastKnownCoordinates: { lat: number; lng: number } | null = null;
+
 // LOCAL STORAGE KEY for permissions and queue
 const LOCATION_PERMISSION_REQUESTED_KEY = "location_permission_requested";
 const LOCATION_QUEUE_KEY = "location_request_queue_v1";
@@ -314,6 +316,8 @@ async function startForegroundLocationWatch() {
   }
 
   try {
+    let lastCallbackTime = 0;
+    const MIN_CALLBACK_INTERVAL_MS = 2000;
     watchId = await Geolocation.watchPosition(
       {
         enableHighAccuracy: true,
@@ -321,6 +325,10 @@ async function startForegroundLocationWatch() {
         maximumAge: 0,
       },
       async (pos, err) => {
+        const now = Date.now();
+        if (now - lastCallbackTime < MIN_CALLBACK_INTERVAL_MS) return;
+        lastCallbackTime = now;
+
         if (err) {
           console.error("Geolocation watch error (foreground):", err);
           return;
@@ -332,6 +340,15 @@ async function startForegroundLocationWatch() {
 
         // Only send if user is still clocked in
         if (!isUserClockedIn) {
+          return;
+        }
+
+        // Pre-warming mode: skip sending if sessionId === 0
+        if (currentSessionId === 0) {
+          lastKnownCoordinates = {
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+          };
           return;
         }
 
@@ -360,6 +377,12 @@ async function startForegroundLocationWatch() {
             );
             return;
           }
+
+          // Update last known coordinates
+          lastKnownCoordinates = {
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+          };
 
           locationSendInProgress = true;
 
@@ -446,6 +469,15 @@ export async function startBackgroundLocationWatch() {
           return;
         }
 
+        // Pre-warming mode: skip sending if sessionId === 0
+        if (currentSessionId === 0) {
+          lastKnownCoordinates = {
+            lat: location.latitude,
+            lng: location.longitude,
+          };
+          return;
+        }
+
         // Validate location freshness when stale: false
         if (location.time && Date.now() - location.time > 60000) {
           console.warn("Location is older than 60 seconds, potentially stale");
@@ -480,6 +512,12 @@ export async function startBackgroundLocationWatch() {
             );
             return;
           }
+
+          // Update last known coordinates
+          lastKnownCoordinates = {
+            lat: location.latitude,
+            lng: location.longitude,
+          };
 
           locationSendInProgress = true;
 
@@ -563,12 +601,12 @@ export async function startClockInTracking(userId: string, sessionId: number) {
     isUserClockedIn = true;
     console.log("User clocked in - starting location tracking");
 
-    // Start BOTH foreground and background tracking simultaneously
+    // Start BOTH foreground and background tracking simultaneously (fire-and-forget)
     // Foreground: Active when app is open
-    await startForegroundLocationWatch();
+    startForegroundLocationWatch(); // fire-and-forget
 
     // Background: Active when app is closed or device is locked
-    await startBackgroundLocationWatch();
+    startBackgroundLocationWatch(); // fire-and-forget
 
     console.log("Location tracking started (foreground + background)");
 
@@ -731,4 +769,27 @@ export async function fetchLatestUserLocation(userId: string) {
   const res = await fetch(`/api/location/${userId}`);
   if (!res.ok) return null;
   return await res.json();
+}
+
+export function getLastKnownCoordinates() {
+  return lastKnownCoordinates;
+}
+
+/**
+ * Pre-start location tracking to warm up GPS before clock-in
+ * Fires foreground tracking in the background without sending to backend yet
+ */
+export async function preStartLocationTracking(userId: string) {
+  // Store userId temporarily
+  currentUserId = userId;
+
+  // Fake sessionId 0 for pre-warm
+  currentSessionId = 0;
+
+  isUserClockedIn = true; // allow watch callbacks to run
+
+  // Start foreground watch only; skip background to reduce unnecessary writes
+  startForegroundLocationWatch();
+
+  console.log("GPS pre-warming started (foreground only)");
 }

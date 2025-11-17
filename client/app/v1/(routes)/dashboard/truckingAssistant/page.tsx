@@ -14,12 +14,15 @@ import { Contents } from "@/app/v1/components/(reusable)/contents";
 import { Bases } from "@/app/v1/components/(reusable)/bases";
 import { apiRequest } from "@/app/lib/utils/api-Utils";
 import { set } from "lodash";
+import { Capacitor } from "@capacitor/core";
 
 export default function TruckingContexts() {
   const t = useTranslations("Widgets");
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [laborType, setLaborType] = useState<string | null>(null);
+  const android = Capacitor.getPlatform() === "android";
+  const ios = Capacitor.getPlatform() === "ios";
 
   useEffect(() => {
     const fetchLaborType = async () => {
@@ -40,7 +43,11 @@ export default function TruckingContexts() {
     return (
       <Bases>
         <Contents>
-          <Grids rows={"7"} gap={"5"} className="h-full">
+          <Grids
+            rows={"7"}
+            gap={"5"}
+            className={ios ? "pt-12" : android ? "pt-4" : ""}
+          >
             <Holds
               background={"white"}
               className="row-start-1 row-end-2 h-full "
@@ -66,7 +73,11 @@ export default function TruckingContexts() {
   return (
     <Bases>
       <Contents>
-        <Grids rows={"7"} gap={"5"} className="h-full">
+        <Grids
+          rows={"7"}
+          gap={"5"}
+          className={ios ? "pt-12" : android ? "pt-4" : ""}
+        >
           <Holds background={"white"} className="row-start-1 row-end-2 h-full ">
             <TitleBoxes onClick={() => router.push("/v1/dashboard")}>
               <Holds

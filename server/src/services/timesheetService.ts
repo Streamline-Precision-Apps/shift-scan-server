@@ -1223,11 +1223,10 @@ export async function getClockOutComment(userId: string) {
   return timesheet?.comment || "";
 }
 
-export async function getEquipmentLogs(userId: string) {
-  // Get all equipment logs for the user, regardless of timesheet status
-  // This will show both active and completed equipment logs
+export async function getEquipmentLogs(userId: string, timesheetId: number) {
   const logs = await prisma.employeeEquipmentLog.findMany({
     where: {
+      timeSheetId: timesheetId,
       TimeSheet: {
         userId: userId,
       },
