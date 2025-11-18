@@ -95,20 +95,9 @@ export default function DynamicForm({ params }: PageProps) {
     approvalId,
     autoSaveEnabled: true,
     autoSaveDelay: 2000,
-    onSaved: () => {
-      // Optional: Show toast notification
-      console.log("[page.tsx] Form saved");
-    },
-    onError: (error) => {
-      console.error("[page.tsx] Form error:", error);
-    },
+    onSaved: () => {},
+    onError: (error) => {},
   });
-
-  console.log(
-    "[page.tsx] useFormManager returned template:",
-    template?.name || "null"
-  );
-  console.log("[page.tsx] Passing template to FormContextProvider");
 
   // =========================================================================
   // HANDLERS
@@ -171,7 +160,7 @@ export default function DynamicForm({ params }: PageProps) {
         // Call approval endpoint
         // For now, this is a placeholder
         // Implementation depends on your approval workflow
-        console.log("Form approved", { signature, comment });
+
         router.push("/hamburger/inbox");
       } catch (err) {
         console.error("Approval failed:", err);

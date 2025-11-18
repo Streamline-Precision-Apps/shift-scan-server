@@ -13,13 +13,25 @@
 
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import {
   useFormContext,
   useFormState,
   useFormIsDraft,
 } from "@/app/lib/hooks/useFormContext";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
+// Utility to detect route change in Next.js app router
+function useRouteChange(onRouteChange: () => void) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const lastPathRef = useRef(pathname);
+  useEffect(() => {
+    if (lastPathRef.current !== pathname) {
+      onRouteChange();
+      lastPathRef.current = pathname;
+    }
+  }, [pathname, onRouteChange]);
+}
 import { Buttons } from "@/app/v1/components/(reusable)/buttons";
 import { TitleBoxes } from "@/app/v1/components/(reusable)/titleBoxes";
 import { Titles } from "@/app/v1/components/(reusable)/titles";
@@ -96,24 +108,47 @@ export function FormDraftView({
   const isDraft = useFormIsDraft();
   const { template, values, updateValue } = useFormContext();
   const router = useRouter();
+  const pathname = usePathname();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deleteRequestModal, setDeleteRequestModal] = useState(false);
   const [userDisplayTitle, setUserDisplayTitle] = useState("");
 
+  // AlertDialog for unsaved changes
+  const [showLeaveDialog, setShowLeaveDialog] = useState(false);
+  const pendingRouteChange = useRef<null | (() => void)>(null);
+
   // Use template name as the form title
   const formTitle = template?.name || "Untitled Form";
 
-  console.log(
-    "[FormDraftView] Template name:",
-    template?.name,
-    "User display title:",
-    userDisplayTitle
-  );
-
-  // Save draft logic placeholder
+  // Save draft logic
   const handleSaveDraft = useCallback(async () => {
-    // Implement save logic here if needed
+    if (onSave) {
+      await onSave();
+    }
+  }, [onSave]);
+  // Prompt user before leaving if there are unsaved changes
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue =
+        "You have unsaved changes. Do you want to save your draft before leaving?";
+      return e.returnValue;
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
   }, []);
+
+  // Route change detection for Next.js navigation
+  useRouteChange(() => {
+    setShowLeaveDialog(true);
+    // Block navigation until user confirms
+    pendingRouteChange.current = () => {
+      setShowLeaveDialog(false);
+      pendingRouteChange.current = null;
+    };
+  });
 
   const handleSubmit = useCallback(async () => {
     setIsSubmitting(true);
@@ -148,6 +183,8 @@ export function FormDraftView({
       <TitleBoxes
         className="h-16 border-b-2 pb-2 rounded-lg border-neutral-100 shrink-0 sticky top-0 z-10 bg-white"
         onClick={async () => {
+          // Set up a pending navigation to inbox, but do not navigate yet
+
           await handleSaveDraft();
           router.push("/v1/hamburger/inbox");
         }}

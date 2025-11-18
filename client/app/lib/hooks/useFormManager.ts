@@ -112,7 +112,10 @@ export function useFormManager(config: UseFormManagerConfig): FormManagerState {
         `/api/v1/admins/forms/template/${formId}`,
         "GET"
       );
+
       const normalized = normalizeFormTemplate(apiData);
+      console.log("[Normalized Data] - Fetch Data", normalized);
+
       setTemplate(normalized);
       return normalized;
     } catch (err) {
@@ -137,6 +140,7 @@ export function useFormManager(config: UseFormManagerConfig): FormManagerState {
           "GET"
         );
         const normalized = normalizeFormSubmission(apiData, template);
+        console.log("[Normalized Submission] - Fetch Data", normalized);
         setSubmission(normalized);
         setValues({ ...normalized.data });
         lastSavedValuesRef.current = { ...normalized.data };
@@ -164,6 +168,7 @@ export function useFormManager(config: UseFormManagerConfig): FormManagerState {
         "GET"
       );
       const normalized = normalizeFormApproval(apiData);
+      console.log("[Normalized Approval] - Fetch Data", normalized);
       setApproval(normalized);
       return normalized;
     } catch (err) {
@@ -260,14 +265,19 @@ export function useFormManager(config: UseFormManagerConfig): FormManagerState {
     try {
       const apiPayload = denormalizeFormValues(template, values);
 
+      console.log("[Auto-Save] - Payload:", apiPayload);
+
       // Use admin API endpoint for PATCH request
-      await apiRequest(
-        `/api/v1/admins/forms/submissions/${submission.id}`,
+      const apiData = await apiRequest(
+        `/api/v1/forms/submission/${submission.id}`,
         "PUT",
         {
-          data: apiPayload,
+          submissionId: submission.id,
+          formData: apiPayload,
         }
       );
+
+      console.log("[Auto-Save] - Response:", apiData);
 
       lastSavedValuesRef.current = { ...values };
       onSaved?.();
@@ -366,9 +376,11 @@ export function useFormManager(config: UseFormManagerConfig): FormManagerState {
       try {
         const apiPayload = denormalizeFormValues(template, submitValues);
 
+        // set status based on approval requirement
+
         // Use admin API endpoint for approve/submit
         const apiData = await apiRequest(
-          `/api/v1/admins/forms/submissions/${submission.id}`,
+          `/api/v1/forms/submission/${submission.id}`,
           "PUT",
           {
             formData: apiPayload,
@@ -471,17 +483,14 @@ export function useFormManager(config: UseFormManagerConfig): FormManagerState {
 
     try {
       // Use admin API endpoint for DELETE request
-      console.log("[FormManager] Deleting submission", submission?.id);
       const response = await apiRequest(
         `/api/v1/admins/forms/submissions/${submission.id}`,
         "DELETE"
       );
-      console.log("[FormManager] Delete API response:", response);
 
       setSubmission(null);
       setValues({});
       lastSavedValuesRef.current = {};
-      console.log("[FormManager] Submission state cleared after delete");
       onSaved?.();
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : String(err);

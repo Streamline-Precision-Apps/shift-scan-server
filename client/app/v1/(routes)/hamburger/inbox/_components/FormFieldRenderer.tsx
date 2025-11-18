@@ -167,15 +167,8 @@ export const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
    * Groupings sorted by order, then fields within each grouping sorted by order
    */
   const sortedFormData = useMemo(() => {
-    console.log("[FormFieldRenderer] sortedFormData: Sorting form template");
     const sorted = sortFormTemplate(formData);
-    console.log(
-      "[FormFieldRenderer] sortedFormData: Passing sorted form to RenderFields:",
-      sorted.name,
-      "with",
-      sorted.FormGrouping.length,
-      "groupings"
-    );
+
     return sorted;
   }, [formData]);
 

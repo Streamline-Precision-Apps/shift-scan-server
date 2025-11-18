@@ -39,11 +39,6 @@ export function normalizeFormTemplate(apiResponse: any): FormTemplate {
     throw new Error("Cannot normalize null/undefined form template");
   }
 
-  console.log(
-    "[formNormalization] normalizeFormTemplate: Processing template:",
-    apiResponse.name
-  );
-
   const {
     id,
     name,
@@ -69,12 +64,6 @@ export function normalizeFormTemplate(apiResponse: any): FormTemplate {
     (group: any) => normalizeFormGrouping(group) as FormGrouping
   );
 
-  console.log(
-    "[formNormalization] normalizeFormTemplate: Normalized",
-    normalizedGrouping.length,
-    "groupings"
-  );
-
   const template: FormTemplate = {
     id,
     name,
@@ -93,10 +82,7 @@ export function normalizeFormTemplate(apiResponse: any): FormTemplate {
 
   // Ensure template is properly sorted before returning
   const sortedTemplate = sortFormTemplate(template);
-  console.log(
-    "[formNormalization] normalizeFormTemplate: Returning sorted template",
-    sortedTemplate.name
-  );
+
   return sortedTemplate;
 }
 

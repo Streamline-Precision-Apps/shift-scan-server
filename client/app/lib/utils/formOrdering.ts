@@ -22,29 +22,13 @@ import { FormTemplate, FormGrouping, FormField } from "../types/forms";
  */
 export function sortFormTemplate(template: FormTemplate): FormTemplate {
   if (!template || !template.FormGrouping) {
-    console.log(
-      "[formOrdering] sortFormTemplate: Template is null/undefined or has no FormGrouping"
-    );
     return template;
   }
-
-  console.log(
-    "[formOrdering] sortFormTemplate: Received template",
-    template.name,
-    "with",
-    template.FormGrouping.length,
-    "groupings"
-  );
 
   // Sort groupings by order
   const sortedGroupings = [...template.FormGrouping]
     .sort((a, b) => a.order - b.order)
     .map((grouping) => sortFormGrouping(grouping));
-
-  console.log(
-    "[formOrdering] sortFormTemplate: Sorted grouping order:",
-    sortedGroupings.map((g) => `${g.title}(${g.order})`)
-  );
 
   return {
     ...template,
@@ -60,20 +44,10 @@ export function sortFormTemplate(template: FormTemplate): FormTemplate {
  */
 export function sortFormGrouping(grouping: FormGrouping): FormGrouping {
   if (!grouping || !grouping.Fields) {
-    console.log("[formOrdering] sortFormGrouping: Grouping has no fields");
     return grouping;
   }
 
-  console.log(
-    `[formOrdering] sortFormGrouping: Sorting "${grouping.title}" with ${grouping.Fields.length} fields`
-  );
-
   const sortedFields = [...grouping.Fields].sort((a, b) => a.order - b.order);
-
-  console.log(
-    `[formOrdering] sortFormGrouping: Sorted field order in "${grouping.title}":`,
-    sortedFields.map((f) => `${f.label}(${f.order})`)
-  );
 
   return {
     ...grouping,

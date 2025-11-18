@@ -127,20 +127,6 @@ export default function RenderFields({
 
   if (!formTemplate?.FormGrouping) return null;
 
-  console.log(
-    "[RenderFields] Received formTemplate:",
-    formTemplate.name,
-    "with",
-    formTemplate.FormGrouping.length,
-    "groupings"
-  );
-  console.log(
-    "[RenderFields] Grouping order:",
-    formTemplate.FormGrouping.map(
-      (g) => `${g.title}(order:${g.order}, fields:${g.Fields?.length || 0})`
-    )
-  );
-
   return (
     <>
       {!hideSubmittedBy && (
@@ -181,10 +167,6 @@ export default function RenderFields({
             <div className="flex flex-col gap-5">
               {group.Fields?.sort((a, b) => a.order - b.order).map(
                 (formField: FormField, fieldIndex) => {
-                  console.log(
-                    `[RenderFields] Rendering field in "${group.title}": ${formField.label} (order: ${formField.order})`
-                  );
-
                   // Normalize FormField to legacy Fields type for component compatibility
                   const field = normalizeFieldToLegacyType(formField);
 
@@ -356,7 +338,6 @@ export default function RenderFields({
                             readOnly
                               ? () => {}
                               : (id: string, val: string | boolean) => {
-                                  console.log("RenderFields", val);
                                   handleFieldChange(id, val);
                                 }
                           }
