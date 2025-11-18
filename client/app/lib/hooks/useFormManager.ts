@@ -112,7 +112,6 @@ export function useFormManager(config: UseFormManagerConfig): FormManagerState {
         `/api/v1/admins/forms/template/${formId}`,
         "GET"
       );
-      console.log("[FormManager] Loaded template data from API:", apiData);
       const normalized = normalizeFormTemplate(apiData);
       setTemplate(normalized);
       return normalized;
@@ -178,8 +177,6 @@ export function useFormManager(config: UseFormManagerConfig): FormManagerState {
   /**
    * Initialize all data loading
    */
-  // Memoize the callbacks to ensure stable references
-  // (already done above with useCallback, but double-check dependencies)
   useEffect(() => {
     let isMounted = true;
 
@@ -371,10 +368,9 @@ export function useFormManager(config: UseFormManagerConfig): FormManagerState {
 
         // Use admin API endpoint for approve/submit
         const apiData = await apiRequest(
-          `/api/v1/admins/forms/submissions/${submission.id}/approve`,
+          `/api/v1/admins/forms/submissions/${submission.id}`,
           "PUT",
           {
-            action: "APPROVED",
             formData: apiPayload,
             formTemplateId: template.id,
             isApprovalRequired: template.isApprovalRequired,
@@ -466,7 +462,7 @@ export function useFormManager(config: UseFormManagerConfig): FormManagerState {
   // =========================================================================
 
   /**
-   * Delete a submission
+   * Delete a submission - not used only referenced here for completeness
    */
   const deleteSubmission = useCallback(async () => {
     if (!submission) {
