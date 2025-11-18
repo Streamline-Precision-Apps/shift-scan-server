@@ -36,6 +36,8 @@ import {
 import { useUserStore } from "@/app/lib/store/userStore";
 import { apiRequest } from "@/app/lib/utils/api-Utils";
 
+import { FormTemplate } from "@/app/lib/types/forms";
+
 export default function EditFormSubmissionModal({
   id,
   closeModal,
@@ -44,7 +46,7 @@ export default function EditFormSubmissionModal({
 }: {
   id: number;
   closeModal: () => void;
-  formTemplate: FormIndividualTemplate | null;
+  formTemplate: FormTemplate | null;
   onSuccess: () => void;
 }) {
   const { refresh } = useDashboardData();

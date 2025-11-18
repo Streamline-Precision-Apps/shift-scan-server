@@ -9,9 +9,10 @@ import { Dispatch, SetStateAction } from "react";
 import { FormIndividualTemplate } from "./hooks/types";
 import { Skeleton } from "@/app/v1/components/ui/skeleton";
 import { PageHeaderContainer } from "../../../_pages/PageHeaderContainer";
+import { FormTemplate } from "@/app/lib/types/forms";
 
 interface PageProps {
-  formTemplate: FormIndividualTemplate | undefined;
+  formTemplate: FormTemplate | undefined;
   loading: boolean;
   setStatusPopoverOpen: Dispatch<SetStateAction<boolean>>;
   handleStatusChange: (

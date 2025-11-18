@@ -23,7 +23,7 @@ export interface FormIndividualTemplate {
   formType: string;
   createdAt: string;
   updatedAt: string;
-  isActive: string;
+  isActive: "ACTIVE" | "DRAFT" | "ARCHIVED";
   description: string | null;
   isSignatureRequired: boolean;
   isApprovalRequired: boolean;

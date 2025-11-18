@@ -30,14 +30,15 @@ import {
 import { Button } from "@/app/v1/components/ui/button";
 import React, { Dispatch, SetStateAction, useMemo, Suspense } from "react";
 import { Skeleton } from "@/app/v1/components/ui/skeleton";
-import { FormIndividualTemplate, Submission } from "./hooks/types";
+import { Submission, FormTemplatePages } from "./hooks/useSubmissionDataById";
 import { format } from "date-fns";
 import { highlight } from "../../../_pages/highlight";
 import { Check, X } from "lucide-react";
 import LoadingFormSubmissionTableState from "./loadingFormSubmissionTableState";
 
 interface FormsDataTableProps {
-  formTemplate?: FormIndividualTemplate;
+  formTemplate?: any;
+  formTemplatePage?: FormTemplatePages;
   loading: boolean;
   page: number;
   pageSize: number;
@@ -55,6 +56,7 @@ interface FormsDataTableProps {
 
 export function FormSubmissionDataTable({
   formTemplate,
+  formTemplatePage,
   loading,
   page,
   pageSize,
@@ -70,11 +72,17 @@ export function FormSubmissionDataTable({
   onApprovalAction,
 }: FormsDataTableProps) {
   // Flatten all fields from all groupings, ordered
+  type Field = {
+    id: string;
+    label: string;
+    type: string;
+    order: number;
+  };
   const fields = useMemo(() => {
-    if (!formTemplate?.FormGrouping) return [];
-    return formTemplate.FormGrouping.flatMap((g) => g.Fields).sort(
-      (a, b) => a.order - b.order
-    );
+    if (!formTemplate?.FormGrouping) return [] as Field[];
+    return formTemplate.FormGrouping.flatMap(
+      (g: { Fields: Field[] }) => g.Fields
+    ).sort((a: Field, b: Field) => a.order - b.order);
   }, [formTemplate]);
 
   // Dynamically create columns based on the form fields
@@ -125,122 +133,126 @@ export function FormSubmissionDataTable({
       },
     ];
     // Add dynamic field columns based on the form template
-    const fieldColumns: ColumnDef<Submission>[] = fields.map((field) => ({
-      id: field.id,
-      accessorKey: `data.${field.id}`,
-      header: field.label,
-      cell: ({ row }) => {
-        const submission = row.original;
-        // Use the same fallback pattern as in SubmissionTable
-        const val = (submission.data?.[field.id] ??
-          submission.data?.[field.label]) as
-          | string
-          | number
-          | boolean
-          | object
-          | Array<unknown>
-          | null
-          | undefined;
+    const fieldColumns: ColumnDef<Submission>[] = fields.map(
+      (field: Field) => ({
+        id: field.id,
+        accessorKey: `data.${field.id}`,
+        header: field.label,
+        cell: ({ row }: { row: { original: Submission } }) => {
+          const submission = row.original;
+          // Use the same fallback pattern as in SubmissionTable
+          const val = (submission.data?.[field.id] ??
+            submission.data?.[field.label]) as
+            | string
+            | number
+            | boolean
+            | object
+            | Array<unknown>
+            | null
+            | undefined;
 
-        // If the field is a date or time, format it
-        let display: string | number | undefined = val as
-          | string
-          | number
-          | undefined;
-        let isObject = false;
-        let isArrayOfObjects = false;
+          // If the field is a date or time, format it
+          let display: string | number | undefined = val as
+            | string
+            | number
+            | undefined;
+          let isObject = false;
+          let isArrayOfObjects = false;
 
-        if (val && (field.type === "DATE" || field.type === "TIME")) {
-          try {
-            if (
-              typeof val === "string" ||
-              typeof val === "number" ||
-              val instanceof Date
-            ) {
-              const dateObj = new Date(val);
-              if (!isNaN(dateObj.getTime())) {
-                display = format(dateObj, "P");
+          if (val && (field.type === "DATE" || field.type === "TIME")) {
+            try {
+              if (
+                typeof val === "string" ||
+                typeof val === "number" ||
+                val instanceof Date
+              ) {
+                const dateObj = new Date(val);
+                if (!isNaN(dateObj.getTime())) {
+                  display = format(dateObj, "P");
+                } else {
+                  display = String(val);
+                }
               } else {
                 display = String(val);
               }
-            } else {
+            } catch {
               display = String(val);
             }
-          } catch {
-            display = String(val);
-          }
-        } else if (val && field.type === "CHECKBOX") {
-          display = val ? "Yes" : "No";
-        } else if (Array.isArray(val)) {
-          if (
-            val.length > 0 &&
-            typeof val[0] === "object" &&
-            val[0] !== null &&
-            "name" in val[0]
+          } else if (val && field.type === "CHECKBOX") {
+            display = val ? "Yes" : "No";
+          } else if (Array.isArray(val)) {
+            if (
+              val.length > 0 &&
+              typeof val[0] === "object" &&
+              val[0] !== null &&
+              "name" in val[0]
+            ) {
+              // Array of objects with name property
+              isArrayOfObjects = true;
+            } else {
+              display = (val as (string | number)[]).join(", ");
+            }
+          } else if (
+            val &&
+            typeof val === "object" &&
+            val !== null &&
+            "name" in val
           ) {
-            // Array of objects with name property
-            isArrayOfObjects = true;
-          } else {
-            display = (val as (string | number)[]).join(", ");
+            // Single object with name property
+            isObject = true;
+            display = (val as { name?: string }).name || "";
           }
-        } else if (
-          val &&
-          typeof val === "object" &&
-          val !== null &&
-          "name" in val
-        ) {
-          // Single object with name property
-          isObject = true;
-          display = (val as { name?: string }).name || "";
-        }
 
-        return (
-          <div className="text-xs text-center">
-            {isArrayOfObjects && Array.isArray(val) ? (
-              val.length > 3 ? (
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <button
-                      type="button"
-                      className="bg-blue-50 rounded-lg px-2 py-1 border border-blue-200 text-xs text-blue-700 cursor-pointer min-w-12"
-                    >
-                      {val.length} items
-                    </button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-64 max-h-64 overflow-y-auto">
-                    <div className="flex flex-wrap gap-1 ">
-                      {(val as { id: string; name: string }[]).map(
-                        (item, idx) => (
-                          <div
-                            key={item.id || idx}
-                            className="bg-blue-50 rounded-lg px-2 py-1 inline-block border border-blue-200 mb-1"
-                          >
-                            {item.name || ""}
-                          </div>
-                        )
-                      )}
-                    </div>
-                  </PopoverContent>
-                </Popover>
+          return (
+            <div className="text-xs text-center">
+              {isArrayOfObjects && Array.isArray(val) ? (
+                val.length > 3 ? (
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <button
+                        type="button"
+                        className="bg-blue-50 rounded-lg px-2 py-1 border border-blue-200 text-xs text-blue-700 cursor-pointer min-w-12"
+                      >
+                        {val.length} items
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-64 max-h-64 overflow-y-auto">
+                      <div className="flex flex-wrap gap-1 ">
+                        {(val as { id: string; name: string }[]).map(
+                          (item, idx) => (
+                            <div
+                              key={item.id || idx}
+                              className="bg-blue-50 rounded-lg px-2 py-1 inline-block border border-blue-200 mb-1"
+                            >
+                              {item.name || ""}
+                            </div>
+                          )
+                        )}
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                ) : (
+                  <div className="flex flex-wrap gap-1">
+                    {(val as { id: string; name: string }[]).map(
+                      (item, idx) => (
+                        <div
+                          key={item.id || idx}
+                          className="bg-sky-200 rounded-lg px-2 py-1 inline-block border border-blue-200"
+                        >
+                          {item.name || ""}
+                        </div>
+                      )
+                    )}
+                  </div>
+                )
               ) : (
-                <div className="flex flex-wrap gap-1">
-                  {(val as { id: string; name: string }[]).map((item, idx) => (
-                    <div
-                      key={item.id || idx}
-                      className="bg-sky-200 rounded-lg px-2 py-1 inline-block border border-blue-200"
-                    >
-                      {item.name || ""}
-                    </div>
-                  ))}
-                </div>
-              )
-            ) : (
-              display ?? ""
-            )}
-          </div>
-        );
-      },
-    }));
+                display ?? ""
+              )}
+            </div>
+          );
+        },
+      })
+    );
 
     // Add standard columns after the dynamic fields
     const endColumns: ColumnDef<Submission>[] = [
@@ -426,7 +438,7 @@ export function FormSubmissionDataTable({
   ]);
 
   const table = useReactTable({
-    data: formTemplate?.Submissions || [],
+    data: formTemplatePage?.Submissions || [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -437,7 +449,7 @@ export function FormSubmissionDataTable({
       },
     },
     manualPagination: true, // Tell TanStack Table we're handling pagination manually
-    pageCount: formTemplate?.totalPages || 1, // Important for proper page count display
+    pageCount: formTemplatePage?.totalPages || 1, // Important for proper page count display
     onPaginationChange: (updater) => {
       const newState =
         typeof updater === "function"

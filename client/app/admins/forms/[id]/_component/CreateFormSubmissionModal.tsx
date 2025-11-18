@@ -5,63 +5,16 @@ import { toast } from "sonner";
 import { createFormSubmission } from "@/app/lib/actions/adminActions";
 // Import the RenderFields component
 import Spinner from "@/app/v1/components/(animations)/spinner";
-import { FormIndividualTemplate } from "./hooks/types";
 import { X } from "lucide-react";
 import { Label } from "@/app/v1/components/ui/label";
 import { Textarea } from "@/app/v1/components/ui/textarea";
 import { useUserStore } from "@/app/lib/store/userStore";
 import { apiRequest } from "@/app/lib/utils/api-Utils";
 import RenderFields from "@/app/admins/forms/_components/RenderFields/RenderFields";
-
-export interface Submission {
-  id: string;
-  title: string;
-  formTemplateId: string;
-  userId: string;
-  formType: string;
-  data: Record<string, string | number | boolean | null>;
-  createdAt: string;
-  updatedAt: string;
-  submittedAt: string;
-  status: string;
-  User: {
-    id: string;
-    firstName: string;
-    lastName: string;
-  };
-}
-
-export interface Grouping {
-  id: string;
-  title: string;
-  order: number;
-  Fields: Fields[];
-}
-
-export interface Fields {
-  id: string;
-  formGroupingId: string;
-  label: string;
-  type: string;
-  required: boolean;
-  order: number;
-  placeholder?: string | null;
-  minLength?: number | null;
-  maxLength?: number | null;
-  multiple: boolean | null;
-  content?: string | null;
-  filter?: string | null;
-  Options?: FieldOption[];
-}
-
-interface FieldOption {
-  id: string;
-  fieldId: string;
-  value: string;
-}
+import { FormTemplate, FormFieldValue } from "@/app/lib/types/forms";
 
 interface CreateFormSubmissionModalProps {
-  formTemplate: FormIndividualTemplate;
+  formTemplate: FormTemplate;
   closeModal: () => void;
   onSuccess?: () => void;
 }
@@ -75,9 +28,7 @@ const CreateFormSubmissionModal: React.FC<CreateFormSubmissionModalProps> = ({
   const adminUserId = user?.id || null;
 
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState<
-    Record<string, string | number | boolean | null>
-  >({});
+  const [formData, setFormData] = useState<Record<string, FormFieldValue>>({});
   const [submittedBy, setSubmittedBy] = useState<{
     id: string;
     firstName: string;
@@ -224,13 +175,26 @@ const CreateFormSubmissionModal: React.FC<CreateFormSubmissionModalProps> = ({
     setLoading(true);
     try {
       // Process formData to ensure asset data is properly formatted
+      // Cast FormFieldValue to the format expected by the API
       const processedFormData: Record<
         string,
         string | number | boolean | null
-      > = { ...formData };
+      > = {};
+
+      for (const [key, value] of Object.entries(formData)) {
+        if (value instanceof Date) {
+          processedFormData[key] = value.toISOString();
+        } else if (Array.isArray(value)) {
+          processedFormData[key] = value.join(",");
+        } else if (typeof value === "object" && value !== null) {
+          processedFormData[key] = JSON.stringify(value);
+        } else {
+          processedFormData[key] = value as string | number | boolean | null;
+        }
+      }
 
       if (formTemplate.isSignatureRequired) {
-        processedFormData.signature = true;
+        processedFormData.signature = "true";
       }
 
       const res = await createFormSubmission({

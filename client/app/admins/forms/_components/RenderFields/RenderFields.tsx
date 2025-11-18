@@ -14,31 +14,22 @@ import RenderDropdownField from "./RenderDropdownField";
 import RenderRadioField from "./RenderRadioField";
 import RenderCheckboxField from "./RenderCheckboxField";
 import RenderMultiselectField from "./RenderMultiselectField";
-import { FormTemplate, FormField } from "@/app/lib/types/forms";
-
-// Define a FormFieldValue type to represent all possible field values
-export type FormFieldValue =
-  | string
-  | Date
-  | string[]
-  | Record<string, any>
-  | boolean
-  | number
-  | null;
+import { FormTemplate, FormField, FormFieldValue } from "@/app/lib/types/forms";
 
 /**
- * Normalize FormField to Fields type for backward compatibility.
- * Converts optional `multiple` to nullable for legacy component expectations.
+ * Type adapter: Convert canonical FormField to legacy Fields type for backward-compatible components.
+ * This adapter is temporary and should be removed once all child components are updated to use FormField.
  */
-function normalizeFieldToLegacyType(field: FormField): Fields {
+function adaptFormFieldToLegacy(field: FormField): Fields {
   return {
     ...field,
+    // Ensure nullable fields are properly handled for legacy components
     multiple: field.multiple ?? null,
-    placeholder: field.placeholder ?? null,
-    maxLength: field.maxLength ?? null,
-    minLength: field.minLength ?? null,
-    content: field.content ?? null,
-    filter: field.filter ?? null,
+    placeholder: field.placeholder ?? undefined,
+    maxLength: field.maxLength ?? undefined,
+    minLength: field.minLength ?? undefined,
+    content: field.content ?? undefined,
+    filter: field.filter ?? undefined,
   };
 }
 
@@ -51,7 +42,6 @@ export default function RenderFields({
   formData,
   handleFieldChange,
   disabled,
-
   equipmentOptions = [],
   jobsiteOptions = [],
   costCodeOptions = [],
@@ -167,8 +157,8 @@ export default function RenderFields({
             <div className="flex flex-col gap-5">
               {group.Fields?.sort((a, b) => a.order - b.order).map(
                 (formField: FormField, fieldIndex) => {
-                  // Normalize FormField to legacy Fields type for component compatibility
-                  const field = normalizeFieldToLegacyType(formField);
+                  // Adapt canonical FormField to legacy Fields type for backward-compatible components
+                  const field = adaptFormFieldToLegacy(formField);
 
                   // Get properly typed value based on field type - use same fallback pattern as admin
                   const rawValue =

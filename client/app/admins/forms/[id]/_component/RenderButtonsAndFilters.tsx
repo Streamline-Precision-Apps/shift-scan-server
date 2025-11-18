@@ -8,14 +8,21 @@ import { Badge } from "@/app/v1/components/ui/badge";
 import { Button } from "@/app/v1/components/ui/button";
 import SearchBarPopover from "../../../_pages/searchBarPopover";
 import { Dispatch, SetStateAction } from "react";
-import { FormIndividualTemplate } from "./hooks/types";
+import { FormTemplate } from "@/app/lib/types/forms";
 import FormSubmissionFilters from "./form-submission-filters";
 import { useRouter } from "next/navigation";
 
 interface PageProps {
   setShowExportModal: Dispatch<SetStateAction<boolean>>;
   openHandleDelete: (id: string) => void;
-  formTemplate: FormIndividualTemplate | undefined;
+  formTemplate: FormTemplate | undefined;
+  formTemplatePage?: {
+    Submissions: unknown[];
+    total: number;
+    page: number;
+    pageSize: number;
+    totalPages: number;
+  };
   setShowCreateModal: Dispatch<SetStateAction<boolean>>;
   inputValue: string;
   setInputValue: Dispatch<SetStateAction<string>>;
@@ -36,6 +43,7 @@ export default function RenderButtonsAndFilters({
   setShowExportModal,
   openHandleDelete,
   formTemplate,
+  formTemplatePage,
   setShowCreateModal,
   inputValue,
   setInputValue,
@@ -148,11 +156,7 @@ export default function RenderButtonsAndFilters({
         </Tooltip>
       </div>
       {/* Hide Delete Template if there are forms created for this template */}
-      {!(
-        formTemplate &&
-        Array.isArray(formTemplate.Submissions) &&
-        formTemplate.Submissions.length > 0
-      ) &&
+      {!(formTemplatePage && (formTemplatePage.total ?? 0) > 0) &&
         !showPendingOnly &&
         !loading && (
           <div className="flex justify-center items-center">

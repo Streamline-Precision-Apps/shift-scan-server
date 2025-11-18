@@ -2,7 +2,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 import { useCallback } from "react";
-import { FormIndividualTemplate } from "./types";
 import {
   ApproveFormSubmission,
   archiveFormTemplate,
@@ -17,11 +16,37 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { saveAs } from "file-saver";
 import * as XLSX from "xlsx";
-import { Fields as FormField } from "./types";
+// import { Fields as FormField } from "./types";
 import { useDashboardData } from "@/app/admins/_pages/sidebar/DashboardDataContext";
 import { useUserStore } from "@/app/lib/store/userStore";
 import { apiRequest } from "@/app/lib/utils/api-Utils";
+import { FormTemplate, FormField } from "@/app/lib/types/forms";
 
+export interface Submission {
+  id: number;
+  title: string;
+  formTemplateId: string;
+  userId: string;
+  formType: string;
+  data: Record<string, unknown>;
+  createdAt: string;
+  updatedAt: string;
+  submittedAt: string;
+  status: string;
+  User: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    signature: string;
+  };
+}
+export interface FormTemplatePages {
+  Submissions: Submission[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
 export default function useSubmissionDataById(id: string) {
   const { refresh } = useDashboardData();
   const router = useRouter();
@@ -61,7 +86,8 @@ export default function useSubmissionDataById(id: string) {
   const [showDeleteSubmissionDialog, setShowDeleteSubmissionDialog] =
     useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [formTemplate, setFormTemplate] = useState<FormIndividualTemplate>();
+  const [formTemplate, setFormTemplate] = useState<FormTemplate>();
+  const [formTemplatePage, setFormTemplatePage] = useState<FormTemplatePages>();
   const [loading, setLoading] = useState(true);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
@@ -119,6 +145,7 @@ export default function useSubmissionDataById(id: string) {
         );
 
         setFormTemplate(data);
+        setFormTemplatePage(data);
         setApprovalInbox(data.pendingForms || 0);
         return data;
       } catch (error) {
@@ -298,7 +325,7 @@ export default function useSubmissionDataById(id: string) {
         }
         const groupings = template.FormGrouping;
         const fields = groupings
-          .flatMap((group: { Fields?: FormField[] }) =>
+          .flatMap((group: { Fields: FormField[] }) =>
             Array.isArray(group.Fields) ? group.Fields : []
           )
           .filter(
@@ -506,5 +533,6 @@ export default function useSubmissionDataById(id: string) {
     showPendingOnly,
     approvalInbox,
     onApprovalAction,
+    formTemplatePage,
   };
 }
