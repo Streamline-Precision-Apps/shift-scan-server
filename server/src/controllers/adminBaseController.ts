@@ -10,7 +10,7 @@ export const baseController = async (
   res: express.Response
 ) => {
   try {
-    const { userId } = req.query;
+    const { userId, resolvedSince } = req.query;
     if (!userId) {
       return res.status(400).json({ error: "Missing userId parameter" });
     }
@@ -19,7 +19,10 @@ export const baseController = async (
       return res.status(400).json({ error: "userId must be a string" });
     }
 
-    const result = await fetchNotificationServiceByUserId(userId);
+    const result = await fetchNotificationServiceByUserId(
+      userId,
+      resolvedSince as string | undefined
+    );
     return res.json(result);
   } catch (error) {
     console.error("Error fetching notifications:", error);

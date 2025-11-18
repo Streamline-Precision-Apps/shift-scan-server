@@ -11,7 +11,7 @@ import {
     updateNotificationReadStatus,
     markAllNotificationsAsRead,
 } from "@/app/lib/actions/NotificationActions";
-import { Fragment, useState } from "react";
+import { Fragment, useState, useMemo } from "react";
 import { Button } from "@/app/v1/components/ui/button";
 import {
     Tooltip,
@@ -19,15 +19,24 @@ import {
     TooltipTrigger,
 } from "@/app/v1/components/ui/tooltip";
 import { useRouter } from "next/navigation";
+import { FooterPagination } from "../_pages/FooterPagination";
 
 export default function NotificationActionsList({
     resolved,
     currentUserId,
     unreadCount,
+    page,
+    setPage,
+    pageSize,
+    setPageSize,
 }: {
     resolved: ResolvedNotification[] | undefined;
     currentUserId: string;
     unreadCount: number;
+    page: number;
+    setPage: (page: number) => void;
+    pageSize: number;
+    setPageSize: (pageSize: number) => void;
 }) {
     const router = useRouter();
     // Local state to track read notifications
@@ -76,6 +85,28 @@ export default function NotificationActionsList({
         return format(date, "MMM d, yyyy");
     };
 
+    // Filter and paginate resolved notifications
+    const filteredResolved = useMemo(() => {
+        if (!resolved) return [];
+        if (showOnlyUnread) {
+            return resolved.filter((item) => {
+                const isRead =
+                    readIds.has(item.id) ||
+                    item.Reads.some((read) => read.userId === currentUserId);
+                return !isRead;
+            });
+        }
+        return resolved;
+    }, [resolved, showOnlyUnread, readIds, currentUserId]);
+
+    const paginatedResolved = useMemo(() => {
+        const startIndex = (page - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+        return filteredResolved.slice(startIndex, endIndex);
+    }, [filteredResolved, page, pageSize]);
+
+    const totalPages = Math.ceil(filteredResolved.length / pageSize);
+
     return (
         <div className="w-[40%] h-[90vh] pb-2 rounded-lg bg-neutral-100 ">
             <div className="flex flex-col h-full">
@@ -102,23 +133,14 @@ export default function NotificationActionsList({
                 {/* Show responses */}
                 <div className="flex flex-col px-3 h-full overflow-auto  bg-neutral-100  ">
                     {(() => {
-                        // Filter and sort notifications
-                        const filtered = (resolved || [])
-                            .filter((item) => {
-                                const isRead =
-                                    item.Reads?.some(
-                                        (r: { userId: string }) =>
-                                            r.userId === currentUserId
-                                    ) || readIds.has(item.id);
-                                return showOnlyUnread ? !isRead : true;
-                            })
-                            .sort((a, b) => {
-                                if (!a.Response || !b.Response) return 0;
-                                return (
-                                    new Date(b.Response.respondedAt).getTime() -
-                                    new Date(a.Response.respondedAt).getTime()
-                                );
-                            });
+                        // Use the paginated and filtered notifications
+                        const filtered = paginatedResolved.sort((a, b) => {
+                            if (!a.Response || !b.Response) return 0;
+                            return (
+                                new Date(b.Response.respondedAt).getTime() -
+                                new Date(a.Response.respondedAt).getTime()
+                            );
+                        });
 
                         // Group notifications by day label
                         const groups: Record<string, typeof filtered> = {};
@@ -739,6 +761,14 @@ export default function NotificationActionsList({
                         );
                     })()}
                 </div>
+                <FooterPagination
+                    page={page}
+                    totalPages={totalPages}
+                    total={filteredResolved.length}
+                    pageSize={pageSize}
+                    setPage={setPage}
+                    setPageSize={setPageSize}
+                />
             </div>
         </div>
     );
