@@ -30,6 +30,17 @@ import {
 
 import { useNotification } from "@/app/lib/context/NotificationContext";
 import { apiRequest } from "@/app/lib/utils/api-Utils";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/app/v1/components/ui/alert-dialog";
+import { Button } from "@/app/v1/components/ui/button";
 
 export type FormStatus = "DRAFT" | "PENDING" | "APPROVED" | "DENIED";
 // Helper function to transform API response to form state
@@ -98,6 +109,8 @@ export default function CombinedForm({ id }: { id: string }) {
   const [state, setState] = useState<UnifiedEquipmentState>(
     createInitialState()
   );
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Fetch equipment log data
   useEffect(() => {
@@ -288,6 +301,24 @@ export default function CombinedForm({ id }: { id: string }) {
       setNotification(t("FailedToDelete"), "error");
     }
   };
+
+  const handleDeleteConfirm = useCallback(async () => {
+    setIsDeleting(true);
+    try {
+      await deleteEquipmentLog();
+      setIsDeleteDialogOpen(false);
+    } finally {
+      setIsDeleting(false);
+    }
+  }, []);
+
+  const handleDeleteCancel = useCallback(() => {
+    setIsDeleteDialogOpen(false);
+  }, []);
+
+  const openDeleteDialog = useCallback(() => {
+    setIsDeleteDialogOpen(true);
+  }, []);
 
   const saveEdits = async () => {
     try {
@@ -501,9 +532,10 @@ export default function CombinedForm({ id }: { id: string }) {
                   >
                     <Buttons
                       shadow={"none"}
-                      onClick={deleteEquipmentLog}
+                      onClick={openDeleteDialog}
                       background="red"
                       className="w-full "
+                      disabled={isDeleting}
                     >
                       <Titles size="sm">{t("DeleteLog")}</Titles>
                     </Buttons>
@@ -535,6 +567,51 @@ export default function CombinedForm({ id }: { id: string }) {
           </Holds>
         </Grids>
       </Holds>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+      >
+        <AlertDialogContent className="max-w-[450px] rounded-[10px] w-[90%]">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-lg font-bold text-center">
+              Confirm Delete
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-sm text-center pb-3">
+              {t("DeletePrompt")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="w-full flex flex-row items-center justify-center gap-4">
+            <AlertDialogCancel
+              asChild
+              className="border-gray-200 hover:bg-white rounded-[10px]"
+            >
+              <Button
+                size={"lg"}
+                variant="outline"
+                className="bg-gray-200 text-black px-6 py-2 rounded-md mt-0 w-24"
+                onClick={() => setIsDeleteDialogOpen(false)}
+              >
+                {t("Cancel")}
+              </Button>
+            </AlertDialogCancel>
+            <AlertDialogAction
+              asChild
+              className=" bg-red-500 hover:bg-red-600 border-none rounded-[10px] w-24"
+              onClick={handleDeleteConfirm}
+            >
+              <Button
+                size={"lg"}
+                variant="destructive"
+                className="bg-app-red text-white px-6 py-2 rounded-md"
+              >
+                {t("Delete")}
+              </Button>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

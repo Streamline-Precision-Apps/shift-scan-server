@@ -11,7 +11,7 @@ export const CardControls = ({
   handleApproveClick,
   completed,
 }: {
-  handleEditClick: () => void;
+  handleEditClick?: () => void;
   handleApproveClick: () => void;
   completed: boolean;
 }) => {
@@ -23,22 +23,15 @@ export const CardControls = ({
       className="row-span-1 h-full flex items-center justify-center "
     >
       <Contents className="h-full">
-        <Grids cols={"2"} gap={"5"} className="w-full h-full pt-5">
+        <Grids gap={"5"} className="w-full h-full pt-5">
           {!completed && (
             <>
-              <Buttons
-                background={"orange"}
-                onClick={handleEditClick}
-                className=" w-full"
-              >
-                <Titles size={"h4"}>{t("Edit")}</Titles>
-              </Buttons>
               <Buttons
                 background={"green"}
                 onClick={handleApproveClick}
                 className=" w-full"
               >
-                <Titles size={"h4"}>{t("Approved")}</Titles>
+                <Titles size={"h4"}>{t("Approve")}</Titles>
               </Buttons>
             </>
           )}

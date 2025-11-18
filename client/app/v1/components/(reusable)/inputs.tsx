@@ -10,7 +10,7 @@ const anton = Anton({
 });
 //this determines styles of all inputs
 const InputVariants = cva(
-  "items-center justify-center text-black text-lg rounded-[10px]", //this applies to all variants
+  "items-center justify-center text-black bg-white text-lg rounded-[10px]", //this applies to all variants
   {
     variants: {
       variant: {

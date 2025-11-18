@@ -89,7 +89,6 @@ export default function FormBuilder({
             `/api/v1/admins/forms/template/${formId}`,
             "GET"
           );
-          console.log("Fetched form data:", data);
 
           // Map the response data to the form state
           const formGrouping = data.FormGrouping.map((group: FormGrouping) => ({

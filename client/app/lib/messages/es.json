@@ -186,11 +186,13 @@
     "StartTime": "Hora de inicio: ",
     "NoStartTime": "Sin tiempo de inicio",
     "UnknownEquipment": "Equipo desconocido",
-    "AbcdShift": "Cambio de ABCD",
+    "AbcdShift": "Turno ABCD",
     "EquipmentOperator": "Operador de equipos",
-    "EShift": "E cambio",
+    "EShift": "Turno E",
+    "FShift": "Turno F",
     "ManualLabor": "Trabajo manual",
-    "MudConditioning": "Acondicionamiento de lodo",
+    "Lime": "Roca caliza de pantalla",
+    "MudConditioning": "Acondicionamiento del barro",
     "CurrentCostCode": "Código de costo actual",
     "ActiveTime": "Tiempo activo",
     "CurrentSite": "Sitio actual",
@@ -288,6 +290,9 @@
     "SaveCropImage": "Salvar el imagen"
   },
   "Equipment": {
+    "PullToRefresh": "Tirar para actualizar",
+    "ReleaseToRefresh": "Suelte para actualizar",
+    "Refreshing": "Actualizando...",
     "DeletePrompt": "¿Está seguro de que desea eliminar este registro de equipo?",
     "CurrentLogs": "Registros de equipos actuales",
     "FinishedLogs": "Registros finalizados",
@@ -611,6 +616,8 @@
     }
   },
   "TimeCardSwiper": {
+    "Approve": "Aprobar",
+    "Submitted": "Enviado",
     "highlight": "Destacados de la hoja de tiempo",
     "Trucking": "Camionaje",
     "Tasco": "Tasco",

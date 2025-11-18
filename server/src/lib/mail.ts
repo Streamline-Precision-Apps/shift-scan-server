@@ -18,9 +18,6 @@ export const sendPasswordResetEmail = async (
       ? `https://shiftscanapp.com/signin/update-password?token=${token}`
       : `http://localhost:3000/signin/update-password?token=${token}`;
 
-    console.log(`📧 Sending password reset email to: ${email}`);
-    console.log(`🔗 Reset link: ${resetLink}`);
-
     await resend.emails.send({
       from: "no-reply@shiftscanapp.com",
       to: email,
@@ -34,8 +31,6 @@ export const sendPasswordResetEmail = async (
       <p>Thank you,<br/>ShiftScan Team</p>
       `,
     });
-
-    console.log(`✅ Password reset email sent to: ${email}`);
   } catch (error) {
     console.error("❌ Error sending password reset email:", error);
     throw error;

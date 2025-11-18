@@ -21,6 +21,8 @@ type TascoMaterialSelectorProps = {
   materialType: string;
   setMaterialType: React.Dispatch<React.SetStateAction<string>>;
   setJobsite: React.Dispatch<React.SetStateAction<Option>>;
+  clockInRoleTypes?: string;
+  setStep?: React.Dispatch<React.SetStateAction<number>>;
 };
 
 const materialOptions = [
@@ -109,6 +111,8 @@ export default function TascoMaterialSelector({
   materialType,
   setMaterialType,
   setJobsite,
+  clockInRoleTypes,
+  setStep,
 }: TascoMaterialSelectorProps) {
   const [selectedMaterial, setSelectedMaterial] = useState<Option | null>(null);
   const { jobsites: jobsiteResults } = useProfitStore();
@@ -140,8 +144,6 @@ export default function TascoMaterialSelector({
             .toLowerCase()
             .includes(materialOption.jobsiteName.toLowerCase())
         );
-
-        console.log("Found jobsite:", foundJobsite);
 
         if (foundJobsite) {
           setJobsite({
@@ -200,7 +202,20 @@ export default function TascoMaterialSelector({
 
               <Holds className="row-start-7 row-end-8 w-full justify-center">
                 <StepButtons
-                  handleNextStep={handleNextStep}
+                  handleNextStep={() => {
+                    // For ABCD Labor, skip step 4 and go directly to step 5 (verification)
+                    if (clockInRoleTypes === "tascoAbcdLabor" && setStep) {
+                      setStep(5);
+                    } else if (
+                      clockInRoleTypes === "tascoAbcdEquipment" &&
+                      setStep
+                    ) {
+                      setStep(4);
+                    } else {
+                      // For ABCD Equipment, proceed normally to step 4
+                      handleNextStep();
+                    }
+                  }}
                   disabled={!selectedMaterial}
                 />
               </Holds>

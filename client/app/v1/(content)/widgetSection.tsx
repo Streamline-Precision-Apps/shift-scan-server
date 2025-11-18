@@ -21,18 +21,19 @@ import { getApiUrl } from "@/app/lib/utils/api-Utils";
 import { usePermissions } from "@/app/lib/context/permissionContext";
 import { Buttons } from "../components/(reusable)/buttons";
 import { Titles } from "../components/(reusable)/titles";
+import { useCookieStore } from "@/app/lib/store/cookieStore";
 
 export default function WidgetSection() {
   const [loadingUi, setLoadingUi] = useState(true);
   const [userDataLoaded, setUserDataLoaded] = useState(false);
   const { user, setUser, setPayPeriodTimeSheets } = useUserStore();
+  const { currentPageView } = useCookieStore();
   const { setJobsites } = useProfitStore();
   const { setEquipments } = useEquipmentStore();
   const { setCostCodes } = useCostCodeStore();
   const { permissionStatus, requestLocationPermission } = usePermissions();
   const router = useRouter();
   const [toggle, setToggle] = useState(true);
-  const [loadedPageView, setLoadedPageView] = useState("");
   const [locationEnabled, setLocationEnabled] = useState(false);
 
   // If no user, try to load from localStorage first, then refetch from /api/v1/init if needed
@@ -169,13 +170,12 @@ export default function WidgetSection() {
   // Handlers
   const handleToggle = () => setToggle(!toggle);
 
-  // Wait until user data is loaded, usePayPeriodData is done loading, and pageView is determined (including empty string for homepage)
+  // Wait until user data is loaded and pageView is determined
   useEffect(() => {
     if (userDataLoaded && !loading) {
       setLoadingUi(false);
-      setLoadedPageView(pageView || "");
     }
-  }, [userDataLoaded, loading, pageView]);
+  }, [userDataLoaded, loading]);
 
   // Check location permissions status
   useEffect(() => {
@@ -184,16 +184,13 @@ export default function WidgetSection() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (pageView === "dashboard") {
+      if (currentPageView === "dashboard") {
         router.push("/v1/dashboard");
-      }
-      if (pageView === "removeLocalStorage") {
-        setPageView("");
       }
     }, 300); // 300ms delay, adjust as needed
 
     return () => clearTimeout(timer);
-  }, [pageView, router, accountSetup, setPageView]);
+  }, [currentPageView, router]);
 
   if (loadingUi) {
     // Match the main layout: BannerSection (row-start-2 row-end-4), MainContentSection (row-start-4 row-end-9)
@@ -216,14 +213,14 @@ export default function WidgetSection() {
   return (
     <>
       <BannerSection
-        pageView={loadedPageView}
+        pageView={currentPageView}
         user={user || { firstName: "" }}
         date={date}
       />
 
       <MainContentSection
         toggle={toggle}
-        pageView={loadedPageView}
+        pageView={currentPageView}
         isManager={isManager}
         handleToggle={handleToggle}
         loading={loading}

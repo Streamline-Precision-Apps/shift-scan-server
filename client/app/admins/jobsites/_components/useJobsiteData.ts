@@ -131,9 +131,7 @@ export const useJobsiteData = (initialShowPendingOnly: boolean = false) => {
   const confirmArchive = async () => {
     if (pendingArchiveId) {
       const result = await archiveJobsite(pendingArchiveId);
-      if (result.success) {
-        console.log(result.message);
-      } else {
+      if (!result.success) {
         console.error(result.error);
       }
       setShowArchiveDialog(false);
@@ -157,9 +155,7 @@ export const useJobsiteData = (initialShowPendingOnly: boolean = false) => {
   const confirmRestore = async () => {
     if (pendingRestoreId) {
       const result = await restoreJobsite(pendingRestoreId);
-      if (result.success) {
-        console.log(result.message);
-      } else {
+      if (!result.success) {
         console.error(result.error);
       }
       setShowRestoreDialog(false);

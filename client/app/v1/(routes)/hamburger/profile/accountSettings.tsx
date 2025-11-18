@@ -80,8 +80,6 @@ export default function ProfilePage({ userId }: { userId: string }) {
   const fetchEmployee = async () => {
     setLoading(true);
     try {
-      console.log("🔍 fetchEmployee called with userId:", userId);
-
       // First, try to load from localStorage
       if (typeof window !== "undefined") {
         const userStoreRaw = localStorage.getItem("user-store");
@@ -91,7 +89,6 @@ export default function ProfilePage({ userId }: { userId: string }) {
             const userData = userStoreObj?.state?.user || userStoreObj?.user;
 
             if (userData && userData.id) {
-              console.log("✅ Found user in localStorage:", userData.id);
               // Map user data to employee format
               const employeeData = {
                 id: userData.id,
@@ -115,11 +112,9 @@ export default function ProfilePage({ userId }: { userId: string }) {
       }
 
       // If not in localStorage, fetch from API
-      console.log("📡 Fetching employee data from API for userId:", userId);
 
       const token =
         typeof window !== "undefined" ? localStorage.getItem("token") : null;
-      console.log("🔑 Token:", token ? "exists" : "missing");
 
       const result = await apiRequest("/api/v1/user/contact", "POST", {
         userId: String(userId),
@@ -144,7 +139,6 @@ export default function ProfilePage({ userId }: { userId: string }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("🔍 fetchData called with userId:", userId);
         let settings = null;
 
         // First, try to load from localStorage
@@ -156,10 +150,6 @@ export default function ProfilePage({ userId }: { userId: string }) {
               const userData = userStoreObj?.state?.user || userStoreObj?.user;
 
               if (userData && userData.UserSettings) {
-                console.log(
-                  "✅ Found UserSettings in localStorage:",
-                  userData.UserSettings
-                );
                 // Use cached UserSettings from localStorage
                 settings = userData.UserSettings;
                 const validatedSettings = userSettingsSchema.parse(settings);
@@ -181,10 +171,9 @@ export default function ProfilePage({ userId }: { userId: string }) {
         }
 
         // If not in localStorage, fetch from API to get current settings
-        console.log("📡 Fetching UserSettings from API for userId:", userId);
+
         const token =
           typeof window !== "undefined" ? localStorage.getItem("token") : null;
-        console.log("🔑 Token:", token ? "exists" : "missing");
 
         const res = await apiRequest("/api/v1/user/settings", "POST", {
           userId: String(userId),

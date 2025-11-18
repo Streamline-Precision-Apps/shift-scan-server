@@ -432,6 +432,7 @@ export async function approveTimesheetsBatchService({
               userId: editorId,
               readAt: new Date(),
             })),
+            skipDuplicates: true,
           });
         }
         await tx.notificationResponse.createMany({
@@ -441,6 +442,7 @@ export async function approveTimesheetsBatchService({
             response: "Approved",
             respondedAt: new Date(),
           })),
+          skipDuplicates: true,
         });
       });
     }
@@ -1221,27 +1223,19 @@ export async function getClockOutComment(userId: string) {
   return timesheet?.comment || "";
 }
 
-export async function getEquipmentLogs(userId: string) {
-  const currentDate = new Date();
-  const past24Hours = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000);
-
-  const timeSheetId = await prisma.timeSheet.findFirst({
-    where: {
-      userId: userId,
-      endTime: null,
-    },
-  });
-  if (!timeSheetId) {
-    throw new Error("No active timesheet found.");
-  }
-
+export async function getEquipmentLogs(userId: string, timesheetId: number) {
   const logs = await prisma.employeeEquipmentLog.findMany({
     where: {
-      startTime: { gte: past24Hours, lte: currentDate },
-      timeSheetId: timeSheetId.id,
+      timeSheetId: timesheetId,
+      TimeSheet: {
+        userId: userId,
+      },
     },
     include: {
       Equipment: true,
+    },
+    orderBy: {
+      startTime: "desc",
     },
   });
 

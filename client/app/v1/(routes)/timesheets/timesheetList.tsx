@@ -5,6 +5,7 @@ import { Texts } from "@/app/v1/components/(reusable)/texts";
 import { formatTimeHHMM } from "@/app/lib/utils/formatDateAmPm";
 import { useTranslations } from "next-intl";
 import { Contents } from "@/app/v1/components/(reusable)/contents";
+import { use, useState } from "react";
 
 export type FormStatus = "PENDING" | "APPROVED" | "DENIED" | "DRAFT";
 export type WorkType = "MECHANIC" | "LABOR" | "TASCO" | "TRUCK_DRIVER";
@@ -46,13 +47,15 @@ export default function TimesheetList({
   timesheet,
   copyToClipboard,
   calculateDuration,
+  isCopied,
 }: {
   timesheet: TimeSheet;
-  copyToClipboard: (timesheet: string) => Promise<void>;
+  copyToClipboard: (timesheetId: number, timesheet: string) => Promise<void>;
   calculateDuration: (
     startTime: string | Date | null | undefined,
     endTime: string | Date | null | undefined
   ) => string;
+  isCopied: boolean;
 }) {
   const t = useTranslations("TimeSheet");
 
@@ -70,12 +73,19 @@ export default function TimesheetList({
               <Texts size="sm">{timesheet.id}</Texts>
             </div>
             <button
-              onClick={() => copyToClipboard(String(timesheet.id))}
-              className="p-1 rounded-md bg-slate-300"
+              onClick={() =>
+                copyToClipboard(timesheet.id, String(timesheet.id))
+              }
+              className={`p-1 rounded-md transition-all duration-300 ${
+                isCopied
+                  ? "bg-green-500 scale-110"
+                  : "bg-slate-300 hover:bg-slate-400"
+              }`}
+              disabled={isCopied}
             >
               <Images
-                titleImg="/form.svg"
-                titleImgAlt="Copy"
+                titleImg={isCopied ? "/checkbox.svg" : "/form.svg"}
+                titleImgAlt={isCopied ? "Copied" : "Copy"}
                 className="w-5 h-5 opacity-70"
               />
             </button>

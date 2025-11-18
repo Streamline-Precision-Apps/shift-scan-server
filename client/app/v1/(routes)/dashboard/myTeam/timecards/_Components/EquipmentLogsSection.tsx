@@ -1,6 +1,6 @@
 "use client";
 type TimeSheet = {
-  id: string;
+  id: number;
   date: string;
   startTime: string;
   endTime: string;

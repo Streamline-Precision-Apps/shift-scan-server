@@ -5,7 +5,7 @@ type TinderSwipeRef = {
 };
 
 type TimeSheet = {
-  id: string;
+  id: number;
   date: string;
   startTime: string;
   endTime: string;
@@ -117,6 +117,7 @@ import { CardControls } from "./CardControls";
 import GeneralReviewSection from "./GeneralReviewSection";
 import TascoReviewSection from "./TascoReviewSection";
 import TruckingReviewSection from "./TruckingReviewSection";
+import AppManagerEditTimesheetModal from "@/app/v1/(routes)/dashboard/myTeam/[id]/employee/[employeeId]/_components/TimesheetEditModal";
 import {
   Dispatch,
   SetStateAction,
@@ -165,6 +166,11 @@ export default function TimeCardApprover({
 
   const [isScrolling, setIsScrolling] = useState(false);
   const scrollSwipeHandlers = useScrollSwipeHandlers(setIsScrolling);
+
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingTimesheetId, setEditingTimesheetId] = useState<string | null>(
+    null
+  );
 
   // Memoized calculation of total time for performance
   const calculateTotalTime = useCallback((timeSheets: TimeSheet[]): string => {
@@ -215,6 +221,7 @@ export default function TimeCardApprover({
         `/api/v1/timesheet/manager/${managerId}/crew-timesheets`,
         "GET"
       );
+
       const data: TeamMember[] = result.data || [];
       const membersWithTotals = data
         .map((member) => ({
@@ -241,6 +248,10 @@ export default function TimeCardApprover({
   // Memoized ApproveTimeSheets for stable reference
   const ApproveTimeSheets = useCallback(
     async (id: string) => {
+      if (!managerId) {
+        console.error("Manager ID is not available");
+        return;
+      }
       try {
         const approveMember = teamMembers.find((member) => member.id === id);
         if (!approveMember) return;
@@ -260,19 +271,15 @@ export default function TimeCardApprover({
         console.error("Error submitting timecards:", error);
       }
     },
-    [teamMembers, manager]
+    [teamMembers, manager, managerId]
   );
 
   // Memoized swipe handler
   const swiped = useCallback(
     (direction: string, memberId: string) => {
-      const myTeamId = currentMember?.Crews.find(
-        (crew) => crew.leadId === managerId
-      )?.id;
       if (direction === "left") {
-        router.push(
-          `/dashboard/myTeam/${myTeamId}/employee/${memberId}?timeCard=/dashboard/myTeam/timecards?rPath=${rPath}`
-        );
+        // Edit swipe disabled - do nothing
+        return;
       } else {
         ApproveTimeSheets(memberId);
         if (currentIndex < teamMembers.length - 1) {
@@ -282,24 +289,24 @@ export default function TimeCardApprover({
         }
       }
     },
-    [
-      currentMember,
-      managerId,
-      router,
-      rPath,
-      ApproveTimeSheets,
-      currentIndex,
-      teamMembers.length,
-    ]
+    [ApproveTimeSheets, currentIndex, teamMembers.length]
   );
 
-  // Memoized edit/approve click handlers
-  const handleEditClick = useCallback(() => {
-    swipeRef.current?.swipeLeft();
-  }, []);
+  // Memoized approve click handler
   const handleApproveClick = useCallback(() => {
     swipeRef.current?.swipeRight();
   }, []);
+
+  const handleEditTimesheet = useCallback((timesheetId: string) => {
+    setEditingTimesheetId(timesheetId);
+    setShowEditModal(true);
+  }, []);
+
+  const handleCloseModal = useCallback(() => {
+    setShowEditModal(false);
+    setEditingTimesheetId(null);
+    fetchCrewTimeCards();
+  }, [fetchCrewTimeCards]);
 
   return (
     <Holds className="h-full w-full">
@@ -334,7 +341,6 @@ export default function TimeCardApprover({
                 <TinderSwipe
                   ref={swipeRef}
                   key={currentMember.id}
-                  onSwipeLeft={() => swiped("left", currentMember.id)}
                   onSwipeRight={() => {
                     swiped("right", currentMember.id);
                     ApproveTimeSheets(currentMember.id);
@@ -367,7 +373,7 @@ export default function TimeCardApprover({
                         onChange={(e) =>
                           setViewOption(e.target.value as ViewOption)
                         }
-                        className="text-center text-sm"
+                        className="text-center h-12 text-sm"
                       >
                         {getAvailableViewOptions(currentTimeSheets).map(
                           (option) => (
@@ -386,6 +392,7 @@ export default function TimeCardApprover({
                           currentTimeSheets={currentTimeSheets}
                           scrollSwipeHandlers={scrollSwipeHandlers}
                           isScrolling={isScrolling}
+                          onEditTimesheet={handleEditTimesheet}
                         />
                       )}
                       {viewOption === "Trucking" && (
@@ -429,10 +436,17 @@ export default function TimeCardApprover({
           <Holds className="row-start-8 row-end-9 w-full h-full">
             <CardControls
               completed={completed}
-              handleEditClick={handleEditClick}
               handleApproveClick={handleApproveClick}
             />
           </Holds>
+        )}
+        {/* Modal for editing timesheet */}
+        {showEditModal && editingTimesheetId && (
+          <AppManagerEditTimesheetModal
+            timesheetId={editingTimesheetId}
+            isOpen={showEditModal}
+            onClose={handleCloseModal}
+          />
         )}
       </Grids>
     </Holds>

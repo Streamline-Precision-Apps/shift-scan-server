@@ -12,7 +12,11 @@ import { TitleBoxes } from "@/app/v1/components/(reusable)/titleBoxes";
 import { useRouter } from "next/navigation";
 import { Input } from "@/app/v1/components/ui/input";
 import { Label } from "@/app/v1/components/ui/label";
-
+import { Clipboard } from "@capacitor/clipboard";
+import {
+  useMobileToast,
+  MobileToastContainer,
+} from "@/app/v1/components/(notifications)/mobileToast";
 import TimesheetList from "./timesheetList";
 import { apiRequest } from "@/app/lib/utils/api-Utils";
 import { getUserId } from "@/app/lib/utils/api-Utils";
@@ -63,6 +67,8 @@ export default function ViewTimesheets({ user }: Props) {
   const [showTimesheets, setShowTimesheets] = useState(false);
   const [timesheetData, setTimesheetData] = useState<TimeSheet[]>([]);
   const [loading, setLoading] = useState(false);
+  const [copiedId, setCopiedId] = useState<number | null>(null);
+  const { toasts, showToast, removeToast } = useMobileToast();
   const router = useRouter();
 
   // Get current date in YYYY-MM-DD format
@@ -113,13 +119,21 @@ export default function ViewTimesheets({ user }: Props) {
     }
   };
 
-  const copyToClipboard = async (timesheet: string) => {
+  const copyToClipboard = async (timesheetId: number, timesheet: string) => {
     try {
-      await navigator.clipboard.writeText(timesheet);
-      // Optionally, provide user feedback:
-      alert("Copied to clipboard!");
+      await Clipboard.write({
+        string: timesheet,
+      });
+      // Set the copied state for this specific timesheet
+      setCopiedId(timesheetId);
+      // Show success toast
+      showToast("Copied to clipboard!", "success", 2000);
+      // Reset after 2 seconds
+      setTimeout(() => setCopiedId(null), 2000);
     } catch (err) {
       console.error("Failed to copy!", err);
+      // Show error toast
+      showToast("Failed to copy", "error", 2000);
     }
   };
 
@@ -216,6 +230,7 @@ export default function ViewTimesheets({ user }: Props) {
                     timesheet={timesheet}
                     calculateDuration={calculateDuration}
                     copyToClipboard={copyToClipboard}
+                    isCopied={copiedId === timesheet.id}
                   />
                 ))
               ) : (
@@ -229,6 +244,7 @@ export default function ViewTimesheets({ user }: Props) {
           )
         )}
       </Holds>
+      <MobileToastContainer toasts={toasts} onClose={removeToast} />
     </>
   );
 }

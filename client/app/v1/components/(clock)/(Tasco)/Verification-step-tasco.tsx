@@ -1,4 +1,5 @@
 "use client";
+import { useCookieStore } from "@/app/lib/store/cookieStore";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { useTranslations } from "next-intl";
 
@@ -7,11 +8,6 @@ import {
   handleTascoTimeSheet,
 } from "@/app/lib/actions/timeSheetActions"; // Updated import
 
-import {
-  setCurrentPageView,
-  setLaborType,
-  setWorkRole,
-} from "@/app/lib/actions/cookieActions";
 import { useRouter } from "next/navigation";
 import { Buttons } from "@/app/v1/components/(reusable)/buttons";
 import { Contents } from "@/app/v1/components/(reusable)/contents";
@@ -33,6 +29,7 @@ import { sendNotification } from "@/app/lib/actions/generatorActions";
 import {
   startClockInTracking,
   getStoredCoordinates,
+  isTrackingActive,
 } from "@/app/lib/client/locationTracking";
 import { useSessionStore } from "@/app/lib/store/sessionStore";
 
@@ -80,6 +77,11 @@ export default function TascoVerificationStep({
   const [loading, setLoading] = useState<boolean>(false);
 
   const { user } = useUserStore();
+  const setCurrentPageView = useCookieStore(
+    (state) => state.setCurrentPageView
+  );
+  const setWorkRole = useCookieStore((state) => state.setWorkRole);
+  const setLaborType = useCookieStore((state) => state.setLaborType);
   const { savedCommentData, setCommentData } = useCommentData();
   const router = useRouter();
   const { savedTimeSheetData, refetchTimesheet } = useTimeSheetData();
@@ -125,9 +127,6 @@ export default function TascoVerificationStep({
 
           if (currentTime - endTime > FOUR_HOURS_MS) {
             // More than 4 hours have passed, clear sessions and create a new one
-            console.log(
-              "Session expired (4+ hours since end), clearing storage and creating new session"
-            );
             useSessionStore.getState().clearSessions();
             sessionId = await createNewSession(id);
             setCurrentSession(sessionId);
@@ -142,6 +141,7 @@ export default function TascoVerificationStep({
         }
       }
 
+      // Build the payload for handleTascoTimeSheet
       const payload: {
         date: string;
         jobsiteId: string;
@@ -198,7 +198,6 @@ export default function TascoVerificationStep({
       payload.workType = role;
       payload.equipmentId = equipment?.id || "";
 
-      // If switching jobs, include the previous timesheet ID
       if (type === "switchJobs") {
         let timeSheetId = savedTimeSheetData?.id;
         if (!timeSheetId) {
@@ -225,7 +224,23 @@ export default function TascoVerificationStep({
           : null;
       }
 
-      // Use the new transaction-based function
+      // Start location tracking FIRST for clock in (before submitting timesheet)
+      let trackingResult = { success: false };
+      if (type !== "switchJobs" && sessionId) {
+        // Check if tracking is already active to prevent duplicate tracking
+        if (!isTrackingActive()) {
+          trackingResult = await startClockInTracking(id, sessionId);
+        } else {
+          console.warn("Location tracking already active, skipping start");
+          trackingResult = { success: true };
+        }
+      }
+
+      // Only proceed with timesheet submission if tracking succeeded or is not required
+      if (!trackingResult?.success && type !== "switchJobs") {
+        throw new Error("Failed to start location tracking. Cannot clock in.");
+      }
+
       const responseAction = await handleTascoTimeSheet(payload);
 
       // Add timesheet ID to session store after successful creation
@@ -249,31 +264,27 @@ export default function TascoVerificationStep({
         await sendNotification({
           topic: "timecard-submission",
           title: "Timecard Approval Needed",
-          message: `#${responseAction.createdTimeCard.id} has been submitted by ${responseAction.createdTimeCard.User.firstName} ${responseAction.createdTimeCard.User.lastName} for approval.`,
-          link: `/admins/timesheets?id=${responseAction.createdTimeCard.id}`,
-          referenceId: responseAction.createdTimeCard.id,
+          message: `#${responseAction.createdTimeSheet.id} has been submitted by ${responseAction.createdTimeSheet.User.firstName} ${responseAction.createdTimeSheet.User.lastName} for approval.`,
+          link: `/admins/timesheets?id=${responseAction.createdTimeSheet.id}`,
+          referenceId: responseAction.createdTimeSheet.id,
         });
       }
 
-      // Start location tracking for clock in
-      if (type !== "switchJobs" && sessionId) {
-        await startClockInTracking(id, sessionId);
-      }
+      // Update state and redirect
       setCommentData(null);
       localStorage.removeItem("savedCommentData");
 
-      await Promise.all([
-        setCurrentPageView("dashboard"),
-        setWorkRole(role),
-        setLaborType(
-          clockInRoleTypes === "tascoEEquipment"
-            ? "EShift"
-            : clockInRoleTypes === "tascoFEquipment"
-            ? "FShift"
-            : clockInRoleTypes || ""
-        ),
-        refetchTimesheet(),
-      ]).then(() => router.push("/v1/dashboard"));
+      setCurrentPageView("dashboard");
+      setWorkRole(role);
+      setLaborType(
+        clockInRoleTypes === "tascoEEquipment"
+          ? "EShift"
+          : clockInRoleTypes === "tascoFEquipment"
+          ? "FShift"
+          : clockInRoleTypes || ""
+      );
+      await refetchTimesheet();
+      router.push("/v1/dashboard");
     } catch (error) {
       console.error("Error in handleSubmit:", error);
     } finally {

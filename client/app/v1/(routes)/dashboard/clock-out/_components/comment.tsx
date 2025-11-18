@@ -1,6 +1,6 @@
 "use client";
 import { useTranslations } from "next-intl";
-import { setCurrentPageView } from "@/app/lib/actions/cookieActions";
+import { useCookieStore } from "@/app/lib/store/cookieStore";
 import { useRouter } from "next/navigation";
 import { Holds } from "@/app/v1/components/(reusable)/holds";
 import { TextAreas } from "@/app/v1/components/(reusable)/textareas";
@@ -21,6 +21,8 @@ import {
   stopClockOutTracking,
   getStoredCoordinates,
 } from "@/app/lib/client/locationTracking";
+import { sendNotification } from "@/app/lib/actions/generatorActions";
+import { enqueue } from "@/app/lib/queue/jobQueue";
 
 export default function Comment({
   handleClick,
@@ -31,6 +33,7 @@ export default function Comment({
   setLoading,
   loading = false,
   currentTimesheetId,
+  coordinates,
 }: {
   commentsValue: string;
   handleClick: () => void;
@@ -41,6 +44,7 @@ export default function Comment({
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   loading: boolean;
   currentTimesheetId: number | undefined;
+  coordinates?: { lat: number; lng: number } | null;
 }) {
   const { user } = useUserStore();
 
@@ -53,6 +57,10 @@ export default function Comment({
     window.history.back();
   };
 
+  const setCurrentPageView = useCookieStore(
+    (state) => state.setCurrentPageView
+  );
+
   const processOne = async () => {
     try {
       let timeSheetId = currentTimesheetId;
@@ -62,15 +70,16 @@ export default function Comment({
         const ts = savedTimeSheetData?.id;
         if (!ts) {
           console.error("No active timesheet found for job switch.");
+          return;
         }
-        return (timeSheetId = ts);
+        timeSheetId = ts;
       }
+
       if (!permissions.location) {
         console.error("Location permissions are required to clock in.");
         return;
       }
 
-      // Get current coordinates before stopping tracking
       const coordinates = await getStoredCoordinates();
 
       const body = {
@@ -78,26 +87,41 @@ export default function Comment({
         endTime: new Date().toISOString(),
         timeSheetComments: commentsValue,
         wasInjured: false,
-        clockOutLat: coordinates ? coordinates.lat : null,
-        clockOutLng: coordinates ? coordinates.lng : null,
+        clockOutLat: coordinates?.lat ?? null,
+        clockOutLong: coordinates?.lng ?? null,
       };
 
-      // Use apiRequest to call the backend update route
-      const isUpdated = await apiRequest(
-        `/api/v1/timesheet/${timeSheetId}/clock-out`,
-        "PUT",
-        body
-      );
+      // 🔴 CRITICAL: Stop tracking FIRST before doing anything else
 
-      if (isUpdated) {
-        // Stop location tracking only after successful clock-out
-        await stopClockOutTracking();
-        await setCurrentPageView("break");
-        setTimeSheetData(null);
-        router.push("/v1");
-      }
+      await stopClockOutTracking();
+
+      // Now update state and redirect
+      setCurrentPageView("break");
+      setTimeSheetData(null);
+      // 🟢 INSTANT — Navigate after tracking is stopped
+      router.push("/v1");
+
+      // 🟡 Queue API call after redirect
+      enqueue(async () => {
+        await apiRequest(
+          `/api/v1/timesheet/${timeSheetId}/clock-out`,
+          "PUT",
+          body
+        );
+      });
+
+      enqueue(async () => {
+        const fullName = user?.firstName + " " + user?.lastName;
+        await sendNotification({
+          topic: "timecard-submission",
+          title: "Timecard Approval Needed",
+          message: `#${timeSheetId} has been submitted by ${fullName}.`,
+          link: `/admins/timesheets?id=${timeSheetId}`,
+          referenceId: timeSheetId,
+        });
+      });
     } catch (err) {
-      console.error(err);
+      console.error("[Comment] Error:", err);
     }
   };
   const ios = Capacitor.getPlatform() === "ios";

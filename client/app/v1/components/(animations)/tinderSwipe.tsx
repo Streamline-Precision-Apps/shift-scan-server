@@ -33,7 +33,7 @@ const TinderSwipe = forwardRef<TinderSwipeRef, SlidingDivProps>(
       swipeThreshold = 80, // Lower threshold for easier swipe
       minHoldTime = 50, // Lower hold time for quicker drag enable
     },
-    ref,
+    ref
   ) {
     const controls = useAnimation();
     const [bgColor, setBgColor] = useState("bg-transparent");
@@ -78,7 +78,7 @@ const TinderSwipe = forwardRef<TinderSwipeRef, SlidingDivProps>(
         setBgColor("bg-transparent");
         setMessage("");
       },
-      [controls, onSwipeLeft, onSwipeRight],
+      [controls, onSwipeLeft, onSwipeRight]
     );
 
     // Expose swipe functions to parent component
@@ -88,7 +88,7 @@ const TinderSwipe = forwardRef<TinderSwipeRef, SlidingDivProps>(
         swipeLeft: () => triggerSwipe("left"),
         swipeRight: () => triggerSwipe("right"),
       }),
-      [triggerSwipe],
+      [triggerSwipe]
     );
 
     const handleDragStart = () => {
@@ -105,7 +105,7 @@ const TinderSwipe = forwardRef<TinderSwipeRef, SlidingDivProps>(
 
     const handleDrag = (
       event: MouseEvent | TouchEvent | PointerEvent,
-      info: PanInfo,
+      info: PanInfo
     ) => {
       // If minimum hold time hasn't passed, prevent dragging
       if (!dragEnabled) {
@@ -118,11 +118,11 @@ const TinderSwipe = forwardRef<TinderSwipeRef, SlidingDivProps>(
       }
       setIsScrolling(false);
 
-      // Visual feedback based on drag position
-      if (info.offset.x < -swipeThreshold) {
+      // Visual feedback based on drag position - only if callback exists for that direction
+      if (info.offset.x < -swipeThreshold && onSwipeLeft) {
         setBgColor("bg-app-orange");
         setMessage("Editing Time Sheets");
-      } else if (info.offset.x > swipeThreshold) {
+      } else if (info.offset.x > swipeThreshold && onSwipeRight) {
         setBgColor("bg-app-green");
         setMessage("Approving Time Sheets");
       } else {
@@ -133,7 +133,7 @@ const TinderSwipe = forwardRef<TinderSwipeRef, SlidingDivProps>(
 
     const handleDragEnd = (
       event: MouseEvent | TouchEvent | PointerEvent,
-      info: PanInfo,
+      info: PanInfo
     ) => {
       // Clear any pending hold timer
       if (holdTimerRef.current) {
@@ -157,8 +157,9 @@ const TinderSwipe = forwardRef<TinderSwipeRef, SlidingDivProps>(
       if (isScrolling) return;
 
       const { offset } = info;
-      const shouldSwipeLeft = offset.x < -swipeThreshold;
-      const shouldSwipeRight = offset.x > swipeThreshold;
+      // Only allow swipe if the callback exists for that direction
+      const shouldSwipeLeft = offset.x < -swipeThreshold && onSwipeLeft;
+      const shouldSwipeRight = offset.x > swipeThreshold && onSwipeRight;
 
       if (shouldSwipeLeft) {
         triggerSwipe("left");
@@ -242,7 +243,7 @@ const TinderSwipe = forwardRef<TinderSwipeRef, SlidingDivProps>(
         </motion.div>
       </Holds>
     );
-  },
+  }
 );
 
 export default TinderSwipe;

@@ -195,6 +195,7 @@ export default function RenderSearchPersonField({
               handleFieldChange(field.id, null);
             }
           }}
+          disabled={disabled}
         />
         {/* Display selected person as tag */}
         {selectedPerson && (

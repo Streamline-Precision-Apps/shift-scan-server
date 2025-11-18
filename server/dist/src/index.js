@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="d3d22e86-4c19-5538-9f90-b011a80ef752")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="754c2388-d577-5be5-ac23-051dc48e96f2")}catch(e){}}();
 import "./instrument.mjs";
 import * as Sentry from "@sentry/node";
 import express from "express";
@@ -64,7 +64,7 @@ async function main() {
         app.use(notFoundHandler);
         // Error handling middleware (must be last)
         app.use(errorHandler);
-        const PORT = parseInt(process.env.PORT || "8080", 10) || 8080;
+        const PORT = 8080;
         // Start server
         const server = app.listen(PORT, "0.0.0.0", () => {
             console.log(`🌟 Server is running on port ${PORT}`);
@@ -98,4 +98,4 @@ main().catch(async (error) => {
     process.exit(1);
 });
 //# sourceMappingURL=index.js.map
-//# debugId=d3d22e86-4c19-5538-9f90-b011a80ef752
+//# debugId=754c2388-d577-5be5-ac23-051dc48e96f2

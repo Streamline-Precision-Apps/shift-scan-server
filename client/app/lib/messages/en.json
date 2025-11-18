@@ -194,6 +194,8 @@
     "AbcdShift": "ABCD Shift",
     "EquipmentOperator": "Equipment Operator",
     "EShift": "E Shift",
+    "FShift": "F Shift",
+    "Lime": "Screen Lime Rock",
     "ManualLabor": "Manual Labor",
     "MudConditioning": "Mud Conditioning",
     "CurrentCostCode": "Current Cost Code",
@@ -294,6 +296,9 @@
     "SaveCropImage": "Save Image"
   },
   "Equipment": {
+    "PullToRefresh": "Pull to refresh",
+    "ReleaseToRefresh": "Release to refresh",
+    "Refreshing": "Refreshing...",
     "DeletePrompt": "Are you sure you want to delete this Equipment log?",
     "CurrentLogs": "Current Logs",
     "FinishedLogs": "Finished Logs",
@@ -616,6 +621,8 @@
     }
   },
   "TimeCardSwiper": {
+    "Approve": "Approve",
+    "Submitted": "Submitted",
     "highlight": "Time Sheet Highlights",
     "Trucking": "Trucking",
     "Tasco": "Tasco",

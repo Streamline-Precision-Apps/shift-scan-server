@@ -2,8 +2,18 @@
 import prisma from "../lib/prisma.js";
 import { EquipmentTags, OwnershipType } from "../../generated/prisma/client.js";
 
-export async function getEquipment(query: { qrg?: boolean }) {
+export async function getEquipment(query: { qrg?: boolean; clock?: boolean }) {
   if (query.qrg) {
+    return prisma.equipment.findMany({
+      select: {
+        id: true,
+        qrId: true,
+        name: true,
+        code: true,
+        status: true,
+      },
+    });
+  } else if (query.clock) {
     return prisma.equipment.findMany({
       where: {
         status: { not: "ARCHIVED" },

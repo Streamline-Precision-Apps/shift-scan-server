@@ -425,6 +425,7 @@ export async function createTimesheetAndSwitchJobsController(
     });
   }
 }
+
 // GET /v1/timesheet/:id/user/:userId
 export async function getBannerDataController(
   req: Express.Request,
@@ -490,10 +491,14 @@ export async function getUserEquipmentLogsController(
 ) {
   try {
     const userId = req.params.userId;
-    if (!userId) {
-      return res.status(400).json({ error: "userId parameter is required." });
+    const timesheetIdString = req.query.timesheetId as string;
+    if (!userId || !timesheetIdString) {
+      return res
+        .status(400)
+        .json({ error: "Invalid Request - parameters are required." });
     }
-    const logs = await getEquipmentLogs(userId);
+    const timesheetId = Number(timesheetIdString);
+    const logs = await getEquipmentLogs(userId, timesheetId);
     return res.json({ success: true, data: logs });
   } catch (error) {
     console.error("[getUserEquipmentLogsController] Error:", error);

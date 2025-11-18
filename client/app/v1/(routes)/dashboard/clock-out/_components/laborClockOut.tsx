@@ -7,7 +7,7 @@ import {
   stopClockOutTracking,
   getStoredCoordinates,
 } from "@/app/lib/client/locationTracking";
-
+import { useCookieStore } from "@/app/lib/store/cookieStore";
 import Spinner from "@/app/v1/components/(animations)/spinner";
 import { Bases } from "@/app/v1/components/(reusable)/bases";
 import { Buttons } from "@/app/v1/components/(reusable)/buttons";
@@ -22,7 +22,8 @@ import { Titles } from "@/app/v1/components/(reusable)/titles";
 import { Capacitor } from "@capacitor/core";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { enqueue } from "@/app/lib/queue/jobQueue";
 
 export type TimeSheet = {
   submitDate: string;
@@ -63,80 +64,90 @@ export const LaborClockOut = ({
   const t = useTranslations("ClockOut");
   const [date] = useState(new Date());
   const [loading, setLoading] = useState<boolean>(false);
+  // No need to prefetch here, now passed from page
   const router = useRouter();
   const { user } = useUserStore();
-  // const { permissions, getStoredCoordinates } = usePermissions();
+  const { reset } = useCookieStore();
+  // Prefetch coordinates as soon as possible
 
+  if (!user) return null;
+  const fullName = user?.firstName + " " + user?.lastName;
   async function handleSubmitTimeSheet() {
+    setLoading(true);
+
     if (!timeSheetId || isNaN(Number(timeSheetId))) {
-      alert("Timesheet ID is missing or invalid. Cannot submit timesheet.");
+      alert("Timesheet ID is missing or invalid.");
       return;
     }
-    try {
-      setLoading(true);
 
-      // Get current coordinates before stopping tracking
+    try {
       const coordinates = await getStoredCoordinates();
 
-      // Prepare body for API request
       const body = {
         userId: user?.id,
         endTime: new Date().toISOString(),
         timeSheetComments: commentsValue,
         wasInjured,
-        clockOutLat: coordinates ? coordinates.lat : null,
-        clockOutLng: coordinates ? coordinates.lng : null,
+        clockOutLat: coordinates?.lat ?? null,
+        clockOutLong: coordinates?.lng ?? null,
       };
 
-      // Use apiRequest to call the backend update route
-      const result = await apiRequest(
-        `/api/v1/timesheet/${timeSheetId}/clock-out`,
-        "PUT",
-        body
-      );
-      if (result.success) {
-        // Stop location tracking only after successful clock-out
-        await stopClockOutTracking();
+      // 🔴 CRITICAL: Stop tracking FIRST before doing anything else
+      // This must complete before component unmounts
 
-        try {
-          await sendNotification({
-            topic: "timecard-submission",
-            title: "Timecard Approval Needed",
-            message: `#${result.timesheetId} has been submitted by ${result.userFullName} for approval.`,
-            link: `/admins/timesheets?id=${result.timesheetId}`,
-            referenceId: result.timesheetId,
-          });
-        } catch (error) {
-          console.error("🔴 Failed to send notification:", error);
-          return;
-        } finally {
-          // List of cookie names to delete (add names as needed)
-          const cookiesToDelete: string[] = [
-            "currentPageView",
-            "costCode",
-            "equipment",
-            "jobSite",
-            "startingMileage",
-            "timeSheetId",
-            "truckId",
-            "adminAccess",
-            "laborType",
-            "workRole",
-          ];
-          // Build query string
-          const query = cookiesToDelete
-            .map((name) => `name=${encodeURIComponent(name)}`)
-            .join("&");
-          await apiRequest(
-            `/api/cookies/list${query ? `?${query}` : ""}`,
-            "DELETE"
-          );
-          localStorage.removeItem("timesheetId");
-          await Promise.all([refetchTimesheet(), router.push("/v1")]);
-        }
-      }
-    } catch (error) {
-      console.error("🔴 Failed to process the time sheet:", error);
+      await stopClockOutTracking();
+
+      // Now update state and redirect
+      reset(); // Clear cookie store immediately
+      // 🟢 INSTANT — Navigate after tracking is stopped
+      router.push("/v1");
+
+      // 🟡 Queue API call after redirect
+      enqueue(async () => {
+        await apiRequest(
+          `/api/v1/timesheet/${timeSheetId}/clock-out`,
+          "PUT",
+          body
+        );
+      });
+
+      enqueue(async () => {
+        await sendNotification({
+          topic: "timecard-submission",
+          title: "Timecard Approval Needed",
+          message: `#${timeSheetId} has been submitted by ${fullName}.`,
+          link: `/admins/timesheets?id=${timeSheetId}`,
+          referenceId: timeSheetId,
+        });
+      });
+
+      enqueue(async () => {
+        const cookiesToDelete: string[] = [
+          "currentPageView",
+          "costCode",
+          "equipment",
+          "jobSite",
+          "startingMileage",
+          "timeSheetId",
+          "truckId",
+          "adminAccess",
+          "laborType",
+          "workRole",
+        ];
+
+        const query = cookiesToDelete
+          .map((c) => `name=${encodeURIComponent(c)}`)
+          .join("&");
+
+        await apiRequest(`/api/cookies/list?${query}`, "DELETE");
+        localStorage.removeItem("timesheetId");
+      });
+
+      enqueue(async () => {
+        await refetchTimesheet();
+      });
+    } catch (err) {
+      console.error("Clock-out error:", err);
     } finally {
       setLoading(false);
     }

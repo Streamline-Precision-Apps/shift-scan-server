@@ -7,6 +7,7 @@ import { LaborClockOut } from "./_components/laborClockOut";
 import { PreInjuryReport } from "./_components/no-injury";
 import Comment from "./_components/comment";
 import { useTimeSheetData } from "@/app/lib/context/TimeSheetIdContext";
+import { getStoredCoordinates } from "@/app/lib/client/locationTracking";
 import { useUserStore } from "@/app/lib/store/userStore";
 import { usePermissions } from "@/app/lib/context/permissionContext";
 import { apiRequest } from "@/app/lib/utils/api-Utils";
@@ -67,17 +68,10 @@ export default function TempClockOutContent() {
   const { currentView } = useCurrentView();
   const [commentsValue, setCommentsValue] = useState("");
   const [timesheets, setTimesheets] = useState<TimeSheet[]>([]);
-  // Removed reviewYourTeam state, not needed for manager flow
   const [pendingTimeSheets, setPendingTimeSheets] = useState<TimeSheet>();
-  const [editFilter, setEditFilter] = useState<TimesheetFilter | null>(null);
-  const [editDate, setEditDate] = useState<string>("");
-  const [focusIds, setFocusIds] = useState<string[]>([]);
-  const [employeeId, setEmployeeId] = useState<string>("");
-  const [teamUsers, setTeamUsers] = useState<crewUsers[]>([]);
   const [wasInjured, setWasInjured] = useState<boolean>(false);
   // const [currentTimesheetId, setCurrentTimesheetId] = useState<number>();
   const { savedTimeSheetData, refetchTimesheet } = useTimeSheetData();
-  const { requestLocationPermission } = usePermissions();
 
   const incrementStep = () => {
     setStep((prevStep) => prevStep + 1); // Increment function
@@ -86,13 +80,6 @@ export default function TempClockOutContent() {
   const prevStep = () => {
     setStep((prevStep) => prevStep - 1); // Increment function
   };
-
-  useEffect(() => {}, []);
-
-  // on mount, request location permission and get stored coordinates
-  useEffect(() => {
-    requestLocationPermission();
-  }, []);
 
   // Batch fetch all clock-out details (timesheets, comment, signature)
   useEffect(() => {

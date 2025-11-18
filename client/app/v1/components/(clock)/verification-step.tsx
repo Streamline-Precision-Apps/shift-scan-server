@@ -13,11 +13,7 @@ import { Images } from "../(reusable)/images";
 import { Holds } from "../(reusable)/holds";
 import { Grids } from "../(reusable)/grids";
 
-import {
-  setCurrentPageView,
-  setLaborType,
-  setWorkRole,
-} from "@/app/lib/actions/cookieActions";
+import { useCookieStore } from "@/app/lib/store/cookieStore";
 import { Titles } from "../(reusable)/titles";
 import { useRouter } from "next/navigation";
 import Spinner from "../(animations)/spinner";
@@ -31,6 +27,7 @@ import { sendNotification } from "@/app/lib/actions/generatorActions";
 import {
   startClockInTracking,
   getStoredCoordinates,
+  isTrackingActive,
 } from "@/app/lib/client/locationTracking";
 import { useSessionStore } from "@/app/lib/store/sessionStore";
 
@@ -69,6 +66,11 @@ export default function VerificationStep({
   const [date] = useState(new Date());
   const [loading, setLoading] = useState<boolean>(false);
   const { user } = useUserStore();
+  const setCurrentPageView = useCookieStore(
+    (state) => state.setCurrentPageView
+  );
+  const setWorkRole = useCookieStore((state) => state.setWorkRole);
+  const setLaborType = useCookieStore((state) => state.setLaborType);
   const { savedCommentData, setCommentData } = useCommentData();
   const router = useRouter();
   const { savedTimeSheetData, refetchTimesheet } = useTimeSheetData();
@@ -113,9 +115,6 @@ export default function VerificationStep({
 
           if (currentTime - endTime > FOUR_HOURS_MS) {
             // More than 4 hours have passed, clear sessions and create a new one
-            console.log(
-              "Session expired (4+ hours since end), clearing storage and creating new session"
-            );
             useSessionStore.getState().clearSessions();
             sessionId = await createNewSession(id);
             setCurrentSession(sessionId);
@@ -185,9 +184,23 @@ export default function VerificationStep({
           : null;
       }
 
-      const responseAction = await handleGeneralTimeSheet(payload);
+      // Start location tracking FIRST for clock in (before submitting timesheet)
+      let trackingResult = { success: false };
+      if (type !== "switchJobs" && sessionId) {
+        if (!isTrackingActive()) {
+          trackingResult = await startClockInTracking(id, sessionId);
+        } else {
+          console.log("Location tracking already active, skipping start");
+          trackingResult = { success: true };
+        }
+      }
 
-      console.log("TimeSheet action response:", responseAction);
+      // Only proceed with timesheet submission if tracking succeeded or is not required
+      if (!trackingResult?.success && type !== "switchJobs") {
+        throw new Error("Failed to start location tracking. Cannot clock in.");
+      }
+
+      const responseAction = await handleGeneralTimeSheet(payload);
 
       // Add timesheet ID to session store after successful creation
       if (
@@ -216,21 +229,15 @@ export default function VerificationStep({
         });
       }
 
-      // Start location tracking for clock in
-      if (type !== "switchJobs" && sessionId) {
-        await startClockInTracking(id, sessionId);
-      }
-
       // Update state and redirect
       setCommentData(null);
       localStorage.removeItem("savedCommentData");
 
-      await Promise.all([
-        setCurrentPageView("dashboard"),
-        setWorkRole(role),
-        setLaborType(clockInRoleTypes || ""),
-        refetchTimesheet(),
-      ]).then(() => router.push("/v1/dashboard"));
+      setCurrentPageView("dashboard");
+      setWorkRole(role);
+      setLaborType(clockInRoleTypes || "");
+      await refetchTimesheet();
+      router.push("/v1/dashboard");
     } catch (error) {
       console.error("Error in handleSubmit:", error);
     } finally {

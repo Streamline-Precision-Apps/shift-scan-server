@@ -18,6 +18,7 @@ import {
   ServiceSaveDraftToPending,
   ServiceSavePending,
   ServiceUpdateFormApproval,
+  updateFormSubmissionService,
 } from "../services/formsService.js";
 
 import { ServiceGetEmployeeRequests } from "../services/formsService.js";
@@ -112,6 +113,23 @@ export const getForms = async (req: express.Request, res: express.Response) => {
       error instanceof Error && error.message
         ? error.message
         : "Failed to retrieve forms";
+    res.status(400).json({ message });
+  }
+};
+
+export const updateFormSubmission = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const body = req.body;
+    const submission = await updateFormSubmissionService(body);
+    res.status(201).json(submission);
+  } catch (error) {
+    const message =
+      error instanceof Error && error.message
+        ? error.message
+        : "Failed to create form submission";
     res.status(400).json({ message });
   }
 };

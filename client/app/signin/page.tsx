@@ -43,7 +43,7 @@ export default function SignInPage() {
       setBiometricAvailable(true);
     } else {
       // Biometry is not available, info.reason and info.code will tell you why.
-      console.log(`Biometry unavailable`);
+
       setBiometricAvailable(false);
     }
   }, []);

@@ -159,6 +159,16 @@ export default function BannerRotating() {
             <p>{t("MudConditioning")}</p>
           </div>
         );
+      } else if (equipment.shiftType === "F shift") {
+        slides.push(
+          <div
+            key={`tasco-labor-${slideKey++}`}
+            className="text-white flex flex-col justify-center items-center space-y-1"
+          >
+            <h3>{t("FShift")}</h3>
+            <p>{t("Lime")}</p>
+          </div>
+        );
       } else if (
         equipment.shiftType === "ABCD Shift" &&
         equipment.laborType === "Manual Labor"
@@ -205,17 +215,24 @@ export default function BannerRotating() {
 
     // 6. Employee Equipment Logs
     bannerData.employeeEquipmentLogs.forEach((equipment, index) => {
+      const endTime = equipment.endTime
+        ? equipment.endTime
+        : newDate.toISOString();
+      const durationDisplay = formatDuration(
+        equipment.startTime,
+        new Date(endTime)
+      );
+
       slides.push(
         <div
           key={`employee-equipment-${slideKey++}`}
           className="text-white flex flex-col justify-center items-center space-y-1"
         >
           <h3>{equipment.equipment?.name || t("UnknownEquipment")}</h3>
-          <p>
-            {equipment.startTime
-              ? `${t("StartTime")} ${equipment.startTime}`
-              : t("NoStartTime")}
-          </p>
+          <p>{durationDisplay}</p>
+          {equipment.endTime && (
+            <p className="text-sm opacity-80">{t("Completed")}</p>
+          )}
         </div>
       );
     });

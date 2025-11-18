@@ -1,8 +1,18 @@
 // server/src/services/jobsiteService.ts
 import prisma from "../lib/prisma.js";
 
-export async function getJobsites(query: { qrg?: boolean }) {
+export async function getJobsites(query: { qrg?: boolean; clock?: boolean }) {
   if (query.qrg) {
+    return prisma.jobsite.findMany({
+      select: {
+        id: true,
+        qrId: true,
+        name: true,
+        code: true,
+        status: true,
+      },
+    });
+  } else if (query.clock) {
     return prisma.jobsite.findMany({
       where: {
         status: { not: "ARCHIVED" },

@@ -1,9 +1,7 @@
 "use client";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-
 import { useRouter } from "next/navigation";
-
 import { Buttons } from "@/app/v1/components/(reusable)/buttons";
 import { Contents } from "@/app/v1/components/(reusable)/contents";
 import { Grids } from "@/app/v1/components/(reusable)/grids";
@@ -15,14 +13,9 @@ import { Texts } from "@/app/v1/components/(reusable)/texts";
 import { Titles } from "@/app/v1/components/(reusable)/titles";
 import Spinner from "@/app/v1/components/(animations)/spinner";
 import { TitleBoxes } from "@/app/v1/components/(reusable)/titleBoxes";
-
 import { usePermissions } from "@/app/lib/context/permissionContext";
 import Capitalize from "@/app/lib/utils/capitalizeFirst";
-import {
-  setCurrentPageView,
-  setLaborType,
-  setWorkRole,
-} from "@/app/lib/actions/cookieActions";
+import { useCookieStore } from "@/app/lib/store/cookieStore";
 import { useUserStore } from "@/app/lib/store/userStore";
 import { useTimeSheetData } from "@/app/lib/context/TimeSheetIdContext";
 import { useSavedCostCode } from "@/app/lib/context/CostCodeContext";
@@ -35,9 +28,9 @@ import { sendNotification } from "@/app/lib/actions/generatorActions";
 import {
   startClockInTracking,
   getStoredCoordinates,
+  isTrackingActive,
 } from "@/app/lib/client/locationTracking";
 import { useSessionStore } from "@/app/lib/store/sessionStore";
-import { set } from "lodash";
 
 type Option = {
   id: string;
@@ -72,6 +65,11 @@ export default function MechanicVerificationStep({
   const [date] = useState(new Date());
   const [loading, setLoading] = useState<boolean>(false);
   const { user } = useUserStore();
+  const setCurrentPageView = useCookieStore(
+    (state) => state.setCurrentPageView
+  );
+  const setWorkRole = useCookieStore((state) => state.setWorkRole);
+  const setLaborType = useCookieStore((state) => state.setLaborType);
   const { savedCommentData, setCommentData } = useCommentData();
   const { setCostCode } = useSavedCostCode();
   const costCode = "#00.50 Mechanics";
@@ -89,155 +87,112 @@ export default function MechanicVerificationStep({
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      if (!id) {
-        console.error("User ID does not exist");
-        return;
-      }
-      // Check if location permissions are granted if not clock in does not work
+      if (!id) throw new Error("User ID does not exist");
+
+      // Ensure location permissions
       if (!permissionStatus.location) {
         console.error("Location permissions are required to clock in.");
         return;
       }
 
-      // Get current coordinates
+      // Get current coordinates (fast snapshot)
       const coordinates = await getStoredCoordinates();
 
-      // Check for session data
-      let sessionId = null;
-      if (currentSessionId === null) {
-        // No session exists, create a new one
+      // Determine session ID
+      let sessionId = currentSessionId;
+      if (!sessionId) {
         sessionId = await createNewSession(id);
         setCurrentSession(sessionId);
       } else {
-        // Session exists, check if it's ended
-        const currentSession = useSessionStore
-          .getState()
-          .getSession(currentSessionId);
-        if (currentSession && currentSession.endTime) {
-          // Session has ended, check if 4+ hours have passed
+        const currentSession = useSessionStore.getState().getSession(sessionId);
+        if (currentSession?.endTime) {
+          const FOUR_HOURS_MS = 4 * 60 * 60 * 1000;
           const endTime = new Date(currentSession.endTime).getTime();
-          const currentTime = new Date().getTime();
-          const FOUR_HOURS_MS = 4 * 60 * 60 * 1000; // 4 hours in milliseconds
-
-          if (currentTime - endTime > FOUR_HOURS_MS) {
-            // More than 4 hours have passed, clear sessions and create a new one
-            console.log(
-              "Session expired (4+ hours since end), clearing storage and creating new session"
-            );
+          if (Date.now() - endTime > FOUR_HOURS_MS) {
             useSessionStore.getState().clearSessions();
             sessionId = await createNewSession(id);
             setCurrentSession(sessionId);
           } else {
-            // Less than 4 hours, create a new session but keep old one in history
             sessionId = await createNewSession(id);
             setCurrentSession(sessionId);
           }
-        } else {
-          // Session is still active, reuse it
-          sessionId = currentSessionId;
         }
       }
 
-      const payload: {
-        date: string;
-        jobsiteId: string;
-        workType: string;
-        userId: string;
-        costCode: string;
-        startTime: string;
-        clockInLat?: number | null;
-        clockInLong?: number | null;
-        type?: string;
-        previousTimeSheetId?: number;
-        endTime?: string;
-        previoustimeSheetComments?: string;
-        sessionId?: number | null;
-        clockOutLat?: number | null;
-        clockOutLong?: number | null;
-      } = {
+      // Build payload
+      const payload: any = {
         date: new Date().toISOString(),
         jobsiteId: jobsite?.id || "",
         workType: role,
-        userId: id?.toString() || "",
-        costCode: costCode || "",
+        userId: id.toString(),
+        costCode: costCode,
         startTime: new Date().toISOString(),
         sessionId,
-        clockInLat: coordinates ? coordinates.lat : null,
-        clockInLong: coordinates ? coordinates.lng : null,
+        clockInLat: coordinates?.lat ?? null,
+        clockInLong: coordinates?.lng ?? null,
       };
 
-      // If switching jobs, include the previous timesheet ID
+      // Handle job switch
       if (type === "switchJobs") {
         let timeSheetId = savedTimeSheetData?.id;
         if (!timeSheetId) {
           await refetchTimesheet();
-          const ts = savedTimeSheetData?.id;
-          if (!ts) {
+          timeSheetId = savedTimeSheetData?.id;
+          if (!timeSheetId) {
             console.error("No active timesheet found for job switch.");
             return;
           }
-          timeSheetId = ts;
         }
         payload.type = "switchJobs";
         payload.previousTimeSheetId = timeSheetId;
         payload.endTime = new Date().toISOString();
         payload.previoustimeSheetComments =
-          savedCommentData?.id?.toString() || "";
-        // For clock out, get coordinates again
+          savedCommentData?.id?.toString() ?? "";
+
         const clockOutCoordinates = await getStoredCoordinates();
-        payload.clockOutLat = clockOutCoordinates
-          ? clockOutCoordinates.lat
-          : null;
-        payload.clockOutLong = clockOutCoordinates
-          ? clockOutCoordinates.lng
-          : null;
+        payload.clockOutLat = clockOutCoordinates?.lat ?? null;
+        payload.clockOutLong = clockOutCoordinates?.lng ?? null;
       }
 
+      // Start location tracking for clock in (if not switching jobs)
+      if (type !== "switchJobs" && sessionId && !isTrackingActive()) {
+        const trackingResult = await startClockInTracking(id, sessionId);
+        if (!trackingResult.success) {
+          throw new Error(
+            "Failed to start location tracking. Cannot clock in."
+          );
+        }
+      }
+
+      // Submit timesheet
       const responseAction = await handleMechanicTimeSheet(payload);
 
-      // Add timesheet ID to session store after successful creation
-      if (
-        responseAction &&
-        responseAction.createdTimeSheet &&
-        responseAction.createdTimeSheet.id &&
-        sessionId
-      ) {
+      // Save timesheet ID in session store
+      if (responseAction?.createdTimeSheet?.id && sessionId) {
         useSessionStore
           .getState()
           .setTimesheetId(sessionId, responseAction.createdTimeSheet.id);
       }
 
-      // Send notification to admins for approval if switching jobs
-      if (
-        type === "switchJobs" &&
-        responseAction &&
-        responseAction.createdTimeSheet &&
-        responseAction.createdTimeSheet.id
-      ) {
+      // Send notification if switching jobs
+      if (type === "switchJobs" && responseAction?.createdTimeSheet?.id) {
         await sendNotification({
           topic: "timecard-submission",
           title: "Timecard Approval Needed",
-          message: `#${responseAction.createdTimeCard.id} has been submitted by ${responseAction.createdTimeCard.User.firstName} ${responseAction.createdTimeCard.User.lastName} for approval.`,
-          link: `/admins/timesheets?id=${responseAction.createdTimeCard.id}`,
-          referenceId: responseAction.createdTimeCard.id,
+          message: `#${responseAction.createdTimeSheet.id} has been submitted by ${responseAction.createdTimeSheet.User.firstName} ${responseAction.createdTimeSheet.User.lastName} for approval.`,
+          link: `/admins/timesheets?id=${responseAction.createdTimeSheet.id}`,
+          referenceId: responseAction.createdTimeSheet.id,
         });
       }
 
-      // Start location tracking for clock in
-      if (type !== "switchJobs" && sessionId) {
-        await startClockInTracking(id, sessionId);
-      }
-
-      // Update state and redirect
+      // Cleanup and redirect
       setCommentData(null);
       localStorage.removeItem("savedCommentData");
-
-      await Promise.all([
-        setCurrentPageView("dashboard"),
-        setWorkRole(role),
-        setLaborType(clockInRoleTypes || ""),
-        refetchTimesheet(),
-      ]).then(() => router.push("/v1/dashboard"));
+      setCurrentPageView("dashboard");
+      setWorkRole(role);
+      setLaborType(clockInRoleTypes || "");
+      await refetchTimesheet();
+      router.push("/v1/dashboard");
     } catch (error) {
       console.error("Error in handleSubmit:", error);
     } finally {

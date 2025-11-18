@@ -14,6 +14,7 @@ import DashboardLoadingView from "./UI/_dashboards/dashboardLoadingView";
 import LoadingHamburgerMenuNew from "@/app/v1/components/(animations)/loadingHamburgerMenuNew";
 import { useUserStore } from "@/app/lib/store/userStore";
 import { getCookies } from "@/app/lib/actions/cookieActions";
+import { useCookieStore } from "@/app/lib/store/cookieStore";
 import { useRouter } from "next/navigation";
 import { Capacitor } from "@capacitor/core";
 
@@ -23,47 +24,33 @@ export default function Dashboard() {
   const ios = Capacitor.getPlatform() === "ios";
   const android = Capacitor.getPlatform() === "android";
 
-  // State for cookies
-  const [cookiesState, setCookiesState] = useState({
-    currentPageView: "",
-    mechanicProjectID: "",
-    workRole: "general",
-    laborType: "",
-    loading: true,
-  });
+  // Zustand cookie store values
+  const currentPageView = useCookieStore((state) => state.currentPageView);
+  const workRole = useCookieStore((state) => state.workRole) || "general";
+  const laborType = useCookieStore((state) => state.laborType) || "";
+  const [mechanicProjectID, setMechanicProjectID] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchCookies() {
-      const [currentPageView, mechanicProjectID, workRole, laborType] =
-        await Promise.all([
-          getCookies({ cookieName: "currentPageView" }),
-          getCookies({ cookieName: "mechanicProjectID" }),
-          getCookies({ cookieName: "workRole" }),
-          getCookies({ cookieName: "laborType" }),
-        ]);
-      setCookiesState({
-        currentPageView: currentPageView || "",
-        mechanicProjectID: mechanicProjectID || "",
-        workRole: workRole || "general",
-        laborType: laborType || "",
-        loading: false,
-      });
+    async function fetchMechanicProjectID() {
+      const id = await getCookies({ cookieName: "mechanicProjectID" });
+      setMechanicProjectID(id || "");
+      setLoading(false);
     }
-    fetchCookies();
+    fetchMechanicProjectID();
   }, []);
 
   useEffect(() => {
-    if (!cookiesState.loading && cookiesState.currentPageView !== "dashboard") {
+    if (!loading && currentPageView !== "dashboard") {
       router.push("/v1");
     }
-  }, [cookiesState.loading, cookiesState.currentPageView, router]);
+  }, [loading, currentPageView, router]);
 
-  if (cookiesState.loading) {
+  if (loading) {
     return <div>Loading...</div>;
   }
 
-  // You can't use redirect() in client components, so you could use router.push if needed
-  if (cookiesState.currentPageView !== "dashboard") {
+  if (currentPageView !== "dashboard") {
     return <div>Redirecting...</div>;
   }
 
@@ -108,9 +95,9 @@ export default function Dashboard() {
           <Holds background={"white"} className="row-start-4 row-end-9 h-full">
             <Suspense fallback={<DashboardLoadingView />}>
               <DbWidgetSection
-                view={cookiesState.workRole}
-                mechanicProjectID={cookiesState.mechanicProjectID}
-                laborType={cookiesState.laborType}
+                view={workRole}
+                mechanicProjectID={mechanicProjectID}
+                laborType={laborType}
               />
             </Suspense>
           </Holds>

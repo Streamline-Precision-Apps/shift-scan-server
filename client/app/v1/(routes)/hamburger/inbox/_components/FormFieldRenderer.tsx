@@ -1,72 +1,69 @@
 "use client";
 
-import RenderFields from "../../../../../admins/forms/_components/RenderFields/RenderFields";
-
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+import type { FormTemplate, FormFieldValue } from "@/app/lib/types/forms";
 import { useEquipmentStore } from "@/app/lib/store/equipmentStore";
 import { useProfitStore } from "@/app/lib/store/profitStore";
 import { useCostCodeStore } from "@/app/lib/store/costCodeStore";
 import { apiRequest } from "@/app/lib/utils/api-Utils";
-import { FormIndividualTemplate } from "../_adminComponents/types";
+import RenderFields from "../../../../../admins/forms/_components/RenderFields/RenderFields";
+import { sortFormTemplate } from "@/app/lib/utils/formOrdering";
+import type { FormIndividualTemplate } from "../_adminComponents/types";
 
-// Define FormFieldValue type to match RenderFields expectations
-type FormFieldValue =
-  | string
-  | Date
-  | string[]
-  | object
-  | boolean
-  | number
-  | null;
+// ============================================================================
+// TYPES
+// ============================================================================
 
-// Define local types for backward compatibility
-interface FormField {
-  id: string;
-  label: string;
-  name: string;
-  type: string;
-  required: boolean;
-  order: number;
-  defaultValue?: string;
-  placeholder?: string;
-  maxLength?: number;
-  helperText?: string;
-  filter?: string;
-  multiple?: boolean;
-  options?: string[];
-}
-
-interface FormGrouping {
-  id: string;
-  title: string;
-  order: number;
-  fields: FormField[];
-}
-
-interface FormTemplate {
-  id: string;
-  name: string;
-  formType: string;
-  isActive: boolean;
-  isSignatureRequired: boolean;
-  isApprovalRequired: boolean;
-  groupings: FormGrouping[];
-}
-
-interface Option {
+interface UserOption {
   value: string;
   label: string;
 }
 
-interface FormFieldRendererProps {
+interface EquipmentOption {
+  value: string;
+  label: string;
+}
+
+interface JobsiteOption {
+  value: string;
+  label: string;
+}
+
+interface CostCodeOption {
+  value: string;
+  label: string;
+}
+
+/**
+ * Props for FormFieldRenderer component.
+ * Accepts FormTemplate from FormContext and manages conversion to RenderFields.
+ */
+export interface FormFieldRendererProps {
   formData: FormTemplate;
-  formValues: Record<string, string | boolean>;
-  setFormValues?: (values: Record<string, string | boolean>) => void;
+  formValues: Record<string, FormFieldValue>;
+  setFormValues?: (values: Record<string, FormFieldValue>) => void;
   readOnly?: boolean;
   disabled?: boolean;
   useNativeInput?: boolean;
 }
 
+// ============================================================================
+// COMPONENT
+// ============================================================================
+
+/**
+ * FormFieldRenderer Component
+ *
+ * Bridges FormContext (FormTemplate) with RenderFields component.
+ * Handles:
+ * - Converting FormTemplate to FormIndividualTemplate
+ * - Fetching dependent data (users, equipment, jobsites, cost codes)
+ * - Managing field value conversions
+ * - Delegating rendering to RenderFields
+ *
+ * @param props - FormFieldRendererProps
+ * @returns Rendered form fields via RenderFields
+ */
 export const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   formData,
   formValues,
@@ -75,19 +72,27 @@ export const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   disabled = false,
   useNativeInput = false,
 }) => {
-  const [equipmentOptions, setEquipmentOptions] = useState<Option[]>([]);
-  const [jobsiteOptions, setJobsiteOptions] = useState<Option[]>([]);
-  const [costCodeOptions, setCostCodeOptions] = useState<Option[]>([]);
-  const [userOptions, setUserOptions] = useState<Option[]>([]);
+  const [userOptions, setUserOptions] = useState<UserOption[]>([]);
+  const [equipmentOptions, setEquipmentOptions] = useState<EquipmentOption[]>(
+    []
+  );
+  const [jobsiteOptions, setJobsiteOptions] = useState<JobsiteOption[]>([]);
+  const [costCodeOptions, setCostCodeOptions] = useState<CostCodeOption[]>([]);
 
   const { costCodes } = useCostCodeStore();
   const { jobsites } = useProfitStore();
   const { equipments } = useEquipmentStore();
 
-  // Convert equipment data to Option format
+  // =========================================================================
+  // EFFECTS: Fetch and convert dependent data
+  // =========================================================================
+
+  /**
+   * Convert equipment store data to option format
+   */
   useEffect(() => {
     if (equipments && Array.isArray(equipments)) {
-      const options = equipments.map((equipment) => ({
+      const options: EquipmentOption[] = equipments.map((equipment) => ({
         value: equipment.id,
         label: equipment.name,
       }));
@@ -95,10 +100,12 @@ export const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
     }
   }, [equipments]);
 
-  // Convert jobsite data to Option format
+  /**
+   * Convert jobsite store data to option format
+   */
   useEffect(() => {
     if (jobsites && Array.isArray(jobsites)) {
-      const options = jobsites.map((jobsite) => ({
+      const options: JobsiteOption[] = jobsites.map((jobsite) => ({
         value: jobsite.id,
         label: jobsite.name,
       }));
@@ -106,10 +113,12 @@ export const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
     }
   }, [jobsites]);
 
-  // Convert cost code data to Option format
+  /**
+   * Convert cost code store data to option format
+   */
   useEffect(() => {
     if (costCodes && Array.isArray(costCodes)) {
-      const options = costCodes.map((costcode) => ({
+      const options: CostCodeOption[] = costCodes.map((costcode) => ({
         value: costcode.id,
         label: costcode.name,
       }));
@@ -117,16 +126,19 @@ export const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
     }
   }, [costCodes]);
 
-  // Fetch user options
+  /**
+   * Fetch user options from API
+   */
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchUsers = async (): Promise<void> => {
       try {
         const employeesRes = await apiRequest(`/api/v1/user/all`, "GET");
         const employees = Array.isArray(employeesRes.data)
           ? employeesRes.data
           : [];
+
         if (Array.isArray(employees)) {
-          const options = employees.map(
+          const options: UserOption[] = employees.map(
             (user: { id: string; firstName: string; lastName: string }) => ({
               value: user.id,
               label: `${user.firstName} ${user.lastName}`,
@@ -142,270 +154,63 @@ export const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
         setUserOptions([]);
       }
     };
+
     fetchUsers();
   }, []);
 
-  // Convert FormTemplate to FormIndividualTemplate for RenderFields
-  const convertToIndividualTemplate = (
-    template: FormTemplate
-  ): FormIndividualTemplate => {
-    return {
-      id: template.id,
-      name: template.name,
-      formType: template.formType,
-      isActive: template.isActive ? "ACTIVE" : "INACTIVE",
-      isSignatureRequired: template.isSignatureRequired,
-      isApprovalRequired: template.isApprovalRequired,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      description: null,
-      Submissions: [],
-      total: 0,
-      page: 1,
-      pageSize: 10,
-      totalPages: 1,
-      FormGrouping:
-        template.groupings?.map((group: FormGrouping) => ({
-          id: group.id,
-          title: group.title,
-          order: group.order,
-          Fields:
-            group.fields?.map((field: FormField) => ({
-              id: field.id,
-              formGroupingId: group.id,
-              label: field.label,
-              type: field.label === "Time" ? "TIME" : field.type, // Map Time label to TIME type
-              required: field.required,
-              order: field.order,
-              placeholder: field.placeholder || null,
-              maxLength: field.maxLength || null,
-              minLength: null,
-              multiple: field.multiple || null,
-              content: null,
-              filter: field.filter || null,
-              Options:
-                field.options?.map((opt: string) => ({
-                  id: `${field.id}-${opt}`,
-                  value: opt,
-                  fieldId: field.id,
-                })) || [],
-            })) || [],
-        })) || [],
-    };
-  };
+  // =========================================================================
+  // CONVERSIONS: FormTemplate <-> FormIndividualTemplate
+  // =========================================================================
 
-  // Convert string values to proper types for RenderFields
-  const convertToFormFieldValues = (
-    values: Record<string, string | boolean>
-  ): Record<string, FormFieldValue> => {
-    const result: Record<string, FormFieldValue> = {};
+  /**
+   * Sort form template to ensure proper ordering
+   * Groupings sorted by order, then fields within each grouping sorted by order
+   */
+  const sortedFormData = useMemo(() => {
+    const sorted = sortFormTemplate(formData);
 
-    Object.entries(values).forEach(([key, value]) => {
-      // Find the field to understand its type
-      // First try to find by field ID, then by field label/name, then by order
-      let field = formData.groupings
-        ?.flatMap((group: FormGrouping) => group.fields || [])
-        .find(
-          (f: FormField) => f.id === key || f.label === key || f.name === key
-        );
+    return sorted;
+  }, [formData]);
 
-      // If no field found and key is numeric, try to find by order
-      if (!field && /^\d+$/.test(key)) {
-        const order = parseInt(key);
-        field = formData.groupings
-          ?.flatMap((group: FormGrouping) => group.fields || [])
-          .find((f: FormField) => f.order === order);
-      }
-
-      if (field) {
-        switch (field.type) {
-          case "NUMBER":
-            // For numbers, handle both string and numeric values
-            if (typeof value === "string") {
-              result[field.id] = value ? parseFloat(value) : 0;
-            } else {
-              result[field.id] = value ? 1 : 0;
-            }
-            break;
-          case "CHECKBOX":
-            // For checkboxes, handle both string and boolean values
-            // Keep the actual boolean value
-            if (typeof value === "boolean") {
-              result[field.id] = value;
-            } else {
-              const checkboxValue = value === "true";
-              console.log(
-                `Converting checkbox ${
-                  field.id
-                }: ${value} (${typeof value}) to ${checkboxValue}`
-              );
-              result[field.id] = checkboxValue;
-            }
-            break;
-          case "DATE":
-          case "DATE_TIME":
-            result[field.id] = value || "";
-            break;
-          case "MULTISELECT":
-            try {
-              if (typeof value === "string") {
-                result[field.id] = value ? JSON.parse(value) : [];
-              } else {
-                result[field.id] = []; // Default for boolean case
-              }
-            } catch (error) {
-              // If JSON parsing fails, treat as empty array
-              result[field.id] = [];
-            }
-            break;
-          case "SEARCH_PERSON":
-            try {
-              if (typeof value === "string") {
-                result[field.id] = value ? JSON.parse(value) : null;
-              } else {
-                result[field.id] = null; // Default for boolean case
-              }
-            } catch (error) {
-              // If JSON parsing fails, treat as string (backward compatibility)
-              result[field.id] = value || "";
-            }
-            break;
-          case "SEARCH_ASSET":
-            try {
-              if (typeof value === "string") {
-                result[field.id] = value ? JSON.parse(value) : null;
-              } else {
-                result[field.id] = null; // Default for boolean case
-              }
-            } catch (error) {
-              // If JSON parsing fails, treat as string (backward compatibility)
-              result[field.id] = value || "";
-            }
-            break;
-          default:
-            result[field.id] = value || "";
-        }
-      } else {
-        result[key] = value || "";
-      }
-    });
-
-    return result;
-  };
-
-  // Convert FormFieldValue back to string for legacy components
-  const convertFromFormFieldValue = (
-    value: FormFieldValue
-  ): string | boolean => {
-    if (typeof value === "string") {
-      return value;
-    } else if (typeof value === "boolean") {
-      return value; // Keep booleans as booleans
-    } else if (typeof value === "number") {
-      return value.toString();
-    } else if (value instanceof Date) {
-      return value.toISOString();
-    } else if (Array.isArray(value)) {
-      return JSON.stringify(value);
-    } else if (value && typeof value === "object") {
-      return JSON.stringify(value);
-    } else {
-      return "";
-    }
-  };
-
-  const handleFieldChange = (fieldId: string, value: FormFieldValue) => {
+  /**
+   * Handle field changes from RenderFields.
+   * FormFieldValue types are compatible, so we pass through directly.
+   *
+   * @param fieldId - The ID of the field that changed
+   * @param value - The new value from RenderFields
+   */
+  const handleFieldChange = (fieldId: string, value: FormFieldValue): void => {
     if (!readOnly && setFormValues) {
-      // Find the field to understand its type
-      const field = formData.groupings
-        ?.flatMap((group: FormGrouping) => group.fields || [])
-        .find((f: FormField) => f.id === fieldId);
-
-      let convertedValue: string | boolean = "";
-
-      if (field) {
-        switch (field.type) {
-          case "SEARCH_PERSON":
-          case "SEARCH_ASSET":
-            // For search fields, store as JSON string
-            if (Array.isArray(value)) {
-              convertedValue = JSON.stringify(value);
-            } else if (value && typeof value === "object") {
-              convertedValue = JSON.stringify(value);
-            } else {
-              convertedValue = value ? String(value) : "";
-            }
-            break;
-          case "MULTISELECT":
-            // For multiselect, store as JSON array
-            if (Array.isArray(value)) {
-              convertedValue = JSON.stringify(value);
-            } else {
-              convertedValue = value ? String(value) : "";
-            }
-            break;
-          case "CHECKBOX":
-            // Store the actual boolean value
-            convertedValue = !!value;
-            console.log("convertedValue on FormFieldRenderer", convertedValue);
-            break;
-          case "NUMBER":
-            convertedValue = value ? String(value) : "0";
-            break;
-          case "DATE":
-          case "DATE_TIME":
-            if (value instanceof Date) {
-              convertedValue = value.toISOString();
-            } else {
-              convertedValue = value ? String(value) : "";
-            }
-            break;
-          default:
-            convertedValue = value ? String(value) : "";
-        }
-      } else {
-        // Fallback conversion
-        convertedValue = convertFromFormFieldValue(value);
-      }
-
-      // Always use field.id as the key since we're standardizing on that
-      // RenderFields will handle both field.id and field.label lookups
-      const keyToUpdate = fieldId;
-      console.log(
-        "Updating field:",
-        keyToUpdate,
-        "with value:",
-        convertedValue
-      );
-
-      const newFormValues = {
+      const newValues: Record<string, FormFieldValue> = {
         ...formValues,
-        [keyToUpdate]: convertedValue,
+        [fieldId]: value,
       };
-      console.log("New form values:", newFormValues);
-      setFormValues(newFormValues);
+      setFormValues(newValues);
     }
   };
 
-  const convertedTemplate = convertToIndividualTemplate(formData);
-  const convertedValues = convertToFormFieldValues(formValues);
+  // =========================================================================
+  // RENDER
+  // =========================================================================
 
   return (
     <RenderFields
-      formTemplate={convertedTemplate}
+      formTemplate={sortedFormData}
       userOptions={userOptions}
       submittedBy={null}
       setSubmittedBy={() => {}}
       submittedByTouched={false}
-      formData={convertedValues}
+      formData={formValues}
       handleFieldChange={handleFieldChange}
       equipmentOptions={equipmentOptions}
       jobsiteOptions={jobsiteOptions}
       costCodeOptions={costCodeOptions}
-      readOnly={readOnly}
+      readOnly={readOnly || disabled}
       hideSubmittedBy={true}
       disabled={disabled}
       useNativeInput={useNativeInput}
     />
   );
 };
+
+export default FormFieldRenderer;

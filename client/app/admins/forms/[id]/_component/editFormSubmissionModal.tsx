@@ -217,11 +217,6 @@ export default function EditFormSubmissionModal({
     return null;
   };
 
-  useEffect(() => {
-    console.log("Edit Data:", editData);
-    console.log("Form Submission:", formSubmission);
-  }, [editData]);
-
   const handleFieldChange = (
     fieldId: string,
     value: string | Date | string[] | object | boolean | number | null

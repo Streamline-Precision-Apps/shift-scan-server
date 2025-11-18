@@ -1,26 +1,34 @@
 "use client";
 
-import { apiRequest, getApiUrl, getToken } from "../utils/api-Utils";
+import { apiRequest } from "../utils/api-Utils";
 
-// Accepts contact info and settings, updates User, Contacts, and UserSettings as needed
+/**
+ * FORM ACTIONS
+ *
+ * Server actions for form submission management.
+ * All endpoints use the apiRequest utility for consistent authentication and error handling.
+ *
+ * Endpoints:
+ * - POST /api/v1/forms/submission - Create form submission
+ * - DELETE /api/v1/forms/submission/:id - Delete form submission
+ * - POST /api/v1/forms/draft - Save as draft
+ * - POST /api/v1/forms/draft-to-pending - Save draft and move to pending
+ * - POST /api/v1/forms/pending - Save pending submission
+ * - POST /api/v1/forms/approval - Create approval
+ * - PUT /api/v1/forms/approval/update - Update approval
+ */
 
+/**
+ * Create a new form submission
+ * @param formData - FormData containing formTemplateId and userId
+ * @returns Created submission
+ */
 export async function createFormSubmission(formData: FormData) {
-  const token = getToken();
-  const url = `${getApiUrl()}/api/v1/forms/submission`;
   const body: Record<string, any> = {};
   formData.forEach((value, key) => {
     body[key] = value;
   });
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(body),
-  });
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
+  return apiRequest("/api/v1/forms/submission", "POST", body);
 }
 
 export async function deleteFormSubmission(id: number) {
@@ -29,7 +37,7 @@ export async function deleteFormSubmission(id: number) {
 }
 
 export async function saveDraft(
-  formData: Record<string, string>,
+  formData: Record<string, string | boolean | number>,
   formTemplateId: string,
   userId: string,
   formType?: string,
@@ -48,7 +56,7 @@ export async function saveDraft(
 }
 
 export async function saveDraftToPending(
-  formData: Record<string, string>,
+  formData: Record<string, string | boolean | number>,
   isApprovalRequired: boolean,
   formTemplateId: string,
   userId: string,
@@ -69,7 +77,7 @@ export async function saveDraftToPending(
 }
 
 export async function savePending(
-  formData: Record<string, string>,
+  formData: Record<string, string | boolean | number>,
   formTemplateId: string,
   userId: string,
   formType?: string,
@@ -87,43 +95,32 @@ export async function savePending(
   return apiRequest("/api/v1/forms/pending", "POST", body);
 }
 
+/**
+ * Create a form approval
+ * @param formData - FormData containing approval details
+ * @param approval - "APPROVED" or "DENIED"
+ * @returns Approval result
+ */
 export async function createFormApproval(
   formData: FormData,
   approval: "APPROVED" | "DENIED"
 ) {
-  const token = getToken();
-  const url = `${getApiUrl()}/api/v1/forms/approval`;
   const body: Record<string, any> = { approval };
   formData.forEach((value, key) => {
     body[key] = value;
   });
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(body),
-  });
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
+  return apiRequest("/api/v1/forms/approval", "POST", body);
 }
 
+/**
+ * Update a form approval
+ * @param formData - FormData containing approval details
+ * @returns Update result
+ */
 export async function updateFormApproval(formData: FormData) {
-  const token = getToken();
-  const url = `${getApiUrl()}/api/v1/forms/approval/update`;
   const body: Record<string, any> = {};
   formData.forEach((value, key) => {
     body[key] = value;
   });
-  const res = await fetch(url, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(body),
-  });
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
+  return apiRequest("/api/v1/forms/approval/update", "PUT", body);
 }

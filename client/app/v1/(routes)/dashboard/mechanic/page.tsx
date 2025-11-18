@@ -9,9 +9,12 @@ import { TitleBoxes } from "@/app/v1/components/(reusable)/titleBoxes";
 import { Titles } from "@/app/v1/components/(reusable)/titles";
 import { Buttons } from "@/app/v1/components/(reusable)/buttons";
 import { useTranslations } from "next-intl";
+import { Capacitor } from "@capacitor/core";
 
 export default function Mechanic() {
   const t = useTranslations("MechanicWidget");
+  const ios = Capacitor.getPlatform() === "ios";
+  const android = Capacitor.getPlatform() === "android";
 
   return (
     <Bases>
@@ -19,7 +22,11 @@ export default function Mechanic() {
         {/* <MechanicDisplay isManager={isManager} /> */}
         <Suspense
           fallback={
-            <Grids rows="7" gap="5">
+            <Grids
+              rows="7"
+              gap="5"
+              className={ios ? "pt-12" : android ? "pt-4" : ""}
+            >
               {/* Header */}
               <Holds
                 background={"white"}
@@ -51,7 +58,7 @@ export default function Mechanic() {
             </Grids>
           }
         >
-          <MechanicDisplayList />
+          <MechanicDisplayList ios={ios} android={android} />
         </Suspense>
       </Contents>
     </Bases>
