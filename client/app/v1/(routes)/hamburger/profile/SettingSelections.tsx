@@ -98,7 +98,6 @@ export default function SettingSelections({
               value={language}
               onChange={async (event: ChangeEvent<HTMLSelectElement>) => {
                 const newLanguage = event.target.value;
-                console.log("🌍 Changing language to:", newLanguage);
 
                 // 1. Update database via state change
                 handleLanguageChange("language", newLanguage);

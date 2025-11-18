@@ -26,17 +26,16 @@ export default function RenderCheckboxField({
   disabled?: boolean;
   useNativeInput?: boolean;
 }) {
-  useEffect(() => {
-    console.log("RenderCheckboxField value changed in checkbox field:", value);
-  }, [value]);
+  // CRITICAL: Only treat actual boolean true as checked
+  // This prevents string values from radio buttons being interpreted as "checked"
+  const isChecked = typeof value === "boolean" ? value : false;
   return (
     <div key={field.id} className="flex flex-col">
       <div className="flex flex-row items-center gap-2">
         <Checkbox
-          checked={!!value}
+          checked={isChecked}
           onCheckedChange={(checked) => {
             handleFieldChange(field.id, checked);
-            console.log("Checkbox checked Change:", field.id, checked);
           }}
           id={`checkbox-${field.id}`}
           onBlur={() => handleFieldTouch(field.id)}

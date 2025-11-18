@@ -177,26 +177,20 @@ export default function NotificationModal({ open, setOpen }: Props) {
   // Save preferences to server
   const handleSave = async () => {
     if (!token) {
-      console.log("Saving failed, no token available");
-
       toast.error("You need to allow notifications to save preferences");
       return;
     }
 
     try {
       setIsLoading(true);
-      console.log("Saving notification preferences1");
+
       // Get topics to subscribe to (enabled preferences)
       const topicsToSubscribe = Object.entries(preferences)
         .filter(([_, enabled]) => enabled)
         .map(([topic]) => topic);
-      console.log("Saving notification preferences2");
 
       // Get topics to unsubscribe from (disabled preferences)
       const userPrefs = await getUserTopicPreferences(user?.id || "");
-
-      console.log("Current user prefs:", userPrefs); // Debug log
-      console.log("Topics to subscribe:", topicsToSubscribe); // Debug log
 
       const currentTopics = userPrefs.map((pref) => pref.topic);
       const topicsToUnsubscribe = currentTopics.filter(

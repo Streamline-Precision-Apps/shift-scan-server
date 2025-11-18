@@ -145,8 +145,6 @@ export default function TascoMaterialSelector({
             .includes(materialOption.jobsiteName.toLowerCase())
         );
 
-        console.log("Found jobsite:", foundJobsite);
-
         if (foundJobsite) {
           setJobsite({
             id: foundJobsite.id, // Use the actual database ID

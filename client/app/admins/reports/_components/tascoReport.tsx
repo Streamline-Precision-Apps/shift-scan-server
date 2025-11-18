@@ -36,7 +36,7 @@ export default function TascoReport({
     try {
       setLoading(true);
       const result = await apiRequest("/api/v1/admins/report/tasco", "GET");
-      console.log("Fetched Tasco report data:", result);
+
       setAllData(result.data || []);
     } catch (error) {
       console.error("Error fetching Tasco report data:", error);

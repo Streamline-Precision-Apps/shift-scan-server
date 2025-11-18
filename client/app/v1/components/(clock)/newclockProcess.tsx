@@ -380,23 +380,6 @@ export default function NewClockProcess({
     return router.push(returnpath);
   };
 
-  // Handle retrying location permission request
-  // const handleRetryLocationPermission = async () => {
-  //   try {
-  //     const result = await requestLocationPermission();
-  //     if (result.success) {
-  //       console.log("Location permission granted on retry");
-  //       setIsLocationOn(true);
-  //     } else {
-  //       console.log("Location permission denied again");
-  //       setLocationRetryCount((prev) => prev + 1);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error retrying location permission:", error);
-  //     setLocationRetryCount((prev) => prev + 1);
-  //   }
-  // };
-
   return (
     <>
       {step === 0 && (

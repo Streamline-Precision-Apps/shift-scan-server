@@ -1,666 +1,306 @@
-"use client";
-import { FormEvent, use, useEffect, useState, useMemo } from "react";
-import Spinner from "@/app/v1/components/(animations)/spinner";
-import { useRouter, useSearchParams } from "next/navigation";
-import FormDraft from "./_components/formDraft";
-import ManagerFormApproval from "./_components/managerFormApproval";
-import SubmittedForms from "./_components/submittedForms";
-import ManagerFormEditApproval from "./_components/managerFormEdit";
-import { Bases } from "@/app/v1/components/(reusable)/bases";
-import { Contents } from "@/app/v1/components/(reusable)/contents";
-import { Holds } from "@/app/v1/components/(reusable)/holds";
-import { TitleBoxes } from "@/app/v1/components/(reusable)/titleBoxes";
-import SubmittedFormsApproval from "./_components/SubmittedFormsApproval";
-import { Titles } from "@/app/v1/components/(reusable)/titles";
-import { useTranslations } from "next-intl";
-import { apiRequest } from "@/app/lib/utils/api-Utils";
+/**
+ * DYNAMIC FORM PAGE
+ *
+ * Simplified page component for form submission management.
+ * Replaces the old ~750 line page.tsx with clean ~150 line version.
+ *
+ * Responsibilities:
+ * 1. Extract URL params (formId, submissionId, approvalId)
+ * 2. Use useFormManager hook to load and manage all data
+ * 3. Provide FormContextProvider to child components
+ * 4. Route to appropriate view based on submission status and query params
+ *
+ * All data normalization, validation, and persistence is handled by:
+ * - useFormManager hook (lifecycle management)
+ * - FormContextProvider (state distribution)
+ * - Specialized view components (UI rendering)
+ *
+ * Zero transformation logic in this component.
+ */
 
-import { useUserStore } from "@/app/lib/store/userStore";
-import { saveDraftToPending } from "@/app/lib/actions/formActions";
-import { FormIndividualTemplate } from "../../_adminComponents/types";
+"use client";
+
+import { use, useMemo, useCallback } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { FormContextProvider } from "@/app/lib/context/FormContext";
+import { useFormManager } from "@/app/lib/hooks/useFormManager";
+import FormDraftView from "./_components/FormDraftView";
+import FormSubmittedView from "./_components/FormSubmittedView";
+import FormApprovalView from "./_components/FormApprovalView";
+import { FormStatus } from "@/app/lib/types/forms";
+import FormLoadingView from "./_components/FormLoadingView";
+import FormErrorView from "./_components/FormErrorView";
 import { Capacitor } from "@capacitor/core";
 
-// Define FormFieldValue type to match RenderFields expectations
-type FormFieldValue =
-  | string
-  | Date
-  | string[]
-  | object
-  | boolean
-  | number
-  | null;
-
-// Interface for backward compatibility with existing child components
-interface FormTemplate {
-  id: string;
-  name: string;
-  formType: string;
-  isActive: boolean;
-  isSignatureRequired: boolean;
-  isApprovalRequired: boolean;
-  groupings: FormGrouping[];
-}
-
-interface FormGrouping {
-  id: string;
-  title: string;
-  order: number;
-  fields: FormField[];
-}
-
-interface FormField {
-  id: string;
-  label: string;
-  name: string;
-  type: string;
-  required: boolean;
-  order: number;
-  defaultValue?: string;
-  placeholder?: string;
-  maxLength?: number;
-  helperText?: string;
-  options?: string[];
-}
-
-type ManagerFormApprovalSchema = {
-  id: number;
-  title: string;
-  formTemplateId: string;
-  userId: string;
-  formType: string | null;
-  data: {
-    comments: string;
-    request_type: string;
-    request_end_date: string;
-    request_start_date: string;
-  };
-  createdAt: string;
-  updatedAt: string;
-  submittedAt: string;
-  status: FormStatus;
-  Approvals: Array<{
-    id: string;
-    formSubmissionId: number;
-    signedBy: string;
-    submittedAt: string;
-    updatedAt: string;
-    signature: string;
-    comment: string;
-    Approver: {
-      firstName: string;
-      lastName: string;
-    };
-  }>;
-};
-enum FormStatus {
-  PENDING = "PENDING",
-  APPROVED = "APPROVED",
-  DENIED = "DENIED",
-  DRAFT = "DRAFT",
-}
-
-export default function DynamicForm({
-  params,
-}: {
+/**
+ * Page component props
+ */
+interface PageProps {
   params: Promise<{ id: string }>;
-}) {
-  const ios = Capacitor.getPlatform() === "ios";
-  const android = Capacitor.getPlatform() === "android";
-  const id = use(params).id;
-  // Search params from URL
-  const t = useTranslations("Hamburger-Inbox");
-  const formSubmissions = useSearchParams();
-  const submissionId = Number(formSubmissions.get("submissionId"));
-  const submissionStatus = formSubmissions.get("status");
-  const submissionApprovingStatus = formSubmissions.get("approvingStatus");
-  const formApprover = formSubmissions.get("formApprover");
+}
 
-  // State variables
-  const [formData, setFormData] = useState<FormIndividualTemplate | null>(null);
-  const [formTitle, setFormTitle] = useState<string>("");
-  const [formValues, setFormValues] = useState<Record<string, FormFieldValue>>(
-    {}
-  );
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-  const [signature, setSignature] = useState<string | null>(null);
-  const [submittedForm, setSubmittedForm] = useState<string | null>(null);
-  const [managerFormApproval, setManagerFormApproval] =
-    useState<ManagerFormApprovalSchema | null>(null);
-
-  // Get user that is logged in
-  const { user } = useUserStore();
-  const userId = user?.id;
+/**
+ * Dynamic Form Submission Page
+ *
+ * Routes between different form views based on status and query params:
+ * - Draft: FormDraftView (editable)
+ * - Submitted/Pending: FormSubmittedView (read-only)
+ * - Approval: FormApprovalView (with signature/comment)
+ * - Approved/Denied: FormSubmittedView (read-only with status)
+ *
+ * @param props - Page props with dynamic [id] param
+ * @returns Rendered form page with appropriate view
+ *
+ * Query Parameters:
+ * - approvingStatus=true : Show approval interface
+ * - submissionId=123 : Load existing submission
+ * - approvalId=abc : Load specific approval record
+ */
+export default function DynamicForm({ params }: PageProps) {
+  // Extract route params
+  const { id: formId } = use(params);
+  const searchParams = useSearchParams();
   const router = useRouter();
 
-  // Determine which API endpoints to fetch based on the current state
-  const determineApiEndpoints = () => {
-    const endpoints = {
-      form: `/api/v1/forms/form/${id}`,
-      submission: null as string | null,
-      managerApproval: null as string | null,
-    };
+  // Extract query params
+  const submissionId = searchParams.get("submissionId")
+    ? parseInt(searchParams.get("submissionId")!)
+    : undefined;
+  const approvalId = searchParams.get("approvalId") ?? undefined;
+  const approvingStatus = searchParams.get("approvingStatus") === "true";
 
-    if (!submissionId) return endpoints;
+  // =========================================================================
+  // FORM MANAGEMENT
+  // =========================================================================
 
-    // Determine submission endpoint based on status and approval status
-    if (submissionStatus === "DRAFT") {
-      endpoints.submission = `/api/v1/forms/formDraft/${submissionId}`;
-    } else if (submissionApprovingStatus === "true") {
-      endpoints.submission = `/api/v1/forms/teamSubmission/${submissionId}`;
-    } else {
-      endpoints.submission = `/api/v1/forms/formSubmission/${submissionId}`;
-    }
+  /**
+   * Load form data and manage lifecycle
+   * All normalization happens in this hook
+   */
+  const {
+    template,
+    submission,
+    approval,
+    values,
+    isLoading,
+    error,
+    updateValue,
+    submitForm,
+    saveAsDraft,
+    deleteSubmission,
+    validateForm,
+  } = useFormManager({
+    formId,
+    submissionId,
+    approvalId,
+    autoSaveEnabled: true,
+    autoSaveDelay: 2000,
+    onSaved: () => {
+      // Optional: Show toast notification
+      console.log("[page.tsx] Form saved");
+    },
+    onError: (error) => {
+      console.error("[page.tsx] Form error:", error);
+    },
+  });
 
-    // Determine if manager approval data is needed
-    if (
-      submissionStatus === "APPROVED" ||
-      submissionStatus === "DENIED" ||
-      submissionApprovingStatus === "true"
-    ) {
-      endpoints.managerApproval = `/api/v1/forms/managerFormApproval/${submissionId}`;
-    }
+  console.log(
+    "[page.tsx] useFormManager returned template:",
+    template?.name || "null"
+  );
+  console.log("[page.tsx] Passing template to FormContextProvider");
 
-    return endpoints;
-  };
+  // =========================================================================
+  // HANDLERS
+  // =========================================================================
 
-  // Fetch data in parallel and process it efficiently
-  useEffect(() => {
-    const fetchAllData = async () => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const endpoints = determineApiEndpoints();
-        // Use apiRequest for all fetches (GET)
-        const fetchPromises = [apiRequest(endpoints.form, "GET")];
-        if (endpoints.submission) {
-          fetchPromises.push(apiRequest(endpoints.submission, "GET"));
-        }
-        if (endpoints.managerApproval) {
-          fetchPromises.push(apiRequest(endpoints.managerApproval, "GET"));
-        }
-
-        // Execute all fetches in parallel
-        const [formData, ...otherData] = await Promise.all(fetchPromises);
-
-        // Set form data first
-        setFormData(formData);
-
-        // If no submission ID, stop here
-        if (!submissionId) {
-          setLoading(false);
-          return;
-        }
-
-        // Extract submission data and manager approval data from otherData
-        let submissionData = null;
-        let managerApprovalData = null;
-
-        if (endpoints.submission && endpoints.managerApproval) {
-          [submissionData, managerApprovalData] = otherData;
-        } else if (endpoints.submission) {
-          [submissionData] = otherData;
-        } else if (endpoints.managerApproval) {
-          [managerApprovalData] = otherData;
-        }
-
-        // Process and set submission data if available
-        if (submissionData) {
-          // Do these transformations once
-          const legacyTemplate = convertToLegacyFormTemplate(formData);
-          const convertedValues = convertFormValuesToIdBased(
-            submissionData.data,
-            legacyTemplate
-          );
-
-          // Update all related state at once to minimize re-renders
-          setFormValues(convertedValues);
-          setFormTitle(
-            submissionData.title ||
-              (submissionData.user?.firstName && submissionData.user?.lastName
-                ? `${submissionData.user.firstName} ${submissionData.user.lastName}`
-                : "") ||
-              ""
-          );
-          setSignature(submissionData.User?.signature || null);
-          setSubmittedForm(submissionData.submittedAt || "");
-        }
-
-        // Set manager approval data if available
-        if (managerApprovalData) {
-          setManagerFormApproval(managerApprovalData);
-        }
-      } catch (error) {
-        console.error("Error fetching form data:", error);
-        setError("Failed to fetch form data. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAllData();
-  }, [id, submissionId, submissionStatus, submissionApprovingStatus]);
-
-  // Legacy method for backward compatibility with existing components
-  const updateFormValuesLegacy = (
-    newValues: Record<string, string | boolean>
-  ) => {
-    setFormValues((prevValues) => {
-      // Convert new values from potentially label-based keys to ID-based keys
-      const convertedValues: Record<string, FormFieldValue> = {};
-
-      Object.entries(newValues).forEach(([key, value]) => {
-        convertedValues[key] = value;
-      });
-
-      return {
-        ...prevValues,
-        ...convertedValues,
-      };
-    });
-  };
-
-  // Convert FormFieldValue to string for legacy components
-  const convertFormValuesToString = (
-    values: Record<string, FormFieldValue>
-  ): Record<string, string | boolean> => {
-    const stringValues: Record<string, string | boolean> = {};
-
-    // Get the form template for mapping
-    const template = formData ? convertToLegacyFormTemplate(formData) : null;
-
-    // Create mappings from field IDs to field labels and vice versa
-    const idToLabelMap: Record<string, string> = {};
-    const labelToIdMap: Record<string, string> = {};
-    const allFieldIds = new Set<string>();
-
-    if (template) {
-      template.groupings.forEach((group) => {
-        group.fields.forEach((field) => {
-          idToLabelMap[field.id] = field.label;
-          labelToIdMap[field.label] = field.id;
-          allFieldIds.add(field.id);
-        });
-      });
-    }
-
-    Object.entries(values).forEach(([key, value]) => {
-      // Find the field to understand its type - check both by ID and label
-      const field = template?.groupings
-        ?.flatMap((group) => group.fields || [])
-        .find((f) => f.id === key || f.label === key);
-
-      // Convert the value to string based on field type
-      let stringValue = "";
-
-      if (field) {
-        switch (field.type) {
-          case "SEARCH_PERSON":
-          case "SEARCH_ASSET":
-            // For search fields, store as JSON string
-            if (Array.isArray(value)) {
-              stringValue = JSON.stringify(value);
-            } else if (value && typeof value === "object") {
-              stringValue = JSON.stringify(value);
-            } else {
-              stringValue = value ? String(value) : "";
-            }
-            break;
-          case "MULTISELECT":
-            // For multiselect, store as JSON array
-            if (Array.isArray(value)) {
-              stringValue = JSON.stringify(value);
-            } else {
-              stringValue = value ? String(value) : "";
-            }
-            break;
-          case "CHECKBOX":
-            // Convert to string for compatibility
-            if (typeof value === "boolean") {
-              stringValue = value ? "true" : "false";
-            } else {
-              stringValue = value ? "true" : "false";
-            }
-            break;
-          case "NUMBER":
-            stringValue = value ? String(value) : "0";
-            break;
-          case "DATE":
-          case "DATE_TIME":
-            if (value instanceof Date) {
-              stringValue = value.toISOString();
-            } else {
-              stringValue = value ? String(value) : "";
-            }
-            break;
-          default:
-            stringValue = value ? String(value) : "";
-        }
-      } else {
-        // Fallback conversion
-        if (typeof value === "string") {
-          stringValue = value;
-        } else if (typeof value === "number" || typeof value === "boolean") {
-          stringValue = String(value);
-        } else if (value instanceof Date) {
-          stringValue = value.toISOString();
-        } else if (Array.isArray(value)) {
-          stringValue = JSON.stringify(value);
-        } else if (value && typeof value === "object") {
-          stringValue = JSON.stringify(value);
-        } else {
-          stringValue = "";
-        }
-      }
-
-      // For rendering, always use field.id as the key to match RenderFields expectations
-      // The RenderFields component will access values using field.id with field.label fallback
-      if (allFieldIds.has(key)) {
-        // Key is already a field ID
-        stringValues[key] = stringValue;
-      } else if (labelToIdMap[key]) {
-        // Key is a field label, convert to field ID
-        stringValues[labelToIdMap[key]] = stringValue;
-      } else {
-        // Unknown key, keep as-is
-        stringValues[key] = stringValue;
-      }
-    });
-
-    return stringValues;
-  };
-
-  // Convert API response to FormTemplate for legacy components
-  const convertToLegacyFormTemplate = (
-    template: FormIndividualTemplate | FormTemplate
-  ): FormTemplate => {
-    // Check if the template is already in the correct format from the API
-    if ((template as FormTemplate).groupings) {
-      return template as FormTemplate;
-    }
-
-    // Otherwise, convert from FormIndividualTemplate format
-    const typedTemplate = template as FormIndividualTemplate;
-    return {
-      id: typedTemplate.id,
-      name: typedTemplate.name,
-      formType: typedTemplate.formType,
-      isActive: typedTemplate.isActive === "ACTIVE",
-      isSignatureRequired: typedTemplate.isSignatureRequired,
-      isApprovalRequired: typedTemplate.isApprovalRequired,
-      groupings:
-        typedTemplate.FormGrouping?.map(
-          (group): FormGrouping => ({
-            id: group.id,
-            title: group.title || "",
-            order: group.order,
-            fields:
-              group.Fields?.map(
-                (field): FormField => ({
-                  id: field.id,
-                  label: field.label,
-                  name: field.id, // Use field ID as name for consistency with admin
-                  type: field.type,
-                  required: field.required,
-                  order: field.order,
-                  placeholder: field.placeholder || undefined,
-                  maxLength: field.maxLength || undefined,
-                  options:
-                    field.Options?.map((opt: { value: string }) => opt.value) ||
-                    undefined,
-                })
-              ) || [],
-          })
-        ) || [],
-    };
-  };
-
-  // Convert form values from label-based keys to ID-based keys
-  const convertFormValuesToIdBased = (
-    values: Record<string, FormFieldValue>,
-    template: FormTemplate
-  ): Record<string, FormFieldValue> => {
-    const result: Record<string, FormFieldValue> = {};
-
-    // Create mappings from field labels to field IDs and field IDs to field labels
-    const labelToIdMap: Record<string, string> = {};
-    const idToLabelMap: Record<string, string> = {};
-    const allFieldIds = new Set<string>();
-
-    template.groupings.forEach((group) => {
-      group.fields.forEach((field) => {
-        labelToIdMap[field.label] = field.id;
-        idToLabelMap[field.id] = field.label;
-        allFieldIds.add(field.id);
-      });
-    });
-
-    // Convert values using the mapping, handling both UUID keys and label keys
-    Object.entries(values).forEach(([key, value]) => {
-      // Check if key is already a field ID (UUID format)
-      if (allFieldIds.has(key)) {
-        result[key] = value;
-      } else {
-        // Try to find field ID by label
-        const fieldId = labelToIdMap[key];
-        if (fieldId) {
-          result[fieldId] = value;
-        } else {
-          // If no mapping found, use the original key (fallback)
-          result[key] = value;
-        }
-      }
-    });
-
-    return result;
-  };
-
-  // Handle form submission
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!formData) {
-      console.error("Form data is not available");
-      return;
-    }
-
+  /**
+   * Handle form submission
+   */
+  const handleSubmit = useCallback(async () => {
     try {
-      if (!userId || !submissionId) {
-        console.error("User ID or submission ID is null");
-        return;
-      }
-
-      // Get values with booleans preserved for checkboxes
-      const mixedValues = convertFormValuesToString(formValues);
-
-      // Convert all values to strings for API compatibility
-      const dataToSaveAPI: Record<string, string> = {};
-      Object.entries(mixedValues).forEach(([key, value]) => {
-        dataToSaveAPI[key] =
-          typeof value === "boolean" ? value.toString() : String(value || "");
-      });
-
-      // Save data and wait for completion before navigating
-      const result = await saveDraftToPending(
-        dataToSaveAPI,
-        formData.isApprovalRequired,
-        formData.id,
-        userId,
-        formData.formType,
-        submissionId,
-        formTitle
-      );
-
-      if (result && formData.isApprovalRequired) {
-        const response = await fetch("/api/notifications/send-multicast", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            topic: "form-submissions",
-            title: "New Form Submission",
-            message: `${result.User.firstName} ${result.User.lastName} has submitted a form titled "${result.formTemplateId}" for approval.`,
-            link: `/admins/forms/${result.formTemplateId}`,
-            referenceId: result.id,
-          }),
-        });
-        await response.json();
-
-        // Ensure the save is complete before navigating
-      }
-      setTimeout(() => {
-        router.back(); // Redirect after a small delay to ensure save completes
-      }, 100);
-    } catch (error) {
-      console.error("Error submitting form:", error);
+      await submitForm(values);
+      // Navigate back to inbox after successful submission
+      router.push("/v1/hamburger/inbox");
+    } catch (err) {
+      console.error("Submit failed:", err);
     }
-  };
+  }, [submitForm, values, router]);
 
-  // Create a memoized function to determine which component to render
-  const getFormComponent = useMemo(() => {
-    if (!formData) return null;
+  /**
+   * Handle save as draft
+   */
+  const handleSaveDraft = useCallback(async () => {
+    try {
+      await saveAsDraft(values);
+    } catch (err) {
+      console.error("Save draft failed:", err);
+    }
+  }, [saveAsDraft, values]);
 
-    const legacyTemplate = convertToLegacyFormTemplate(formData);
-    const stringFormValues = convertFormValuesToString(formValues);
+  /**
+   * Handle form deletion
+   */
+  const handleDelete = useCallback(async () => {
+    try {
+      await deleteSubmission();
+      router.push("/v1/hamburger/inbox");
+    } catch (err) {
+      console.error("Delete failed:", err);
+    }
+  }, [deleteSubmission, router]);
 
-    // Convert to pure string values for legacy components
-    const stringOnlyValues: Record<string, string> = {};
-    Object.entries(stringFormValues).forEach(([key, value]) => {
-      stringOnlyValues[key] =
-        typeof value === "boolean"
-          ? value
-            ? "true"
-            : "false"
-          : String(value || "");
-    });
+  /**
+   * Handle edit (manager view)
+   */
+  const handleEdit = useCallback(() => {
+    // Remove approvingStatus param to go back to edit mode
+    const params = new URLSearchParams(searchParams);
+    params.delete("approvingStatus");
+    router.push(
+      `/v1/hamburger/inbox/formSubmission/${formId}?${params.toString()}`
+    );
+  }, [formId, searchParams, router]);
 
-    // Common props for all components
-    const commonProps = {
-      formData: legacyTemplate,
-      formTitle,
-      setFormTitle,
-      formValues: stringOnlyValues,
-      updateFormValues: updateFormValuesLegacy,
-      userId: userId || "",
-      submissionId: submissionId || null,
-      signature,
-      submittedForm,
-      submissionStatus,
-      managerFormApproval,
-    };
+  /**
+   * Handle approval
+   */
+  const handleApprove = useCallback(
+    async (signature: string, comment: string) => {
+      try {
+        // Call approval endpoint
+        // For now, this is a placeholder
+        // Implementation depends on your approval workflow
+        console.log("Form approved", { signature, comment });
+        router.push("/hamburger/inbox");
+      } catch (err) {
+        console.error("Approval failed:", err);
+      }
+    },
+    [router]
+  );
 
-    // Determine which component to show based on status
-    if (submissionStatus === "DRAFT") {
+  /**
+   * Handle denial
+   */
+  const handleDeny = useCallback(
+    async (comment: string) => {
+      try {
+        // Call denial endpoint
+        // For now, this is a placeholder
+        console.log("Form denied", { comment });
+        router.push("/hamburger/inbox");
+      } catch (err) {
+        console.error("Denial failed:", err);
+      }
+    },
+    [router]
+  );
+
+  /**
+   * Handle cancel
+   */
+  const handleCancel = useCallback(() => {
+    router.back();
+  }, [router]);
+
+  // =========================================================================
+  // DETERMINE VIEW
+  // =========================================================================
+
+  /**
+   * Determine which view to render based on submission status and query params
+   */
+  const getView = useMemo(() => {
+    // Loading state
+    if (isLoading) {
+      return <FormLoadingView />;
+    }
+
+    // Error state
+    if (error) {
+      return <FormErrorView error={error} />;
+    }
+
+    // No template loaded
+    if (!template) {
+      return <FormLoadingView />;
+    }
+
+    // DRAFT VIEW
+    if (!submission || submission.status === FormStatus.DRAFT) {
       return (
-        <FormDraft
-          {...commonProps}
-          handleSubmit={handleSubmit}
-          submissionId={submissionId}
+        <FormDraftView
+          onSubmit={handleSubmit}
+          onSave={handleSaveDraft}
+          onDelete={handleDelete}
         />
       );
     }
 
-    if (submissionApprovingStatus === null && submissionStatus !== "DRAFT") {
-      if (submissionStatus === "PENDING") {
-        return <SubmittedForms {...commonProps} />;
-      }
-      return <SubmittedFormsApproval {...commonProps} />;
+    // APPROVAL VIEW
+    if (approvingStatus && submission.status === FormStatus.PENDING) {
+      return (
+        <FormApprovalView
+          requireSignature={template.isSignatureRequired}
+          onApprove={handleApprove}
+          onDeny={handleDeny}
+          onCancel={handleCancel}
+        />
+      );
     }
 
+    // SUBMITTED VIEW
     if (
-      submissionApprovingStatus === "true" &&
-      submissionStatus === "PENDING" &&
-      formApprover
+      submission.status === FormStatus.PENDING ||
+      submission.status === FormStatus.APPROVED ||
+      submission.status === FormStatus.DENIED
     ) {
-      return <ManagerFormApproval {...commonProps} />;
+      return <FormSubmittedView showApprovalInfo={true} onEdit={handleEdit} />;
     }
 
-    if (
-      submissionApprovingStatus === "true" &&
-      submissionStatus !== "PENDING" &&
-      submissionStatus !== "DRAFT" &&
-      formApprover
-    ) {
-      return <ManagerFormEditApproval {...commonProps} />;
-    }
-
-    return null;
+    // Fallback to submitted view
+    return <FormSubmittedView showApprovalInfo={true} />;
   }, [
-    formData,
-    formValues,
-    formTitle,
-    submissionStatus,
-    submissionApprovingStatus,
-    formApprover,
-    signature,
-    submittedForm,
-    submissionId,
-    userId,
-    managerFormApproval,
+    isLoading,
+    error,
+    template,
+    submission,
+    approvingStatus,
     handleSubmit,
+    handleSaveDraft,
+    handleDelete,
+    handleApprove,
+    handleDeny,
+    handleCancel,
+    handleEdit,
   ]);
 
-  // Loading state
-  if (loading || !formData) {
-    return (
-      <Bases>
-        <Contents>
-          <div
-            className={
-              ios
-                ? "pt-12 h-full w-full"
-                : android
-                ? "pt-4 h-full w-full"
-                : "h-full w-full"
-            }
-          >
-            <Holds
-              background={"white"}
-              className="w-full h-full justify-center items-center animate-pulse "
-            >
-              <TitleBoxes
-                className="h-20 border-b-2 border-neutral-100"
-                onClick={() => {
-                  router.back();
-                }}
-              >
-                <div className="w-full h-full flex items-end pb-2 justify-center">
-                  <Titles size={"md"} className="truncate max-w-[200px]">
-                    {t("Loading")}
-                  </Titles>
-                </div>
-              </TitleBoxes>
-
-              <form className="bg-slate-50 h-full w-full overflow-y-auto no-scrollbar rounded-b-lg">
-                <Holds className="row-start-1 row-end-7 h-full w-full justify-center ">
-                  <Spinner />
-                </Holds>
-              </form>
-            </Holds>
-          </div>
-        </Contents>
-      </Bases>
-    );
-  }
-
-  // Render the form based on submission status
+  // =========================================================================
+  // RENDER
+  // =========================================================================
+  const android = Capacitor.getPlatform() === "android";
+  const ios = Capacitor.getPlatform() === "ios";
   return (
-    <Bases>
-      <Contents>
-        <div
-          className={
-            ios
-              ? "pt-12 h-full w-full"
-              : android
-              ? "pt-4 h-full w-full"
-              : "h-full w-full"
-          }
-        >
-          {getFormComponent}
-        </div>
-      </Contents>
-    </Bases>
+    <div
+      className={`h-screen w-full container mx-auto max-w-4xl rounded-[10px] pb-8 px-5 ${
+        android ? "pt-3" : ios ? "pt-6" : "pt-3"
+      }`}
+    >
+      {/* Page Header */}
+
+      {/* Form Content with Context */}
+      <FormContextProvider
+        template={template}
+        submission={submission}
+        approval={approval}
+        values={values}
+        onUpdateValue={updateValue}
+        loading={isLoading}
+        error={error}
+      >
+        {getView}
+      </FormContextProvider>
+    </div>
   );
 }

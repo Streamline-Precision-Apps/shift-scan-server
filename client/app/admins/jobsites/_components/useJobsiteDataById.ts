@@ -70,8 +70,6 @@ export const useJobsiteDataById = (id: string) => {
           setJobSiteDetails(jobsiteDetails);
         }
 
-        console.log("Fetched tag summary:", tagSummary);
-
         const filteredTags = (tagSummary.tagSummary || []).map(
           (tag: { id: string; name: string }) => ({
             id: tag.id,

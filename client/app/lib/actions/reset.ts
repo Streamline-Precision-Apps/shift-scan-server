@@ -32,7 +32,6 @@ export const Reset = async (formData: FormData) => {
       return { error: data.error || "Failed to send reset email" };
     }
 
-    console.log("✅ Password reset email sent:", data);
     return { success: data.message || "Email sent successfully" };
   } catch (error) {
     console.error("❌ Error requesting password reset:", error);
@@ -70,7 +69,6 @@ export const resetUserPassword = async (token: string, newPassword: string) => {
       return { error: data.error || "Failed to reset password" };
     }
 
-    console.log("✅ Password reset successful:", data);
     return { success: data.message || "Password reset successfully" };
   } catch (error) {
     console.error("❌ Error resetting password:", error);
@@ -115,7 +113,6 @@ export const verifyPasswordResetToken = async (token: string) => {
       return { valid: false, error: errorMessage };
     }
 
-    console.log("✅ Token verified:", data);
     return { valid: true, email: data.email };
   } catch (error) {
     console.error("❌ Error verifying token:", error);

@@ -73,7 +73,6 @@ export default function TruckDriverForm({
           `/api/v1/equipment/${truck.id}/lastMileage`,
           "GET"
         );
-        console.log("Fetched last mileage data:", data);
 
         // Handle the response - data is a TruckingLog with endingMileage at root level
         const lastMileage = data?.endingMileage || null;

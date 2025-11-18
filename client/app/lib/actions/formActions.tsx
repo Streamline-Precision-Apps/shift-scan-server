@@ -29,7 +29,7 @@ export async function deleteFormSubmission(id: number) {
 }
 
 export async function saveDraft(
-  formData: Record<string, string>,
+  formData: Record<string, string | boolean | number>,
   formTemplateId: string,
   userId: string,
   formType?: string,
@@ -48,7 +48,7 @@ export async function saveDraft(
 }
 
 export async function saveDraftToPending(
-  formData: Record<string, string>,
+  formData: Record<string, string | boolean | number>,
   isApprovalRequired: boolean,
   formTemplateId: string,
   userId: string,
@@ -69,7 +69,7 @@ export async function saveDraftToPending(
 }
 
 export async function savePending(
-  formData: Record<string, string>,
+  formData: Record<string, string | boolean | number>,
   formTemplateId: string,
   userId: string,
   formType?: string,

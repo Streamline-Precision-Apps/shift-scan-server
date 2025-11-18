@@ -62,7 +62,6 @@ export default function Comment({
   );
 
   const processOne = async () => {
-    console.log("[Comment] Starting process one");
     try {
       let timeSheetId = currentTimesheetId;
 
@@ -88,12 +87,12 @@ export default function Comment({
         endTime: new Date().toISOString(),
         timeSheetComments: commentsValue,
         wasInjured: false,
-        clockOutLat: coordinates ? coordinates.lat : null,
-        clockOutLng: coordinates ? coordinates.lng : null,
+        clockOutLat: coordinates?.lat ?? null,
+        clockOutLong: coordinates?.lng ?? null,
       };
 
       // 🔴 CRITICAL: Stop tracking FIRST before doing anything else
-      console.log("[Comment] Stopping location tracking");
+
       await stopClockOutTracking();
 
       // Now update state and redirect
@@ -104,7 +103,6 @@ export default function Comment({
 
       // 🟡 Queue API call after redirect
       enqueue(async () => {
-        console.log("[Queue] Clock-out API");
         await apiRequest(
           `/api/v1/timesheet/${timeSheetId}/clock-out`,
           "PUT",
@@ -113,7 +111,6 @@ export default function Comment({
       });
 
       enqueue(async () => {
-        console.log("[Queue] Send notification");
         const fullName = user?.firstName + " " + user?.lastName;
         await sendNotification({
           topic: "timecard-submission",
@@ -123,8 +120,6 @@ export default function Comment({
           referenceId: timeSheetId,
         });
       });
-
-      console.log("[Comment] All tasks queued");
     } catch (err) {
       console.error("[Comment] Error:", err);
     }

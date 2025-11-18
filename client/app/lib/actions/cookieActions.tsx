@@ -47,7 +47,6 @@ LOCALE COOKIES
 export async function setLocale(isSpanish: boolean) {
   try {
     const localeValue = isSpanish ? "es" : "en";
-    console.log("📝 setLocale API call - setting to:", localeValue);
 
     const response = await apiRequest("/api/cookies", "POST", {
       name: "locale",
@@ -60,17 +59,11 @@ export async function setLocale(isSpanish: boolean) {
       },
     });
 
-    console.log("✅ setLocale API response:", response);
-
     // Verify cookie was actually set in the browser
     if (typeof window !== "undefined") {
       const locale = document.cookie
         .split("; ")
         .find((row) => row.startsWith("locale="));
-      console.log(
-        "🔍 Locale cookie in browser after set:",
-        locale || "(not found yet)"
-      );
     }
 
     return response;

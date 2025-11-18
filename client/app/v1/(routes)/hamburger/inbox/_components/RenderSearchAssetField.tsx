@@ -213,6 +213,7 @@ export default function RenderSearchAssetField({
               handleFieldChange(field.id, null);
             }
           }}
+          disabled={disabled}
           placeholder={`Select ${assetType}...`}
           filterKeys={["value", "label"]}
         />

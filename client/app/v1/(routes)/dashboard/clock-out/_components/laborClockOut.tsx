@@ -73,7 +73,6 @@ export const LaborClockOut = ({
   if (!user) return null;
   const fullName = user?.firstName + " " + user?.lastName;
   async function handleSubmitTimeSheet() {
-    console.log("[ClockOut] Starting clock-out");
     setLoading(true);
 
     if (!timeSheetId || isNaN(Number(timeSheetId))) {
@@ -95,7 +94,7 @@ export const LaborClockOut = ({
 
       // 🔴 CRITICAL: Stop tracking FIRST before doing anything else
       // This must complete before component unmounts
-      console.log("[ClockOut] Stopping location tracking");
+
       await stopClockOutTracking();
 
       // Now update state and redirect
@@ -105,7 +104,6 @@ export const LaborClockOut = ({
 
       // 🟡 Queue API call after redirect
       enqueue(async () => {
-        console.log("[Queue] Clock-out API");
         await apiRequest(
           `/api/v1/timesheet/${timeSheetId}/clock-out`,
           "PUT",
@@ -114,7 +112,6 @@ export const LaborClockOut = ({
       });
 
       enqueue(async () => {
-        console.log("[Queue] Send notification");
         await sendNotification({
           topic: "timecard-submission",
           title: "Timecard Approval Needed",
@@ -125,7 +122,6 @@ export const LaborClockOut = ({
       });
 
       enqueue(async () => {
-        console.log("[Queue] Delete cookies");
         const cookiesToDelete: string[] = [
           "currentPageView",
           "costCode",
@@ -148,11 +144,8 @@ export const LaborClockOut = ({
       });
 
       enqueue(async () => {
-        console.log("[Queue] Refetch timesheet");
         await refetchTimesheet();
       });
-
-      console.log("[ClockOut] All tasks queued");
     } catch (err) {
       console.error("Clock-out error:", err);
     } finally {

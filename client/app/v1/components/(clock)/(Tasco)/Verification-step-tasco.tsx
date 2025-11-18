@@ -231,7 +231,7 @@ export default function TascoVerificationStep({
         if (!isTrackingActive()) {
           trackingResult = await startClockInTracking(id, sessionId);
         } else {
-          console.log("Location tracking already active, skipping start");
+          console.warn("Location tracking already active, skipping start");
           trackingResult = { success: true };
         }
       }

@@ -17,7 +17,7 @@ export default function RenderNumberField({
     label: string;
     required: boolean;
   };
-  value: string;
+  value: string | null;
   handleFieldChange: (id: string, value: string) => void;
   handleFieldTouch: (id: string) => void;
   touchedFields: Record<string, boolean>;
@@ -36,7 +36,7 @@ export default function RenderNumberField({
         className={`border rounded px-2 py-1 ${
           touchedFields[field.id] && error ? "border-red-500" : ""
         }`}
-        value={value}
+        value={value !== null ? value : ""}
         onChange={(e) => handleFieldChange(field.id, e.target.value)}
         onBlur={() => handleFieldTouch(field.id)}
         disabled={disabled}

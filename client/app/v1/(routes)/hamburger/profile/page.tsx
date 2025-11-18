@@ -62,7 +62,6 @@ export default function EmployeeProfile() {
   useEffect(() => {
     // Try to get userId from user store first
     if (user?.id) {
-      console.log("✅ Got userId from user store:", user.id);
       setUserId(user.id);
       setIsLoading(false);
       return;
@@ -72,7 +71,6 @@ export default function EmployeeProfile() {
     if (typeof window !== "undefined") {
       const storedUserId = localStorage.getItem("userId");
       if (storedUserId) {
-        console.log("✅ Got userId from localStorage:", storedUserId);
         setUserId(storedUserId);
         setIsLoading(false);
         return;
@@ -85,7 +83,6 @@ export default function EmployeeProfile() {
         const storedUserId =
           typeof window !== "undefined" ? localStorage.getItem("userId") : null;
         if (storedUserId) {
-          console.log("✅ Got userId from localStorage (retry):", storedUserId);
           setUserId(storedUserId);
         } else {
           console.error("❌ No userId found in store or localStorage");
