@@ -57,7 +57,7 @@ export interface FormSubmittedViewProps {
  */
 function formatSubmissionDate(date: Date | null | undefined): string {
   if (!date) return "N/A";
-  return format(new Date(date), "MMMM d, yyyy h:mm a");
+  return format(new Date(date), "MMMM d, yyyy 'at' h:mm a");
 }
 
 /**
@@ -178,7 +178,7 @@ export function FormSubmittedView({
                     <p>
                       On{" "}
                       <span className="font-medium">
-                        {formatSubmissionDate(submission.submittedAt)}
+                        {formatSubmissionDate(submission?.submittedAt)}
                       </span>
                     </p>
                   </>

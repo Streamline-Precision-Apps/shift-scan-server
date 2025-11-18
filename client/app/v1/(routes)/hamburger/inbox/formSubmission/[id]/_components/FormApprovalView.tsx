@@ -68,7 +68,7 @@ export interface FormApprovalViewProps {
  */
 function formatSubmissionDate(date: Date | null | undefined): string {
   if (!date) return "N/A";
-  return format(new Date(date), "MMMM d, yyyy h:mm a");
+  return format(new Date(date), "MMMM d, yyyy 'at' h:mm a");
 }
 
 /**

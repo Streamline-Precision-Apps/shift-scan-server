@@ -240,6 +240,9 @@ export function normalizeFormSubmission(
     data: normalizedData,
     createdAt: parseDate(createdAt),
     updatedAt: parseDate(updatedAt),
+    /**
+     * Always return Date|null for submittedAt (never string)
+     */
     submittedAt: submittedAt ? parseDate(submittedAt) : null,
     status: normalizedStatus,
     User: normalizeUserInfo(User),

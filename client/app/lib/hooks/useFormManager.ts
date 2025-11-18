@@ -139,6 +139,7 @@ export function useFormManager(config: UseFormManagerConfig): FormManagerState {
           `/api/v1/admins/forms/submissions/${submissionId}`,
           "GET"
         );
+        console.log("[API Approval] - Fetch Data", apiData);
         const normalized = normalizeFormSubmission(apiData, template);
         console.log("[Normalized Submission] - Fetch Data", normalized);
         setSubmission(normalized);
@@ -167,6 +168,7 @@ export function useFormManager(config: UseFormManagerConfig): FormManagerState {
         `/api/v1/forms/managerFormApproval/${approvalId}`,
         "GET"
       );
+
       const normalized = normalizeFormApproval(apiData);
       console.log("[Normalized Approval] - Fetch Data", normalized);
       setApproval(normalized);
@@ -387,6 +389,7 @@ export function useFormManager(config: UseFormManagerConfig): FormManagerState {
             formTemplateId: template.id,
             isApprovalRequired: template.isApprovalRequired,
             submissionId: submission.id,
+            submittedAt: new Date().toISOString(),
           }
         );
 

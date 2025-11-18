@@ -689,6 +689,7 @@ export interface UpdateFormSubmissionParams {
   formType?: string;
   isApprovalRequired?: boolean;
   userId?: string; // For permission checks if needed
+  submittedAt?: string;
 }
 
 /**
@@ -699,7 +700,14 @@ export interface UpdateFormSubmissionParams {
 export const updateFormSubmissionService = async (
   body: UpdateFormSubmissionParams
 ) => {
-  const { submissionId, formData, isApprovalRequired, title, formType } = body;
+  const {
+    submissionId,
+    formData,
+    isApprovalRequired,
+    title,
+    formType,
+    submittedAt,
+  } = body;
 
   // Fetch the existing submission
   const existing = await prisma.formSubmission.findUnique({
@@ -721,6 +729,9 @@ export const updateFormSubmissionService = async (
     updateData.status = isApprovalRequired
       ? FormStatus.PENDING
       : FormStatus.APPROVED;
+  }
+  if (typeof submittedAt === "string") {
+    updateData.submittedAt = submittedAt; // Converts ISO string to Date
   }
 
   // Update the submission
