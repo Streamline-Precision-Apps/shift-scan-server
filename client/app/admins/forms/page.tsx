@@ -1,16 +1,7 @@
 "use client";
 import { Button } from "@/app/v1/components/ui/button";
-import { useState } from "react";
 import { useFormsList } from "./_components/Table/hooks/useFormsList";
 import Link from "next/link";
-import {
-  archiveFormTemplate,
-  deleteFormTemplate,
-  getFormSubmissions,
-  getFormTemplate,
-  publishFormTemplate,
-} from "@/app/lib/actions/adminActions";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import {
   Dialog,
@@ -36,34 +27,6 @@ import { FooterPagination } from "../_pages/FooterPagination";
 import { FormsDataTable } from "./_components/Table/FormsDataTable";
 import FormsFilters from "./_components/Table/FormsFilters";
 
-// Form field definition
-interface FormField {
-  id: string;
-  label: string;
-  type: string;
-  required?: boolean;
-  order?: number;
-  placeholder?: string | null;
-  minLength?: number | null;
-  maxLength?: number | null;
-  multiple?: boolean | null;
-  content?: string | null;
-  filter?: string | null;
-  Options?: Array<{ id: string; fieldId: string; value: string }>;
-}
-
-// Search person type for form values
-interface SearchPersonValue {
-  name: string;
-  [key: string]: unknown;
-}
-
-// Search asset type for form values
-interface SearchAssetValue {
-  name: string;
-  [key: string]: unknown;
-}
-
 export interface FormItem {
   id: string;
   name: string;
@@ -77,10 +40,7 @@ export interface FormItem {
   updatedAt: string | Date;
 }
 
-type DateRange = { from: Date | undefined; to: Date | undefined };
-
 export default function Forms() {
-  const router = useRouter();
   const {
     inputValue,
     setInputValue,

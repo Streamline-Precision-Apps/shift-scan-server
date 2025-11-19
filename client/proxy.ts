@@ -16,27 +16,6 @@ export function proxy(request: NextRequest) {
     request.headers.get("x-capacitor") ||
     request.nextUrl.searchParams.get("capacitor") === "true";
 
-  // REDIRECTS DISABLED - All redirect logic commented out below
-
-  // If accessing dashboard routes on mobile (but not in Capacitor app), redirect to mobile app
-  // if (pathname.startsWith("/dashboard") && isMobile && !isCapacitor) {
-  //   return NextResponse.redirect(new URL("/app", request.url));
-  // }
-
-  // If accessing mobile app routes on desktop, redirect to dashboard
-  // if (pathname.startsWith("/app") && !isMobile) {
-  //   return NextResponse.redirect(new URL("/dashboard/overview", request.url));
-  // }
-
-  // Redirect root path based on device
-  // if (pathname === "/") {
-  //   if (isMobile || isCapacitor) {
-  //     return NextResponse.redirect(new URL("/app", request.url));
-  //   } else {
-  //     return NextResponse.redirect(new URL("/dashboard", request.url));
-  //   }
-  // }
-
   return NextResponse.next();
 }
 
