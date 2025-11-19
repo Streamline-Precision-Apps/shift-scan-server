@@ -18,21 +18,19 @@ export default function EmployeeTimeCards() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const t = useTranslations("MyTeam");
   const today = useMemo(() => format(new Date(), "yyyy-MM-dd"), []);
-  const [date, setDate] = useState<string>(today);
+
   const params = useParams();
   const employeeId = Array.isArray(params.employeeId)
     ? params.employeeId[0]
     : params.employeeId;
 
-  const { data, loading, error, updateDate, reset } = useTimesheetDataSimple(
-    employeeId,
-    date
-  );
+  const { data, loading, error, updateDate, date, reset } =
+    useTimesheetDataSimple(employeeId);
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newDate = e.target.value;
-    setDate(newDate);
     updateDate(newDate);
+    console.log("Date changed to:", newDate);
   };
 
   // Use the new API response structure
@@ -76,81 +74,66 @@ export default function EmployeeTimeCards() {
               <>
                 {timesheets.map((ts, idx) => (
                   <div
-                    className="border-black border-[3px] rounded-[10px] mb-2 cursor-pointer relative hover:bg-gray-50 transition"
+                    className="border-black border-[3px] rounded-[10px] mb-2 relative hover:bg-gray-50 transition p-3 flex flex-col gap-2"
                     key={ts.id}
                   >
+                    {/* Role icon in top right corner */}
+                    <div className="absolute top-2 right-2 z-20 p-2 border border-gray-300 bg-white shadow rounded-full">
+                      <img
+                        src={
+                          ts.workType === "TASCO"
+                            ? "/tasco.svg"
+                            : ts.workType === "TRUCK_DRIVER"
+                            ? "/trucking.svg"
+                            : ts.workType === "MECHANIC"
+                            ? "/mechanic.svg"
+                            : ts.workType === "LABOR"
+                            ? "/equipment.svg"
+                            : "/profileEmpty.svg"
+                        }
+                        alt={`${ts.workType} Icon`}
+                        className="w-8 h-8 "
+                      />
+                    </div>
+                    <div className="flex flex-col items-start gap-0">
+                      <span className="text-xs font-semibold text-gray-500  ">
+                        {format(new Date(ts.startTime), "EEEE")}
+                      </span>
+                      <span className="text-sm font-bold text-app-dark-blue min-w-[90px] text-center">
+                        {format(new Date(ts.startTime), "hh:mm a")} -{" "}
+                        {ts.endTime
+                          ? format(new Date(ts.endTime), "hh:mm a")
+                          : "--"}
+                      </span>
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-6 mt-1">
+                      <div className="flex-1">
+                        <span className="block text-xs text-gray-500 font-medium">
+                          Jobsite
+                        </span>
+                        <span className="block text-xs text-gray-900 font-semibold">
+                          {ts.Jobsite?.name || "N/A"}
+                        </span>
+                      </div>
+                      <div className="flex-1">
+                        <span className="block text-xs text-gray-500 font-medium">
+                          Cost Code
+                        </span>
+                        <span className="block text-xs text-gray-900 font-semibold">
+                          {ts.CostCode?.name || "N/A"}
+                        </span>
+                      </div>
+                    </div>
+                    {/* Edit button in bottom right corner */}
                     <Button
                       onClick={() => {
                         setEditingId(ts.id);
                         setShowEditModal(true);
                       }}
-                      className="w-full h-full absolute top-0 left-0 right-0 bottom-0 z-10 bg-transparent p-0 m-0 rounded-[7px]"
-                    ></Button>
-                    <Grids cols={"8"} className="w-full h-full">
-                      <Holds className="col-start-1 col-end-2 p-2">
-                        <Images
-                          titleImg={
-                            ts.workType === "TASCO"
-                              ? "/tasco.svg"
-                              : ts.workType === "TRUCK_DRIVER"
-                              ? "/trucking.svg"
-                              : ts.workType === "MECHANIC"
-                              ? "/mechanic.svg"
-                              : ts.workType === "LABOR"
-                              ? "/equipment.svg"
-                              : "null"
-                          }
-                          titleImgAlt={`${ts.workType} Icon`}
-                          className="m-auto w-8 h-8"
-                        />
-                      </Holds>
-                      <Holds className="col-start-2 col-end-5 border-x-[3px] border-black h-full">
-                        {" "}
-                        <Holds className="h-full justify-center border-b-[1.5px] border-black">
-                          {" "}
-                          <Inputs
-                            type="time"
-                            value={format(new Date(ts.startTime), "HH:mm")}
-                            className="text-xs border-none h-full rounded-none justify-center text-center px-1 w-full"
-                            disabled={true}
-                          />
-                        </Holds>{" "}
-                        <Holds className="h-full w-full justify-center border-t-[1.5px] border-black">
-                          {" "}
-                          <Inputs
-                            type="time"
-                            value={
-                              ts.endTime
-                                ? format(new Date(ts.endTime), "HH:mm")
-                                : ""
-                            }
-                            className="text-xs border-none h-full rounded-none justify-center text-center px-1 w-full"
-                            disabled={true}
-                          />
-                        </Holds>
-                      </Holds>
-                      <Holds className="col-start-5 col-end-9 h-full">
-                        <Holds className="border-b-[1.5px] border-black h-full justify-center">
-                          {" "}
-                          <Inputs
-                            type={"text"}
-                            value={ts.Jobsite?.name || "N/A"}
-                            className="text-xs border-none h-full rounded-b-none rounded-l-none rounded-br-none justify-center text-right"
-                            disabled={true}
-                            readOnly
-                          />
-                        </Holds>{" "}
-                        <Holds className="h-full justify-center text-right border-t-[1.5px] border-black">
-                          <Inputs
-                            type={"text"}
-                            value={ts.CostCode?.name || "N/A"}
-                            className="text-xs border-none h-full rounded-t-none rounded-bl-none justify-center text-right"
-                            disabled={true}
-                            readOnly
-                          />
-                        </Holds>
-                      </Holds>
-                    </Grids>
+                      className="absolute bottom-2 right-2 z-20 bg-app-dark-blue text-white rounded-full px-4 py-2 shadow hover:bg-app-dark-blue/90 transition"
+                    >
+                      Edit
+                    </Button>
                   </div>
                 ))}
               </>

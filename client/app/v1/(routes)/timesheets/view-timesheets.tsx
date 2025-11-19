@@ -20,6 +20,8 @@ import {
 import TimesheetList from "./timesheetList";
 import { apiRequest } from "@/app/lib/utils/api-Utils";
 import { getUserId } from "@/app/lib/utils/api-Utils";
+import { format } from "date-fns/format";
+import { Capacitor } from "@capacitor/core";
 
 export type FormStatus = "PENDING" | "APPROVED" | "DENIED" | "DRAFT";
 export type WorkType = "MECHANIC" | "LABOR" | "TASCO" | "TRUCK_DRIVER";
@@ -69,15 +71,21 @@ export default function ViewTimesheets({ user }: Props) {
   const [loading, setLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<number | null>(null);
   const { toasts, showToast, removeToast } = useMobileToast();
+  const native = Capacitor.isNativePlatform();
+  const [selectedDate, setSelectedDate] = useState<string>(() => {
+    // Default to today in yyyy-MM-dd format
+    return format(new Date(), "yyyy-MM-dd");
+  });
   const router = useRouter();
 
   // Get current date in YYYY-MM-DD format
-  const currentDate = new Date().toISOString().split("T")[0];
+  const today = new Date();
+  const currentDate = format(today, "yyyy-MM-dd");
 
-  // Auto-fetch timesheets for today when component mounts
+  // Auto-fetch timesheets for selected date when it changes
   useEffect(() => {
-    fetchTimesheets(currentDate);
-  }, [currentDate]);
+    fetchTimesheets(selectedDate);
+  }, [selectedDate]);
 
   // Function to calculate duration
   const calculateDuration = (
@@ -101,9 +109,8 @@ export default function ViewTimesheets({ user }: Props) {
     setLoading(true);
     try {
       const userId = user || getUserId();
-      const dateIso = date
-        ? new Date(date).toISOString().slice(0, 10)
-        : new Date().toISOString().slice(0, 10);
+      // Use the date string directly (should be yyyy-MM-dd)
+      const dateIso = date || currentDate;
       // Use the new backend route: /api/v1/user/:userId/timesheet/:date
       const data = await apiRequest(
         `/api/v1/user/${userId}/timesheet/${dateIso}`,
@@ -121,19 +128,24 @@ export default function ViewTimesheets({ user }: Props) {
 
   const copyToClipboard = async (timesheetId: number, timesheet: string) => {
     try {
-      await Clipboard.write({
-        string: timesheet,
-      });
-      // Set the copied state for this specific timesheet
-      setCopiedId(timesheetId);
-      // Show success toast
-      showToast("Copied to clipboard!", "success", 2000);
-      // Reset after 2 seconds
-      setTimeout(() => setCopiedId(null), 2000);
+      if (native) {
+        await Clipboard.write({ string: timesheet });
+        setCopiedId(timesheetId);
+        showToast("Copied to clipboard!", "success", 2000);
+        setTimeout(() => setCopiedId(null), 2000);
+      } else {
+        if (typeof navigator !== "undefined" && navigator.clipboard) {
+          await navigator.clipboard.writeText(timesheet);
+        } else {
+          throw new Error("Not Secure Connection for Web Clipboard API");
+        }
+        setCopiedId(timesheetId);
+        showToast("Copied to clipboard!", "success", 2000);
+        setTimeout(() => setCopiedId(null), 2000);
+      }
     } catch (err) {
-      console.error("Failed to copy!", err);
-      // Show error toast
-      showToast("Failed to copy", "error", 2000);
+      // Fallback to Web Clipboard API if available
+      console.error(err);
     }
   };
 
@@ -184,9 +196,9 @@ export default function ViewTimesheets({ user }: Props) {
                 id="date"
                 type="date"
                 name="date"
-                defaultValue={currentDate}
+                value={selectedDate}
                 className="text-center flex-col w-full bg-white max-w-[220px] justify-center items-center"
-                onChange={(e) => fetchTimesheets(e.target.value)}
+                onChange={(e) => setSelectedDate(e.target.value)}
               />
             </div>
           </Forms>

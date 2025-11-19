@@ -306,22 +306,22 @@ export default function Content({
                               <Buttons
                                 href={`/v1/dashboard/myTeam/${id}/employee/${member.id}?rPath=${url}`}
                                 background="lightBlue"
-                                className="w-full h-full py-2 relative"
+                                className="w-full h-full p-2 relative"
                               >
                                 <Holds
                                   position={"row"}
-                                  className="w-full gap-x-4"
+                                  className="w-full gap-x-3"
                                 >
-                                  <Holds className="w-24 relative">
-                                    <Images
-                                      titleImg={
+                                  <Holds className="w-1/5 relative">
+                                    <img
+                                      src={
                                         member.image
                                           ? member.image
                                           : "/profileEmpty.svg"
                                       }
-                                      titleImgAlt="profileFilled"
+                                      alt="profileFilled"
                                       loading="lazy"
-                                      className={`rounded-full max-w-12 h-auto object-contain ${
+                                      className={`rounded-full w-12 h-12 bg-black object-cover ${
                                         member.image
                                           ? "border-[3px] border-black"
                                           : ""
@@ -334,8 +334,12 @@ export default function Content({
                                       className="absolute top-1 right-0 w-3 h-3 rounded-full p-1.5 border-[3px] border-black"
                                     />
                                   </Holds>
-                                  <Holds className="w-full">
-                                    <Titles position={"left"} size="lg">
+                                  <Holds className="w-4/5">
+                                    <Titles
+                                      position={"left"}
+                                      size="md"
+                                      className="truncate max-w-[200px] "
+                                    >
                                       {member.firstName} {member.lastName}
                                     </Titles>
                                   </Holds>

@@ -1,5 +1,6 @@
 import { apiRequest } from "@/app/lib/utils/api-Utils";
-import { useState, useEffect, useCallback } from "react";
+import { format } from "date-fns/format";
+import { useState, useEffect, useCallback, useMemo } from "react";
 
 export interface TimesheetEntry {
   id: string;
@@ -22,17 +23,19 @@ interface UseTimesheetDataReturn {
   error: string | null;
   updateDate: (newDate: string) => void;
   reset: () => Promise<void>;
+  date: string | undefined;
 }
 
 export const useTimesheetDataSimple = (
-  employeeId: string | undefined,
-  initialDate: string
+  employeeId: string | undefined
 ): UseTimesheetDataReturn => {
   const [data, setData] = useState<TimesheetDataResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [reloading, setReloading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [currentDate, setCurrentDate] = useState(initialDate);
+  // Set currentDate to today by default
+  const today = useMemo(() => format(new Date(), "yyyy-MM-dd"), []);
+  const [currentDate, setCurrentDate] = useState<string | undefined>(today);
 
   const fetchTimesheets = useCallback(async () => {
     if (!employeeId) return;
@@ -68,6 +71,7 @@ export const useTimesheetDataSimple = (
     setData,
     loading,
     error,
+    date: currentDate,
     updateDate: setCurrentDate,
     reset: reload,
   };

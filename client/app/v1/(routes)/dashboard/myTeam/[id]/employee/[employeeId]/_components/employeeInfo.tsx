@@ -55,7 +55,7 @@ export default function EmployeeInfo({
             <img
               src={employee?.image ? employee.image : "/profileFilled.svg"}
               alt="Team"
-              className="w-24 h-24 rounded-full border-[3px] border-black"
+              className="w-24 h-24 object-contain bg-black rounded-full border-[3px] border-black"
               onClick={() => setShowModal(true)}
             />
             <Holds
