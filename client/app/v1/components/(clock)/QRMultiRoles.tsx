@@ -115,6 +115,9 @@ export default function QRMultiRoles({
   }, [permissionStatus, requestCameraPermission, requestLocationPermission]);
 
   const selectView = (selectedRoleType: string) => {
+    if (selectedRoleType === "") {
+      return;
+    }
     setClockInRoleTypes(selectedRoleType);
 
     // Map the selected role type to the main clock-in role but only update local state
@@ -353,7 +356,7 @@ export default function QRMultiRoles({
                     <Holds className="p-1 justify-center row-start-1 row-end-2 ">
                       <Contents width={"section"}>
                         <Selects
-                          className=" h-12 bg-app-blue text-center p-2 text-sm disabled:bg-app-blue"
+                          className=" h-12 bg-app-blue text-center px-2 text-sm disabled:bg-app-blue"
                           value={clockInRoleTypes}
                           disabled={startCamera}
                           onChange={(e) => selectView(e.target.value)}
@@ -401,7 +404,7 @@ export default function QRMultiRoles({
                     <Holds className="p-1 justify-center row-start-1 row-end-2 ">
                       <Contents width={"section"}>
                         <Selects
-                          className="h-10 bg-app-blue text-center p-3 disabled:bg-app-blue"
+                          className="h-12 bg-app-blue text-center px-2 disabled:bg-app-blue"
                           value={clockInRoleTypes}
                           disabled={startCamera}
                           onChange={(e) => selectView(e.target.value)}
@@ -430,7 +433,7 @@ export default function QRMultiRoles({
                     <Holds className="p-1 justify-center row-start-1 row-end-2 ">
                       <Contents width={"section"}>
                         <Selects
-                          className="bg-app-blue h-10 text-center p-3 disabled:bg-app-blue"
+                          className="bg-app-blue h-12 text-center px-2 disabled:bg-app-blue"
                           value={clockInRoleTypes}
                           disabled={startCamera}
                           onChange={(e) => selectView(e.target.value)}

@@ -191,6 +191,7 @@ export default function MechanicVerificationStep({
       setCurrentPageView("dashboard");
       setWorkRole(role);
       setLaborType(clockInRoleTypes || "");
+
       await refetchTimesheet();
       router.push("/v1/dashboard");
     } catch (error) {

@@ -69,8 +69,6 @@ export default function NewClockProcess({
   // State management
 
   const { user } = useUserStore();
-  const { equipments: equipmentResults } = useEquipmentStore();
-
   const [clockInRole, setClockInRole] = useState<string | undefined>(workRole);
   const [step, setStep] = useState<number>(0);
 
@@ -81,7 +79,6 @@ export default function NewClockProcess({
   const t = useTranslations("Clock");
   const router = useRouter();
   const [laborType, setLaborType] = useState<string>("");
-  const [locationRetryCount, setLocationRetryCount] = useState(0);
 
   // Truck states
   const [truck, setTruck] = useState<Option>({

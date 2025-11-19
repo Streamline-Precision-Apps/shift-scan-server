@@ -59,7 +59,7 @@ export default function HamburgerMenuNew({
           <img
             src={image ? image : "/profileEmpty.svg"}
             alt="profile"
-            className="max-w-12  h-auto object-contain bg-black border-[3px] border-black rounded-full z-0"
+            className="w-[50px] h-[50px]  object-contain bg-black border-[3px] border-black rounded-full z-0"
           />
           <img
             src={"/settingsFilled.svg"}

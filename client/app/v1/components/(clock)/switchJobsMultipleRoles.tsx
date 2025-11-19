@@ -213,7 +213,7 @@ export default function SwitchJobsMultiRoles({
             {t("ChangeIfNecessary")}
           </Titles>
           <Selects
-            className="bg-app-blue text-md text-center"
+            className="bg-app-blue h-12 text-md text-center"
             value={clockInRoleTypes}
             onChange={(e) => selectView(e.target.value)}
           >
