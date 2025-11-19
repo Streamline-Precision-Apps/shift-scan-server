@@ -89,99 +89,103 @@ export default function QRStep({
 
   return (
     <Holds background={"white"} className="h-full w-full">
-      <Contents width={"section"} className="h-full pb-5">
-        <Grids rows={"8"} gap={"5"} className="h-full w-full ">
-          <Holds className="h-full">
-            <TitleBoxes onClick={handleReturnPath}>
-              <Titles size={"h3"} className="flex flex-col justify-end">
-                {t("SelectLaborType")}
-              </Titles>
-            </TitleBoxes>
-          </Holds>
-          {!startCamera ? (
-            <Holds className={"h-full w-full row-start-2 row-end-7"}>
-              <Contents width={"section"}>
-                <Holds className="h-full w-full  justify-center border-[3px] border-black rounded-[10px] p-3">
-                  <Images
-                    titleImg="/camera.svg"
-                    titleImgAlt="clockIn"
-                    position={"center"}
-                    size={"40"}
-                  />
+      <Grids rows={"7"} gap={"5"} className="h-full w-full">
+        <Holds className="row-start-1 row-end-2 h-full w-full">
+          <TitleBoxes onClick={handleReturnPath} className="h-full">
+            <Titles size={"h3"} className="flex flex-col justify-end">
+              {t("SelectLaborType")}
+            </Titles>
+          </TitleBoxes>
+        </Holds>
+        <Holds className="row-start-2 row-end-8 h-full w-full">
+          <Grids rows={"7"} gap={"5"} className="h-full w-full pb-5">
+            {!startCamera ? (
+              <Holds className={"h-full w-full row-start-1 row-end-7"}>
+                <Contents width={"section"}>
+                  <Holds className="h-full w-full  justify-center border-[3px] border-black rounded-[10px] p-3">
+                    <Images
+                      titleImg="/camera.svg"
+                      titleImgAlt="clockIn"
+                      position={"center"}
+                      size={"40"}
+                    />
 
-                  {failedToScan === true && (
-                    <Holds className="h-full w-full row-start-6 row-end-7 justify-center">
-                      <Texts text={"red"} size={"p4"}>
-                        {t("FailedToScanJobSiteDoesNotExist")}
+                    {failedToScan === true && (
+                      <Holds className="h-full w-full row-start-6 row-end-7 justify-center">
+                        <Texts text={"red"} size={"p4"}>
+                          {t("FailedToScanJobSiteDoesNotExist")}
+                        </Texts>
+                      </Holds>
+                    )}
+                  </Holds>
+
+                  <Holds className="h-20 w-full  justify-center">
+                    <Buttons
+                      background={"none"}
+                      shadow={"none"}
+                      onClick={handleAlternativePath}
+                      className="underline text-app-dark-blue"
+                    >
+                      <Texts
+                        size={"md"}
+                        className="underline underline-offset-4 "
+                      >
+                        {t("TroubleScanning")}
                       </Texts>
-                    </Holds>
-                  )}
-                </Holds>
+                    </Buttons>
+                  </Holds>
+                </Contents>
+              </Holds>
+            ) : (
+              <Holds className={"h-full w-full row-start-1 row-end-7"}>
+                <Grids rows={"7"} gap={"5"}>
+                  <Holds className="h-full w-full row-start-2 row-end-7 justify-center ">
+                    <QR
+                      handleScanJobsite={handleScanJobsite}
+                      url={url}
+                      clockInRole={clockInRole || ""}
+                      type={type}
+                      handleNextStep={handleNextStep}
+                      startCamera={startCamera}
+                      setStartCamera={setStartCamera}
+                      setFailedToScan={setFailedToScan}
+                      setJobsite={setJobsite}
+                    />
+                  </Holds>
 
-                <Holds className="h-20 w-full  justify-center">
-                  <Buttons
-                    background={"none"}
-                    shadow={"none"}
-                    onClick={handleAlternativePath}
-                    className="underline text-app-dark-blue"
-                  >
-                    <Texts
-                      size={"md"}
-                      className="underline underline-offset-4 "
+                  <Holds className="h-full w-full row-start-7 row-end-8 justify-center">
+                    <Buttons
+                      background={"none"}
+                      shadow={"none"}
+                      onClick={handleAlternativePath}
+                      className="underline text-app-dark-blue"
                     >
-                      {t("TroubleScanning")}
-                    </Texts>
-                  </Buttons>
-                </Holds>
-              </Contents>
-            </Holds>
-          ) : (
-            <Holds className={"h-full w-full row-start-2 row-end-7"}>
-              <Grids rows={"7"} gap={"2"}>
-                <Holds className="h-full w-full row-start-2 row-end-7 justify-center ">
-                  <QR
-                    handleScanJobsite={handleScanJobsite}
-                    url={url}
-                    clockInRole={clockInRole || ""}
-                    type={type}
-                    handleNextStep={handleNextStep}
-                    startCamera={startCamera}
-                    setStartCamera={setStartCamera}
-                    setFailedToScan={setFailedToScan}
-                    setJobsite={setJobsite}
-                  />
-                </Holds>
-
-                <Holds className="h-full w-full row-start-7 row-end-8 justify-center">
+                      <Texts
+                        size={"md"}
+                        className="underline underline-offset-4 "
+                      >
+                        {t("TroubleScanning")}
+                      </Texts>
+                    </Buttons>
+                  </Holds>
+                </Grids>
+              </Holds>
+            )}
+            {!startCamera ? (
+              <Holds className="row-start-7 row-end-8 h-full w-full justify-center py-2">
+                <Contents width={"section"}>
                   <Buttons
-                    background={"none"}
-                    shadow={"none"}
-                    onClick={handleAlternativePath}
-                    className="underline text-app-dark-blue"
+                    onClick={() => setStartCamera(!startCamera)}
+                    background={"green"}
                   >
-                    <Texts
-                      size={"md"}
-                      className="underline underline-offset-4 "
-                    >
-                      {t("TroubleScanning")}
-                    </Texts>
+                    <Titles size={"md"}>{t("StartCamera")}</Titles>
                   </Buttons>
-                </Holds>
-              </Grids>
-            </Holds>
-          )}
-          {!startCamera ? (
-            <Holds className="row-start-8 row-end-9 h-full w-full justify-center py-2">
-              <Buttons
-                onClick={() => setStartCamera(!startCamera)}
-                background={"green"}
-              >
-                <Titles size={"md"}>{t("StartCamera")}</Titles>
-              </Buttons>
-            </Holds>
-          ) : null}
-        </Grids>
-      </Contents>
+                </Contents>
+              </Holds>
+            ) : null}
+          </Grids>
+        </Holds>
+      </Grids>
     </Holds>
   );
 }
