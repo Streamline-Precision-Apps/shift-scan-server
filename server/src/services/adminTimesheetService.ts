@@ -29,9 +29,20 @@ export async function getAllTimesheets(params: GetAllTimesheetsParams) {
     // Build where clause based on filters
     const where: Prisma.TimeSheetWhereInput = {};
 
-    // Status filter (pending vs all)
-    // Only add status filter if not "all" (which means show all statuses)
-    if (status && status !== "all") {
+    // Status filter - combine both the showPendingOnly status param and the filters.status array
+    // Priority: filters.status (from filter dropdown) takes precedence over status param (showPendingOnly)
+    if (filters.status && filters.status.length > 0) {
+      // Use filter dropdown selections
+      const validStatuses = filters.status
+        .filter((s) => s.toLowerCase() !== "all")
+        .map((s) => s.toUpperCase());
+      if (validStatuses.length > 0) {
+        where.status = {
+          in: validStatuses as ApprovalStatus[],
+        };
+      }
+    } else if (status && status !== "all") {
+      // Fall back to showPendingOnly status param only if no filter status is selected
       if (status.toLowerCase() === "pending") {
         where.status = "PENDING" as ApprovalStatus;
       } else {
@@ -80,19 +91,6 @@ export async function getAllTimesheets(params: GetAllTimesheetsParams) {
       where.costcode = { in: filters.costCode };
     }
 
-    // Status filter (from filter options, not pending/all)
-    if (filters.status && filters.status.length > 0) {
-      // Filter out "all" from status array and convert to uppercase to match enum
-      const validStatuses = filters.status
-        .filter((s) => s.toLowerCase() !== "all")
-        .map((s) => s.toUpperCase());
-      if (validStatuses.length > 0) {
-        where.status = {
-          in: validStatuses as ApprovalStatus[],
-        };
-      }
-    }
-
     // ID filter
     if (filters.id && filters.id.length > 0) {
       where.id = { in: filters.id.map((id) => parseInt(id, 10)) };
@@ -133,7 +131,20 @@ export async function getAllTimesheets(params: GetAllTimesheetsParams) {
         equipmentConditions.push({
           TruckingLogs: {
             some: {
-              Equipment: { id: { in: filters.equipmentId } },
+              OR: [
+                // Check hauled equipment
+                { Equipment: { id: { in: filters.equipmentId } } },
+                // Check truck
+                { Truck: { id: { in: filters.equipmentId } } },
+                // Check trailer
+                { Trailer: { id: { in: filters.equipmentId } } },
+                // Check equipment hauled records
+                {
+                  EquipmentHauled: {
+                    some: { equipmentId: { in: filters.equipmentId } },
+                  },
+                },
+              ],
             },
           },
         });

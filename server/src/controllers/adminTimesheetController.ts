@@ -18,7 +18,30 @@ import {
  */
 export async function getAllTimesheetsController(req: Request, res: Response) {
   try {
-    const status = typeof req.query.status === "string" ? req.query.status : "all";
+    // Status param for showPendingOnly behavior
+    // Extract the first 'status' param if it's a string (from showPendingOnly)
+    // If status is an array, use "all" as default for showPendingOnly
+    let statusParam = "all";
+    let statusFilters: string[] = [];
+    
+    if (req.query.status) {
+      if (Array.isArray(req.query.status)) {
+        // Multiple status values = filter selections
+        statusFilters = req.query.status as string[];
+      } else if (typeof req.query.status === "string") {
+        // Single status value could be either:
+        // 1. "pending" or "all" from showPendingOnly
+        // 2. A single filter selection like "APPROVED"
+        const statusValue = req.query.status.toLowerCase();
+        if (statusValue === "pending" || statusValue === "all") {
+          statusParam = statusValue;
+        } else {
+          // It's a filter selection
+          statusFilters = [req.query.status];
+        }
+      }
+    }
+    
     const page = req.query.page ? parseInt(req.query.page as string, 10) : 1;
     const pageSize = req.query.pageSize
       ? parseInt(req.query.pageSize as string, 10)
@@ -46,9 +69,6 @@ export async function getAllTimesheetsController(req: Request, res: Response) {
         ? req.query.equipmentLogTypes
         : [req.query.equipmentLogTypes]
       : [];
-    // Note: statusFilters should come from a different query param (e.g., statusFilter[])
-    // not from the main 'status' param which controls pending vs all behavior
-    const statusFilters: string[] = [];
     const changes = req.query.changes
       ? Array.isArray(req.query.changes)
         ? req.query.changes
@@ -76,7 +96,7 @@ export async function getAllTimesheetsController(req: Request, res: Response) {
     const skip = (page - 1) * pageSize;
 
     const result = await getAllTimesheets({
-      status,
+      status: statusParam,
       page,
       pageSize,
       skip,

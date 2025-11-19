@@ -220,7 +220,6 @@ export const EditTimesheetModal: React.FC<EditTimesheetModalProps> = ({
             formData.append("changeReason", changeReason);
             formData.append("wasStatusChanged", wasStatusChanged.toString());
             formData.append("numberOfChanges", numberOfChanges.toString());
-            console.log("Submitting changes:", formData);
             const result = await updateTimesheetAdmin(formData); // Use the admin action
             if (result.success) {
                 //after a successful update, refresh the dashboard data and close the modal the notification will be sent in the background
@@ -330,10 +329,6 @@ export const EditTimesheetModal: React.FC<EditTimesheetModalProps> = ({
 
             // Note: adminSetNotificationToRead function may need to be implemented
             // or this notification logic may need to be handled differently
-            console.log("Setting notification to read for:", {
-                editor,
-                timesheetId,
-            });
         } catch (error) {
             console.error("Error setting notification to read:", error);
         }

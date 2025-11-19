@@ -1,4 +1,4 @@
-import { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useRef, useMemo, useCallback } from 'react';
 
 interface AutoSelectionOptions {
   id: string;
@@ -56,17 +56,17 @@ export const useTimesheetAutoSelection = ({
   // Memoize stable values to prevent unnecessary effect executions
   const currentShiftType = useMemo(() => 
     tascoLogs.length > 0 ? tascoLogs[0].shiftType : '', 
-    [tascoLogs[0]?.shiftType]
+    [tascoLogs]
   );
 
   const currentLaborType = useMemo(() => 
     tascoLogs.length > 0 ? tascoLogs[0].laborType : '', 
-    [tascoLogs[0]?.laborType]
+    [tascoLogs]
   );
 
   const currentMaterialType = useMemo(() => 
     tascoLogs.length > 0 ? tascoLogs[0].materialType : '', 
-    [tascoLogs[0]?.materialType]
+    [tascoLogs]
   );
 
   // Memoize equipment status with efficient comparison
@@ -74,10 +74,10 @@ export const useTimesheetAutoSelection = ({
     return tascoLogs.some(log => {
       return log.Equipment && log.Equipment.id && log.Equipment.id.trim() !== '';
     });
-  }, [tascoLogs.map(log => log.Equipment?.id || '').join('|')]);
+  }, [tascoLogs]);
 
   // Helper function to handle cost code format differences
-  const findCostCode = (searchTerm: string) => {
+  const findCostCode = useCallback((searchTerm: string) => {
     if (costCodes.length === 0) return null;
     
     // Check if it's the old format (value/label) or new format (id/name)
@@ -91,9 +91,9 @@ export const useTimesheetAutoSelection = ({
         cc.name.includes('80.40') && cc.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
-  };
+  }, [costCodes]);
 
-  const findLaborCostCode = () => {
+  const findLaborCostCode = useCallback(() => {
     if (costCodes.length === 0) return null;
     
     const firstItem = costCodes[0];
@@ -106,7 +106,7 @@ export const useTimesheetAutoSelection = ({
         cc.name.toLowerCase().includes('amalgamated labor')
       );
     }
-  };
+  }, [costCodes]);
 
   // Auto-selection for E-shift and F-shift
   useEffect(() => {
@@ -169,7 +169,7 @@ export const useTimesheetAutoSelection = ({
     // Update ref to track processed values
     prevValuesRef.current.workType = workType;
     prevValuesRef.current.shiftType = currentShiftType;
-  }, [workType, currentShiftType, costCodes.length, materialTypes.length, jobsites.length]);
+  }, [workType, currentShiftType, costCodes.length, materialTypes, jobsites, setJobsite, setCostCode, setMaterial, findCostCode, tascoLogs.length]);
 
   // Auto-selection for Labor Type changes (ABCD shifts only)
   useEffect(() => {
@@ -207,7 +207,11 @@ export const useTimesheetAutoSelection = ({
     workType, 
     currentShiftType,
     currentLaborType,
-    costCodes.length
+    costCodes.length,
+    findCostCode,
+    findLaborCostCode,
+    setCostCode,
+    tascoLogs.length
   ]);
 
   // Auto-selection for equipment-based cost code (applies to all TASCO logs)
@@ -253,7 +257,13 @@ export const useTimesheetAutoSelection = ({
   }, [
     workType, 
     hasAnyEquipment,
-    costCodes.length
+    costCodes.length,
+    currentShiftType,
+    currentLaborType,
+    findCostCode,
+    findLaborCostCode,
+    setCostCode,
+    tascoLogs.length
   ]);
 
   // Auto-selection for Material-based jobsite (works for all shift types)
@@ -298,8 +308,6 @@ export const useTimesheetAutoSelection = ({
       );
       if (targetJobsite) {
         setJobsite(targetJobsite);
-      } else {
-        console.log('Jobsite not found for pattern:', targetJobsitePattern, 'Available jobsites:', jobsites.map(js => js.name));
       }
     }
     
@@ -309,6 +317,8 @@ export const useTimesheetAutoSelection = ({
     workType, 
     currentShiftType,
     currentMaterialType,
-    jobsites.length
+    jobsites,
+    setJobsite,
+    tascoLogs.length
   ]);
 };

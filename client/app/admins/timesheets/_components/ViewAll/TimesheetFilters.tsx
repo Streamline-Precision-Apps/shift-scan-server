@@ -67,11 +67,11 @@ const TimesheetFilters: React.FC<FilterPopoverProps> = ({
     >([]);
 
     // For has changes toggle
-    const hasChanges = filters.changes.includes("HAS_CHANGES");
+    const hasChanges = filters.changes.includes("hasChanges");
 
     useEffect(() => {
         const formattedCostCodes = costCodes.map((cc) => ({
-            value: cc.code,
+            value: cc.name,
             label: cc.name,
         }));
         setCostCodeOptions(formattedCostCodes);
@@ -485,12 +485,11 @@ const TimesheetFilters: React.FC<FilterPopoverProps> = ({
                                                 changes: checked
                                                     ? [
                                                           ...(f.changes || []),
-                                                          "HAS_CHANGES",
+                                                          "hasChanges",
                                                       ]
                                                     : (f.changes || []).filter(
                                                           (c) =>
-                                                              c !==
-                                                              "HAS_CHANGES"
+                                                              c !== "hasChanges"
                                                       ),
                                             }));
                                         }}
