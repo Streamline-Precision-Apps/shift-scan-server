@@ -1,9 +1,9 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="8d7caf6b-f8d0-53bb-bdfa-cc23543f0e89")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="f2113dea-3aba-5c1c-812e-f0731af7bdc8")}catch(e){}}();
 import { ServiceManagerFormApprovals, ServiceFormSubmissions, ServiceTeamSubmissions, ServiceFormDraft, ServiceForm, } from "../services/formsService.js";
 // Controller for forms endpoints
 import express from "express";
-import { ServiceCreateFormApproval, ServiceCreateFormSubmission, ServiceDeleteFormSubmission, ServiceGetForms, ServiceGetUserSubmissions, ServiceSaveDraft, ServiceSaveDraftToPending, ServiceSavePending, ServiceUpdateFormApproval, } from "../services/formsService.js";
+import { ServiceCreateFormApproval, ServiceCreateFormSubmission, ServiceDeleteFormSubmission, ServiceGetForms, ServiceGetUserSubmissions, ServiceSaveDraft, ServiceSaveDraftToPending, ServiceSavePending, ServiceUpdateFormApproval, updateFormSubmissionService, } from "../services/formsService.js";
 import { ServiceGetEmployeeRequests } from "../services/formsService.js";
 // Fetch employee requests for a manager (with filter, skip, take)
 export const getUserSubmissions = async (req, res) => {
@@ -88,6 +88,19 @@ export const getForms = async (req, res) => {
         const message = error instanceof Error && error.message
             ? error.message
             : "Failed to retrieve forms";
+        res.status(400).json({ message });
+    }
+};
+export const updateFormSubmission = async (req, res) => {
+    try {
+        const body = req.body;
+        const submission = await updateFormSubmissionService(body);
+        res.status(201).json(submission);
+    }
+    catch (error) {
+        const message = error instanceof Error && error.message
+            ? error.message
+            : "Failed to create form submission";
         res.status(400).json({ message });
     }
 };
@@ -302,4 +315,4 @@ export const getFormTemplate = async (req, res) => {
     }
 };
 //# sourceMappingURL=formsController.js.map
-//# debugId=8d7caf6b-f8d0-53bb-bdfa-cc23543f0e89
+//# debugId=f2113dea-3aba-5c1c-812e-f0731af7bdc8

@@ -1,4 +1,4 @@
-export declare function fetchNotificationServiceByUserId(userId: string): Promise<{
+export declare function fetchNotificationServiceByUserId(userId: string, resolvedSince?: string): Promise<{
     notifications: ({
         Reads: {
             userId: string;

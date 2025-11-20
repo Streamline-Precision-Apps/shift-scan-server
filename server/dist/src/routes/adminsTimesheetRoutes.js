@@ -1,8 +1,11 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="6c30e49c-fc05-5a9f-b786-fcf052f22968")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="8ea466d5-08d7-53df-b3fb-a39e33ba5a6b")}catch(e){}}();
 import { Router } from "express";
-import { getAllTimesheetsController, getTimesheetByIdController, createTimesheetController, updateTimesheetController, updateTimesheetStatusController, deleteTimesheetController, exportTimesheetsController, getTimesheetChangeLogsController, getAllTascoMaterialTypesController, } from "../controllers/adminTimesheetController.js";
+import { getAllTimesheetsController, getTimesheetByIdController, createTimesheetController, updateTimesheetController, updateTimesheetStatusController, deleteTimesheetController, exportTimesheetsController, getTimesheetChangeLogsController, getAllTascoMaterialTypesController, resolveTimecardNotificationController, } from "../controllers/adminTimesheetController.js";
+import { verifyToken } from "../middleware/authMiddleware.js";
 const router = Router();
+// Apply authentication to all routes
+router.use(verifyToken);
 /**
  * GET /api/v1/admins/timesheet
  * Get all timesheets with pagination, filtering, and search
@@ -34,6 +37,11 @@ router.post("/", createTimesheetController);
  */
 router.post("/export", exportTimesheetsController);
 /**
+ * POST /api/v1/admins/timesheet/resolve-notification
+ * Check timesheet status and resolve notification if already approved/rejected
+ */
+router.post("/resolve-notification", resolveTimecardNotificationController);
+/**
  * PUT /api/v1/admins/timesheet/:id
  * Update a timesheet (optimized update with change tracking)
  */
@@ -50,4 +58,4 @@ router.put("/:id/status", updateTimesheetStatusController);
 router.delete("/:id", deleteTimesheetController);
 export default router;
 //# sourceMappingURL=adminsTimesheetRoutes.js.map
-//# debugId=6c30e49c-fc05-5a9f-b786-fcf052f22968
+//# debugId=8ea466d5-08d7-53df-b3fb-a39e33ba5a6b

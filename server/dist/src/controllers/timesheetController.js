@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="9fd7ce6d-15d0-5217-a5c9-873357611fb4")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="ced78969-b0c7-5b2c-923c-e286b5c0ff10")}catch(e){}}();
 import { createGeneralTimesheetService, approveTimesheetsBatchService, updateTimesheetService, getUserTimesheetsByDate, getTimesheetDetailsManager, getManagerCrewTimesheets, createMechanicTimesheetService, createTascoTimesheetService, createTruckDriverTimesheetService, getRecentTimeSheetForUser, getTimesheetActiveStatus, getBannerDataForTimesheet, getLogsForDashboard, getClockOutComment, getEquipmentLogs, getRecentJobDetails, createEmployeeEquipmentLogService, getEmployeeEquipmentLogDetails, deleteEmployeeEquipmentLog, updateEmployeeEquipmentLogService, getClockOutDetailsService, updateClockOutService, getPreviousTimesheet, returnToPreviousTimesheetService, getContinueTimesheetService, deleteRefuelLogService, } from "../services/timesheetService.js";
 import Express from "express";
 // GET /v1/timesheet/user/:userId/active-status
@@ -310,10 +310,14 @@ export async function getClockOutCommentController(req, res) {
 export async function getUserEquipmentLogsController(req, res) {
     try {
         const userId = req.params.userId;
-        if (!userId) {
-            return res.status(400).json({ error: "userId parameter is required." });
+        const timesheetIdString = req.query.timesheetId;
+        if (!userId || !timesheetIdString) {
+            return res
+                .status(400)
+                .json({ error: "Invalid Request - parameters are required." });
         }
-        const logs = await getEquipmentLogs(userId);
+        const timesheetId = Number(timesheetIdString);
+        const logs = await getEquipmentLogs(userId, timesheetId);
         return res.json({ success: true, data: logs });
     }
     catch (error) {
@@ -546,4 +550,4 @@ export async function deleteRefuelLogController(req, res) {
     }
 }
 //# sourceMappingURL=timesheetController.js.map
-//# debugId=9fd7ce6d-15d0-5217-a5c9-873357611fb4
+//# debugId=ced78969-b0c7-5b2c-923c-e286b5c0ff10

@@ -1,9 +1,29 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="e0ddcc19-8e4f-5b07-8357-b0f32eb5a016")}catch(e){}}();
-import { getTascoReport as getTascoReportService, getTruckingReport as getTruckingReportService, getMechanicReport as getMechanicReportService, } from "../services/adminsReportService.js";
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="19e61296-0b8d-51c9-ad94-e6fed8b70138")}catch(e){}}();
+import { getTascoReport as getTascoReportService, getTruckingReport as getTruckingReportService, getMechanicReport as getMechanicReportService, getTascoFilterOptions as getTascoFilterOptionsService, } from "../services/adminsReportService.js";
 export async function getTascoReport(req, res) {
     try {
-        const data = await getTascoReportService();
+        // Parse query parameters
+        const filters = {};
+        if (req.query.jobsiteIds) {
+            filters.jobsiteIds = req.query.jobsiteIds.split(",");
+        }
+        if (req.query.shiftTypes) {
+            filters.shiftTypes = req.query.shiftTypes.split(",");
+        }
+        if (req.query.employeeIds) {
+            filters.employeeIds = req.query.employeeIds.split(",");
+        }
+        if (req.query.laborTypes) {
+            filters.laborTypes = req.query.laborTypes.split(",");
+        }
+        if (req.query.equipmentIds) {
+            filters.equipmentIds = req.query.equipmentIds.split(",");
+        }
+        if (req.query.materialTypes) {
+            filters.materialTypes = req.query.materialTypes.split(",");
+        }
+        const data = await getTascoReportService(filters);
         res.json({ success: true, data });
     }
     catch (error) {
@@ -40,5 +60,18 @@ export async function getMechanicReport(req, res) {
         });
     }
 }
+export async function getTascoFilterOptions(req, res) {
+    try {
+        const data = await getTascoFilterOptionsService();
+        res.json(data);
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Failed to fetch Tasco filter options",
+            error: error instanceof Error ? error.message : error,
+        });
+    }
+}
 //# sourceMappingURL=adminReportController.js.map
-//# debugId=e0ddcc19-8e4f-5b07-8357-b0f32eb5a016
+//# debugId=19e61296-0b8d-51c9-ad94-e6fed8b70138

@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="5fc51f5b-9352-5b85-8715-00448726ef9a")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="08dc9fbc-fddf-59d9-b29d-facff22d8a47")}catch(e){}}();
 import { Router } from "express";
 import { createCrewController, createUserAdminController, deleteCrewController, deleteUserController, editCrewController, editUserAdminController, getAllActiveEmployeesController, getAllCrewsController, getCrewByIdAdminController, getCrewEmployeesController, getCrewManagersController, getEmployeeInfoController, getPersonnelManagerController, } from "../controllers/adminPersonnelController.js";
 const router = Router();
@@ -16,18 +16,18 @@ router.get("/getCrewByIdAdmin/:id", getCrewByIdAdminController);
 // get all crew managers
 router.get("/crewManagers", getCrewManagersController);
 router.get("/personnelManager", getPersonnelManagerController);
-// create crew
-router.post("/createCrew", createCrewController);
-// edit crew
-router.put("/editCrew/:id", editCrewController);
-// delete crew
-router.delete("/deleteCrew/:id", deleteCrewController);
 // create user (admin)
 router.post("/createUserAdmin", createUserAdminController);
 // edit user (admin)
 router.put("/editUserAdmin/:id", editUserAdminController);
 // delete user (admin)
 router.delete("/deleteUser/:id", deleteUserController);
+// create crew
+router.post("/createCrew", createCrewController);
+// edit crew
+router.put("/editCrew/:id", editCrewController);
+// delete crew
+router.delete("/deleteCrew/:id", deleteCrewController);
 export default router;
 //# sourceMappingURL=adminsPersonnelRoutes.js.map
-//# debugId=5fc51f5b-9352-5b85-8715-00448726ef9a
+//# debugId=08dc9fbc-fddf-59d9-b29d-facff22d8a47

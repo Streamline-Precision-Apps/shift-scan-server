@@ -124,15 +124,17 @@ export default function EditJobsiteModal({
             );
 
             // Include address data
-            fd.append(
-                "Address",
-                JSON.stringify({
-                    street: formData.Address.street,
-                    city: formData.Address.city,
-                    state: formData.Address.state,
-                    zipCode: formData.Address.zipCode,
-                })
-            );
+            if (formData.Address) {
+                fd.append(
+                    "Address",
+                    JSON.stringify({
+                        street: formData.Address.street,
+                        city: formData.Address.city,
+                        state: formData.Address.state,
+                        zipCode: formData.Address.zipCode,
+                    })
+                );
+            }
 
             const result = await updateJobsiteAdmin(fd);
 

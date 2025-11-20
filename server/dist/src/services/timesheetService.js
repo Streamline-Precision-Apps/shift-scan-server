@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="01adea9b-70db-5497-815b-1aa85a47531b")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="ff8aeafa-fe99-5093-b73a-70a03df38ca1")}catch(e){}}();
 import { formatISO } from "date-fns";
 import prisma from "../lib/prisma.js";
 export async function updateTimesheetService({ id, editorId, changes, changeReason, numberOfChanges, startTime, endTime, Jobsite, CostCode, comment, }) {
@@ -364,6 +364,7 @@ export async function approveTimesheetsBatchService({ userId, timesheetIds, stat
                             userId: editorId,
                             readAt: new Date(),
                         })),
+                        skipDuplicates: true,
                     });
                 }
                 await tx.notificationResponse.createMany({
@@ -373,6 +374,7 @@ export async function approveTimesheetsBatchService({ userId, timesheetIds, stat
                         response: "Approved",
                         respondedAt: new Date(),
                     })),
+                    skipDuplicates: true,
                 });
             });
         }
@@ -997,25 +999,19 @@ export async function getClockOutComment(userId) {
     });
     return timesheet?.comment || "";
 }
-export async function getEquipmentLogs(userId) {
-    const currentDate = new Date();
-    const past24Hours = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000);
-    const timeSheetId = await prisma.timeSheet.findFirst({
-        where: {
-            userId: userId,
-            endTime: null,
-        },
-    });
-    if (!timeSheetId) {
-        throw new Error("No active timesheet found.");
-    }
+export async function getEquipmentLogs(userId, timesheetId) {
     const logs = await prisma.employeeEquipmentLog.findMany({
         where: {
-            startTime: { gte: past24Hours, lte: currentDate },
-            timeSheetId: timeSheetId.id,
+            timeSheetId: timesheetId,
+            TimeSheet: {
+                userId: userId,
+            },
         },
         include: {
             Equipment: true,
+        },
+        orderBy: {
+            startTime: "desc",
         },
     });
     return logs;
@@ -1463,4 +1459,4 @@ export async function deleteRefuelLogService(refuelLogId) {
     }
 }
 //# sourceMappingURL=timesheetService.js.map
-//# debugId=01adea9b-70db-5497-815b-1aa85a47531b
+//# debugId=ff8aeafa-fe99-5093-b73a-70a03df38ca1

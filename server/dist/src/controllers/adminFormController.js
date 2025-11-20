@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="c07c75a8-4e77-5fdc-a358-6a0f803fe866")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="6c47ae73-c8d3-54f6-a2bb-61d7c5633c64")}catch(e){}}();
 import { getAllFormTemplates, getFormTemplateById, getFormSubmissions, getFormSubmissionByTemplateId, createFormTemplate, updateFormTemplate, deleteFormTemplate, archiveFormTemplate, publishFormTemplate, draftFormTemplate, createFormSubmission, updateFormSubmission, deleteFormSubmission, getFormSubmissionById, approveFormSubmission, } from "../services/adminFormService.js";
 // GET /api/v1/admins/forms/template
 export async function getAllFormTemplatesController(req, res) {
@@ -316,4 +316,4 @@ export async function approveFormSubmissionController(req, res) {
     }
 }
 //# sourceMappingURL=adminFormController.js.map
-//# debugId=c07c75a8-4e77-5fdc-a358-6a0f803fe866
+//# debugId=6c47ae73-c8d3-54f6-a2bb-61d7c5633c64

@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="01367461-58b5-5b1c-b38f-8efbaf06d513")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="00dd1bc9-470d-5d48-b217-c4c7e58b55f4")}catch(e){}}();
 import { createEquipmentService, editEquipmentService, archiveEquipmentService, restoreEquipmentService, deleteEquipmentService, getAllEquipmentService, getEquipmentByIdService, getEquipmentSummaryService, } from "../services/adminsEquipmentService.js";
 // GET /api/v1/admins/equipment - List all equipment
 export async function listEquipment(req, res) {
@@ -59,8 +59,10 @@ export async function createEquipment(req, res) {
 export async function updateEquipment(req, res) {
     try {
         const id = req.params.id;
-        // TODO: Get userId from auth/session or request
-        const userId = req.body.userId || "";
+        const userId = req.user?.id || "";
+        if (!userId) {
+            return res.status(401).json({ message: "User not authenticated" });
+        }
         const equipment = await editEquipmentService(id, req.body, userId);
         res.json(equipment);
     }
@@ -115,4 +117,4 @@ export async function listArchivedEquipment(req, res) {
     }
 }
 //# sourceMappingURL=adminEquipmentController.js.map
-//# debugId=01367461-58b5-5b1c-b38f-8efbaf06d513
+//# debugId=00dd1bc9-470d-5d48-b217-c4c7e58b55f4

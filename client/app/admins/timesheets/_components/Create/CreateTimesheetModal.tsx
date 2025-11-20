@@ -345,15 +345,15 @@ export function CreateTimesheetModal({
         fetchAllData();
     }, [fetchAllData]);
 
-    // Re-filter trucks whenever equipment changes (trucks are tagged as VEHICLE)
+    // Re-filter trucks whenever equipment changes (trucks are tagged as TRUCK or VEHICLE)
     useEffect(() => {
         if (equipment && Array.isArray(equipment) && equipment.length > 0) {
             const filteredTrucks = equipment.filter(
-                (e) => e.equipmentTag === "VEHICLE"
+                (e) =>
+                    e.equipmentTag === "TRUCK" || e.equipmentTag === "VEHICLE"
             );
             setTrucks(filteredTrucks);
         } else {
-            console.warn("⚠️ No equipment available for truck filtering");
             setTrucks([]);
         }
     }, [equipment]);
@@ -512,6 +512,40 @@ export function CreateTimesheetModal({
         }
     }, [materialTypesCache]);
 
+    // Memoized callbacks for useTimesheetAutoSelection to prevent infinite loops
+    const handleSetJobsite = useCallback(
+        (jobsite: { id: string; name: string }) => {
+            setForm((prev) => ({ ...prev, jobsite }));
+        },
+        []
+    );
+
+    const handleSetCostCode = useCallback(
+        (
+            costcode:
+                | { id: string; name: string }
+                | { value: string; label: string }
+        ) => {
+            if ("value" in costcode && "label" in costcode) {
+                setForm((prev) => ({
+                    ...prev,
+                    costcode: { id: costcode.value, name: costcode.label },
+                }));
+            } else {
+                setForm((prev) => ({ ...prev, costcode }));
+            }
+        },
+        []
+    );
+
+    const handleSetMaterial = useCallback((material: string, logIndex = 0) => {
+        setTascoLogs((prev) =>
+            prev.map((log, index) =>
+                index === logIndex ? { ...log, materialType: material } : log
+            )
+        );
+    }, []);
+
     // Auto-selection logic for TASCO shifts
     useTimesheetAutoSelection({
         workType: form.workType.toLowerCase(),
@@ -524,29 +558,9 @@ export function CreateTimesheetModal({
         costCodes: costCode,
         materialTypes,
         jobsites,
-        setJobsite: (jobsite) => {
-            setForm((prev) => ({ ...prev, jobsite }));
-        },
-        setCostCode: (costcode) => {
-            // Convert cost code to expected format
-            if ("value" in costcode && "label" in costcode) {
-                setForm((prev) => ({
-                    ...prev,
-                    costcode: { id: costcode.value, name: costcode.label },
-                }));
-            } else {
-                setForm((prev) => ({ ...prev, costcode }));
-            }
-        },
-        setMaterial: (material, logIndex = 0) => {
-            setTascoLogs((prev) =>
-                prev.map((log, index) =>
-                    index === logIndex
-                        ? { ...log, materialType: material }
-                        : log
-                )
-            );
-        },
+        setJobsite: handleSetJobsite,
+        setCostCode: handleSetCostCode,
+        setMaterial: handleSetMaterial,
     });
 
     const handleChange = async (
@@ -562,6 +576,25 @@ export function CreateTimesheetModal({
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        // Validate required fields
+        if (!form.user.id) {
+            toast.error("Please select a user", { duration: 3000 });
+            return;
+        }
+        if (!form.jobsite.id) {
+            toast.error("Please select a jobsite", { duration: 3000 });
+            return;
+        }
+        if (!form.costcode.id && !form.costcode.name) {
+            toast.error("Please select a cost code", { duration: 3000 });
+            return;
+        }
+        if (!form.workType) {
+            toast.error("Please select a work type", { duration: 3000 });
+            return;
+        }
+
         setSubmitting(true);
         try {
             // Map tascoLogs to match server expectations (convert types accordingly)
@@ -724,8 +757,7 @@ export function CreateTimesheetModal({
     // Fetch material types and equipment based on work type
     useEffect(() => {
         if (form.workType === "TASCO") {
-            fetchMaterialTypes();
-            // Optionally re-fetch equipment if needed
+            fetchMaterialTypes(); // Optionally re-fetch equipment if needed
             if (!equipment || equipment.length === 0) {
                 apiRequest("/api/v1/admins/equipment", "GET")
                     .then((data) => {
@@ -952,7 +984,13 @@ export function CreateTimesheetModal({
                             type="submit"
                             form="timesheet-form" /* Connect this button to the form */
                             className="bg-sky-500 hover:bg-sky-400 text-white hover:text-white px-4 py-2 rounded"
-                            disabled={submitting}
+                            disabled={
+                                submitting ||
+                                !form.user.id ||
+                                !form.jobsite.id ||
+                                (!form.costcode.id && !form.costcode.name) ||
+                                !form.workType
+                            }
                         >
                             Create & Approve
                         </Button>

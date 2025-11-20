@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="9f70f040-61ca-58be-baef-299f0f71810d")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="f46cf41a-a6d9-5deb-a0aa-dab3a8e91416")}catch(e){}}();
 import prisma from "../lib/prisma.js";
 export async function getAllJobsites(status, page, pageSize, skip, totalPages, total) {
     try {
@@ -109,6 +109,16 @@ export async function getJobsiteById(id) {
     return await prisma.jobsite.findUnique({
         where: { id },
         include: {
+            Address: {
+                select: {
+                    id: true,
+                    street: true,
+                    city: true,
+                    state: true,
+                    zipCode: true,
+                    country: true,
+                },
+            },
             CCTags: {
                 select: {
                     id: true,
@@ -132,6 +142,7 @@ export async function createJobsite(payload) {
                 city: payload.Address.city.trim(),
                 state: payload.Address.state.trim(),
                 zipCode: payload.Address.zipCode.trim(),
+                country: "US",
             },
         });
         if (existingAddress) {
@@ -178,6 +189,7 @@ export async function createJobsite(payload) {
                             city: payload.Address.city.trim(),
                             state: payload.Address.state.trim(),
                             zipCode: payload.Address.zipCode.trim(),
+                            country: "US",
                         },
                     },
                     ...(payload.Client?.id && {
@@ -224,6 +236,36 @@ export async function updateJobsite(id, data) {
         updateData.CCTags = {
             set: data.CCTags.map((tag) => ({ id: tag.id })),
         };
+    }
+    // Handle address update
+    if (data.Address) {
+        const existingAddress = await prisma.address.findFirst({
+            where: {
+                street: data.Address.street.trim(),
+                city: data.Address.city.trim(),
+                state: data.Address.state.trim(),
+                zipCode: data.Address.zipCode.trim(),
+                country: "US",
+            },
+        });
+        if (existingAddress) {
+            // Connect to existing address
+            updateData.Address = {
+                connect: { id: existingAddress.id },
+            };
+        }
+        else {
+            // Create new address
+            updateData.Address = {
+                create: {
+                    street: data.Address.street.trim(),
+                    city: data.Address.city.trim(),
+                    state: data.Address.state.trim(),
+                    zipCode: data.Address.zipCode.trim(),
+                    country: "US",
+                },
+            };
+        }
     }
     const updatedJobsite = await prisma.jobsite.update({
         where: { id },
@@ -282,4 +324,4 @@ export async function deleteJobsite(id) {
     });
 }
 //# sourceMappingURL=adminJobsiteService.js.map
-//# debugId=9f70f040-61ca-58be-baef-299f0f71810d
+//# debugId=f46cf41a-a6d9-5deb-a0aa-dab3a8e91416

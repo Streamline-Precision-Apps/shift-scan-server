@@ -44,4 +44,9 @@ export declare function deleteTimesheetController(req: Request, res: Response): 
  * Get all Tasco material types
  */
 export declare function getAllTascoMaterialTypesController(req: Request, res: Response): Promise<void>;
+/**
+ * POST /api/v1/admins/timesheet/resolve-notification
+ * Check timesheet status and resolve notification if already approved/rejected
+ */
+export declare function resolveTimecardNotificationController(req: Request, res: Response): Promise<Response<any, Record<string, any>> | undefined>;
 //# sourceMappingURL=adminTimesheetController.d.ts.map

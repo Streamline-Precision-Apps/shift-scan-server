@@ -339,6 +339,12 @@ export async function getTimesheetById(id: string | undefined) {
                 name: true,
               },
             },
+            Truck: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
             Trailer: {
               select: {
                 id: true,
@@ -536,6 +542,12 @@ export async function createTimesheet(payload: any) {
                 milesAtFueling: parseFloat(refuel.milesAtFueling) || null,
               })),
             },
+            TascoFLoads: {
+              create: (log.TascoFLoads || []).map((fLoad: any) => ({
+                weight: parseFloat(fLoad.weight) || null,
+                screenType: fLoad.screenType || null,
+              })),
+            },
           })),
         },
         // Create mechanic projects
@@ -625,7 +637,7 @@ export async function updateTimesheet(
       if (data.EmployeeEquipmentLogs.length > 0) {
         await prisma.employeeEquipmentLog.createMany({
           data: data.EmployeeEquipmentLogs.map((log: any) => ({
-            timeSheetId: id,
+            timeSheetId: parseInt(id as string, 10),
             equipmentId: log.equipmentId,
             startTime: new Date(log.startTime),
             endTime: new Date(log.endTime),
@@ -644,7 +656,7 @@ export async function updateTimesheet(
       if (data.Maintenance.length > 0) {
         await prisma.mechanicProjects.createMany({
           data: data.Maintenance.map((project: any) => ({
-            timeSheetId: id,
+            timeSheetId: parseInt(id as string, 10),
             equipmentId: project.equipmentId,
             hours: parseFloat(project.hours) || 0,
             description: project.description || "",

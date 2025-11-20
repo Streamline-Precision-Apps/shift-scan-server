@@ -1,7 +1,7 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="77f1f54a-9042-532f-83a8-a8633abbe231")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="b6b4ab77-8e38-5305-a257-f2213dcd7edd")}catch(e){}}();
 import prisma from "../lib/prisma.js";
-export async function fetchNotificationServiceByUserId(userId) {
+export async function fetchNotificationServiceByUserId(userId, resolvedSince) {
     // fetch subscribed notifications
     const subscribedNotifications = await prisma.topicSubscription.findMany({
         where: {
@@ -47,26 +47,27 @@ export async function fetchNotificationServiceByUserId(userId) {
             createdAt: "desc",
         },
     });
-    const count = await prisma.notification.count({
-        where: {
-            Response: {
-                isNot: null,
-            },
-            topic: {
-                in: subscribedTopics,
-            },
+    // Build where clause for resolved notifications
+    const resolvedWhereClause = {
+        Response: {
+            isNot: null,
         },
+        topic: {
+            in: subscribedTopics,
+        },
+    };
+    // Add date filter if resolvedSince is provided
+    if (resolvedSince) {
+        resolvedWhereClause.createdAt = {
+            gte: new Date(resolvedSince),
+        };
+    }
+    const count = await prisma.notification.count({
+        where: resolvedWhereClause,
     });
     // Resolved notifications with full data
     const resolved = await prisma.notification.findMany({
-        where: {
-            Response: {
-                isNot: null,
-            },
-            topic: {
-                in: subscribedTopics,
-            },
-        },
+        where: resolvedWhereClause,
         include: {
             Response: {
                 include: {
@@ -150,4 +151,4 @@ export async function getUserTopicPreferences(userId) {
     return preferences;
 }
 //# sourceMappingURL=adminBaseService.js.map
-//# debugId=77f1f54a-9042-532f-83a8-a8633abbe231
+//# debugId=b6b4ab77-8e38-5305-a257-f2213dcd7edd

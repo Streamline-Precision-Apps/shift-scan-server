@@ -227,7 +227,7 @@ export async function editUserAdmin(payload: {
 
 export async function deleteCrew(id: string) {
     try {
-        await apiRequest(`/api/v1/admins/personnel/${id}`, "DELETE");
+        await apiRequest(`/api/v1/admins/personnel/deleteCrew/${id}`, "DELETE");
         return { success: true };
     } catch (error) {
         console.error("Error deleting crew:", error);

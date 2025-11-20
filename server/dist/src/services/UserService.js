@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="184d6e1d-2a0f-5983-833a-1e30b1d76e9e")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="f2f1d2d6-a0f1-5ee4-950d-412cc7380997")}catch(e){}}();
 import prisma from "../lib/prisma.js";
 import { hash } from "bcryptjs";
 const ALLOWED_USER_FIELDS = [
@@ -427,4 +427,4 @@ export async function EndSession(id) {
     return newSession;
 }
 //# sourceMappingURL=UserService.js.map
-//# debugId=184d6e1d-2a0f-5983-833a-1e30b1d76e9e
+//# debugId=f2f1d2d6-a0f1-5ee4-950d-412cc7380997

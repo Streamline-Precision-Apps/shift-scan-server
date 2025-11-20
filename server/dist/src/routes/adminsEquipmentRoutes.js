@@ -1,8 +1,11 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="3453027c-8fe2-5124-8491-211c0ab9b9ae")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="ebdd1bfb-ea23-54d9-8e9a-aa1d3a4703ab")}catch(e){}}();
 import { Router } from "express";
 import { listEquipment, getEquipmentById, createEquipment, updateEquipment, archiveEquipment, restoreEquipment, listArchivedEquipment, deleteEquipment, getEquipmentSummary, } from "../controllers/adminEquipmentController.js";
+import { verifyToken } from "../middleware/authMiddleware.js";
 const router = Router();
+// Apply authentication middleware to all routes
+router.use(verifyToken);
 // Equipment Management REST API routes (handlers to be implemented)
 // GET /api/v1/admins/equipment - List all equipment
 router.get("/", listEquipment);
@@ -24,4 +27,4 @@ router.put("/:id/restore", restoreEquipment);
 router.get("/archived", listArchivedEquipment);
 export default router;
 //# sourceMappingURL=adminsEquipmentRoutes.js.map
-//# debugId=3453027c-8fe2-5124-8491-211c0ab9b9ae
+//# debugId=ebdd1bfb-ea23-54d9-8e9a-aa1d3a4703ab

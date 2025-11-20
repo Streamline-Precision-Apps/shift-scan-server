@@ -510,7 +510,7 @@ type TascoLog = {
 };
 export declare function getLogsForDashboard(userId: string): Promise<(EquipmentLog | MaintenanceLog | TruckingLog | TascoLog)[]>;
 export declare function getClockOutComment(userId: string): Promise<string>;
-export declare function getEquipmentLogs(userId: string): Promise<({
+export declare function getEquipmentLogs(userId: string, timesheetId: number): Promise<({
     Equipment: {
         createdAt: Date;
         id: string;

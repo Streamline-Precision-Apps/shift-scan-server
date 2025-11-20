@@ -1,14 +1,14 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="a2c9c6cb-0345-5e2d-ab4b-17457105376b")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="cab1c3b3-9bd0-5f60-88cf-d6d98caec58b")}catch(e){}}();
 import { Router } from "express";
 import { getCostCodesController, archiveCostCodeController, createCostCodeController, deleteCostCodeController, getCostCodeByIdController, restoreCostCodeController, updateCostCodeController, getCostCodeSummaryController, } from "../controllers/adminCostCodeController.js";
 const router = Router();
 // /api/v1/admins/cost-codes - get all cost codes
 router.get("/", getCostCodesController);
-// /api/v1/admins/cost-codes/:id - get all cost codes
-router.get("/:id", getCostCodeByIdController);
-// /api/v1/admins/cost-codes/summary - get cost code summary
+// /api/v1/admins/cost-codes/summary - get cost code summary (must come before /:id)
 router.get("/summary", getCostCodeSummaryController);
+// /api/v1/admins/cost-codes/:id - get cost code by id
+router.get("/:id", getCostCodeByIdController);
 // /api/v1/admins/cost-codes/ - create cost code
 router.post("/", createCostCodeController);
 // /api/v1/admins/cost-codes/:id - update cost code
@@ -21,4 +21,4 @@ router.put("/:id/restore", restoreCostCodeController);
 router.delete("/:id", deleteCostCodeController);
 export default router;
 //# sourceMappingURL=adminsCostCodesRoutes.js.map
-//# debugId=a2c9c6cb-0345-5e2d-ab4b-17457105376b
+//# debugId=cab1c3b3-9bd0-5f60-88cf-d6d98caec58b

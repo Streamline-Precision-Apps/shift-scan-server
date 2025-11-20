@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="f67b33f7-a1ca-56a9-ad41-9a6a6a2c1156")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="37d4e0a4-2ad7-5028-bee0-3093d3d34eb1")}catch(e){}}();
 import { Resend } from "resend";
 const resend = new Resend(process.env.AUTH_RESEND_KEY);
 /**
@@ -14,8 +14,6 @@ export const sendPasswordResetEmail = async (email, token) => {
         const resetLink = isProd
             ? `https://shiftscanapp.com/signin/update-password?token=${token}`
             : `http://localhost:3000/signin/update-password?token=${token}`;
-        console.log(`📧 Sending password reset email to: ${email}`);
-        console.log(`🔗 Reset link: ${resetLink}`);
         await resend.emails.send({
             from: "no-reply@shiftscanapp.com",
             to: email,
@@ -29,7 +27,6 @@ export const sendPasswordResetEmail = async (email, token) => {
       <p>Thank you,<br/>ShiftScan Team</p>
       `,
         });
-        console.log(`✅ Password reset email sent to: ${email}`);
     }
     catch (error) {
         console.error("❌ Error sending password reset email:", error);
@@ -37,4 +34,4 @@ export const sendPasswordResetEmail = async (email, token) => {
     }
 };
 //# sourceMappingURL=mail.js.map
-//# debugId=f67b33f7-a1ca-56a9-ad41-9a6a6a2c1156
+//# debugId=37d4e0a4-2ad7-5028-bee0-3093d3d34eb1

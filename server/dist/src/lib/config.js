@@ -8,7 +8,7 @@
  * The expression evaluator is guarded with a regex to only allow numeric characters and math operators.
  */
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="7d51c532-40ce-594f-8a50-2f4c861f5d80")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="862e760c-8895-5bd2-a1de-02b83b505e54")}catch(e){}}();
 import parseEnvSeconds from "./tokenExpirationParser.js";
 // Default to 8080 for Cloud Run compatibility
 const config = {
@@ -20,4 +20,4 @@ const config = {
 };
 export default config;
 //# sourceMappingURL=config.js.map
-//# debugId=7d51c532-40ce-594f-8a50-2f4c861f5d80
+//# debugId=862e760c-8895-5bd2-a1de-02b83b505e54

@@ -13,6 +13,8 @@ const nextConfig: NextConfig = {
     "https://shift-scan-server-897456891133.us-west3.run.app/",
     "192.168.1.102",
     "192.168.1.102:3000",
+    "169.254.83.107",
+    "169.254.83.107:3000",
     "localhost:3000",
   ],
   // Suppress WebSocket HMR console warnings

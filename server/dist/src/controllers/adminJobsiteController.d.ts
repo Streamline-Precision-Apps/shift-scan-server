@@ -32,6 +32,12 @@ export interface JobsiteUpdateBody {
     CCTags?: Array<{
         id: string;
     }>;
+    Address?: {
+        street: string;
+        city: string;
+        state: string;
+        zipCode: string;
+    };
     updatedAt?: Date;
     userId: string;
 }

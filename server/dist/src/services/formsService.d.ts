@@ -404,4 +404,78 @@ export declare const ServiceForm: (id: string, userId: string) => Promise<{
         }[];
     }[];
 }>;
+export interface UpdateFormSubmissionParams {
+    submissionId: number;
+    formData?: Record<string, any>;
+    status?: string;
+    title?: string;
+    formType?: string;
+    isApprovalRequired?: boolean;
+    userId?: string;
+}
+/**
+ * Update a form submission (partial update)
+ * Supports updating data, status, title, and formType.
+ * Returns the updated submission.
+ */
+export declare const updateFormSubmissionService: (body: UpdateFormSubmissionParams) => Promise<{
+    User: {
+        id: string;
+        email: string | null;
+        username: string;
+        firstName: string;
+        lastName: string;
+        password: string;
+        signature: string | null;
+        DOB: Date | null;
+        truckView: boolean;
+        tascoView: boolean;
+        laborView: boolean;
+        mechanicView: boolean;
+        permission: import("../../generated/prisma/index.js").$Enums.Permission;
+        image: string | null;
+        startDate: Date | null;
+        terminationDate: Date | null;
+        accountSetup: boolean;
+        clockedIn: boolean;
+        companyId: string;
+        passwordResetTokenId: string | null;
+        workTypeId: string | null;
+        middleName: string | null;
+        secondLastName: string | null;
+        lastSeen: Date | null;
+    };
+    FormTemplate: {
+        createdAt: Date;
+        id: string;
+        name: string;
+        updatedAt: Date;
+        companyId: string;
+        description: string | null;
+        isActive: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
+        isSignatureRequired: boolean;
+        formType: import("../../generated/prisma/index.js").$Enums.FormTemplateCategory;
+        isApprovalRequired: boolean;
+    };
+    Approvals: {
+        id: string;
+        updatedAt: Date;
+        signature: string | null;
+        comment: string | null;
+        submittedAt: Date;
+        formSubmissionId: number;
+        signedBy: string | null;
+    }[];
+} & {
+    data: import("../../generated/prisma/runtime/library.js").JsonValue | null;
+    title: string | null;
+    createdAt: Date;
+    id: number;
+    userId: string;
+    updatedAt: Date;
+    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
+    formTemplateId: string;
+    formType: string | null;
+    submittedAt: Date | null;
+}>;
 //# sourceMappingURL=formsService.d.ts.map

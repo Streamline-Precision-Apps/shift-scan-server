@@ -121,13 +121,13 @@ export const notificationTableColumns = (
                                                 const timesheetId =
                                                     row.original.referenceId;
                                                 if (!timesheetId) {
-                                                    router.push(
-                                                        row.original.url
-                                                    );
+                                                    if (row.original.url) {
+                                                        router.push(
+                                                            row.original.url
+                                                        );
+                                                    }
                                                     return;
-                                                }
-
-                                                // Check if timesheet was already approved/rejected
+                                                } // Check if timesheet was already approved/rejected
                                                 const result =
                                                     await resolveTimecardNotification(
                                                         {
@@ -148,9 +148,11 @@ export const notificationTableColumns = (
                                                     );
                                                 } else {
                                                     // Timesheet still pending, navigate to approval page
-                                                    router.push(
-                                                        row.original.url
-                                                    );
+                                                    if (row.original.url) {
+                                                        router.push(
+                                                            row.original.url
+                                                        );
+                                                    }
                                                 }
                                             } catch (error) {
                                                 console.error(
@@ -158,7 +160,11 @@ export const notificationTableColumns = (
                                                     error
                                                 );
                                                 // On error, navigate to the page anyway
-                                                router.push(row.original.url);
+                                                if (row.original.url) {
+                                                    router.push(
+                                                        row.original.url
+                                                    );
+                                                }
                                             }
                                         }}
                                     >

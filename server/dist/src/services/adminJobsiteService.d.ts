@@ -55,6 +55,14 @@ export declare function getAllJobsites(status: string, page: number | undefined,
     totalPages: number;
 }>;
 export declare function getJobsiteById(id: string): Promise<({
+    Address: {
+        id: string;
+        state: string;
+        city: string;
+        zipCode: string;
+        street: string;
+        country: string;
+    } | null;
     createdBy: {
         firstName: string;
         lastName: string;

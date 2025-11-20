@@ -13,20 +13,34 @@ export declare function getCrewEmployees(): Promise<{
     middleName: string | null;
     secondLastName: string | null;
 }[]>;
-export declare function getAllCrews(): Promise<({
-    Users: {
+export declare function getAllCrews({ page, pageSize, status, search, }?: {
+    page?: number | undefined;
+    pageSize?: number | undefined;
+    status?: string | undefined;
+    search?: string | undefined;
+}): Promise<{
+    crews: ({
+        Users: {
+            id: string;
+            firstName: string;
+            lastName: string;
+            image: string | null;
+            middleName: string | null;
+            secondLastName: string | null;
+        }[];
+    } & {
+        createdAt: Date;
         id: string;
-        firstName: string;
-        lastName: string;
-    }[];
-} & {
-    createdAt: Date;
-    id: string;
-    name: string;
-    updatedAt: Date;
-    leadId: string;
-    crewType: import("../../generated/prisma/index.js").$Enums.WorkType;
-})[]>;
+        name: string;
+        updatedAt: Date;
+        leadId: string;
+        crewType: import("../../generated/prisma/index.js").$Enums.WorkType;
+    })[];
+    total: number;
+    page: number;
+    pageSize: number;
+    totalPages: number;
+}>;
 export declare function getEmployeeInfo(id: string): Promise<{
     id: string;
     email: string | null;
@@ -154,7 +168,7 @@ export declare function createUserAdmin(payload: {
 }): Promise<{
     success: boolean;
     userId: string;
-} | undefined>;
+}>;
 export declare function editUserAdmin(payload: {
     id: string;
     terminationDate: string | null;

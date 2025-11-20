@@ -1,5 +1,6 @@
 export declare function getEquipment(query: {
     qrg?: boolean;
+    clock?: boolean;
 }): Promise<{
     id: string;
     name: string;

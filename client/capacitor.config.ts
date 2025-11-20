@@ -6,8 +6,8 @@ const config: CapacitorConfig = {
   appName: "Shift Scan",
   webDir: "out",
 
-  server: {
-    url: "http://192.168.1.102:3000",
+server: {
+    url: process.env.NEXT_PUBLIC_CAPACITOR_APP_URL,
     cleartext: true,
   },
   android: {

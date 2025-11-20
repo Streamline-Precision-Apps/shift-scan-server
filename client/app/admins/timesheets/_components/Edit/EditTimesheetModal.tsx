@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Button } from "@/app/v1/components/ui/button";
 import { Badge } from "@/app/v1/components/ui/badge";
 import { EditMechanicProjects } from "./EditMechanicProjects";
@@ -21,12 +21,10 @@ import { toast } from "sonner";
 import { TimeSheetHistory } from "./TimeSheetHistory";
 import { useUserStore } from "@/app/lib/store/userStore";
 import { Textarea } from "@/app/v1/components/ui/textarea";
-import { useDashboardData } from "../../../_pages/sidebar/DashboardDataContext";
 import { format } from "date-fns";
 import Spinner from "@/app/v1/components/(animations)/spinner";
 import { Skeleton } from "@/app/v1/components/ui/skeleton";
 import { apiRequest } from "@/app/lib/utils/api-Utils";
-import { get } from "lodash";
 
 // Define types for change logs
 interface ChangeLogEntry {
@@ -57,7 +55,6 @@ export const EditTimesheetModal: React.FC<EditTimesheetModalProps> = ({
     const [showHistory, setShowHistory] = useState(false);
     const [changeReason, setChangeReason] = useState("");
     const { user } = useUserStore();
-    const { refresh } = useDashboardData();
 
     const editor = user?.id;
 
@@ -77,24 +74,25 @@ export const EditTimesheetModal: React.FC<EditTimesheetModalProps> = ({
     // Log handlers
     const logs = useTimesheetLogs(form, setForm, originalForm);
 
-    // Auto-selection logic for TASCO shifts
-    useTimesheetAutoSelection({
-        workType: form?.workType?.toLowerCase() || "",
-        tascoLogs: form?.TascoLogs || [],
-        costCodes: costCodeOptions,
-        materialTypes: tascoMaterialTypeOptions.map((m) => ({
-            id: m.value,
-            name: m.label,
-        })),
-        jobsites: jobsites,
-        setJobsite: (jobsite) => {
+    // Memoized callbacks for useTimesheetAutoSelection to prevent infinite loops
+    const handleSetJobsite = useCallback(
+        (jobsite: { id: string; name: string }) => {
             if (form) {
                 setForm((prev) =>
                     prev ? { ...prev, Jobsite: jobsite } : prev
                 );
             }
         },
-        setCostCode: (costcode) => {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        []
+    );
+
+    const handleSetCostCode = useCallback(
+        (
+            costcode:
+                | { id: string; name: string }
+                | { value: string; label: string }
+        ) => {
             if (form) {
                 // Convert cost code to expected format
                 if ("value" in costcode && "label" in costcode) {
@@ -116,19 +114,38 @@ export const EditTimesheetModal: React.FC<EditTimesheetModalProps> = ({
                 }
             }
         },
-        setMaterial: (material, logIndex = 0) => {
-            if (form && form.TascoLogs.length > logIndex) {
-                setForm((prev) => {
-                    if (!prev) return prev;
-                    const updatedLogs = [...prev.TascoLogs];
-                    updatedLogs[logIndex] = {
-                        ...updatedLogs[logIndex],
-                        materialType: material,
-                    };
-                    return { ...prev, TascoLogs: updatedLogs };
-                });
-            }
-        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        []
+    );
+
+    const handleSetMaterial = useCallback((material: string, logIndex = 0) => {
+        if (form && form.TascoLogs.length > logIndex) {
+            setForm((prev) => {
+                if (!prev) return prev;
+                const updatedLogs = [...prev.TascoLogs];
+                updatedLogs[logIndex] = {
+                    ...updatedLogs[logIndex],
+                    materialType: material,
+                };
+                return { ...prev, TascoLogs: updatedLogs };
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // Auto-selection logic for TASCO shifts
+    useTimesheetAutoSelection({
+        workType: form?.workType?.toLowerCase() || "",
+        tascoLogs: form?.TascoLogs || [],
+        costCodes: costCodeOptions,
+        materialTypes: tascoMaterialTypeOptions.map((m) => ({
+            id: m.value,
+            name: m.label,
+        })),
+        jobsites: jobsites,
+        setJobsite: handleSetJobsite,
+        setCostCode: handleSetCostCode,
+        setMaterial: handleSetMaterial,
     });
 
     useEffect(() => {
@@ -318,6 +335,7 @@ export const EditTimesheetModal: React.FC<EditTimesheetModalProps> = ({
             }
         };
         getEnsureSingleLog();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [form?.workType]);
 
     // Using memoized dropdown options from the hook
