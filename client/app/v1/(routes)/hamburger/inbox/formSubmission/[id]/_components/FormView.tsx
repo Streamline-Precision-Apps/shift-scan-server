@@ -16,11 +16,15 @@
 
 "use client";
 
-import { ReactNode, useMemo } from "react";
+import { ReactNode, useMemo, useEffect, useState } from "react";
 import type { FormFieldValue } from "@/app/lib/types/forms";
 import { useFormContext } from "@/app/lib/hooks/useFormContext";
 import { sortFormTemplate } from "@/app/lib/utils/formOrdering";
-import { FormFieldRenderer } from "../../../_components/FormFieldRenderer";
+import FormBridge from "@/app/admins/forms/_components/RenderFields/FormBridge";
+import { useEquipmentStore } from "@/app/lib/store/equipmentStore";
+import { useProfitStore } from "@/app/lib/store/profitStore";
+import { useCostCodeStore } from "@/app/lib/store/costCodeStore";
+import { apiRequest } from "@/app/lib/utils/api-Utils";
 import FormLoadingView from "./FormLoadingView";
 
 /**
@@ -128,6 +132,68 @@ export function FormView({
 }: FormViewProps) {
   const { template, values, updateValue, loading, error, submission } =
     useFormContext();
+  const [userOptions, setUserOptions] = useState<{ value: string; label: string }[]>([]);
+  const [equipmentOptions, setEquipmentOptions] = useState<{ value: string; label: string }[]>([]);
+  const [jobsiteOptions, setJobsiteOptions] = useState<{ value: string; label: string }[]>([]);
+  const [costCodeOptions, setCostCodeOptions] = useState<{ value: string; label: string }[]>([]);
+
+  const { costCodes } = useCostCodeStore();
+  const { jobsites } = useProfitStore();
+  const { equipments } = useEquipmentStore();
+
+  useEffect(() => {
+    if (equipments && Array.isArray(equipments)) {
+      const options = equipments.map((equipment) => ({
+        value: equipment.id,
+        label: equipment.name,
+      }));
+      setEquipmentOptions(options);
+    }
+  }, [equipments]);
+
+  useEffect(() => {
+    if (jobsites && Array.isArray(jobsites)) {
+      const options = jobsites.map((jobsite) => ({
+        value: jobsite.id,
+        label: jobsite.name,
+      }));
+      setJobsiteOptions(options);
+    }
+  }, [jobsites]);
+
+  useEffect(() => {
+    if (costCodes && Array.isArray(costCodes)) {
+      const options = costCodes.map((cost) => ({
+        value: cost.id,
+        label: cost.name,
+      }));
+      setCostCodeOptions(options);
+    }
+  }, [costCodes]);
+
+  useEffect(() => {
+    const fetchUsers = async (): Promise<void> => {
+      try {
+        const employeesRes = await apiRequest(`/api/v1/user/all`, "GET");
+        const employees = Array.isArray(employeesRes.data) ? employeesRes.data : [];
+        if (Array.isArray(employees)) {
+          const options = employees.map((user: any) => ({
+            value: user.id,
+            label: `${user.firstName} ${user.lastName}`,
+          }));
+          setUserOptions(options);
+        } else {
+          setUserOptions([]);
+          console.warn("Expected array for employees, got:", employees);
+        }
+      } catch (err) {
+        console.error("Error fetching users:", err);
+        setUserOptions([]);
+      }
+    };
+
+    fetchUsers();
+  }, []);
   /**
    * Sort template to ensure proper ordering:
    * 1. FormGrouping sorted by order
@@ -171,20 +237,24 @@ export function FormView({
 
   return (
     <div className={className}>
-      <FormFieldRenderer
-        formData={sortedTemplate!}
+      <FormBridge
+        formTemplate={sortedTemplate!}
         formValues={values}
-        setFormValues={(newValues: Record<string, FormFieldValue>) => {
-          // Update each changed value in context
-          for (const [fieldId, value] of Object.entries(newValues)) {
-            if (values[fieldId] !== value) {
-              updateValue(fieldId, value);
-            }
+        // Prefer single-field updates via onFieldChange to avoid wholesale
+        // replace of the values object and to match the existing update flow
+        onFieldChange={(fieldId: string, value: FormFieldValue) => {
+          if (values[fieldId] !== value) {
+            updateValue(fieldId, value);
           }
         }}
+        userOptions={userOptions}
+        equipmentOptions={equipmentOptions}
+        jobsiteOptions={jobsiteOptions}
+        costCodeOptions={costCodeOptions}
         readOnly={readOnly || disabled}
         disabled={disabled}
         useNativeInput={useNativeInput}
+        hideSubmittedBy={true}
       />
       {/* Additional content (signatures, approvals, etc) */}
       {additionalContent}

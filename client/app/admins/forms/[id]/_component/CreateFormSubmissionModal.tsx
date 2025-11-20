@@ -3,15 +3,14 @@ import React, { useEffect, useState } from "react";
 import { Button } from "@/app/v1/components/ui/button";
 import { toast } from "sonner";
 import { createFormSubmission } from "@/app/lib/actions/adminActions";
-// Import the RenderFields component
 import Spinner from "@/app/v1/components/(animations)/spinner";
 import { X } from "lucide-react";
 import { Label } from "@/app/v1/components/ui/label";
 import { Textarea } from "@/app/v1/components/ui/textarea";
 import { useUserStore } from "@/app/lib/store/userStore";
 import { apiRequest } from "@/app/lib/utils/api-Utils";
-import RenderFields from "@/app/admins/forms/_components/RenderFields/RenderFields";
 import { FormTemplate, FormFieldValue } from "@/app/lib/types/forms";
+import FormBridge from "@/app/admins/forms/_components/RenderFields/FormBridge";
 
 interface CreateFormSubmissionModalProps {
   formTemplate: FormTemplate;
@@ -305,14 +304,15 @@ const CreateFormSubmissionModal: React.FC<CreateFormSubmissionModalProps> = ({
         </div>
         <div className="flex-1 w-full px-2 pb-10 overflow-y-auto no-scrollbar">
           <div className="w-full mt-3">
-            <RenderFields
+            <FormBridge
               formTemplate={formTemplate}
               userOptions={userOptions}
               submittedBy={submittedBy}
               setSubmittedBy={setSubmittedBy}
               submittedByTouched={submittedByTouched}
-              formData={getDisplayFormData()}
-              handleFieldChange={handleFieldChange}
+              formValues={getDisplayFormData()}
+              setFormValues={setFormData}
+              onFieldChange={handleFieldChange}
               equipmentOptions={equipmentOptions}
               jobsiteOptions={jobsiteOptions}
               costCodeOptions={costCodeOptions}

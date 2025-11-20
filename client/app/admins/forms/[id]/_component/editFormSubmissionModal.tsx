@@ -7,7 +7,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/app/v1/components/ui/accordion";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, use } from "react";
 import {
   FormIndividualTemplate,
   FormSubmissionWithTemplate,
@@ -15,16 +15,7 @@ import {
 import { Label } from "@/app/v1/components/ui/label";
 import { Input } from "@/app/v1/components/ui/input";
 import { toast } from "sonner";
-import RenderTextArea from "../../_components/RenderFields/RenderTextAreaField";
-import RenderNumberField from "../../_components/RenderFields/RenderNumberField";
-import RenderDateField from "../../_components/RenderFields/RenderDateField";
-import RenderTimeField from "../../_components/RenderFields/RenderTimeField";
-import RenderDropdownField from "../../_components/RenderFields/RenderDropdownField";
-import RenderRadioField from "../../_components/RenderFields/RenderRadioField";
-import RenderCheckboxField from "../../_components/RenderFields/RenderCheckboxField";
-import RenderMultiselectField from "../../_components/RenderFields/RenderMultiselectField";
-import RenderSearchPersonField from "../../_components/RenderFields/RenderSearchPersonField";
-import RenderSearchAssetField from "../../_components/RenderFields/RenderSearchAssetField";
+import FormBridge from "@/app/admins/forms/_components/RenderFields/FormBridge";
 import { Textarea } from "@/app/v1/components/ui/textarea";
 import { ChevronDown, X } from "lucide-react";
 import { useDashboardData } from "../../../_pages/sidebar/DashboardDataContext";
@@ -34,8 +25,9 @@ import {
 } from "@/app/lib/actions/adminActions";
 import { useUserStore } from "@/app/lib/store/userStore";
 import { apiRequest } from "@/app/lib/utils/api-Utils";
+import { denormalizeFormValues } from "@/app/lib/utils/formNormalization";
 
-import { FormTemplate } from "@/app/lib/types/forms";
+import { FormFieldValue, FormTemplate } from "@/app/lib/types/forms";
 
 export default function EditFormSubmissionModal({
   id,
@@ -97,6 +89,10 @@ export default function EditFormSubmissionModal({
     label: c.name,
   }));
 
+  useEffect(() => {
+    console.log("editData:", editData);
+  }, [editData]);
+
   // Fetch form submission data by ID
   useEffect(() => {
     const fetchData = async () => {
@@ -106,11 +102,11 @@ export default function EditFormSubmissionModal({
         console.error("Submission not found for ID:", id);
         return;
       }
+      console.log("Api Response:", submission);
       setFormSubmission(submission as unknown as FormSubmissionWithTemplate);
 
       // Convert submission data to the correct type
-      const processedData: Record<string, string | number | boolean | null> =
-        {};
+      const processedData: Record<string, FormFieldValue> = {};
       if (
         submission &&
         typeof submission.data === "object" &&
@@ -118,17 +114,39 @@ export default function EditFormSubmissionModal({
       ) {
         // First, add all the original data entries
         Object.entries(submission.data).forEach(([key, value]) => {
-          if (
-            typeof value === "string" ||
-            typeof value === "number" ||
-            typeof value === "boolean" ||
-            value === null
-          ) {
-            processedData[key] = value;
-          } else if (value !== undefined) {
-            // Convert any other types to string
-            processedData[key] = String(value);
+          if (value === undefined) return;
+          if (value === null) {
+            processedData[key] = null;
+            return;
           }
+
+          if (typeof value === "string") {
+            const trimmed = value.trim();
+            // If value looks like a JSON string, try to parse it back to object/array
+            if (
+              (trimmed.startsWith("{") && trimmed.endsWith("}")) ||
+              (trimmed.startsWith("[") && trimmed.endsWith("]"))
+            ) {
+              try {
+                processedData[key] = JSON.parse(trimmed) as FormFieldValue;
+                return;
+              } catch (e) {
+                // Not valid JSON - leave as string
+              }
+            }
+            // Otherwise store raw string (CSV etc.) and let display logic handle conversion
+            processedData[key] = value as FormFieldValue;
+            return;
+          }
+
+          if (typeof value === "object") {
+            // Preserve arrays/objects without converting to string
+            processedData[key] = value as FormFieldValue;
+            return;
+          }
+
+          // number / boolean fall-through
+          processedData[key] = value as FormFieldValue;
         });
       }
       setEditData(processedData);
@@ -350,58 +368,13 @@ export default function EditFormSubmissionModal({
 
   // Transform editData to API submission format
   const getSubmitFormData = () => {
-    const submitData: Record<string, string | number | boolean | null> = {};
-
-    for (const [key, value] of Object.entries(editData)) {
-      // Null/undefined values
-      if (value === null || value === undefined) {
-        submitData[key] = null;
-      }
-      // ISO date strings
-      else if (typeof value === "string" && value.match(/^\d{4}-\d{2}-\d{2}/)) {
-        submitData[key] = value;
-      }
-      // Date objects
-      else if (value instanceof Date) {
-        submitData[key] = value.toISOString();
-      }
-      // String and number primitives
-      else if (typeof value === "string" || typeof value === "number") {
-        submitData[key] = value;
-      }
-      // Boolean values
-      else if (typeof value === "boolean") {
-        submitData[key] = value;
-      }
-      // Arrays (multiselect, search fields with multiple selections)
-      else if (Array.isArray(value)) {
-        submitData[key] = value
-          .map((v) => {
-            if (typeof v === "object" && v !== null && "name" in v) {
-              return String((v as { name: unknown }).name);
-            }
-            return String(v);
-          })
-          .filter(Boolean)
-          .join(",");
-      }
-      // Objects (single person/asset selections)
-      else if (typeof value === "object") {
-        if ("name" in value) {
-          submitData[key] = String((value as { name: unknown }).name);
-        } else if ("id" in value) {
-          submitData[key] = String((value as { id: unknown }).id);
-        } else {
-          submitData[key] = String(value);
-        }
-      }
-      // Fallback
-      else {
-        submitData[key] = String(value);
-      }
-    }
-
-    return submitData;
+    if (!formSubmission?.FormTemplate) return {};
+    // Use canonical denormalization utility to convert the editable form values
+    const apiPayload = denormalizeFormValues(
+      formSubmission.FormTemplate as unknown as FormTemplate,
+      editData as Record<string, any>
+    );
+    return apiPayload as Record<string, string | number | boolean | null>;
   };
 
   // Signature state for editing
@@ -581,6 +554,10 @@ export default function EditFormSubmissionModal({
       displayFormData.signature === "true";
     const signature = formSubmission.User.signature;
 
+    // Use FormBridge to render the template fields. We pass `displayFormData`
+    // as `formValues` so that SEARCH_PERSON/SEARCH_ASSET fields can receive
+    // object shapes (not just CSV strings). We still keep "Submitted For"
+    // as a separate display field above and keep signature display below.
     return (
       <>
         <div>
@@ -599,228 +576,23 @@ export default function EditFormSubmissionModal({
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
-                {/* Sort fields by order property */}
-                {[...group.Fields]
-                  .sort((a, b) => a.order - b.order)
-                  .map((field) => {
-                    const options = field.Options || [];
-                    const rawValue =
-                      displayFormData[field.id] ??
-                      displayFormData[field.label] ??
-                      null;
-                    const defaultValue = "";
-                    const error = errors[field.id];
-                    const isTouched = touchedFields[field.id];
-
-                    function getFieldValue(type: "CHECKBOX"): boolean;
-                    function getFieldValue(type: "MULTISELECT"): string[];
-                    function getFieldValue(
-                      type:
-                        | "NUMBER"
-                        | "TEXTAREA"
-                        | "DATE"
-                        | "TIME"
-                        | "DROPDOWN"
-                        | "RADIO"
-                        | "SEARCH_PERSON"
-                        | "SEARCH_ASSET"
-                        | "TEXT"
-                    ): string;
-                    function getFieldValue(
-                      type: string
-                    ): string | boolean | string[] {
-                      if (rawValue === null || rawValue === undefined)
-                        return type === "CHECKBOX"
-                          ? false
-                          : type === "MULTISELECT"
-                          ? []
-                          : defaultValue;
-
-                      switch (type) {
-                        case "NUMBER":
-                          return typeof rawValue === "number"
-                            ? rawValue.toString()
-                            : typeof rawValue === "string"
-                            ? rawValue
-                            : defaultValue;
-                        case "CHECKBOX":
-                          return typeof rawValue === "boolean"
-                            ? rawValue
-                            : rawValue === "true"
-                            ? true
-                            : rawValue === "false"
-                            ? false
-                            : false;
-                        case "MULTISELECT":
-                          return typeof rawValue === "string"
-                            ? rawValue.split(",").filter(Boolean)
-                            : Array.isArray(rawValue)
-                            ? rawValue
-                            : [String(rawValue)];
-                        default:
-                          return typeof rawValue === "string"
-                            ? rawValue
-                            : rawValue !== null
-                            ? String(rawValue)
-                            : defaultValue;
-                      }
-                    }
-
-                    switch (field.type) {
-                      case "TEXTAREA":
-                        return (
-                          <RenderTextArea
-                            key={field.id}
-                            field={field}
-                            value={getFieldValue("TEXTAREA")}
-                            handleFieldChange={handleFieldChange}
-                            handleFieldTouch={handleFieldTouch}
-                            touchedFields={touchedFields}
-                            error={error}
-                          />
-                        );
-                      case "NUMBER":
-                        return (
-                          <RenderNumberField
-                            key={field.id}
-                            field={field}
-                            value={getFieldValue("NUMBER")}
-                            handleFieldChange={handleFieldChange}
-                            handleFieldTouch={handleFieldTouch}
-                            touchedFields={touchedFields}
-                            error={error}
-                          />
-                        );
-                      case "DATE":
-                        return (
-                          <RenderDateField
-                            key={field.id}
-                            field={field}
-                            value={getFieldValue("DATE")}
-                            handleFieldChange={handleFieldChange}
-                            handleFieldTouch={handleFieldTouch}
-                            touchedFields={touchedFields}
-                            error={error}
-                          />
-                        );
-                      case "TIME":
-                        return (
-                          <RenderTimeField
-                            key={field.id}
-                            field={field}
-                            value={getFieldValue("TIME")}
-                            handleFieldChange={handleFieldChange}
-                            handleFieldTouch={handleFieldTouch}
-                            touchedFields={touchedFields}
-                            error={error}
-                          />
-                        );
-                      case "DROPDOWN":
-                        return (
-                          <RenderDropdownField
-                            key={field.id}
-                            field={field}
-                            value={getFieldValue("DROPDOWN")}
-                            handleFieldChange={handleFieldChange}
-                            handleFieldTouch={handleFieldTouch}
-                            touchedFields={touchedFields}
-                            error={error}
-                            options={options}
-                          />
-                        );
-                      case "RADIO":
-                        return (
-                          <RenderRadioField
-                            key={field.id}
-                            field={field}
-                            value={getFieldValue("RADIO")}
-                            handleFieldChange={handleFieldChange}
-                            handleFieldTouch={handleFieldTouch}
-                            touchedFields={touchedFields}
-                            error={error}
-                            options={options}
-                          />
-                        );
-                      case "CHECKBOX":
-                        return (
-                          <RenderCheckboxField
-                            key={field.id}
-                            field={field}
-                            value={getFieldValue("CHECKBOX")}
-                            handleFieldChange={handleFieldChange}
-                            handleFieldTouch={handleFieldTouch}
-                            touchedFields={touchedFields}
-                            error={error}
-                          />
-                        );
-                      case "MULTISELECT":
-                        return (
-                          <RenderMultiselectField
-                            key={field.id}
-                            field={field}
-                            value={getFieldValue("MULTISELECT")}
-                            options={options}
-                            handleFieldChange={handleFieldChange}
-                            handleFieldTouch={handleFieldTouch}
-                            touchedFields={touchedFields}
-                            error={error}
-                          />
-                        );
-                      case "SEARCH_PERSON":
-                        return (
-                          <RenderSearchPersonField
-                            key={field.id}
-                            field={field}
-                            value={getFieldValue("SEARCH_PERSON")}
-                            handleFieldChange={handleFieldChange}
-                            handleFieldTouch={handleFieldTouch}
-                            touchedFields={touchedFields}
-                            error={error}
-                            userOptions={userOptions}
-                            formData={displayFormData}
-                          />
-                        );
-                      case "SEARCH_ASSET":
-                        return (
-                          <RenderSearchAssetField
-                            key={field.id}
-                            field={field}
-                            value={getFieldValue("SEARCH_ASSET")}
-                            handleFieldChange={handleFieldChange}
-                            handleFieldTouch={handleFieldTouch}
-                            touchedFields={touchedFields}
-                            equipmentOptions={equipmentOptions}
-                            jobsiteOptions={jobsiteOptions}
-                            costCodeOptions={costCodeOptions}
-                            formData={displayFormData}
-                          />
-                        );
-                      default:
-                        return (
-                          <div key={field.id} className="flex flex-col">
-                            <Label className="text-sm font-medium mb-1">
-                              {field.label}
-                            </Label>
-                            <Input
-                              type="text"
-                              className={`border rounded px-2 py-1 ${
-                                isTouched && error ? "border-red-500" : ""
-                              }`}
-                              value={getFieldValue("TEXT")}
-                              onChange={(e) =>
-                                handleFieldChange(field.id, e.target.value)
-                              }
-                              onBlur={() => handleFieldTouch(field.id)}
-                            />
-                            {isTouched && error && (
-                              <p className="text-xs text-red-500 mt-1">
-                                {error}
-                              </p>
-                            )}
-                          </div>
-                        );
-                    }
-                  })}
+                <FormBridge
+                  formTemplate={
+                    formSubmission.FormTemplate as unknown as FormTemplate
+                  }
+                  formValues={displayFormData}
+                  setFormValues={(newValues) => setEditData(newValues as any)}
+                  onFieldChange={(fieldId: string, value: any) =>
+                    handleFieldChange(fieldId, value)
+                  }
+                  userOptions={userOptions}
+                  equipmentOptions={equipmentOptions}
+                  jobsiteOptions={jobsiteOptions}
+                  costCodeOptions={costCodeOptions}
+                  readOnly={false}
+                  disabled={false}
+                  hideSubmittedBy={true}
+                />
               </div>
             </div>
           ))}
