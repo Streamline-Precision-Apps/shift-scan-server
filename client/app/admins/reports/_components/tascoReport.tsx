@@ -152,8 +152,27 @@ export default function TascoReport({
         // Use the already filtered data for export
         const exportData = filteredData;
 
+        // Helper function to format F-Loads for CSV (detailed list)
+        const formatFLoads = (fLoadDetails: any[]) => {
+            if (!Array.isArray(fLoadDetails) || fLoadDetails.length === 0)
+                return "-";
+            return fLoadDetails
+                .map(
+                    (load: any, index: number) =>
+                        `[Load ${index + 1}: ${load.weight || "-"} tons - ${
+                            load.screenType === "SCREENED"
+                                ? "Screened"
+                                : load.screenType === "UNSCREENED"
+                                ? "Unscreened"
+                                : "-"
+                        }]`
+                )
+                .join(" | ");
+        };
+
         const tableHeaders = [
             "Shift Type",
+            "Timesheet ID",
             "Submitted Date",
             "Employee",
             "Profit ID",
@@ -178,6 +197,7 @@ export default function TascoReport({
                             : row.shiftType === "E Shift"
                             ? "TASCO - E Shift Mud Conditioning"
                             : row.shiftType,
+                        row.timeSheetId,
                         format(new Date(row.submittedDate), "yyyy-MM-dd"),
                         row.employee,
                         row.profitId || "-",
@@ -193,9 +213,7 @@ export default function TascoReport({
                         row.loadsABCDE !== null && row.loadsABCDE !== undefined
                             ? row.loadsABCDE
                             : "-",
-                        row.loadsF !== null && row.loadsF !== undefined
-                            ? row.loadsF
-                            : "-",
+                        formatFLoads(row.fLoadDetails || []),
                         row.materials || "-",
                         format(new Date(row.startTime), "HH:mm") || "-",
                         format(new Date(row.endTime), "HH:mm") || "-",
@@ -225,6 +243,7 @@ export default function TascoReport({
             URL.revokeObjectURL(url);
         } else if (exportFormat === "xlsx") {
             import("xlsx").then((XLSX) => {
+                // Main sheet with count for Loads - F
                 const ws = XLSX.utils.json_to_sheet(
                     exportData.map((row) => ({
                         "Shift Type":
@@ -233,6 +252,7 @@ export default function TascoReport({
                                 : row.shiftType === "E Shift"
                                 ? "TASCO - E Shift Mud Conditioning"
                                 : row.shiftType,
+                        "Timesheet ID": row.timeSheetId,
                         "Submitted Date": format(
                             new Date(row.submittedDate),
                             "yyyy/MM/dd"
@@ -274,8 +294,42 @@ export default function TascoReport({
                                 : "-",
                     }))
                 );
+
+                // Create second sheet with detailed F-Load data
+                const fLoadData: any[] = [];
+                exportData.forEach((row) => {
+                    if (
+                        Array.isArray(row.fLoadDetails) &&
+                        row.fLoadDetails.length > 0
+                    ) {
+                        row.fLoadDetails.forEach((load: any, index: number) => {
+                            fLoadData.push({
+                                "Timesheet ID": row.timeSheetId,
+                                Employee: row.employee,
+                                "Profit ID": row.profitId || "-",
+                                "Date Worked": format(
+                                    new Date(row.dateWorked),
+                                    "yyyy/MM/dd"
+                                ),
+                                "Load Number": index + 1,
+                                "Weight (tons)": load.weight || "-",
+                                "Screen Type":
+                                    load.screenType === "SCREENED"
+                                        ? "Screened"
+                                        : load.screenType === "UNSCREENED"
+                                        ? "Unscreened"
+                                        : "-",
+                            });
+                        });
+                    }
+                });
+
+                const wsFLoads = XLSX.utils.json_to_sheet(fLoadData);
+
+                // Create workbook and append both sheets
                 const wb = XLSX.utils.book_new();
                 XLSX.utils.book_append_sheet(wb, ws, "Tasco Report");
+                XLSX.utils.book_append_sheet(wb, wsFLoads, "Loads - F");
                 XLSX.writeFile(wb, "tasco-report.xlsx");
             });
         }
