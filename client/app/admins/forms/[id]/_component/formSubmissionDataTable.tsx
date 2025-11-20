@@ -29,7 +29,6 @@ import {
 } from "@/app/v1/components/ui/popover";
 import { Button } from "@/app/v1/components/ui/button";
 import React, { Dispatch, SetStateAction, useMemo, Suspense } from "react";
-import { Skeleton } from "@/app/v1/components/ui/skeleton";
 import { format } from "date-fns";
 import { highlight } from "../../../_pages/highlight";
 import { Check, X } from "lucide-react";
