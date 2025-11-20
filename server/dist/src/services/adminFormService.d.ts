@@ -143,7 +143,7 @@ export declare function getAllFormTemplates(search: string, page: number | undef
     total: number;
     totalPages: number;
 }>;
-export declare function getFormSubmissionByTemplateId(id: string, page: number, pageSize: number, pendingOnly: boolean, statusFilter: string, dateRangeStart: string | null, dateRangeEnd: string | null): Promise<{
+export declare function getFormSubmissionByTemplateId(id: string, search: string | null, page: number, pageSize: number, pendingOnly: boolean, statusFilter: string, dateRangeStart: string | null, dateRangeEnd: string | null): Promise<{
     Submissions: ({
         User: {
             id: string;

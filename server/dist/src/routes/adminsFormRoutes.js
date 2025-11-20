@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="41418cd9-ea86-50a8-ade0-bac63d76270b")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="18b341f0-ee45-5447-bbcd-cfed92d8f711")}catch(e){}}();
 import { Router } from "express";
 const router = Router();
 import { getAllFormTemplatesController, getFormTemplateByIdController, getFormSubmissionsController, getFormSubmissionByTemplateIdController, createFormTemplateController, updateFormTemplateController, deleteFormTemplateController, archiveFormTemplateController, publishFormTemplateController, draftFormTemplateController, createFormSubmissionController, updateFormSubmissionController, deleteFormSubmissionController, getFormSubmissionByIdController, approveFormSubmissionController, } from "../controllers/adminFormController.js";
@@ -52,4 +52,4 @@ router.put("/submissions/:submissionId/approve", approveFormSubmissionController
 router.delete("/submissions/:submissionId", deleteFormSubmissionController);
 export default router;
 //# sourceMappingURL=adminsFormRoutes.js.map
-//# debugId=41418cd9-ea86-50a8-ade0-bac63d76270b
+//# debugId=18b341f0-ee45-5447-bbcd-cfed92d8f711

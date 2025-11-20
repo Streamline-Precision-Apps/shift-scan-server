@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="c50b156e-4bd2-5921-a9e8-ffcdd0a1d2fb")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="0753897a-9f40-5611-914d-519b5a1e1484")}catch(e){}}();
 import express from "express";
 import { getCookie, setCookie, deleteCookie, deleteAllCookie, getCookieList, deleteCookieList, } from "../controllers/cookiesController.js";
 const router = express.Router();
@@ -13,4 +13,4 @@ router.delete("/clear-all", deleteAllCookie);
 router.delete("/list", deleteCookieList);
 export default router;
 //# sourceMappingURL=cookiesRoutes.js.map
-//# debugId=c50b156e-4bd2-5921-a9e8-ffcdd0a1d2fb
+//# debugId=0753897a-9f40-5611-914d-519b5a1e1484

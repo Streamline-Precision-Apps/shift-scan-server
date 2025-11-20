@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="c96f8839-5983-52da-a480-d1376a76e1ed")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="ad0ae31c-6019-521a-a206-b97d1ca91e5d")}catch(e){}}();
 import prisma from "../lib/prisma.js";
 export async function getAllTags(search, page, pageSize, skip) {
     try {
@@ -194,4 +194,4 @@ export async function deleteTag(id) {
     });
 }
 //# sourceMappingURL=adminTagService.js.map
-//# debugId=c96f8839-5983-52da-a480-d1376a76e1ed
+//# debugId=ad0ae31c-6019-521a-a206-b97d1ca91e5d

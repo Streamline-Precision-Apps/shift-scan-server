@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="f38ddcbd-81df-5e19-b589-7f31afd5d19c")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="4218b30c-721a-5109-bcc1-892bb6039c91")}catch(e){}}();
 import { Router } from "express";
 import { verifyToken } from "../middleware/authMiddleware.js";
 import { getUserLocations, getUserLocationHistory, postUserLocation, getAllUsersLocations, } from "../controllers/locationController.js";
@@ -16,4 +16,4 @@ router.get("/:userId/history", verifyToken, getUserLocationHistory);
 router.post("/", postUserLocation);
 export default router;
 //# sourceMappingURL=locationRoutes.js.map
-//# debugId=f38ddcbd-81df-5e19-b589-7f31afd5d19c
+//# debugId=4218b30c-721a-5109-bcc1-892bb6039c91

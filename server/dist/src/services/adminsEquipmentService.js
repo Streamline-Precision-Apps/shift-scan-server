@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="32c97159-1c3c-5738-a6d3-678123eaa9ba")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="ee216b4d-9e00-570a-a171-a7aa4492f2ae")}catch(e){}}();
 import prisma from "../lib/prisma.js";
 export async function createEquipmentService(equipmentData, createdById, qrId) {
     return await prisma.equipment.create({
@@ -340,4 +340,4 @@ export async function getEquipmentSummaryService() {
     });
 }
 //# sourceMappingURL=adminsEquipmentService.js.map
-//# debugId=32c97159-1c3c-5738-a6d3-678123eaa9ba
+//# debugId=ee216b4d-9e00-570a-a171-a7aa4492f2ae

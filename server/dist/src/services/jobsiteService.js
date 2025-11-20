@@ -1,10 +1,6 @@
 // server/src/services/jobsiteService.ts
 
-<<<<<<< HEAD
 !function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="77ce7b8b-752b-564c-8490-ea4ae4398fa4")}catch(e){}}();
-=======
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="62ac874b-5adc-5a7a-928e-89ac3a4c085b")}catch(e){}}();
->>>>>>> 0aa595989a8ca4b8eb8e44c4fe9d03c2c7e8fa2d
 import prisma from "../lib/prisma.js";
 export async function getJobsites(query) {
     if (query.qrg) {
@@ -115,8 +111,4 @@ export async function deleteJobsite(id) {
     }
 }
 //# sourceMappingURL=jobsiteService.js.map
-<<<<<<< HEAD
 //# debugId=77ce7b8b-752b-564c-8490-ea4ae4398fa4
-=======
-//# debugId=62ac874b-5adc-5a7a-928e-89ac3a4c085b
->>>>>>> 0aa595989a8ca4b8eb8e44c4fe9d03c2c7e8fa2d

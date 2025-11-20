@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="00dd1bc9-470d-5d48-b217-c4c7e58b55f4")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="b0544295-9152-532e-981d-853101b37fe9")}catch(e){}}();
 import { createEquipmentService, editEquipmentService, archiveEquipmentService, restoreEquipmentService, deleteEquipmentService, getAllEquipmentService, getEquipmentByIdService, getEquipmentSummaryService, } from "../services/adminsEquipmentService.js";
 // GET /api/v1/admins/equipment - List all equipment
 export async function listEquipment(req, res) {
@@ -117,4 +117,4 @@ export async function listArchivedEquipment(req, res) {
     }
 }
 //# sourceMappingURL=adminEquipmentController.js.map
-//# debugId=00dd1bc9-470d-5d48-b217-c4c7e58b55f4
+//# debugId=b0544295-9152-532e-981d-853101b37fe9

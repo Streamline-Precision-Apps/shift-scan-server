@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="35df6ace-87b3-5f8f-9be9-6c6cb0673fc3")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="094d644c-07cd-52bd-903b-96d998af4599")}catch(e){}}();
 import { Router } from "express";
 import notificationRoutes from "./notificationsRoute.js";
 import pushNotificationsRoute from "./pushNotificationsRoute.js";
@@ -55,4 +55,4 @@ router.use("/location", locationRoutes);
 router.use("/cookies", cookiesRoutes);
 export default router;
 //# sourceMappingURL=index.js.map
-//# debugId=35df6ace-87b3-5f8f-9be9-6c6cb0673fc3
+//# debugId=094d644c-07cd-52bd-903b-96d998af4599

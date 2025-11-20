@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="b9f643fb-93a5-5fe1-b358-785adc0112a9")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="a30c5f87-5d47-50d8-becc-b7762aaf2b4a")}catch(e){}}();
 import { Router } from "express";
 import { verifyToken } from "../middleware/authMiddleware.js";
 import { sendNotification, sendNotificationMulticast, topics, } from "../controllers/notificationController.js";
@@ -162,4 +162,4 @@ router.post("/send-notification", verifyToken, requireFirebaseEnv, sendNotificat
 router.post("/topics", verifyToken, requireFirebaseEnv, topics);
 export default router;
 //# sourceMappingURL=notificationsRoute.js.map
-//# debugId=b9f643fb-93a5-5fe1-b358-785adc0112a9
+//# debugId=a30c5f87-5d47-50d8-becc-b7762aaf2b4a

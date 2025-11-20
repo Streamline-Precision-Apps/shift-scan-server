@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="845886f3-8df0-5ed4-a226-e1dde7c76d5e")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="193b4e89-fbbd-5417-a6a2-e809fcf2abad")}catch(e){}}();
 import Express from "express";
 import { getMechanicLogsService, createMechanicLogService, updateMechanicLogService, deleteMechanicLogService, getMechanicLogService, } from "../services/mechanicService.js";
 export async function getMechanicLogsController(req, res) {
@@ -105,4 +105,4 @@ export async function deleteMechanicProjectController(req, res) {
     }
 }
 //# sourceMappingURL=mechanicLogsController.js.map
-//# debugId=845886f3-8df0-5ed4-a226-e1dde7c76d5e
+//# debugId=193b4e89-fbbd-5417-a6a2-e809fcf2abad

@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="fc98e05f-93b1-5e8b-9c1f-bce1bec4e935")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="b16406a7-9da9-5579-bba6-a0466c43a51c")}catch(e){}}();
 import { getAllJobsites, getJobsiteById, createJobsite, updateJobsite, archiveJobsite, restoreJobsite, deleteJobsite, } from "../services/adminJobsiteService.js";
 // GET /api/v1/admins/jobsite
 export async function getAllJobsitesController(req, res) {
@@ -168,4 +168,4 @@ export async function deleteJobsiteController(req, res) {
     }
 }
 //# sourceMappingURL=adminJobsiteController.js.map
-//# debugId=fc98e05f-93b1-5e8b-9c1f-bce1bec4e935
+//# debugId=b16406a7-9da9-5579-bba6-a0466c43a51c

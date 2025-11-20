@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="72b2161d-ad16-5397-9fb6-a5b316ce481a")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="d3a00f0e-40a8-55b4-bff0-ebac65101240")}catch(e){}}();
 import * as jobsiteService from "../services/jobsiteService.js";
 export async function getJobsites(req, res) {
     try {
@@ -98,4 +98,4 @@ export async function deleteJobsite(req, res) {
     }
 }
 //# sourceMappingURL=jobsiteController.js.map
-//# debugId=72b2161d-ad16-5397-9fb6-a5b316ce481a
+//# debugId=d3a00f0e-40a8-55b4-bff0-ebac65101240

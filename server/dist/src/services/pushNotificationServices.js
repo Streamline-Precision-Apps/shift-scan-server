@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="f31b69d4-97e4-56d6-842f-1614782bf172")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="3cde41b1-3d0b-5939-88a8-918992eef769")}catch(e){}}();
 import prisma from "../lib/prisma.js";
 /**
  * Mark a single notification as read for the user in the request.
@@ -90,4 +90,4 @@ export async function markBrokenEquipmentNotificationsAsReadService(notification
     return { notificationId };
 }
 //# sourceMappingURL=pushNotificationServices.js.map
-//# debugId=f31b69d4-97e4-56d6-842f-1614782bf172
+//# debugId=3cde41b1-3d0b-5939-88a8-918992eef769

@@ -1,21 +1,5 @@
-!(function () {
-  try {
-    var e =
-        "undefined" != typeof window
-          ? window
-          : "undefined" != typeof global
-          ? global
-          : "undefined" != typeof globalThis
-          ? globalThis
-          : "undefined" != typeof self
-          ? self
-          : {},
-      n = new e.Error().stack;
-    n &&
-      ((e._sentryDebugIds = e._sentryDebugIds || {}),
-      (e._sentryDebugIds[n] = "37d4e0a4-2ad7-5028-bee0-3093d3d34eb1"));
-  } catch (e) {}
-})();
+
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="c5391701-e2a7-5ec5-b889-c8cfbc2b675e")}catch(e){}}();
 import { Resend } from "resend";
 const resend = new Resend(process.env.AUTH_RESEND_KEY);
 /**
@@ -25,16 +9,16 @@ const resend = new Resend(process.env.AUTH_RESEND_KEY);
  * @param token - The password reset token
  */
 export const sendPasswordResetEmail = async (email, token) => {
-  try {
-    const isProd = process.env.NODE_ENV === "production";
-    const resetLink = isProd
-      ? `https://shiftscanapp.com/signin/update-password?token=${token}`
-      : `http://localhost:3000/signin/update-password?token=${token}`;
-    await resend.emails.send({
-      from: "no-reply@shiftscanapp.com",
-      to: email,
-      subject: "Reset your password",
-      html: `
+    try {
+        const isProd = process.env.NODE_ENV === "production";
+        const resetLink = isProd
+            ? `https://shiftscanapp.com/signin/update-password?token=${token}`
+            : `http://localhost:3000/signin/update-password?token=${token}`;
+        await resend.emails.send({
+            from: "no-reply@shiftscanapp.com",
+            to: email,
+            subject: "Reset your password",
+            html: `
       <p>Hello,</p>
       <p>You have requested to reset your password. Please click the link below to set a new password:</p>
       <p><a href="${resetLink}" style="background-color: #003d99; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Reset Password</a></p>
@@ -42,11 +26,12 @@ export const sendPasswordResetEmail = async (email, token) => {
       <p>If you did not request a password reset, please ignore this email.</p>
       <p>Thank you,<br/>ShiftScan Team</p>
       `,
-    });
-  } catch (error) {
-    console.error("❌ Error sending password reset email:", error);
-    throw error;
-  }
+        });
+    }
+    catch (error) {
+        console.error("❌ Error sending password reset email:", error);
+        throw error;
+    }
 };
 //# sourceMappingURL=mail.js.map
-//# debugId=37d4e0a4-2ad7-5028-bee0-3093d3d34eb1
+//# debugId=c5391701-e2a7-5ec5-b889-c8cfbc2b675e

@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="2ca7e804-a219-5a9f-a6bb-88f36f2f0e3c")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="fcb14357-9923-59e3-bab7-2c7268606080")}catch(e){}}();
 import * as PushNotificationService from "../services/pushNotificationServices.js";
 /**
  * Controller for marking notifications as read.
@@ -33,4 +33,4 @@ export async function markReadController(req, res) {
     }
 }
 //# sourceMappingURL=pushNotifcationController.js.map
-//# debugId=2ca7e804-a219-5a9f-a6bb-88f36f2f0e3c
+//# debugId=fcb14357-9923-59e3-bab7-2c7268606080

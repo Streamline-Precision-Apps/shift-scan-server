@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="209d1e42-4380-5d79-9fb2-7ccfb5fc5ac5")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="837869fd-38c2-5e91-af81-3eebcc1e8c39")}catch(e){}}();
 import * as equipmentService from "../services/equipmentService.js";
 export async function getEquipment(req, res) {
     try {
@@ -58,4 +58,4 @@ export async function getEquipmentByQrId(req, res) {
     }
 }
 //# sourceMappingURL=equipmentController.js.map
-//# debugId=209d1e42-4380-5d79-9fb2-7ccfb5fc5ac5
+//# debugId=837869fd-38c2-5e91-af81-3eebcc1e8c39

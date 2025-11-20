@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="f8b16fee-f4a0-55b2-8406-f99121473650")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="f6cf9efe-a39e-522b-9df8-86cc1afcde5a")}catch(e){}}();
 import { Router } from "express";
 import { verifyToken } from "../middleware/authMiddleware.js";
 import { saveFCMToken, requestPasswordReset, resetPassword, verifyResetToken, deleteResetToken, } from "../controllers/tokenController.js";
@@ -31,4 +31,4 @@ router.get("/verify-reset-token/:token", verifyResetToken);
 router.delete("/reset/:token", deleteResetToken);
 export default router;
 //# sourceMappingURL=tokenRoutes.js.map
-//# debugId=f8b16fee-f4a0-55b2-8406-f99121473650
+//# debugId=f6cf9efe-a39e-522b-9df8-86cc1afcde5a

@@ -1,43 +1,8 @@
-!(function () {
-  try {
-    var e =
-        "undefined" != typeof window
-          ? window
-          : "undefined" != typeof global
-          ? global
-          : "undefined" != typeof globalThis
-          ? globalThis
-          : "undefined" != typeof self
-          ? self
-          : {},
-      n = new e.Error().stack;
-    n &&
-      ((e._sentryDebugIds = e._sentryDebugIds || {}),
-      (e._sentryDebugIds[n] = "a807af6f-0e79-5068-b293-1859bf67a83c"));
-  } catch (e) {}
-})();
+
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="cad72154-99c3-58fd-b4ec-8ba49d72f46a")}catch(e){}}();
 import { Router } from "express";
 import { verifyToken } from "../middleware/authMiddleware.js";
-import {
-  createUser,
-  deleteUser,
-  getUserById,
-  getUsers,
-  updateSettings,
-  updateUser,
-  getUserSettingsByQuery,
-  getUserContact,
-  getAllUsers,
-  getUsersTimeSheetByDate,
-  getTeamsByUserId,
-  getCrewMembers,
-  getCrewOnlineStatus,
-  getUserOnlineStatus,
-  getUserInfo,
-  sessionController,
-  endSessionController,
-  userSignatureController,
-} from "../controllers/userController.js";
+import { createUser, deleteUser, getUserById, getUsers, updateSettings, updateUser, getUserSettingsByQuery, getUserContact, getAllUsers, getUsersTimeSheetByDate, getTeamsByUserId, getCrewMembers, getCrewOnlineStatus, getUserOnlineStatus, getUserInfo, sessionController, endSessionController, userSignatureController, } from "../controllers/userController.js";
 const router = Router();
 router.post("/:id/session", sessionController);
 router.put("/:id/session/:sessionId", endSessionController);
@@ -412,4 +377,4 @@ router.put("/:id", verifyToken, updateUser);
 router.delete("/:id", verifyToken, deleteUser);
 export default router;
 //# sourceMappingURL=userRoute.js.map
-//# debugId=a807af6f-0e79-5068-b293-1859bf67a83c
+//# debugId=cad72154-99c3-58fd-b4ec-8ba49d72f46a

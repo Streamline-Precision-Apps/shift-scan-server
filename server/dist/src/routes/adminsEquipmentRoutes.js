@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="ebdd1bfb-ea23-54d9-8e9a-aa1d3a4703ab")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="18aad29c-5875-5280-a8f1-8159c6ee0cf5")}catch(e){}}();
 import { Router } from "express";
 import { listEquipment, getEquipmentById, createEquipment, updateEquipment, archiveEquipment, restoreEquipment, listArchivedEquipment, deleteEquipment, getEquipmentSummary, } from "../controllers/adminEquipmentController.js";
 import { verifyToken } from "../middleware/authMiddleware.js";
@@ -27,4 +27,4 @@ router.put("/:id/restore", restoreEquipment);
 router.get("/archived", listArchivedEquipment);
 export default router;
 //# sourceMappingURL=adminsEquipmentRoutes.js.map
-//# debugId=ebdd1bfb-ea23-54d9-8e9a-aa1d3a4703ab
+//# debugId=18aad29c-5875-5280-a8f1-8159c6ee0cf5

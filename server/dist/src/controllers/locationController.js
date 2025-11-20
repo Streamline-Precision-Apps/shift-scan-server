@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="89138149-419e-50f9-a15b-2ff22d02cf45")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="ef653560-97c9-5717-b43c-6648577fcba3")}catch(e){}}();
 import { fetchLatestLocation, fetchLocationHistory, fetchAllUsersLatestLocations, saveUserClockInLocation, saveUserClockOutLocation, validateLocationPayload, } from "../services/locationService.js";
 // get the latest location for a user
 export async function getUserLocations(req, res) {
@@ -93,4 +93,4 @@ export async function postUserLocation(req, res) {
     }
 }
 //# sourceMappingURL=locationController.js.map
-//# debugId=89138149-419e-50f9-a15b-2ff22d02cf45
+//# debugId=ef653560-97c9-5717-b43c-6648577fcba3

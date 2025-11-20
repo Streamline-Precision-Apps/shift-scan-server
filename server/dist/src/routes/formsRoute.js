@@ -1,41 +1,8 @@
-!(function () {
-  try {
-    var e =
-        "undefined" != typeof window
-          ? window
-          : "undefined" != typeof global
-          ? global
-          : "undefined" != typeof globalThis
-          ? globalThis
-          : "undefined" != typeof self
-          ? self
-          : {},
-      n = new e.Error().stack;
-    n &&
-      ((e._sentryDebugIds = e._sentryDebugIds || {}),
-      (e._sentryDebugIds[n] = "aa6d4fda-2ba7-5359-b476-0405e8d8ed33"));
-  } catch (e) {}
-})();
+
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="a84ccbf3-f5ab-5e12-97c6-a6188c35a246")}catch(e){}}();
 import { Router } from "express";
 import { verifyToken } from "../middleware/authMiddleware.js";
-import {
-  createFormApproval,
-  createFormSubmission,
-  deleteFormSubmission,
-  getEmployeeRequests,
-  getForms,
-  getUserSubmissions,
-  saveDraft,
-  saveDraftToPending,
-  savePending,
-  updateFormApproval,
-  getFormDraft,
-  getTeamSubmission,
-  getFormSubmission,
-  getManagerFormApproval,
-  getFormTemplate,
-  updateFormSubmission,
-} from "../controllers/formsController.js";
+import { createFormApproval, createFormSubmission, deleteFormSubmission, getEmployeeRequests, getForms, getUserSubmissions, saveDraft, saveDraftToPending, savePending, updateFormApproval, getFormDraft, getTeamSubmission, getFormSubmission, getManagerFormApproval, getFormTemplate, updateFormSubmission, } from "../controllers/formsController.js";
 const router = Router();
 // Submission type-specific GET routes
 router.get("/formDraft/:id", verifyToken, getFormDraft);
@@ -59,4 +26,4 @@ router.post("/approval", verifyToken, createFormApproval);
 router.put("/approval/update", verifyToken, updateFormApproval);
 export default router;
 //# sourceMappingURL=formsRoute.js.map
-//# debugId=aa6d4fda-2ba7-5359-b476-0405e8d8ed33
+//# debugId=a84ccbf3-f5ab-5e12-97c6-a6188c35a246
