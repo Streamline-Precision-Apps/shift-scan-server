@@ -124,7 +124,16 @@ export default function useSubmissionDataById(id: string) {
         );
 
         setFormTemplate(data);
-        setFormTemplatePage(data);
+        if (searchTerm.length == 0) {
+          setFormTemplatePage(data);
+        } else {
+          const filteredData = filterFormSubmissionsBySearchTerm(
+            data,
+            searchTerm
+          );
+          setFormTemplatePage(filteredData);
+        }
+
         setApprovalInbox(data.pendingForms || 0);
         return data;
       } catch (error) {
@@ -137,58 +146,78 @@ export default function useSubmissionDataById(id: string) {
     fetchFormTemplate();
   }, [id, page, pageSize, filter, refreshKey, searchTerm, showPendingOnly]);
 
-  // Filter method for client-side filtering of submissions
-  const filteredSubmissions = useMemo(() => {
-    if (!formTemplate || !Array.isArray((formTemplate as any).Submissions))
-      return [];
-    if (!searchTerm) return (formTemplate as any).Submissions;
-    const lowerSearch = searchTerm.toLowerCase();
-    return (formTemplate as any).Submissions.filter((submission: any) => {
-      // Check user fields
-      const user = submission.User;
-      if (user) {
-        const fullName = `${user.firstName || ""} ${
-          user.lastName || ""
-        }`.toLowerCase();
-        if (fullName.includes(lowerSearch)) return true;
-        if ((user.id || "").toLowerCase().includes(lowerSearch)) return true;
-      }
-      // Check submission id
-      if ((submission.id || "").toLowerCase().includes(lowerSearch))
-        return true;
-      // Check all data fields (string values only)
-      if (submission.data && typeof submission.data === "object") {
-        for (const value of Object.values(submission.data)) {
+  //helper functions
+
+  const filterFormSubmissionsBySearchTerm = (
+    data: FormIndividualTemplate,
+    term: string
+  ) => {
+    if (!data || !data.Submissions) return data;
+    if (!term.trim()) return data;
+
+    const lowered = term.toLowerCase();
+
+    const filtered = data.Submissions.filter((submission) => {
+      // 1. Check ID
+      if (String(submission.id).toLowerCase().includes(lowered)) return true;
+
+      // 2. Check submitter full name
+      const fullName = `${submission.User?.firstName || ""} ${
+        submission.User?.lastName || ""
+      }`
+        .trim()
+        .toLowerCase();
+
+      if (fullName.includes(lowered)) return true;
+
+      // 3. Check any field inside submission.data
+      const dataObj = submission.data || {};
+
+      for (const key in dataObj) {
+        const value = dataObj[key];
+
+        if (value == null) continue;
+
+        // primitive values
+        if (
+          ["string", "number", "boolean"].includes(typeof value) &&
+          String(value).toLowerCase().includes(lowered)
+        ) {
+          return true;
+        }
+
+        // arrays
+        if (Array.isArray(value)) {
           if (
-            typeof value === "string" &&
-            value.toLowerCase().includes(lowerSearch)
+            value
+              .map((v) => String(v?.name || v || "").toLowerCase())
+              .some((v) => v.includes(lowered))
           ) {
             return true;
-          }
-          if (
-            typeof value === "number" &&
-            value.toString().includes(lowerSearch)
-          ) {
-            return true;
-          }
-          // Optionally, check inside arrays/objects
-          if (Array.isArray(value)) {
-            if (
-              value.some(
-                (v) =>
-                  typeof v === "string" && v.toLowerCase().includes(lowerSearch)
-              )
-            ) {
-              return true;
-            }
           }
         }
+
+        // nested objects
+        if (typeof value === "object") {
+          const isMatch = Object.values(value)
+            .map((v) => String(v || "").toLowerCase())
+            .some((v) => v.includes(lowered));
+
+          if (isMatch) return true;
+        }
       }
+
       return false;
     });
-  }, [formTemplate, searchTerm]);
 
-  //helper functions
+    return {
+      ...data,
+      Submissions: filtered, // IMPORTANT: preserve exact key name
+      total: filtered.length,
+      page: 1,
+      totalPages: 1,
+    };
+  };
 
   // Statuses and their display info
   const STATUS_OPTIONS = useMemo(
@@ -564,6 +593,5 @@ export default function useSubmissionDataById(id: string) {
     approvalInbox,
     onApprovalAction,
     formTemplatePage,
-    filteredSubmissions,
   };
 }

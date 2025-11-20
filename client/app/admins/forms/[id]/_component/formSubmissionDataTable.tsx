@@ -109,7 +109,10 @@ export function FormSubmissionDataTable({
           return (
             <div className="text-xs text-center">
               {submission.submittedAt
-                ? format(new Date(submission.submittedAt), "M/d/yyyy")
+                ? highlight(
+                    format(new Date(submission.submittedAt), "M/d/yyyy"),
+                    searchTerm || ""
+                  )
                 : "-"}
             </div>
           );
@@ -224,7 +227,7 @@ export function FormSubmissionDataTable({
                               key={item.id || idx}
                               className="bg-blue-50 rounded-lg px-2 py-1 inline-block border border-blue-200 mb-1"
                             >
-                              {item.name || ""}
+                              {highlight(item.name || "", searchTerm || "")}
                             </div>
                           )
                         )}
@@ -239,14 +242,14 @@ export function FormSubmissionDataTable({
                           key={item.id || idx}
                           className="bg-sky-200 rounded-lg px-2 py-1 inline-block border border-blue-200"
                         >
-                          {item.name || ""}
+                          {highlight(item.name || "", searchTerm || "")}
                         </div>
                       )
                     )}
                   </div>
                 )
               ) : (
-                display ?? ""
+                highlight(display?.toString?.() ?? "", searchTerm || "")
               )}
             </div>
           );
@@ -532,13 +535,17 @@ export function FormSubmissionDataTable({
               </Suspense>
             </TableBody>
           </Table>
-          {!loading && formSubmissions?.Submissions.length === 0 && (
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-row items-center gap-2 justify-center rounded-lg">
-              <span className="text-lg text-gray-500">
-                No submissions found.
-              </span>
-            </div>
-          )}
+          {!loading &&
+            ((Array.isArray(formSubmissions) && formSubmissions.length === 0) ||
+              (formSubmissions &&
+                Array.isArray(formSubmissions.Submissions) &&
+                formSubmissions.Submissions.length === 0)) && (
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-row items-center gap-2 justify-center rounded-lg">
+                <span className="text-lg text-gray-500">
+                  No submissions found.
+                </span>
+              </div>
+            )}
         </div>
       </div>
     </div>
