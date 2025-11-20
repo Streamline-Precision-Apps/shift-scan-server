@@ -10,8 +10,12 @@ import {
   deleteEquipment,
   getEquipmentSummary,
 } from "../controllers/adminEquipmentController.js";
+import { verifyToken } from "../middleware/authMiddleware.js";
 
 const router = Router();
+
+// Apply authentication middleware to all routes
+router.use(verifyToken);
 
 // Equipment Management REST API routes (handlers to be implemented)
 

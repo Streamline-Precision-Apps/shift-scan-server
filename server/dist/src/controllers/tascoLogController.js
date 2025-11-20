@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="d7ddb57b-f0c9-5d96-8047-486f99ada16e")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="930913c2-f068-5c3b-956b-50c53de6fead")}catch(e){}}();
 import { getTascoLogById, getTascoLogsByTimesheet, updateTascoLogLoadQuantity, updateTascoLogComment, createTascoRefuelLog, getTascoRefuelLogs, updateTascoRefuelLog, deleteTascoRefuelLog, createTascoFLoad, getTascoFLoads, updateTascoFLoad, deleteTascoFLoad, getCompleteTascoLogData, deleteTascoLog, getActiveTascoLogForUser, } from "../services/tascoLogService.js";
 /**
  * TascoLog Controller
@@ -447,4 +447,4 @@ export async function getActiveTascoLogController(req, res) {
     }
 }
 //# sourceMappingURL=tascoLogController.js.map
-//# debugId=d7ddb57b-f0c9-5d96-8047-486f99ada16e
+//# debugId=930913c2-f068-5c3b-956b-50c53de6fead

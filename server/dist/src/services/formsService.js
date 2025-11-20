@@ -1,5 +1,21 @@
-
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="0b77d3b6-ba3e-52d5-a07f-9800dd7896a7")}catch(e){}}();
+!(function () {
+  try {
+    var e =
+        "undefined" != typeof window
+          ? window
+          : "undefined" != typeof global
+          ? global
+          : "undefined" != typeof globalThis
+          ? globalThis
+          : "undefined" != typeof self
+          ? self
+          : {},
+      n = new e.Error().stack;
+    n &&
+      ((e._sentryDebugIds = e._sentryDebugIds || {}),
+      (e._sentryDebugIds[n] = "150754be-6d4b-571e-bd34-62fb9d8ccadc"));
+  } catch (e) {}
+})();
 import prisma from "../lib/prisma.js";
 import { FormStatus } from "../../generated/prisma/client.js";
 /**
@@ -10,15 +26,15 @@ import { FormStatus } from "../../generated/prisma/client.js";
  * }[]
  */
 export const ServiceGetForms = async () => {
-    return await prisma.formTemplate.findMany({
-        where: {
-            isActive: "ACTIVE",
-        },
-        select: {
-            id: true,
-            name: true,
-        },
-    });
+  return await prisma.formTemplate.findMany({
+    where: {
+      isActive: "ACTIVE",
+    },
+    select: {
+      id: true,
+      name: true,
+    },
+  });
 };
 /**
  * Create a form submission
@@ -26,45 +42,47 @@ export const ServiceGetForms = async () => {
  * @param {string} params.formTemplateId
  * @param {string} params.userId
  */
-export const ServiceCreateFormSubmission = async ({ formTemplateId, userId, }) => {
-    // Fetch the form template to get the field names
-    const formTemplate = await prisma.formTemplate.findUnique({
-        where: { id: formTemplateId },
+export const ServiceCreateFormSubmission = async ({
+  formTemplateId,
+  userId,
+}) => {
+  // Fetch the form template to get the field names
+  const formTemplate = await prisma.formTemplate.findUnique({
+    where: { id: formTemplateId },
+    include: {
+      FormGrouping: {
         include: {
-            FormGrouping: {
-                include: {
-                    Fields: true,
-                },
-            },
+          Fields: true,
         },
-    });
-    if (!formTemplate)
-        throw new Error("Form template not found");
-    // Initialize the data object with field.id as keys and field.content as default value
-    const initialData = {};
-    for (const group of formTemplate.FormGrouping) {
-        for (const field of group.Fields) {
-            initialData[String(field.id)] = field.content || "";
-        }
+      },
+    },
+  });
+  if (!formTemplate) throw new Error("Form template not found");
+  // Initialize the data object with field.id as keys and field.content as default value
+  const initialData = {};
+  for (const group of formTemplate.FormGrouping) {
+    for (const field of group.Fields) {
+      initialData[String(field.id)] = field.content || "";
     }
-    // Create the form submission with the initialized data
-    const submission = await prisma.formSubmission.create({
-        data: {
-            formTemplateId,
-            userId,
-            title: "",
-            data: initialData,
-        },
-    });
-    return submission;
+  }
+  // Create the form submission with the initialized data
+  const submission = await prisma.formSubmission.create({
+    data: {
+      formTemplateId,
+      userId,
+      title: "",
+      data: initialData,
+    },
+  });
+  return submission;
 };
 /**
  * Delete a form submission
  * @param {number} id
  */
 export const ServiceDeleteFormSubmission = async (id) => {
-    await prisma.formSubmission.delete({ where: { id } });
-    return true;
+  await prisma.formSubmission.delete({ where: { id } });
+  return true;
 };
 /**
  * Save a draft form submission
@@ -77,50 +95,51 @@ export const ServiceDeleteFormSubmission = async (id) => {
  * @param {string} [params.title]
  */
 export const ServiceSaveDraft = async (params) => {
-    const { formData, formTemplateId, userId, formType, submissionId, title } = params;
-    if (submissionId) {
-        const existingSubmission = await prisma.formSubmission.findUnique({
-            where: { id: submissionId },
-        });
-        if (!existingSubmission)
-            throw new Error("Submission not found");
-        let existingData = {};
-        if (typeof existingSubmission.data === "object" &&
-            existingSubmission.data !== null &&
-            !Array.isArray(existingSubmission.data)) {
-            existingData = existingSubmission.data;
-        }
-        const existingTitle = existingSubmission.title;
-        // Only update changed fields
-        const changedFields = {};
-        for (const key in formData) {
-            if (formData[key] !== existingData[key]) {
-                changedFields[key] = formData[key] ?? "";
-            }
-        }
-        const updatedSubmission = await prisma.formSubmission.update({
-            where: { id: submissionId },
-            data: {
-                title: title || existingTitle,
-                data: { ...existingData, ...changedFields },
-            },
-        });
-        return updatedSubmission;
+  const { formData, formTemplateId, userId, formType, submissionId, title } =
+    params;
+  if (submissionId) {
+    const existingSubmission = await prisma.formSubmission.findUnique({
+      where: { id: submissionId },
+    });
+    if (!existingSubmission) throw new Error("Submission not found");
+    let existingData = {};
+    if (
+      typeof existingSubmission.data === "object" &&
+      existingSubmission.data !== null &&
+      !Array.isArray(existingSubmission.data)
+    ) {
+      existingData = existingSubmission.data;
     }
-    else {
-        const newSubmission = await prisma.formSubmission.create({
-            data: {
-                title: title || "",
-                formTemplateId,
-                userId,
-                formType: formType ?? null,
-                data: formData,
-                status: FormStatus.DRAFT,
-                submittedAt: new Date().toISOString(),
-            },
-        });
-        return newSubmission;
+    const existingTitle = existingSubmission.title;
+    // Only update changed fields
+    const changedFields = {};
+    for (const key in formData) {
+      if (formData[key] !== existingData[key]) {
+        changedFields[key] = formData[key] ?? "";
+      }
     }
+    const updatedSubmission = await prisma.formSubmission.update({
+      where: { id: submissionId },
+      data: {
+        title: title || existingTitle,
+        data: { ...existingData, ...changedFields },
+      },
+    });
+    return updatedSubmission;
+  } else {
+    const newSubmission = await prisma.formSubmission.create({
+      data: {
+        title: title || "",
+        formTemplateId,
+        userId,
+        formType: formType ?? null,
+        data: formData,
+        status: FormStatus.DRAFT,
+        submittedAt: new Date().toISOString(),
+      },
+    });
+    return newSubmission;
+  }
 };
 /**
  * Save a draft and move to pending/approved
@@ -134,57 +153,65 @@ export const ServiceSaveDraft = async (params) => {
  * @param {string} [params.title]
  */
 export const ServiceSaveDraftToPending = async (params) => {
-    const { formData, isApprovalRequired, formTemplateId, userId, formType, submissionId, title, } = params;
-    if (submissionId) {
-        const existingSubmission = await prisma.formSubmission.findUnique({
-            where: { id: submissionId },
-        });
-        if (!existingSubmission)
-            throw new Error("Submission not found");
-        let existingData = {};
-        if (typeof existingSubmission.data === "object" &&
-            existingSubmission.data !== null &&
-            !Array.isArray(existingSubmission.data)) {
-            existingData = existingSubmission.data;
-        }
-        const existingTitle = existingSubmission.title;
-        const changedFields = {};
-        for (const key in formData) {
-            if (formData[key] !== existingData[key]) {
-                changedFields[key] = formData[key] ?? "";
-            }
-        }
-        const updatedSubmission = await prisma.formSubmission.update({
-            where: { id: submissionId },
-            data: {
-                title: title || existingTitle,
-                data: { ...existingData, ...changedFields },
-                submittedAt: new Date().toISOString(),
-                status: isApprovalRequired ? FormStatus.PENDING : FormStatus.APPROVED,
-            },
-            include: {
-                User: { select: { firstName: true, lastName: true } },
-            },
-        });
-        return updatedSubmission;
+  const {
+    formData,
+    isApprovalRequired,
+    formTemplateId,
+    userId,
+    formType,
+    submissionId,
+    title,
+  } = params;
+  if (submissionId) {
+    const existingSubmission = await prisma.formSubmission.findUnique({
+      where: { id: submissionId },
+    });
+    if (!existingSubmission) throw new Error("Submission not found");
+    let existingData = {};
+    if (
+      typeof existingSubmission.data === "object" &&
+      existingSubmission.data !== null &&
+      !Array.isArray(existingSubmission.data)
+    ) {
+      existingData = existingSubmission.data;
     }
-    else {
-        const newSubmission = await prisma.formSubmission.create({
-            data: {
-                title: title || "",
-                formTemplateId,
-                userId,
-                formType: formType ?? null,
-                data: formData,
-                status: isApprovalRequired ? FormStatus.PENDING : FormStatus.APPROVED,
-                submittedAt: new Date().toISOString(),
-            },
-            include: {
-                User: { select: { firstName: true, lastName: true } },
-            },
-        });
-        return newSubmission;
+    const existingTitle = existingSubmission.title;
+    const changedFields = {};
+    for (const key in formData) {
+      if (formData[key] !== existingData[key]) {
+        changedFields[key] = formData[key] ?? "";
+      }
     }
+    const updatedSubmission = await prisma.formSubmission.update({
+      where: { id: submissionId },
+      data: {
+        title: title || existingTitle,
+        data: { ...existingData, ...changedFields },
+        submittedAt: new Date().toISOString(),
+        status: isApprovalRequired ? FormStatus.PENDING : FormStatus.APPROVED,
+      },
+      include: {
+        User: { select: { firstName: true, lastName: true } },
+      },
+    });
+    return updatedSubmission;
+  } else {
+    const newSubmission = await prisma.formSubmission.create({
+      data: {
+        title: title || "",
+        formTemplateId,
+        userId,
+        formType: formType ?? null,
+        data: formData,
+        status: isApprovalRequired ? FormStatus.PENDING : FormStatus.APPROVED,
+        submittedAt: new Date().toISOString(),
+      },
+      include: {
+        User: { select: { firstName: true, lastName: true } },
+      },
+    });
+    return newSubmission;
+  }
 };
 /**
  * Save a pending form submission
@@ -197,58 +224,59 @@ export const ServiceSaveDraftToPending = async (params) => {
  * @param {string} [params.title]
  */
 export const ServiceSavePending = async (params) => {
-    const { formData, formTemplateId, userId, formType, submissionId, title } = params;
-    if (submissionId) {
-        const existingSubmission = await prisma.formSubmission.findUnique({
-            where: { id: submissionId },
-        });
-        if (!existingSubmission)
-            throw new Error("Submission not found");
-        let existingData = {};
-        if (typeof existingSubmission.data === "object" &&
-            existingSubmission.data !== null &&
-            !Array.isArray(existingSubmission.data)) {
-            existingData = existingSubmission.data;
-        }
-        const existingTitle = existingSubmission.title;
-        const changedFields = {};
-        for (const key in formData) {
-            if (formData[key] !== existingData[key]) {
-                changedFields[key] = formData[key] ?? "";
-            }
-        }
-        const updatedSubmission = await prisma.formSubmission.update({
-            where: { id: submissionId },
-            data: {
-                title: title || existingTitle,
-                data: { ...existingData, ...changedFields },
-                status: FormStatus.PENDING,
-            },
-        });
-        return updatedSubmission;
+  const { formData, formTemplateId, userId, formType, submissionId, title } =
+    params;
+  if (submissionId) {
+    const existingSubmission = await prisma.formSubmission.findUnique({
+      where: { id: submissionId },
+    });
+    if (!existingSubmission) throw new Error("Submission not found");
+    let existingData = {};
+    if (
+      typeof existingSubmission.data === "object" &&
+      existingSubmission.data !== null &&
+      !Array.isArray(existingSubmission.data)
+    ) {
+      existingData = existingSubmission.data;
     }
-    else {
-        const newSubmission = await prisma.formSubmission.create({
-            data: {
-                title: title || "",
-                formTemplateId,
-                userId,
-                formType: formType ?? null,
-                data: formData,
-                status: FormStatus.PENDING,
-            },
-        });
-        return newSubmission;
+    const existingTitle = existingSubmission.title;
+    const changedFields = {};
+    for (const key in formData) {
+      if (formData[key] !== existingData[key]) {
+        changedFields[key] = formData[key] ?? "";
+      }
     }
+    const updatedSubmission = await prisma.formSubmission.update({
+      where: { id: submissionId },
+      data: {
+        title: title || existingTitle,
+        data: { ...existingData, ...changedFields },
+        status: FormStatus.PENDING,
+      },
+    });
+    return updatedSubmission;
+  } else {
+    const newSubmission = await prisma.formSubmission.create({
+      data: {
+        title: title || "",
+        formTemplateId,
+        userId,
+        formType: formType ?? null,
+        data: formData,
+        status: FormStatus.PENDING,
+      },
+    });
+    return newSubmission;
+  }
 };
 export const ServiceGetFormsWithRequests = async () => {
-    const forms = await prisma.formSubmission.findMany({
-        where: { status: FormStatus.PENDING },
-        include: {
-            User: { select: { firstName: true, lastName: true } },
-        },
-    });
-    return forms;
+  const forms = await prisma.formSubmission.findMany({
+    where: { status: FormStatus.PENDING },
+    include: {
+      User: { select: { firstName: true, lastName: true } },
+    },
+  });
+  return forms;
 };
 /**
  * Create a form approval
@@ -260,22 +288,22 @@ export const ServiceGetFormsWithRequests = async () => {
  * @param {string} params.approval
  */
 export const ServiceCreateFormApproval = async (params) => {
-    const { formSubmissionId, signedBy, signature, comment, approval } = params;
-    const create = await prisma.formApproval.create({
-        data: {
-            formSubmissionId,
-            signedBy,
-            signature,
-            comment,
-        },
+  const { formSubmissionId, signedBy, signature, comment, approval } = params;
+  const create = await prisma.formApproval.create({
+    data: {
+      formSubmissionId,
+      signedBy,
+      signature,
+      comment,
+    },
+  });
+  if (create) {
+    await prisma.formSubmission.update({
+      where: { id: formSubmissionId },
+      data: { status: approval },
     });
-    if (create) {
-        await prisma.formSubmission.update({
-            where: { id: formSubmissionId },
-            data: { status: approval },
-        });
-    }
-    return true;
+  }
+  return true;
 };
 /**
  * Update a form approval
@@ -286,296 +314,301 @@ export const ServiceCreateFormApproval = async (params) => {
  * @param {boolean} params.isApproved
  */
 export const ServiceUpdateFormApproval = async (params) => {
-    const { id, formSubmissionId, comment, managerId, isApproved } = params;
-    // Use a transaction to ensure atomicity
-    const [approval, updatedSubmission] = await prisma.$transaction([
-        prisma.formApproval.update({
-            where: { id },
-            data: {
-                comment,
-                Approver: {
-                    connect: {
-                        id: managerId,
-                    },
-                },
-            },
-        }),
-        prisma.formSubmission.update({
-            where: { id: formSubmissionId },
-            data: { status: isApproved ? FormStatus.APPROVED : FormStatus.DENIED },
-        }),
-    ]);
-    return { approval, updatedSubmission };
+  const { id, formSubmissionId, comment, managerId, isApproved } = params;
+  // Use a transaction to ensure atomicity
+  const [approval, updatedSubmission] = await prisma.$transaction([
+    prisma.formApproval.update({
+      where: { id },
+      data: {
+        comment,
+        Approver: {
+          connect: {
+            id: managerId,
+          },
+        },
+      },
+    }),
+    prisma.formSubmission.update({
+      where: { id: formSubmissionId },
+      data: { status: isApproved ? FormStatus.APPROVED : FormStatus.DENIED },
+    }),
+  ]);
+  return { approval, updatedSubmission };
 };
 /**
  * Fetch employee requests for a manager, with filter, skip, take
  */
-export const ServiceGetEmployeeRequests = async ({ filter, skip, take, managerId, }) => {
-    // 'all' = all pending requests for employees in manager's team (not self),
-    // 'approved' = all approved/denied (not pending/draft) for employees in manager's team (not self),
-    // else: pending requests for a specific userId (employee), in manager's team (not self)
-    if (filter === "all") {
-        return await prisma.formSubmission.findMany({
-            where: {
-                status: "PENDING",
-                User: {
-                    NOT: { id: managerId },
-                    Crews: { some: { leadId: managerId } },
-                },
-                Approvals: { none: {} },
-            },
-            include: {
-                FormTemplate: { select: { formType: true } },
-                User: { select: { id: true, firstName: true, lastName: true } },
-                Approvals: { select: { signedBy: true } },
-            },
-            skip,
-            take,
-            orderBy: { createdAt: "desc" },
-        });
-    }
-    else if (filter === "approved") {
-        return await prisma.formSubmission.findMany({
-            where: {
-                status: { not: { in: ["PENDING", "DRAFT"] } },
-                User: {
-                    NOT: { id: managerId },
-                    Crews: { some: { leadId: managerId } },
-                },
-            },
-            include: {
-                FormTemplate: { select: { formType: true } },
-                User: { select: { firstName: true, lastName: true } },
-                Approvals: {
-                    select: {
-                        id: true,
-                        Approver: { select: { firstName: true, lastName: true } },
-                    },
-                },
-            },
-            skip,
-            take,
-            orderBy: { createdAt: "desc" },
-        });
-    }
-    else {
-        // filter is a userId
-        return await prisma.formSubmission.findMany({
-            where: {
-                status: "PENDING",
-                userId: filter,
-                User: {
-                    NOT: { id: managerId },
-                    Crews: { some: { leadId: managerId } },
-                },
-                Approvals: { none: {} },
-            },
-            include: {
-                FormTemplate: { select: { formType: true } },
-                User: { select: { firstName: true, lastName: true } },
-                Approvals: { select: { signedBy: true } },
-            },
-            skip,
-            take,
-            orderBy: { createdAt: "desc" },
-        });
-    }
-};
-export const ServiceGetUserSubmissions = async ({ userId, filter, startDate, endDate, skip, take, }) => {
-    // Build where clause
-    let whereClause = { userId };
-    if (filter === "pending") {
-        whereClause = { ...whereClause, status: FormStatus.PENDING };
-    }
-    else if (filter === "approved") {
-        whereClause = { ...whereClause, status: FormStatus.APPROVED };
-    }
-    else if (filter === "denied") {
-        whereClause = { ...whereClause, status: FormStatus.DENIED };
-    }
-    else if (filter === "draft") {
-        whereClause = { ...whereClause, status: FormStatus.DRAFT };
-    }
-    else if (filter === "all") {
-        if (startDate && endDate) {
-            whereClause = {
-                ...whereClause,
-                createdAt: { gte: startDate, lte: endDate },
-            };
-        }
-    }
-    const forms = await prisma.formSubmission.findMany({
-        where: whereClause,
-        include: {
-            FormTemplate: { select: { name: true, formType: true } },
-            User: { select: { id: true, firstName: true, lastName: true } },
+export const ServiceGetEmployeeRequests = async ({
+  filter,
+  skip,
+  take,
+  managerId,
+}) => {
+  // 'all' = all pending requests for employees in manager's team (not self),
+  // 'approved' = all approved/denied (not pending/draft) for employees in manager's team (not self),
+  // else: pending requests for a specific userId (employee), in manager's team (not self)
+  if (filter === "all") {
+    return await prisma.formSubmission.findMany({
+      where: {
+        status: "PENDING",
+        User: {
+          NOT: { id: managerId },
+          Crews: { some: { leadId: managerId } },
         },
-        skip,
-        take,
-        orderBy: { createdAt: "desc" },
+        Approvals: { none: {} },
+      },
+      include: {
+        FormTemplate: { select: { formType: true } },
+        User: { select: { id: true, firstName: true, lastName: true } },
+        Approvals: { select: { signedBy: true } },
+      },
+      skip,
+      take,
+      orderBy: { createdAt: "desc" },
     });
-    // Sort: drafts first, then by createdAt desc
-    forms.sort((a, b) => {
-        if (a.status === FormStatus.DRAFT && b.status !== FormStatus.DRAFT)
-            return -1;
-        if (a.status !== FormStatus.DRAFT && b.status === FormStatus.DRAFT)
-            return 1;
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  } else if (filter === "approved") {
+    return await prisma.formSubmission.findMany({
+      where: {
+        status: { not: { in: ["PENDING", "DRAFT"] } },
+        User: {
+          NOT: { id: managerId },
+          Crews: { some: { leadId: managerId } },
+        },
+      },
+      include: {
+        FormTemplate: { select: { formType: true } },
+        User: { select: { firstName: true, lastName: true } },
+        Approvals: {
+          select: {
+            id: true,
+            Approver: { select: { firstName: true, lastName: true } },
+          },
+        },
+      },
+      skip,
+      take,
+      orderBy: { createdAt: "desc" },
     });
-    return forms;
+  } else {
+    // filter is a userId
+    return await prisma.formSubmission.findMany({
+      where: {
+        status: "PENDING",
+        userId: filter,
+        User: {
+          NOT: { id: managerId },
+          Crews: { some: { leadId: managerId } },
+        },
+        Approvals: { none: {} },
+      },
+      include: {
+        FormTemplate: { select: { formType: true } },
+        User: { select: { firstName: true, lastName: true } },
+        Approvals: { select: { signedBy: true } },
+      },
+      skip,
+      take,
+      orderBy: { createdAt: "desc" },
+    });
+  }
+};
+export const ServiceGetUserSubmissions = async ({
+  userId,
+  filter,
+  startDate,
+  endDate,
+  skip,
+  take,
+}) => {
+  // Build where clause
+  let whereClause = { userId };
+  if (filter === "pending") {
+    whereClause = { ...whereClause, status: FormStatus.PENDING };
+  } else if (filter === "approved") {
+    whereClause = { ...whereClause, status: FormStatus.APPROVED };
+  } else if (filter === "denied") {
+    whereClause = { ...whereClause, status: FormStatus.DENIED };
+  } else if (filter === "draft") {
+    whereClause = { ...whereClause, status: FormStatus.DRAFT };
+  } else if (filter === "all") {
+    if (startDate && endDate) {
+      whereClause = {
+        ...whereClause,
+        createdAt: { gte: startDate, lte: endDate },
+      };
+    }
+  }
+  const forms = await prisma.formSubmission.findMany({
+    where: whereClause,
+    include: {
+      FormTemplate: { select: { name: true, formType: true } },
+      User: { select: { id: true, firstName: true, lastName: true } },
+    },
+    skip,
+    take,
+    orderBy: { createdAt: "desc" },
+  });
+  // Sort: drafts first, then by createdAt desc
+  forms.sort((a, b) => {
+    if (a.status === FormStatus.DRAFT && b.status !== FormStatus.DRAFT)
+      return -1;
+    if (a.status !== FormStatus.DRAFT && b.status === FormStatus.DRAFT)
+      return 1;
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });
+  return forms;
 };
 export const ServiceManagerFormApprovals = async (id) => {
-    const forms = await prisma.formSubmission.findFirst({
-        where: {
-            id: Number(id),
-        },
+  const forms = await prisma.formSubmission.findFirst({
+    where: {
+      id: Number(id),
+    },
+    include: {
+      Approvals: {
         include: {
-            Approvals: {
-                include: {
-                    Approver: {
-                        select: {
-                            firstName: true,
-                            lastName: true,
-                        },
-                    },
-                },
+          Approver: {
+            select: {
+              firstName: true,
+              lastName: true,
             },
+          },
         },
-    });
-    return forms;
+      },
+    },
+  });
+  return forms;
 };
 export const ServiceFormSubmissions = async (id) => {
-    const forms = await prisma.formSubmission.findUnique({
-        where: {
-            id: Number(id),
+  const forms = await prisma.formSubmission.findUnique({
+    where: {
+      id: Number(id),
+    },
+    include: {
+      FormTemplate: {
+        select: {
+          id: true,
+          name: true,
         },
-        include: {
-            FormTemplate: {
-                select: {
-                    id: true,
-                    name: true,
-                },
-            },
-            User: {
-                select: {
-                    signature: true,
-                },
-            },
-            Approvals: {
-                select: {
-                    id: true,
-                    comment: true,
-                    updatedAt: true,
-                    Approver: {
-                        select: {
-                            firstName: true,
-                            lastName: true,
-                        },
-                    },
-                },
-            },
+      },
+      User: {
+        select: {
+          signature: true,
         },
-    });
-    return forms;
+      },
+      Approvals: {
+        select: {
+          id: true,
+          comment: true,
+          updatedAt: true,
+          Approver: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  return forms;
 };
 export const ServiceTeamSubmissions = async (id) => {
-    const formSubmission = await prisma.formSubmission.findUnique({
-        where: {
-            id: Number(id),
+  const formSubmission = await prisma.formSubmission.findUnique({
+    where: {
+      id: Number(id),
+    },
+    include: {
+      User: {
+        select: {
+          firstName: true,
+          lastName: true,
         },
-        include: {
-            User: {
-                select: {
-                    firstName: true,
-                    lastName: true,
-                },
+      },
+      Approvals: {
+        select: {
+          comment: true,
+          Approver: {
+            select: {
+              firstName: true,
+              lastName: true,
             },
-            Approvals: {
-                select: {
-                    comment: true,
-                    Approver: {
-                        select: {
-                            firstName: true,
-                            lastName: true,
-                        },
-                    },
-                },
-            },
+          },
         },
-    });
-    return formSubmission;
+      },
+    },
+  });
+  return formSubmission;
 };
 export const ServiceFormDraft = async (id, userId) => {
-    const forms = await prisma.formSubmission.findUnique({
-        where: {
-            id: Number(id),
-            userId,
-            status: FormStatus.DRAFT,
-        },
+  const forms = await prisma.formSubmission.findUnique({
+    where: {
+      id: Number(id),
+      userId,
+      status: FormStatus.DRAFT,
+    },
+    select: {
+      data: true,
+      title: true,
+      FormTemplate: {
         select: {
-            data: true,
-            title: true,
-            FormTemplate: {
-                select: {
-                    name: true,
-                },
-            },
+          name: true,
         },
-    });
-    return forms;
+      },
+    },
+  });
+  return forms;
 };
 export const ServiceForm = async (id, userId) => {
-    const formTemplate = await prisma.formTemplate.findUnique({
-        where: {
-            id,
-        },
+  const formTemplate = await prisma.formTemplate.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      FormGrouping: {
         include: {
-            FormGrouping: {
-                include: {
-                    Fields: {
-                        include: {
-                            Options: true, // Include dropdown options if any
-                        },
-                        orderBy: {
-                            order: "asc",
-                        },
-                    },
-                },
-                orderBy: {
-                    order: "asc",
-                },
+          Fields: {
+            include: {
+              Options: true, // Include dropdown options if any
             },
+            orderBy: {
+              order: "asc",
+            },
+          },
         },
-    });
-    if (!formTemplate)
-        throw new Error("Form template not found");
-    const formattedForm = {
-        id: formTemplate.id,
-        name: formTemplate.name,
-        formType: formTemplate.formType,
-        isActive: formTemplate.isActive,
-        isSignatureRequired: formTemplate.isSignatureRequired,
-        groupings: formTemplate.FormGrouping.map((group) => ({
-            id: group.id,
-            title: group.title || "",
-            order: group.order,
-            fields: group.Fields.map((field) => ({
-                id: field.id,
-                label: field.label,
-                name: field.id, // Use field.id as the name since FormField doesn't have a name property
-                type: field.type,
-                required: field.required,
-                order: field.order,
-                defaultValue: undefined, // FormField doesn't have defaultValue
-                placeholder: field.placeholder,
-                helperText: field.content, // Use content as helperText
-                filter: field.filter, // Include the filter property for SEARCH_ASSET fields
-                multiple: field.multiple, // Include multiple property for multi-select fields
-                options: field.Options.map((option) => option.value), // Extract dropdown options
-            })),
-        })),
-    };
-    return formattedForm;
+        orderBy: {
+          order: "asc",
+        },
+      },
+    },
+  });
+  if (!formTemplate) throw new Error("Form template not found");
+  const formattedForm = {
+    id: formTemplate.id,
+    name: formTemplate.name,
+    formType: formTemplate.formType,
+    isActive: formTemplate.isActive,
+    isSignatureRequired: formTemplate.isSignatureRequired,
+    groupings: formTemplate.FormGrouping.map((group) => ({
+      id: group.id,
+      title: group.title || "",
+      order: group.order,
+      fields: group.Fields.map((field) => ({
+        id: field.id,
+        label: field.label,
+        name: field.id, // Use field.id as the name since FormField doesn't have a name property
+        type: field.type,
+        required: field.required,
+        order: field.order,
+        defaultValue: undefined, // FormField doesn't have defaultValue
+        placeholder: field.placeholder,
+        helperText: field.content, // Use content as helperText
+        filter: field.filter, // Include the filter property for SEARCH_ASSET fields
+        multiple: field.multiple, // Include multiple property for multi-select fields
+        options: field.Options.map((option) => option.value), // Extract dropdown options
+      })),
+    })),
+  };
+  return formattedForm;
 };
 /**
  * Update a form submission (partial update)
@@ -583,44 +616,38 @@ export const ServiceForm = async (id, userId) => {
  * Returns the updated submission.
  */
 export const updateFormSubmissionService = async (body) => {
-    const { submissionId, formData, isApprovalRequired, title, formType, submittedAt, } = body;
-    // Fetch the existing submission
-    const existing = await prisma.formSubmission.findUnique({
-        where: { id: submissionId },
-    });
-    if (!existing) {
-        throw new Error("Form submission not found");
-    }
-    // Build update data object
-    const updateData = {
-        updatedAt: new Date(),
-    };
-    if (formData)
-        updateData.data = formData;
-    if (typeof title === "string")
-        updateData.title = title;
-    if (typeof formType === "string")
-        updateData.formType = formType;
-    if (typeof isApprovalRequired === "boolean") {
-        // Update status based on isApprovalRequired, if it expect an approval set to PENDING, else APPROVED
-        updateData.status = isApprovalRequired
-            ? FormStatus.PENDING
-            : FormStatus.APPROVED;
-    }
-    if (typeof submittedAt === "string") {
-        updateData.submittedAt = submittedAt; // Converts ISO string to Date
-    }
-    // Update the submission
-    const updated = await prisma.formSubmission.update({
-        where: { id: submissionId },
-        data: updateData,
-        include: {
-            FormTemplate: true,
-            User: true,
-            Approvals: true,
-        },
-    });
-    return updated;
+  const { submissionId, formData, isApprovalRequired, title, formType } = body;
+  // Fetch the existing submission
+  const existing = await prisma.formSubmission.findUnique({
+    where: { id: submissionId },
+  });
+  if (!existing) {
+    throw new Error("Form submission not found");
+  }
+  // Build update data object
+  const updateData = {
+    updatedAt: new Date(),
+  };
+  if (formData) updateData.data = formData;
+  if (typeof title === "string") updateData.title = title;
+  if (typeof formType === "string") updateData.formType = formType;
+  if (typeof isApprovalRequired === "boolean") {
+    // Update status based on isApprovalRequired, if it expect an approval set to PENDING, else APPROVED
+    updateData.status = isApprovalRequired
+      ? FormStatus.PENDING
+      : FormStatus.APPROVED;
+  }
+  // Update the submission
+  const updated = await prisma.formSubmission.update({
+    where: { id: submissionId },
+    data: updateData,
+    include: {
+      FormTemplate: true,
+      User: true,
+      Approvals: true,
+    },
+  });
+  return updated;
 };
 //# sourceMappingURL=formsService.js.map
-//# debugId=0b77d3b6-ba3e-52d5-a07f-9800dd7896a7
+//# debugId=150754be-6d4b-571e-bd34-62fb9d8ccadc

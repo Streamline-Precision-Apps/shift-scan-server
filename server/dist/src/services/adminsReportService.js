@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="d4d6e328-b9f0-5958-8e1b-0b1e8f5149d2")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="8a032b26-17ea-54b1-9730-a4fd3594b780")}catch(e){}}();
 import prisma from "../lib/prisma.js";
 export async function getTruckingReport() {
     const overWeightReport = await prisma.truckingLog.findMany({
@@ -112,25 +112,64 @@ export async function getTruckingReport() {
     }));
     return formattedReport;
 }
-export async function getTascoReport() {
+export async function getTascoReport(filters) {
+    // Build where clause based on filters
+    const whereClause = {};
+    if (filters?.employeeIds && filters.employeeIds.length > 0) {
+        whereClause.userId = { in: filters.employeeIds };
+    }
+    if (filters?.jobsiteIds && filters.jobsiteIds.length > 0) {
+        whereClause.jobsiteId = { in: filters.jobsiteIds };
+    }
+    const tascoLogsWhere = {};
+    if (filters?.shiftTypes && filters.shiftTypes.length > 0) {
+        tascoLogsWhere.shiftType = { in: filters.shiftTypes };
+    }
+    if (filters?.laborTypes && filters.laborTypes.length > 0) {
+        tascoLogsWhere.laborType = { in: filters.laborTypes };
+    }
+    if (filters?.equipmentIds && filters.equipmentIds.length > 0) {
+        tascoLogsWhere.equipmentId = { in: filters.equipmentIds };
+    }
+    if (filters?.materialTypes && filters.materialTypes.length > 0) {
+        tascoLogsWhere.materialType = { in: filters.materialTypes };
+    }
     const report = await prisma.timeSheet.findMany({
+        where: {
+            ...whereClause,
+            TascoLogs: {
+                some: tascoLogsWhere,
+            },
+        },
         select: {
             date: true,
             startTime: true,
             endTime: true,
+            userId: true,
+            jobsiteId: true,
             User: {
                 select: {
+                    id: true,
                     firstName: true,
                     lastName: true,
                 },
             },
+            Jobsite: {
+                select: {
+                    id: true,
+                    name: true,
+                },
+            },
             TascoLogs: {
+                where: Object.keys(tascoLogsWhere).length > 0 ? tascoLogsWhere : undefined,
                 select: {
                     id: true,
                     shiftType: true,
                     laborType: true,
+                    equipmentId: true,
                     Equipment: {
                         select: {
+                            id: true,
                             name: true,
                         },
                     },
@@ -166,9 +205,13 @@ export async function getTascoReport() {
             shiftType: shiftType,
             submittedDate: log.date,
             employee: `${log.User.firstName} ${log.User.lastName}`,
+            employeeId: log.User.id,
             dateWorked: log.date,
             laborType: laborType,
             equipment: firstLog.Equipment?.name ?? "",
+            equipmentId: firstLog.equipmentId ?? "",
+            profitId: log.Jobsite?.name ?? "",
+            jobsiteId: log.jobsiteId ?? "",
             loadsABCDE: loadsABCDE,
             loadsF: loadsF,
             materials: firstLog.materialType ?? "",
@@ -216,5 +259,44 @@ export async function getMechanicReport() {
     })));
     return mechanicReport;
 }
+export async function getTascoFilterOptions() {
+    // Fetch employees who have TascoLogs
+    const employees = await prisma.user.findMany({
+        where: {
+            TimeSheets: {
+                some: {
+                    TascoLogs: {
+                        some: {},
+                    },
+                },
+            },
+        },
+        select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+        },
+    });
+    // Fetch distinct material types from TascoLogs
+    const materialTypesRaw = await prisma.tascoLog.findMany({
+        where: {
+            materialType: { not: null },
+        },
+        select: {
+            materialType: true,
+        },
+        distinct: ["materialType"],
+    });
+    const materialTypes = materialTypesRaw
+        .filter((item) => item.materialType !== null)
+        .map((item) => ({ name: item.materialType }));
+    return {
+        employees: employees.map((emp) => ({
+            id: emp.id,
+            name: `${emp.firstName} ${emp.lastName}`,
+        })),
+        materialTypes,
+    };
+}
 //# sourceMappingURL=adminsReportService.js.map
-//# debugId=d4d6e328-b9f0-5958-8e1b-0b1e8f5149d2
+//# debugId=8a032b26-17ea-54b1-9730-a4fd3594b780

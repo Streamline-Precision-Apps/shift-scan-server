@@ -119,9 +119,13 @@ type TascoReportRow = {
   shiftType: string;
   submittedDate: Date;
   employee: string;
+  employeeId: string;
   dateWorked: Date;
   laborType: string | null;
   equipment: string;
+  equipmentId: string;
+  profitId: string; // Jobsite name
+  jobsiteId: string;
   loadsABCDE: number | null;
   loadsF: number | null;
   materials: string;
@@ -130,25 +134,79 @@ type TascoReportRow = {
   LoadType: "SCREENED" | "UNSCREENED";
 };
 
-export async function getTascoReport(): Promise<TascoReportRow[]> {
+export async function getTascoReport(filters?: {
+  jobsiteIds?: string[];
+  shiftTypes?: string[];
+  employeeIds?: string[];
+  laborTypes?: string[];
+  equipmentIds?: string[];
+  materialTypes?: string[];
+}): Promise<TascoReportRow[]> {
+  // Build where clause based on filters
+  const whereClause: any = {};
+
+  if (filters?.employeeIds && filters.employeeIds.length > 0) {
+    whereClause.userId = { in: filters.employeeIds };
+  }
+
+  if (filters?.jobsiteIds && filters.jobsiteIds.length > 0) {
+    whereClause.jobsiteId = { in: filters.jobsiteIds };
+  }
+
+  const tascoLogsWhere: any = {};
+
+  if (filters?.shiftTypes && filters.shiftTypes.length > 0) {
+    tascoLogsWhere.shiftType = { in: filters.shiftTypes };
+  }
+
+  if (filters?.laborTypes && filters.laborTypes.length > 0) {
+    tascoLogsWhere.laborType = { in: filters.laborTypes };
+  }
+
+  if (filters?.equipmentIds && filters.equipmentIds.length > 0) {
+    tascoLogsWhere.equipmentId = { in: filters.equipmentIds };
+  }
+
+  if (filters?.materialTypes && filters.materialTypes.length > 0) {
+    tascoLogsWhere.materialType = { in: filters.materialTypes };
+  }
+
   const report = await prisma.timeSheet.findMany({
+    where: {
+      ...whereClause,
+      TascoLogs: {
+        some: tascoLogsWhere,
+      },
+    },
     select: {
       date: true,
       startTime: true,
       endTime: true,
+      userId: true,
+      jobsiteId: true,
       User: {
         select: {
+          id: true,
           firstName: true,
           lastName: true,
         },
       },
+      Jobsite: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
       TascoLogs: {
+        where: Object.keys(tascoLogsWhere).length > 0 ? tascoLogsWhere : undefined,
         select: {
           id: true,
           shiftType: true,
           laborType: true,
+          equipmentId: true,
           Equipment: {
             select: {
+              id: true,
               name: true,
             },
           },
@@ -189,9 +247,13 @@ export async function getTascoReport(): Promise<TascoReportRow[]> {
         shiftType: shiftType,
         submittedDate: log.date,
         employee: `${log.User.firstName} ${log.User.lastName}`,
+        employeeId: log.User.id,
         dateWorked: log.date,
         laborType: laborType,
         equipment: firstLog.Equipment?.name ?? "",
+        equipmentId: firstLog.equipmentId ?? "",
+        profitId: log.Jobsite?.name ?? "",
+        jobsiteId: log.jobsiteId ?? "",
         loadsABCDE: loadsABCDE,
         loadsF: loadsF,
         materials: firstLog.materialType ?? "",
@@ -247,4 +309,47 @@ export async function getMechanicReport() {
   );
 
   return mechanicReport;
+}
+
+export async function getTascoFilterOptions() {
+  // Fetch employees who have TascoLogs
+  const employees = await prisma.user.findMany({
+    where: {
+      TimeSheets: {
+        some: {
+          TascoLogs: {
+            some: {},
+          },
+        },
+      },
+    },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+    },
+  });
+
+  // Fetch distinct material types from TascoLogs
+  const materialTypesRaw = await prisma.tascoLog.findMany({
+    where: {
+      materialType: { not: null },
+    },
+    select: {
+      materialType: true,
+    },
+    distinct: ["materialType"],
+  });
+
+  const materialTypes = materialTypesRaw
+    .filter((item) => item.materialType !== null)
+    .map((item) => ({ name: item.materialType as string }));
+
+  return {
+    employees: employees.map((emp) => ({
+      id: emp.id,
+      name: `${emp.firstName} ${emp.lastName}`,
+    })),
+    materialTypes,
+  };
 }

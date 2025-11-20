@@ -8,6 +8,8 @@ const config: CapacitorConfig = {
 
   server: {
     url: process.env.NEXT_PUBLIC_CAPACITOR_APP_URL,
+server: {
+    url: process.env.NEXT_PUBLIC_CAPACITOR_APP_URL,
     cleartext: true,
   },
   android: {

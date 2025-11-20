@@ -20,37 +20,7 @@ import {
 } from "@/app/v1/components/ui/alert-dialog";
 import { deleteFormSubmission, saveDraft } from "@/app/lib/actions/formActions";
 import { apiRequest } from "@/app/lib/utils/api-Utils";
-
-interface FormField {
-  id: string;
-  label: string;
-  name: string;
-  type: string;
-  required: boolean;
-  order: number;
-  defaultValue?: string;
-  placeholder?: string;
-  maxLength?: number;
-  helperText?: string;
-  options?: string[];
-}
-
-interface FormGrouping {
-  id: string;
-  title: string;
-  order: number;
-  fields: FormField[];
-}
-
-interface FormTemplate {
-  id: string;
-  name: string;
-  formType: string;
-  isActive: boolean;
-  isApprovalRequired: boolean;
-  isSignatureRequired: boolean;
-  groupings: FormGrouping[];
-}
+import type { FormTemplate, FormFieldValue } from "@/app/lib/types/forms";
 
 export default function FormDraft({
   formData,
@@ -64,14 +34,14 @@ export default function FormDraft({
 }: {
   formData: FormTemplate;
   handleSubmit: (e: FormEvent<HTMLFormElement>) => Promise<void>;
-  formValues: Record<string, string | boolean>;
+  formValues: Record<string, FormFieldValue>;
   formTitle: string;
   setFormTitle: (title: string) => void;
-  updateFormValues: (values: Record<string, string | boolean>) => void;
+  updateFormValues: (values: Record<string, FormFieldValue>) => void;
   userId: string;
   submissionId: number;
 }) {
-  type FormValues = Record<string, string | boolean>;
+  type FormValues = Record<string, FormFieldValue>;
   const t = useTranslations("Hamburger-Inbox");
   const [signature, setSignature] = useState<string | null>(null);
   const [showSignature, setShowSignature] = useState(false);
@@ -150,7 +120,7 @@ export default function FormDraft({
 
   //validation map function to required all fields that are required within form template
   const validateForm = (
-    formValues: Record<string, string | boolean>,
+    formValues: Record<string, FormFieldValue>,
     formData: FormTemplate
   ): boolean => {
     // Check signature requirement separately
@@ -158,8 +128,8 @@ export default function FormDraft({
       return false;
     }
 
-    for (const group of formData.groupings) {
-      for (const field of group.fields) {
+    for (const group of formData.FormGrouping) {
+      for (const field of group.Fields) {
         if (field.required) {
           // Check both field ID and field label as keys
           const fieldValue = formValues[field.id] || formValues[field.label];

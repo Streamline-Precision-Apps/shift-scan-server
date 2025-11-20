@@ -41,9 +41,13 @@ type TascoReportRow = {
     shiftType: string;
     submittedDate: Date;
     employee: string;
+    employeeId: string;
     dateWorked: Date;
     laborType: string | null;
     equipment: string;
+    equipmentId: string;
+    profitId: string;
+    jobsiteId: string;
     loadsABCDE: number | null;
     loadsF: number | null;
     materials: string;
@@ -51,7 +55,14 @@ type TascoReportRow = {
     endTime: Date | null;
     LoadType: "SCREENED" | "UNSCREENED";
 };
-export declare function getTascoReport(): Promise<TascoReportRow[]>;
+export declare function getTascoReport(filters?: {
+    jobsiteIds?: string[];
+    shiftTypes?: string[];
+    employeeIds?: string[];
+    laborTypes?: string[];
+    equipmentIds?: string[];
+    materialTypes?: string[];
+}): Promise<TascoReportRow[]>;
 export declare function getMechanicReport(): Promise<{
     id: number;
     employeeName: string;
@@ -60,5 +71,14 @@ export declare function getMechanicReport(): Promise<{
     comments: string;
     dateWorked: Date;
 }[]>;
+export declare function getTascoFilterOptions(): Promise<{
+    employees: {
+        id: string;
+        name: string;
+    }[];
+    materialTypes: {
+        name: string;
+    }[];
+}>;
 export {};
 //# sourceMappingURL=adminsReportService.d.ts.map

@@ -17,15 +17,11 @@ export type Jobsite = {
   createdById: string;
   updatedAt: Date;
   createdVia: "ADMIN" | "API";
-  Address: {
+  Address?: {
     street: string;
     city: string;
     state: string;
     zipCode: string;
-  };
-  Client: {
-    id: string;
-    name: string;
   };
   CCTags: Array<{
     id: string;

@@ -33,7 +33,20 @@ export const getCrewEmployeesController = async (
 
 export const getAllCrewsController = async (req: Request, res: Response) => {
   try {
-    const result = await getAllCrews();
+    // Extract query parameters
+    const page = req.query.page ? parseInt(req.query.page as string, 10) : 1;
+    const pageSize = req.query.pageSize
+      ? parseInt(req.query.pageSize as string, 10)
+      : 25;
+    const status = typeof req.query.status === "string" ? req.query.status : "all";
+    const search = typeof req.query.search === "string" ? req.query.search : "";
+
+    const result = await getAllCrews({
+      page,
+      pageSize,
+      status,
+      search,
+    });
     res.json(result);
   } catch (error) {
     res.status(500).json({
@@ -195,7 +208,30 @@ export const getPersonnelManagerController = async (
   res: Response
 ) => {
   try {
-    const result = await getPersonnelManager();
+    // Extract query parameters
+    const page = req.query.page ? parseInt(req.query.page as string, 10) : 1;
+    const pageSize = req.query.pageSize
+      ? parseInt(req.query.pageSize as string, 10)
+      : 25;
+    const status = typeof req.query.status === "string" ? req.query.status : "all";
+    const search = typeof req.query.search === "string" ? req.query.search : "";
+    
+    // Filter parameters
+    const roles = typeof req.query.roles === "string" ? req.query.roles : "";
+    const accessLevel = typeof req.query.accessLevel === "string" ? req.query.accessLevel : "";
+    const accountSetup = typeof req.query.accountSetup === "string" ? req.query.accountSetup : "";
+    const crews = typeof req.query.crews === "string" ? req.query.crews : "";
+
+    const result = await getPersonnelManager({
+      page,
+      pageSize,
+      status,
+      search,
+      roles,
+      accessLevel,
+      accountSetup,
+      crews,
+    });
     res.json(result);
   } catch (error) {
     res.status(500).json({

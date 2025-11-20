@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
+import type { AuthenticatedRequest } from "../middleware/authMiddleware.js";
 import {
   createEquipmentService,
   editEquipmentService,
@@ -68,11 +69,18 @@ export async function createEquipment(req: Request, res: Response) {
 }
 
 // PUT /api/v1/admins/equipment/:id - Update equipment by ID
-export async function updateEquipment(req: Request, res: Response) {
+export async function updateEquipment(
+  req: AuthenticatedRequest,
+  res: Response
+) {
   try {
     const id = req.params.id as string;
-    // TODO: Get userId from auth/session or request
-    const userId = req.body.userId || "";
+    const userId = req.user?.id || "";
+    
+    if (!userId) {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
+    
     const equipment = await editEquipmentService(id, req.body, userId);
     res.json(equipment);
   } catch (error) {

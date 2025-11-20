@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="5940d097-5a6d-5cef-a1bf-0e8098fe7b26")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="c5d4a435-8d93-565b-a086-0df082754dd5")}catch(e){}}();
 import express from "express";
 import { loginUser, signOutUser } from "../controllers/authController.js";
 import { sign } from "crypto";
@@ -33,4 +33,4 @@ router.post("/login", loginUser);
 router.post("/signout", signOutUser);
 export default router;
 //# sourceMappingURL=authRoutes.js.map
-//# debugId=5940d097-5a6d-5cef-a1bf-0e8098fe7b26
+//# debugId=c5d4a435-8d93-565b-a086-0df082754dd5

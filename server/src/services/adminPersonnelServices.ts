@@ -21,21 +21,93 @@ export async function getCrewEmployees() {
   });
 }
 
-export async function getAllCrews() {
-  return await prisma.crew.findMany({
-    orderBy: {
-      name: "asc",
-    },
-    include: {
-      Users: {
-        select: {
-          id: true,
-          firstName: true,
-          lastName: true,
+export async function getAllCrews({
+  page = 1,
+  pageSize = 25,
+  status = "all",
+  search = "",
+} = {}) {
+  let crews, total, skip, totalPages;
+
+  if (status === "inactive") {
+    // No pagination for inactive crews
+    skip = undefined;
+    totalPages = 1;
+
+    const whereCondition: any = {
+      // Add your inactive condition here if you have one
+      // For now, we'll just search all crews
+    };
+
+    if (search) {
+      whereCondition.name = { contains: search, mode: "insensitive" };
+    }
+
+    crews = await prisma.crew.findMany({
+      where: whereCondition,
+      orderBy: {
+        name: "asc",
+      },
+      include: {
+        Users: {
+          select: {
+            id: true,
+            firstName: true,
+            middleName: true,
+            lastName: true,
+            secondLastName: true,
+            image: true,
+          },
         },
       },
-    },
-  });
+    });
+
+    total = crews.length;
+  } else {
+    // Standard pagination
+    skip = (page - 1) * pageSize;
+
+    const whereCondition: any = {};
+
+    if (search) {
+      whereCondition.name = { contains: search, mode: "insensitive" };
+    }
+
+    total = await prisma.crew.count({
+      where: whereCondition,
+    });
+
+    totalPages = Math.ceil(total / pageSize);
+
+    crews = await prisma.crew.findMany({
+      where: whereCondition,
+      skip,
+      take: pageSize,
+      orderBy: {
+        name: "asc",
+      },
+      include: {
+        Users: {
+          select: {
+            id: true,
+            firstName: true,
+            middleName: true,
+            lastName: true,
+            secondLastName: true,
+            image: true,
+          },
+        },
+      },
+    });
+  }
+
+  return {
+    crews,
+    total,
+    page,
+    pageSize,
+    totalPages,
+  };
 }
 
 export async function getEmployeeInfo(id: string) {
@@ -505,7 +577,12 @@ export async function createUserAdmin(payload: {
 
     return result;
   } catch (error) {
-    console.log(error);
+    console.error("Error creating user:", error);
+    throw new Error(
+      `Failed to create user: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`
+    );
   }
 }
 

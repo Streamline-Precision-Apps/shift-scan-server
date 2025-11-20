@@ -1,7 +1,10 @@
-"use server";
+"use client";
 import { apiRequest } from "@/app/lib/utils/api-Utils";
 
 /**
+ * Client-side notification actions that call backend REST API endpoints
+ * These are NOT server actions - they make direct HTTP requests to the backend
+ * 
  * Save FCM token via API endpoint (POST /api/v1/tokens/fcm)
  * - Deletes any existing tokens for the user
  * - Creates a new FCM token record
@@ -144,5 +147,34 @@ export async function markBrokenEquipmentNotificationsAsRead({
       error
     );
     throw new Error("Failed to mark broken equipment notifications as read");
+  }
+}
+
+export async function resolveTimecardNotification({
+  timesheetId,
+  notificationId,
+}: {
+  timesheetId: string;
+  notificationId: number;
+}) {
+  try {
+    const response = await apiRequest(
+      "/api/v1/admins/timesheet/resolve-notification",
+      "POST",
+      {
+        timesheetId,
+        notificationId,
+      }
+    );
+    if (response && response.success) {
+      return response;
+    } else {
+      throw new Error(
+        response?.error || "Failed to resolve timecard notification"
+      );
+    }
+  } catch (error) {
+    console.error("Error resolving timecard notification:", error);
+    throw new Error("Failed to resolve timecard notification");
   }
 }

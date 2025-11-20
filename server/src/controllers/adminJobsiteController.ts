@@ -94,6 +94,12 @@ export interface JobsiteUpdateBody {
   status?: string;
   creationReason?: string;
   CCTags?: Array<{ id: string }>;
+  Address?: {
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+  };
   updatedAt?: Date;
   userId: string;
 }

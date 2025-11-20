@@ -23,7 +23,7 @@ export interface FormIndividualTemplate {
   formType: string;
   createdAt: string;
   updatedAt: string;
-  isActive: string;
+  isActive: "ACTIVE" | "DRAFT" | "ARCHIVED";
   description: string | null;
   isSignatureRequired: boolean;
   isApprovalRequired: boolean;
@@ -49,10 +49,10 @@ export interface Fields {
   type: string;
   required: boolean;
   order: number;
-  placeholder?: string | null;
-  minLength?: number | null;
-  maxLength?: number | null;
-  multiple: boolean | null;
+  placeholder?: string;
+  minLength?: number | undefined;
+  maxLength?: number | undefined;
+  multiple?: boolean;
   content?: string | null;
   filter?: string | null;
   Options?: FieldOption[];

@@ -29,14 +29,25 @@ export async function getAllTimesheets(params: GetAllTimesheetsParams) {
     // Build where clause based on filters
     const where: Prisma.TimeSheetWhereInput = {};
 
-    // Status filter (pending vs all)
-    // Only add status filter if not "all" (which means show all statuses)
-    if (status && status !== "all") {
-      if (status === "pending") {
-        where.status = "PENDING";
+    // Status filter - combine both the showPendingOnly status param and the filters.status array
+    // Priority: filters.status (from filter dropdown) takes precedence over status param (showPendingOnly)
+    if (filters.status && filters.status.length > 0) {
+      // Use filter dropdown selections
+      const validStatuses = filters.status
+        .filter((s) => s.toLowerCase() !== "all")
+        .map((s) => s.toUpperCase());
+      if (validStatuses.length > 0) {
+        where.status = {
+          in: validStatuses as ApprovalStatus[],
+        };
+      }
+    } else if (status && status !== "all") {
+      // Fall back to showPendingOnly status param only if no filter status is selected
+      if (status.toLowerCase() === "pending") {
+        where.status = "PENDING" as ApprovalStatus;
       } else {
-        // For specific status values, cast to enum
-        where.status = status as ApprovalStatus;
+        // For specific status values, convert to uppercase and cast to enum
+        where.status = status.toUpperCase() as ApprovalStatus;
       }
     }
 
@@ -80,17 +91,6 @@ export async function getAllTimesheets(params: GetAllTimesheetsParams) {
       where.costcode = { in: filters.costCode };
     }
 
-    // Status filter (from filter options, not pending/all)
-    if (filters.status && filters.status.length > 0) {
-      // Filter out "all" from status array as it's not a valid enum value
-      const validStatuses = filters.status.filter((s) => s !== "all");
-      if (validStatuses.length > 0) {
-        where.status = {
-          in: validStatuses as ApprovalStatus[],
-        };
-      }
-    }
-
     // ID filter
     if (filters.id && filters.id.length > 0) {
       where.id = { in: filters.id.map((id) => parseInt(id, 10)) };
@@ -131,7 +131,20 @@ export async function getAllTimesheets(params: GetAllTimesheetsParams) {
         equipmentConditions.push({
           TruckingLogs: {
             some: {
-              Equipment: { id: { in: filters.equipmentId } },
+              OR: [
+                // Check hauled equipment
+                { Equipment: { id: { in: filters.equipmentId } } },
+                // Check truck
+                { Truck: { id: { in: filters.equipmentId } } },
+                // Check trailer
+                { Trailer: { id: { in: filters.equipmentId } } },
+                // Check equipment hauled records
+                {
+                  EquipmentHauled: {
+                    some: { equipmentId: { in: filters.equipmentId } },
+                  },
+                },
+              ],
             },
           },
         });
@@ -321,6 +334,12 @@ export async function getTimesheetById(id: string | undefined) {
         TruckingLogs: {
           include: {
             Equipment: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+            Truck: {
               select: {
                 id: true,
                 name: true,
@@ -523,6 +542,12 @@ export async function createTimesheet(payload: any) {
                 milesAtFueling: parseFloat(refuel.milesAtFueling) || null,
               })),
             },
+            TascoFLoads: {
+              create: (log.TascoFLoads || []).map((fLoad: any) => ({
+                weight: parseFloat(fLoad.weight) || null,
+                screenType: fLoad.screenType || null,
+              })),
+            },
           })),
         },
         // Create mechanic projects
@@ -612,7 +637,7 @@ export async function updateTimesheet(
       if (data.EmployeeEquipmentLogs.length > 0) {
         await prisma.employeeEquipmentLog.createMany({
           data: data.EmployeeEquipmentLogs.map((log: any) => ({
-            timeSheetId: id,
+            timeSheetId: parseInt(id as string, 10),
             equipmentId: log.equipmentId,
             startTime: new Date(log.startTime),
             endTime: new Date(log.endTime),
@@ -631,7 +656,7 @@ export async function updateTimesheet(
       if (data.Maintenance.length > 0) {
         await prisma.mechanicProjects.createMany({
           data: data.Maintenance.map((project: any) => ({
-            timeSheetId: id,
+            timeSheetId: parseInt(id as string, 10),
             equipmentId: project.equipmentId,
             hours: parseFloat(project.hours) || 0,
             description: project.description || "",
@@ -787,11 +812,14 @@ export async function updateTimesheet(
 export async function updateTimesheetStatus(
   id: string | undefined,
   status: string,
-  changes: Record<string, { old: unknown; new: unknown }>
+  changes: Record<string, { old: unknown; new: unknown }>,
+  userId: string
 ) {
   try {
+    const timesheetId = parseInt(id as string, 10);
+    
     await prisma.timeSheet.update({
-      where: { id: parseInt(id as string, 10) },
+      where: { id: timesheetId },
       data: {
         status: status as ApprovalStatus,
       },
@@ -801,12 +829,61 @@ export async function updateTimesheetStatus(
     if (Object.keys(changes).length > 0) {
       await prisma.timeSheetChangeLog.create({
         data: {
-          timeSheetId: parseInt(id as string, 10),
-          changedBy: "system", // or pass admin ID
+          timeSheetId: timesheetId,
+          changedBy: userId,
           changes: changes as any,
           changeReason: `Status changed to ${status}`,
         },
       });
+    }
+
+    // Handle notifications for timecard approval/denial
+    if (status === "APPROVED" || status === "REJECTED") {
+      const notifications = await prisma.notification.findMany({
+        where: {
+          topic: "timecard-submission",
+          referenceId: timesheetId.toString(),
+          Response: { is: null },
+        },
+      });
+
+      if (notifications.length > 0) {
+        // Filter out notifications that already have a notificationRead for this user
+        const existingReads = await prisma.notificationRead.findMany({
+          where: {
+            notificationId: { in: notifications.map((n) => n.id) },
+            userId: userId,
+          },
+          select: { notificationId: true },
+        });
+        const alreadyReadIds = new Set(
+          existingReads.map((r) => r.notificationId)
+        );
+        const unreadNotifications = notifications.filter(
+          (n) => !alreadyReadIds.has(n.id)
+        );
+
+        // Create notification responses and mark as read in a transaction
+        await prisma.$transaction(async (tx) => {
+          if (unreadNotifications.length > 0) {
+            await tx.notificationRead.createMany({
+              data: unreadNotifications.map((n) => ({
+                notificationId: n.id,
+                userId: userId,
+                readAt: new Date(),
+              })),
+            });
+          }
+          await tx.notificationResponse.createMany({
+            data: notifications.map((n) => ({
+              notificationId: n.id,
+              userId: userId,
+              response: status === "APPROVED" ? "Approved" : "Rejected",
+              respondedAt: new Date(),
+            })),
+          });
+        });
+      }
     }
   } catch (error) {
     console.error("Error updating timesheet status:", error);
@@ -951,6 +1028,100 @@ export async function getAllTascoMaterialTypes() {
     };
   } catch (error) {
     console.error("Error fetching Tasco material types:", error);
+    throw error;
+  }
+}
+
+/**
+ * Check timesheet status and resolve associated notification
+ * If timesheet is already approved/rejected, create notification response
+ */
+export async function resolveTimecardNotification(
+  timesheetId: string,
+  notificationId: number,
+  userId: string
+) {
+  try {
+    // Parse timesheetId to int for Prisma query
+    const tsId = parseInt(timesheetId, 10);
+    if (isNaN(tsId)) {
+      throw new Error("Invalid timesheet ID");
+    }
+
+    // Get the timesheet to check its current status
+    const timesheet = await prisma.timeSheet.findUnique({
+      where: { id: tsId },
+      select: { status: true },
+    });
+
+    if (!timesheet) {
+      throw new Error("Timesheet not found");
+    }
+
+    // Check if timesheet has been approved or rejected
+    if (timesheet.status === "APPROVED" || timesheet.status === "REJECTED") {
+      // Check if notification already has a response
+      const existingResponse = await prisma.notificationResponse.findUnique({
+        where: { notificationId },
+      });
+
+      if (existingResponse) {
+        return {
+          success: true,
+          alreadyResolved: true,
+          status: timesheet.status,
+        };
+      }
+
+      // Check if user has already read this notification
+      const existingRead = await prisma.notificationRead.findUnique({
+        where: {
+          notificationId_userId: {
+            notificationId,
+            userId,
+          },
+        },
+      });
+
+      // Create notification response and read in transaction
+      await prisma.$transaction(async (tx) => {
+        // Create response with the actual status
+        await tx.notificationResponse.create({
+          data: {
+            notificationId,
+            userId,
+            response: timesheet.status === "APPROVED" ? "Approved" : "Rejected",
+            respondedAt: new Date(),
+          },
+        });
+
+        // Create read record if it doesn't exist
+        if (!existingRead) {
+          await tx.notificationRead.create({
+            data: {
+              notificationId,
+              userId,
+              readAt: new Date(),
+            },
+          });
+        }
+      });
+
+      return {
+        success: true,
+        resolved: true,
+        status: timesheet.status,
+      };
+    }
+
+    // Timesheet is still pending
+    return {
+      success: true,
+      resolved: false,
+      status: timesheet.status,
+    };
+  } catch (error) {
+    console.error("Error resolving timecard notification:", error);
     throw error;
   }
 }

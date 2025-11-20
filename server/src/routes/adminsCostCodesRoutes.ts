@@ -15,11 +15,11 @@ const router = Router();
 // /api/v1/admins/cost-codes - get all cost codes
 router.get("/", getCostCodesController);
 
-// /api/v1/admins/cost-codes/:id - get all cost codes
-router.get("/:id", getCostCodeByIdController);
-
-// /api/v1/admins/cost-codes/summary - get cost code summary
+// /api/v1/admins/cost-codes/summary - get cost code summary (must come before /:id)
 router.get("/summary", getCostCodeSummaryController);
+
+// /api/v1/admins/cost-codes/:id - get cost code by id
+router.get("/:id", getCostCodeByIdController);
 
 // /api/v1/admins/cost-codes/ - create cost code
 router.post("/", createCostCodeController);

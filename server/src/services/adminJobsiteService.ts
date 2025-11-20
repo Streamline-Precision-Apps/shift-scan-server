@@ -123,6 +123,16 @@ export async function getJobsiteById(id: string) {
   return await prisma.jobsite.findUnique({
     where: { id },
     include: {
+      Address: {
+        select: {
+          id: true,
+          street: true,
+          city: true,
+          state: true,
+          zipCode: true,
+          country: true,
+        },
+      },
       CCTags: {
         select: {
           id: true,
@@ -165,6 +175,7 @@ export async function createJobsite(payload: {
         city: payload.Address.city.trim(),
         state: payload.Address.state.trim(),
         zipCode: payload.Address.zipCode.trim(),
+        country: "US",
       },
     });
 
@@ -211,6 +222,7 @@ export async function createJobsite(payload: {
               city: payload.Address.city.trim(),
               state: payload.Address.state.trim(),
               zipCode: payload.Address.zipCode.trim(),
+              country: "US",
             },
           },
           ...(payload.Client?.id && {
@@ -258,6 +270,37 @@ export async function updateJobsite(id: string, data: JobsiteUpdateBody) {
     updateData.CCTags = {
       set: data.CCTags.map((tag: { id: string }) => ({ id: tag.id })),
     };
+  }
+
+  // Handle address update
+  if (data.Address) {
+    const existingAddress = await prisma.address.findFirst({
+      where: {
+        street: data.Address.street.trim(),
+        city: data.Address.city.trim(),
+        state: data.Address.state.trim(),
+        zipCode: data.Address.zipCode.trim(),
+        country: "US",
+      },
+    });
+
+    if (existingAddress) {
+      // Connect to existing address
+      updateData.Address = {
+        connect: { id: existingAddress.id },
+      };
+    } else {
+      // Create new address
+      updateData.Address = {
+        create: {
+          street: data.Address.street.trim(),
+          city: data.Address.city.trim(),
+          state: data.Address.state.trim(),
+          zipCode: data.Address.zipCode.trim(),
+          country: "US",
+        },
+      };
+    }
   }
 
   const updatedJobsite = await prisma.jobsite.update({

@@ -8,37 +8,7 @@ import { format } from "date-fns";
 import { TitleBoxes } from "@/app/v1/components/(reusable)/titleBoxes";
 import { useTranslations } from "next-intl";
 import { FormFieldRenderer } from "../../../_components/FormFieldRenderer";
-
-interface FormField {
-  id: string;
-  label: string;
-  name: string;
-  type: string;
-  required: boolean;
-  order: number;
-  defaultValue?: string;
-  placeholder?: string;
-  maxLength?: number;
-  helperText?: string;
-  options?: string[];
-}
-
-interface FormGrouping {
-  id: string;
-  title: string;
-  order: number;
-  fields: FormField[];
-}
-
-interface FormTemplate {
-  id: string;
-  name: string;
-  formType: string;
-  isActive: boolean;
-  isSignatureRequired: boolean;
-  isApprovalRequired: boolean;
-  groupings: FormGrouping[];
-}
+import type { FormTemplate, FormFieldValue } from "@/app/lib/types/forms";
 
 type ManagerFormApprovalSchema = {
   id: number;

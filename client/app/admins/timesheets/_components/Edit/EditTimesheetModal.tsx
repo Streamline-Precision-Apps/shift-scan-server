@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Button } from "@/app/v1/components/ui/button";
 import { Badge } from "@/app/v1/components/ui/badge";
 import { EditMechanicProjects } from "./EditMechanicProjects";
@@ -21,12 +21,10 @@ import { toast } from "sonner";
 import { TimeSheetHistory } from "./TimeSheetHistory";
 import { useUserStore } from "@/app/lib/store/userStore";
 import { Textarea } from "@/app/v1/components/ui/textarea";
-import { useDashboardData } from "../../../_pages/sidebar/DashboardDataContext";
 import { format } from "date-fns";
 import Spinner from "@/app/v1/components/(animations)/spinner";
 import { Skeleton } from "@/app/v1/components/ui/skeleton";
 import { apiRequest } from "@/app/lib/utils/api-Utils";
-import { get } from "lodash";
 
 // Define types for change logs
 interface ChangeLogEntry {
@@ -57,7 +55,6 @@ export const EditTimesheetModal: React.FC<EditTimesheetModalProps> = ({
     const [showHistory, setShowHistory] = useState(false);
     const [changeReason, setChangeReason] = useState("");
     const { user } = useUserStore();
-    const { refresh } = useDashboardData();
 
     const editor = user?.id;
 
@@ -77,24 +74,25 @@ export const EditTimesheetModal: React.FC<EditTimesheetModalProps> = ({
     // Log handlers
     const logs = useTimesheetLogs(form, setForm, originalForm);
 
-    // Auto-selection logic for TASCO shifts
-    useTimesheetAutoSelection({
-        workType: form?.workType?.toLowerCase() || "",
-        tascoLogs: form?.TascoLogs || [],
-        costCodes: costCodeOptions,
-        materialTypes: tascoMaterialTypeOptions.map((m) => ({
-            id: m.value,
-            name: m.label,
-        })),
-        jobsites: jobsites,
-        setJobsite: (jobsite) => {
+    // Memoized callbacks for useTimesheetAutoSelection to prevent infinite loops
+    const handleSetJobsite = useCallback(
+        (jobsite: { id: string; name: string }) => {
             if (form) {
                 setForm((prev) =>
                     prev ? { ...prev, Jobsite: jobsite } : prev
                 );
             }
         },
-        setCostCode: (costcode) => {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        []
+    );
+
+    const handleSetCostCode = useCallback(
+        (
+            costcode:
+                | { id: string; name: string }
+                | { value: string; label: string }
+        ) => {
             if (form) {
                 // Convert cost code to expected format
                 if ("value" in costcode && "label" in costcode) {
@@ -116,46 +114,68 @@ export const EditTimesheetModal: React.FC<EditTimesheetModalProps> = ({
                 }
             }
         },
-        setMaterial: (material, logIndex = 0) => {
-            if (form && form.TascoLogs.length > logIndex) {
-                setForm((prev) => {
-                    if (!prev) return prev;
-                    const updatedLogs = [...prev.TascoLogs];
-                    updatedLogs[logIndex] = {
-                        ...updatedLogs[logIndex],
-                        materialType: material,
-                    };
-                    return { ...prev, TascoLogs: updatedLogs };
-                });
-            }
-        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        []
+    );
+
+    const handleSetMaterial = useCallback((material: string, logIndex = 0) => {
+        if (form && form.TascoLogs.length > logIndex) {
+            setForm((prev) => {
+                if (!prev) return prev;
+                const updatedLogs = [...prev.TascoLogs];
+                updatedLogs[logIndex] = {
+                    ...updatedLogs[logIndex],
+                    materialType: material,
+                };
+                return { ...prev, TascoLogs: updatedLogs };
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // Auto-selection logic for TASCO shifts
+    useTimesheetAutoSelection({
+        workType: form?.workType?.toLowerCase() || "",
+        tascoLogs: form?.TascoLogs || [],
+        costCodes: costCodeOptions,
+        materialTypes: tascoMaterialTypeOptions.map((m) => ({
+            id: m.value,
+            name: m.label,
+        })),
+        jobsites: jobsites,
+        setJobsite: handleSetJobsite,
+        setCostCode: handleSetCostCode,
+        setMaterial: handleSetMaterial,
     });
 
     useEffect(() => {
         const getData = async () => {
-        if (!isOpen || !timesheetId) return;
-        setLoading(true);
-        setError(null);
+            if (!isOpen || !timesheetId) return;
+            setLoading(true);
+            setError(null);
 
-        // Fetch timesheet data
-        apiRequest(`/api/v1/admins/timesheet/${timesheetId}`, "GET")
-            .then((json) => {
-                setForm(json); // Pre-populate form
-                setOriginalForm(json); // Store original for undo
-            })
-            .catch((e) => setError(e.message))
-            .finally(() => setLoading(false));
+            // Fetch timesheet data
+            apiRequest(`/api/v1/admins/timesheet/${timesheetId}`, "GET")
+                .then((json) => {
+                    setForm(json); // Pre-populate form
+                    setOriginalForm(json); // Store original for undo
+                })
+                .catch((e) => setError(e.message))
+                .finally(() => setLoading(false));
 
-        // Fetch change logs separately
-        apiRequest(`/api/v1/admins/timesheet/${timesheetId}/change-logs`, "GET")
-            .then((json) => {
-                setChangeLogs(json);
-            })
-            .catch((e) => {
-                console.error("Error fetching change logs:", e);
-                // Don't set the error state for this, as it's not critical
-            });
-        }
+            // Fetch change logs separately
+            apiRequest(
+                `/api/v1/admins/timesheet/${timesheetId}/change-logs`,
+                "GET"
+            )
+                .then((json) => {
+                    setChangeLogs(json);
+                })
+                .catch((e) => {
+                    console.error("Error fetching change logs:", e);
+                    // Don't set the error state for this, as it's not critical
+                });
+        };
         getData();
     }, [isOpen, timesheetId]);
 
@@ -217,7 +237,6 @@ export const EditTimesheetModal: React.FC<EditTimesheetModalProps> = ({
             formData.append("changeReason", changeReason);
             formData.append("wasStatusChanged", wasStatusChanged.toString());
             formData.append("numberOfChanges", numberOfChanges.toString());
-            console.log("Submitting changes:", formData);
             const result = await updateTimesheetAdmin(formData); // Use the admin action
             if (result.success) {
                 //after a successful update, refresh the dashboard data and close the modal the notification will be sent in the background
@@ -229,19 +248,17 @@ export const EditTimesheetModal: React.FC<EditTimesheetModalProps> = ({
                 setLoading(false);
 
                 if (!result.data?.onlyStatusUpdated && numberOfChanges > 0) {
-                    await fetch("/api/notifications/send-multicast", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
+                    await apiRequest(
+                        "/api/notifications/send-multicast",
+                        "POST",
+                        {
                             topic: "timecards-changes",
                             title: "Timecard Modified ",
                             message: `${result.data?.editorFullName} made ${numberOfChanges} changes to ${result.data?.userFullname}'s timesheet #${timesheetId}.`,
                             link: `/admins/timesheets?id=${timesheetId}`,
                             referenceId: timesheetId,
-                        }),
-                    });
+                        }
+                    );
                 }
             }
         } catch (err) {
@@ -310,13 +327,15 @@ export const EditTimesheetModal: React.FC<EditTimesheetModalProps> = ({
     // Call ensureSingleLog when workType changes to TRUCK_DRIVER or TASCO
     useEffect(() => {
         const getEnsureSingleLog = () => {
-        if (!form) return;
-        if (form.workType === "TRUCK_DRIVER") {
-            ensureSingleLog("TruckingLogs");
-        } else if (form.workType === "TASCO") {
-            ensureSingleLog("TascoLogs");
-        }}
+            if (!form) return;
+            if (form.workType === "TRUCK_DRIVER") {
+                ensureSingleLog("TruckingLogs");
+            } else if (form.workType === "TASCO") {
+                ensureSingleLog("TascoLogs");
+            }
+        };
         getEnsureSingleLog();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [form?.workType]);
 
     // Using memoized dropdown options from the hook
@@ -328,10 +347,6 @@ export const EditTimesheetModal: React.FC<EditTimesheetModalProps> = ({
 
             // Note: adminSetNotificationToRead function may need to be implemented
             // or this notification logic may need to be handled differently
-            console.log("Setting notification to read for:", {
-                editor,
-                timesheetId,
-            });
         } catch (error) {
             console.error("Error setting notification to read:", error);
         }

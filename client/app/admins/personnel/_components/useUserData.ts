@@ -65,7 +65,7 @@ export const useUserData = ({ userid }: { userid: string }) => {
           "/api/v1/admins/personnel/getAllCrews",
           "GET"
         );
-        setCrew(data || []);
+        setCrew(data.crews || []);
       } catch (error) {
         console.error("Failed to fetch crews:", error);
       }

@@ -1,6 +1,9 @@
 import prisma from "../lib/prisma.js";
 
-export async function fetchNotificationServiceByUserId(userId: string) {
+export async function fetchNotificationServiceByUserId(
+  userId: string,
+  resolvedSince?: string
+) {
   // fetch subscribed notifications
   const subscribedNotifications = await prisma.topicSubscription.findMany({
     where: {
@@ -52,27 +55,30 @@ export async function fetchNotificationServiceByUserId(userId: string) {
     },
   });
 
-  const count = await prisma.notification.count({
-    where: {
-      Response: {
-        isNot: null,
-      },
-      topic: {
-        in: subscribedTopics,
-      },
+  // Build where clause for resolved notifications
+  const resolvedWhereClause: any = {
+    Response: {
+      isNot: null,
     },
+    topic: {
+      in: subscribedTopics,
+    },
+  };
+
+  // Add date filter if resolvedSince is provided
+  if (resolvedSince) {
+    resolvedWhereClause.createdAt = {
+      gte: new Date(resolvedSince),
+    };
+  }
+
+  const count = await prisma.notification.count({
+    where: resolvedWhereClause,
   });
 
   // Resolved notifications with full data
   const resolved = await prisma.notification.findMany({
-    where: {
-      Response: {
-        isNot: null,
-      },
-      topic: {
-        in: subscribedTopics,
-      },
-    },
+    where: resolvedWhereClause,
     include: {
       Response: {
         include: {

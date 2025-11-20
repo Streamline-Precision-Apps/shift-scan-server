@@ -218,6 +218,10 @@ export declare function getTimesheetById(id: string | undefined): Promise<({
             id: string;
             name: string;
         } | null;
+        Truck: {
+            id: string;
+            name: string;
+        } | null;
     } & {
         id: string;
         laborType: string;
@@ -379,7 +383,7 @@ export declare function updateTimesheet(id: string | undefined, updateData: {
 export declare function updateTimesheetStatus(id: string | undefined, status: string, changes: Record<string, {
     old: unknown;
     new: unknown;
-}>): Promise<void>;
+}>, userId: string): Promise<void>;
 export declare function deleteTimesheet(id: string | undefined): Promise<void>;
 export declare function exportTimesheets(timesheetIds: number[], fields: string[], dateRange?: {
     from?: Date;
@@ -748,6 +752,26 @@ export declare function getAllTascoMaterialTypes(): Promise<{
         name: string;
     }[];
     total: number;
+}>;
+/**
+ * Check timesheet status and resolve associated notification
+ * If timesheet is already approved/rejected, create notification response
+ */
+export declare function resolveTimecardNotification(timesheetId: string, notificationId: number, userId: string): Promise<{
+    success: boolean;
+    alreadyResolved: boolean;
+    status: "APPROVED" | "REJECTED";
+    resolved?: never;
+} | {
+    success: boolean;
+    resolved: boolean;
+    status: "APPROVED" | "REJECTED";
+    alreadyResolved?: never;
+} | {
+    success: boolean;
+    resolved: boolean;
+    status: "DRAFT" | "PENDING";
+    alreadyResolved?: never;
 }>;
 export {};
 //# sourceMappingURL=adminTimesheetService.d.ts.map

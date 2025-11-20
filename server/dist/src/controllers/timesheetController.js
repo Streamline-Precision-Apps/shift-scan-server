@@ -315,7 +315,14 @@ export async function getUserEquipmentLogsController(req, res) {
             return res
                 .status(400)
                 .json({ error: "Invalid Request - parameters are required." });
+        const timesheetIdString = req.query.timesheetId;
+        if (!userId || !timesheetIdString) {
+            return res
+                .status(400)
+                .json({ error: "Invalid Request - parameters are required." });
         }
+        const timesheetId = Number(timesheetIdString);
+        const logs = await getEquipmentLogs(userId, timesheetId);
         const timesheetId = Number(timesheetIdString);
         const logs = await getEquipmentLogs(userId, timesheetId);
         return res.json({ success: true, data: logs });

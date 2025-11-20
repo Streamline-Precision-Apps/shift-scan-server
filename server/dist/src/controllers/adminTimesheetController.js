@@ -1,13 +1,36 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="26b439c2-8d3c-50be-aee7-addb219b4284")}catch(e){}}();
-import { getAllTimesheets, getTimesheetById, createTimesheet, updateTimesheet, updateTimesheetStatus, deleteTimesheet, exportTimesheets, getTimesheetChangeLogs, getAllTascoMaterialTypes, } from "../services/adminTimesheetService.js";
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="14378044-35c2-5295-b324-4b7299e2ca13")}catch(e){}}();
+import { getAllTimesheets, getTimesheetById, createTimesheet, updateTimesheet, updateTimesheetStatus, deleteTimesheet, exportTimesheets, getTimesheetChangeLogs, getAllTascoMaterialTypes, resolveTimecardNotification, } from "../services/adminTimesheetService.js";
 /**
  * GET /api/v1/admins/timesheet
  * Get all timesheets with pagination, filtering, and search
  */
 export async function getAllTimesheetsController(req, res) {
     try {
-        const status = typeof req.query.status === "string" ? req.query.status : "all";
+        // Status param for showPendingOnly behavior
+        // Extract the first 'status' param if it's a string (from showPendingOnly)
+        // If status is an array, use "all" as default for showPendingOnly
+        let statusParam = "all";
+        let statusFilters = [];
+        if (req.query.status) {
+            if (Array.isArray(req.query.status)) {
+                // Multiple status values = filter selections
+                statusFilters = req.query.status;
+            }
+            else if (typeof req.query.status === "string") {
+                // Single status value could be either:
+                // 1. "pending" or "all" from showPendingOnly
+                // 2. A single filter selection like "APPROVED"
+                const statusValue = req.query.status.toLowerCase();
+                if (statusValue === "pending" || statusValue === "all") {
+                    statusParam = statusValue;
+                }
+                else {
+                    // It's a filter selection
+                    statusFilters = [req.query.status];
+                }
+            }
+        }
         const page = req.query.page ? parseInt(req.query.page, 10) : 1;
         const pageSize = req.query.pageSize
             ? parseInt(req.query.pageSize, 10)
@@ -34,11 +57,6 @@ export async function getAllTimesheetsController(req, res) {
                 ? req.query.equipmentLogTypes
                 : [req.query.equipmentLogTypes]
             : [];
-        const statusFilters = req.query.status
-            ? Array.isArray(req.query.status)
-                ? req.query.status
-                : [req.query.status]
-            : [];
         const changes = req.query.changes
             ? Array.isArray(req.query.changes)
                 ? req.query.changes
@@ -63,7 +81,7 @@ export async function getAllTimesheetsController(req, res) {
             : undefined;
         const skip = (page - 1) * pageSize;
         const result = await getAllTimesheets({
-            status,
+            status: statusParam,
             page,
             pageSize,
             skip,
@@ -265,7 +283,15 @@ export async function updateTimesheetStatusController(req, res) {
                 message: "Invalid status value",
             });
         }
-        await updateTimesheetStatus(id, status, changes || {});
+        // Get authenticated user ID from JWT token
+        const userId = req.user?.id;
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: "User not authenticated",
+            });
+        }
+        await updateTimesheetStatus(id, status, changes || {}, userId);
         res.status(200).json({
             success: true,
             message: `Timesheet ${status.toLowerCase()} successfully`,
@@ -326,5 +352,38 @@ export async function getAllTascoMaterialTypesController(req, res) {
         });
     }
 }
+/**
+ * POST /api/v1/admins/timesheet/resolve-notification
+ * Check timesheet status and resolve notification if already approved/rejected
+ */
+export async function resolveTimecardNotificationController(req, res) {
+    try {
+        const { timesheetId, notificationId } = req.body;
+        if (!timesheetId || !notificationId) {
+            return res.status(400).json({
+                success: false,
+                message: "Timesheet ID and notification ID are required",
+            });
+        }
+        // Get authenticated user ID
+        const userId = req.user?.id;
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: "User not authenticated",
+            });
+        }
+        const result = await resolveTimecardNotification(timesheetId, parseInt(notificationId), userId);
+        res.status(200).json(result);
+    }
+    catch (error) {
+        console.error("Error resolving timecard notification:", error);
+        res.status(500).json({
+            success: false,
+            message: "Failed to resolve timecard notification",
+            error: error instanceof Error ? error.message : "Unknown error",
+        });
+    }
+}
 //# sourceMappingURL=adminTimesheetController.js.map
-//# debugId=26b439c2-8d3c-50be-aee7-addb219b4284
+//# debugId=14378044-35c2-5295-b324-4b7299e2ca13

@@ -9,9 +9,14 @@ import {
   exportTimesheetsController,
   getTimesheetChangeLogsController,
   getAllTascoMaterialTypesController,
+  resolveTimecardNotificationController,
 } from "../controllers/adminTimesheetController.js";
+import { verifyToken } from "../middleware/authMiddleware.js";
 
 const router = Router();
+
+// Apply authentication to all routes
+router.use(verifyToken);
 
 /**
  * GET /api/v1/admins/timesheet
@@ -48,6 +53,12 @@ router.post("/", createTimesheetController);
  * Export timesheets to Excel
  */
 router.post("/export", exportTimesheetsController);
+
+/**
+ * POST /api/v1/admins/timesheet/resolve-notification
+ * Check timesheet status and resolve notification if already approved/rejected
+ */
+router.post("/resolve-notification", resolveTimecardNotificationController);
 
 /**
  * PUT /api/v1/admins/timesheet/:id

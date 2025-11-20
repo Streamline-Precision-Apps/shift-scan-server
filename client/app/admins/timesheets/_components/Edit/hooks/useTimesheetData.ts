@@ -64,10 +64,13 @@ export interface StateMileage {
 }
 export interface TruckingLog {
   id: string;
-  truckNumber: string; // Added truckId for clarity
-  trailerNumber?: string; // Optional trailerId
+  truckNumber: string; // Truck equipment ID
+  trailerNumber?: string; // Trailer equipment ID
   startingMileage: number;
   endingMileage: number;
+  Truck?: { id: string; name: string } | null; // Truck equipment relation
+  Trailer?: { id: string; name: string } | null; // Trailer equipment relation
+  Equipment?: { id: string; name: string } | null; // Hauled equipment relation
   EquipmentHauled: EquipmentHauled[];
   Materials: Material[];
   RefuelLogs: RefuelLog[];
@@ -254,7 +257,8 @@ export function useTimesheetData(form: TimesheetData | null) {
 
       // Process equipment to get trucks and trailers
       const filteredTrucks = equipmentData.filter(
-        (e: { equipmentTag: string }) => e.equipmentTag === "TRUCK",
+        (e: { equipmentTag: string }) => 
+          e.equipmentTag === "TRUCK" || e.equipmentTag === "VEHICLE",
       );
       const filteredTrailers = equipmentData.filter(
         (e: { equipmentTag: string }) => e.equipmentTag === "TRAILER",

@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="40f6f828-99e1-5548-9768-ef28b00e6759")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="6288b172-a951-542a-b648-25b3a06cd2c1")}catch(e){}}();
 import { hash } from "bcryptjs";
 import prisma from "../lib/prisma.js";
 export async function getCrewEmployees() {
@@ -20,21 +20,78 @@ export async function getCrewEmployees() {
         },
     });
 }
-export async function getAllCrews() {
-    return await prisma.crew.findMany({
-        orderBy: {
-            name: "asc",
-        },
-        include: {
-            Users: {
-                select: {
-                    id: true,
-                    firstName: true,
-                    lastName: true,
+export async function getAllCrews({ page = 1, pageSize = 25, status = "all", search = "", } = {}) {
+    let crews, total, skip, totalPages;
+    if (status === "inactive") {
+        // No pagination for inactive crews
+        skip = undefined;
+        totalPages = 1;
+        const whereCondition = {
+        // Add your inactive condition here if you have one
+        // For now, we'll just search all crews
+        };
+        if (search) {
+            whereCondition.name = { contains: search, mode: "insensitive" };
+        }
+        crews = await prisma.crew.findMany({
+            where: whereCondition,
+            orderBy: {
+                name: "asc",
+            },
+            include: {
+                Users: {
+                    select: {
+                        id: true,
+                        firstName: true,
+                        middleName: true,
+                        lastName: true,
+                        secondLastName: true,
+                        image: true,
+                    },
                 },
             },
-        },
-    });
+        });
+        total = crews.length;
+    }
+    else {
+        // Standard pagination
+        skip = (page - 1) * pageSize;
+        const whereCondition = {};
+        if (search) {
+            whereCondition.name = { contains: search, mode: "insensitive" };
+        }
+        total = await prisma.crew.count({
+            where: whereCondition,
+        });
+        totalPages = Math.ceil(total / pageSize);
+        crews = await prisma.crew.findMany({
+            where: whereCondition,
+            skip,
+            take: pageSize,
+            orderBy: {
+                name: "asc",
+            },
+            include: {
+                Users: {
+                    select: {
+                        id: true,
+                        firstName: true,
+                        middleName: true,
+                        lastName: true,
+                        secondLastName: true,
+                        image: true,
+                    },
+                },
+            },
+        });
+    }
+    return {
+        crews,
+        total,
+        page,
+        pageSize,
+        totalPages,
+    };
 }
 export async function getEmployeeInfo(id) {
     return await prisma.user.findUnique({
@@ -443,7 +500,8 @@ export async function createUserAdmin(payload) {
         return result;
     }
     catch (error) {
-        console.log(error);
+        console.error("Error creating user:", error);
+        throw new Error(`Failed to create user: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
 }
 export async function editUserAdmin(payload) {
@@ -490,4 +548,4 @@ export async function getAllActiveEmployees() {
     });
 }
 //# sourceMappingURL=adminPersonnelServices.js.map
-//# debugId=40f6f828-99e1-5548-9768-ef28b00e6759
+//# debugId=6288b172-a951-542a-b648-25b3a06cd2c1

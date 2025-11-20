@@ -252,9 +252,9 @@ export default function useAllTimeSheetData({
   useEffect(() => {
     const fetchCostCodes = async () => {
       try {
-        const data = await apiRequest("/api/v1/admins/cost-codes", "GET");
-        if (data?.costCodeSummary && Array.isArray(data.costCodeSummary)) {
-          const filteredCostCodes = data.costCodeSummary
+        const data = await apiRequest("/api/v1/admins/cost-codes/summary", "GET");
+        if (Array.isArray(data)) {
+          const filteredCostCodes = data
             .filter((costCode: { isActive: boolean }) => costCode.isActive === true)
             .map((costCode: { code: string; name: string }) => ({
               code: costCode.code,
@@ -281,8 +281,8 @@ export default function useAllTimeSheetData({
             (jobsite: { approvalStatus: ApprovalStatus }) =>
               jobsite.approvalStatus !== "REJECTED"
           )
-          .map((jobsite: { code: string; name: string }) => ({
-            code: jobsite.code,
+          .map((jobsite: { id: string; code: string; name: string }) => ({
+            code: jobsite.id,
             name: jobsite.name,
           }));
         setJobsites(filteredJobsites || []);
@@ -296,14 +296,17 @@ export default function useAllTimeSheetData({
   useEffect(() => {
     const fetchEquipment = async () => {
       try {
-        const data = await apiRequest("/api/v1/admins/equipment", "GET");
-        if (data?.equipmentSummary && Array.isArray(data.equipmentSummary)) {
-          const filteredEquipment = data.equipmentSummary.map(
-            (equipment: { id: string; name: string }) => ({
+        const data = await apiRequest("/api/v1/admins/equipment/summary", "GET");
+        if (data && Array.isArray(data)) {
+          const filteredEquipment = data
+            .filter(
+              (equipment: { id: string; name: string; approvalStatus: string }) =>
+                equipment.approvalStatus !== "REJECTED"
+            )
+            .map((equipment: { id: string; name: string }) => ({
               id: equipment.id,
               name: equipment.name,
-            })
-          );
+            }));
           setEquipment(filteredEquipment || []);
         } else {
           setEquipment([]);
@@ -462,13 +465,8 @@ export default function useAllTimeSheetData({
     searchTerm,
     refreshKey,
     refilterKey,
-    // Include filter dependencies only when we have URL params (to auto-apply them)
-    hasUrlParams ? filterDependencies.jobsiteId : '',
-    hasUrlParams ? filterDependencies.costCode : '',
-    hasUrlParams ? filterDependencies.equipmentId : '',
-    hasUrlParams ? filterDependencies.equipmentLogTypes : '',
-    hasUrlParams ? filterDependencies.id : '',
-    hasUrlParams ? filterDependencies.notificationId : ''
+    // Note: filterDependencies are NOT included here
+    // Filters only apply when "Apply Filters" button is clicked (which increments refilterKey)
   ]);
 
   // Approve or deny a timesheet (no modal)

@@ -27,37 +27,8 @@ import {
   savePending,
 } from "@/app/lib/actions/formActions";
 import { useAutoSave } from "@/app/lib/hooks/useAutoSave";
+import type { FormTemplate, FormFieldValue } from "@/app/lib/types/forms";
 
-interface FormField {
-  id: string;
-  label: string;
-  name: string;
-  type: string;
-  required: boolean;
-  order: number;
-  defaultValue?: string;
-  placeholder?: string;
-  maxLength?: number;
-  helperText?: string;
-  options?: string[];
-}
-
-interface FormGrouping {
-  id: string;
-  title: string;
-  order: number;
-  fields: FormField[];
-}
-
-interface FormTemplate {
-  id: string;
-  name: string;
-  formType: string;
-  isActive: boolean;
-  isSignatureRequired: boolean;
-  isApprovalRequired: boolean;
-  groupings: FormGrouping[];
-}
 export default function SubmittedForms({
   formData,
   formTitle,
@@ -71,10 +42,10 @@ export default function SubmittedForms({
   submissionStatus,
 }: {
   formData: FormTemplate;
-  formValues: Record<string, string | boolean>;
+  formValues: Record<string, FormFieldValue>;
   formTitle: string;
   setFormTitle: (title: string) => void;
-  updateFormValues: (values: Record<string, string | boolean>) => void;
+  updateFormValues: (values: Record<string, FormFieldValue>) => void;
   userId: string;
   signature: string | null;
   submittedForm: string | null;
@@ -88,7 +59,7 @@ export default function SubmittedForms({
   // Track if deleted to prevent auto-save after delete
   const [isDeleted, setIsDeleted] = useState(false);
 
-  type FormValues = Record<string, string | boolean>;
+  type FormValues = Record<string, FormFieldValue>;
 
   // Convert mixed values to strings for API
   const convertValuesToString = (
