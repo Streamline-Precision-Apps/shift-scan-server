@@ -219,6 +219,43 @@ export async function getFormSubmissionByTemplateId(
   dateRangeStart: string | null,
   dateRangeEnd: string | null
 ) {
+  // Helper to parse 'YYYY-MM-DD' as local date
+  function parseLocalDateString(dateStr: string): Date | undefined {
+    const [yearStr, monthStr, dayStr] = dateStr.split("-");
+    const year = Number(yearStr);
+    const month = Number(monthStr);
+    const day = Number(dayStr);
+    if (
+      Number.isNaN(year) ||
+      Number.isNaN(month) ||
+      Number.isNaN(day) ||
+      typeof year !== "number" ||
+      typeof month !== "number" ||
+      typeof day !== "number"
+    ) {
+      return undefined;
+    }
+    return new Date(year, month - 1, day);
+  }
+
+  let normalizedStart: Date | undefined = undefined;
+  let normalizedEnd: Date | undefined = undefined;
+  if (dateRangeStart) {
+    const start = parseLocalDateString(dateRangeStart);
+    if (start) {
+      start.setHours(0, 0, 0, 0);
+      normalizedStart = start;
+      console.log("Normalized Start Date:", normalizedStart);
+    }
+  }
+  if (dateRangeEnd) {
+    const end = parseLocalDateString(dateRangeEnd);
+    if (end) {
+      end.setHours(23, 59, 59, 999);
+      normalizedEnd = end;
+      console.log("Normalized End Date:", normalizedEnd);
+    }
+  }
   // If pendingOnly or searching, do not paginate (return all matching submissions)
   const isSearching = search !== null && search !== undefined && search !== "";
   const skip = pendingOnly || isSearching ? undefined : (page - 1) * pageSize;
@@ -288,11 +325,11 @@ export async function getFormSubmissionByTemplateId(
         status: "DRAFT",
       },
       ...(statusCondition && { status: statusCondition }),
-      ...(dateRangeStart || dateRangeEnd
+      ...(normalizedStart || normalizedEnd
         ? {
             submittedAt: {
-              ...(dateRangeStart && { gte: new Date(dateRangeStart) }),
-              ...(dateRangeEnd && { lte: new Date(dateRangeEnd) }),
+              ...(normalizedStart && { gte: normalizedStart }),
+              ...(normalizedEnd && { lte: normalizedEnd }),
             },
           }
         : {}),
