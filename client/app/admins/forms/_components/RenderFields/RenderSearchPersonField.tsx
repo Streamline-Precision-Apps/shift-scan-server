@@ -38,6 +38,8 @@ export default function RenderSearchPersonField({
   error,
   userOptions,
   formData,
+  disabled,
+  useNativeInput = false,
 }: {
   field: {
     id: string;
@@ -71,6 +73,8 @@ export default function RenderSearchPersonField({
   handleFieldTouch: (id: string) => void;
   touchedFields: Record<string, boolean>;
   error: string | null;
+  disabled?: boolean;
+  useNativeInput?: boolean;
 }) {
   if (field.multiple) {
     const selectedPeople: Person[] = Array.isArray(formData[field.id])
@@ -121,19 +125,25 @@ export default function RenderSearchPersonField({
           }}
           placeholder="Select people..."
           filterKeys={["value", "label"]}
+          disabled={disabled}
         />
         {/* Display selected people as tags */}
         {selectedPeople.length > 0 && (
-          <div className="max-w-md flex flex-wrap gap-1 mt-2 mb-1">
+          <div className="max-w-md flex flex-wrap gap-2 mt-3 mb-2">
+            {" "}
+            {/* Increased gap and margin */}
             {selectedPeople.map((person: Person, idx: number) => (
               <div
-                key={idx}
-                className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded flex items-center gap-1"
+                key={person.id || `person-${idx}`}
+                className="bg-green-100 text-green-800 text-xl px-3 py-2 rounded-lg flex items-center gap-2"
+                /* Increased padding, rounded-lg, and gap */
               >
-                <span>{person.name}</span>
+                <span className="text-lg font-medium">{person.name}</span>{" "}
+                {/* Larger and bolder text */}
                 <button
                   type="button"
-                  className="text-blue-800 hover:text-blue-900"
+                  className="text-green-800 hover:text-green-900 text-2xl font-bold leading-none"
+                  /* Larger X, bold, and better vertical alignment */
                   onClick={() => {
                     const updatedPeople = selectedPeople.filter(
                       (_: Person, i: number) => i !== idx
@@ -143,6 +153,7 @@ export default function RenderSearchPersonField({
                       updatedPeople.length ? updatedPeople : null
                     );
                   }}
+                  aria-label={`Remove ${person.name}`} /* Accessibility improvement */
                 >
                   ×
                 </button>
@@ -158,6 +169,8 @@ export default function RenderSearchPersonField({
     );
   } else {
     const showError = error && touchedFields[field.id];
+    const selectedPerson = formData[field.id] as Person | undefined;
+
     return (
       <div
         key={field.id}
@@ -170,7 +183,7 @@ export default function RenderSearchPersonField({
         </Label>
         <SingleCombobox
           options={userOptions}
-          value={(formData[field.id] as Person | undefined)?.id || ""}
+          value={selectedPerson?.id || ""}
           onChange={(val, option) => {
             if (option) {
               // Store the selected value in formData instead of a separate asset state
@@ -182,7 +195,26 @@ export default function RenderSearchPersonField({
               handleFieldChange(field.id, null);
             }
           }}
+          disabled={disabled}
         />
+        {/* Display selected person as tag */}
+        {selectedPerson && (
+          <div className="flex flex-wrap gap-2 mt-3 mb-2">
+            <div className="bg-green-100 text-green-800 text-lg px-3 py-2 rounded-lg flex items-center gap-2">
+              <span className="text-lg font-medium">{selectedPerson.name}</span>
+              <button
+                type="button"
+                className="text-green-800 hover:text-green-900 text-2xl font-bold leading-none"
+                onClick={() => {
+                  handleFieldChange(field.id, null);
+                }}
+                aria-label={`Remove ${selectedPerson.name}`}
+              >
+                ×
+              </button>
+            </div>
+          </div>
+        )}
         {showError && touchedFields[field.id] && (
           <p className="text-xs text-red-500 mt-1">This field is required.</p>
         )}

@@ -34,12 +34,14 @@ export default function RenderSearchAssetField({
   field,
   handleFieldChange,
   formData,
-  // clientOptions,
   equipmentOptions,
   jobsiteOptions,
   costCodeOptions,
   handleFieldTouch,
   touchedFields,
+  error,
+  disabled,
+  useNativeInput = false,
 }: {
   equipmentOptions: { value: string; label: string }[];
   jobsiteOptions: { value: string; label: string }[];
@@ -71,33 +73,28 @@ export default function RenderSearchAssetField({
   formData: Record<string, unknown>;
   handleFieldTouch: (fieldId: string) => void;
   touchedFields: Record<string, boolean>;
+  error?: string | null;
+  disabled?: boolean;
+  useNativeInput?: boolean;
 }) {
-  let assetOptions = equipmentOptions;
+  let assetOptions = [{ value: "", label: "" }];
   let assetType = "client";
 
   if (field.filter) {
-    const filterUpper = field.filter.toUpperCase();
-    switch (filterUpper) {
+    switch (field.filter.toUpperCase()) {
       case "EQUIPMENT":
-        assetOptions = equipmentOptions;
+        assetOptions = equipmentOptions || [];
         assetType = "equipment";
-
         break;
       case "JOBSITES":
-        assetOptions = jobsiteOptions;
+        assetOptions = jobsiteOptions || [];
         assetType = "jobsite";
-
         break;
       case "COST CODES":
       case "COST_CODES":
-      case "COSTCODES":
-        assetOptions = costCodeOptions;
+        assetOptions = costCodeOptions || [];
         assetType = "costCode";
-
         break;
-      default:
-        assetOptions = equipmentOptions;
-        assetType = "equipment";
     }
   }
 
@@ -147,19 +144,20 @@ export default function RenderSearchAssetField({
           }}
           placeholder={`Select ${assetType}...`}
           filterKeys={["value", "label"]}
+          disabled={disabled}
         />
         {/* Display selected assets as tags */}
         {selectedAssets.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-2 mb-1">
+          <div className="max-w-md flex flex-wrap gap-2 mt-3 mb-2">
             {selectedAssets.map((asset: Asset, idx: number) => (
               <div
-                key={idx}
-                className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded flex items-center gap-1"
+                key={asset.id || `asset-${idx}`}
+                className="bg-green-100 text-green-800 text-xl px-3 py-2 rounded-lg flex items-center gap-2"
               >
-                <span>{asset.name}</span>
+                <span className="text-lg font-medium">{asset.name}</span>
                 <button
                   type="button"
-                  className="text-green-800 hover:text-green-900"
+                  className="text-green-800 hover:text-green-900 text-2xl font-bold leading-none"
                   onClick={() => {
                     const updatedAssets = selectedAssets.filter(
                       (_: Asset, i: number) => i !== idx
@@ -169,6 +167,7 @@ export default function RenderSearchAssetField({
                       updatedAssets.length ? updatedAssets : null
                     );
                   }}
+                  aria-label={`Remove ${asset.name}`}
                 >
                   ×
                 </button>
@@ -177,13 +176,18 @@ export default function RenderSearchAssetField({
           </div>
         )}
         {/* Show error message if required and no assets selected */}
-        {showError && touchedFields[field.id] && (
-          <p className="text-xs text-red-500 mt-1">This field is required.</p>
+        {(showError || error) && touchedFields[field.id] && (
+          <p className="text-xs text-red-500 mt-1">
+            {error || "This field is required."}
+          </p>
         )}
       </div>
     );
   } else {
     // For single asset selection (existing behavior)
+    const currentValue = formData[field.id] as Asset | undefined;
+    const displayValue = currentValue?.id || "";
+
     return (
       <div
         key={field.id}
@@ -196,7 +200,7 @@ export default function RenderSearchAssetField({
         </Label>
         <SingleCombobox
           options={assetOptions}
-          value={(formData[field.id] as Asset | undefined)?.id || ""}
+          value={displayValue}
           onChange={(val, option) => {
             if (option) {
               // Store the selected value in formData instead of a separate asset state
@@ -209,11 +213,35 @@ export default function RenderSearchAssetField({
               handleFieldChange(field.id, null);
             }
           }}
+          disabled={disabled}
+          placeholder={`Select ${assetType}...`}
+          filterKeys={["value", "label"]}
         />
-        {/* Show error message if required and no assets selected */}
-        {field.required && touchedFields[field.id] && (
-          <p className="text-xs text-red-500 mt-1">This field is required.</p>
+        {/* Display selected asset as tag */}
+        {currentValue && (
+          <div className="flex flex-wrap gap-2 mt-3 mb-2">
+            <div className="bg-green-100 text-green-800 text-lg px-3 py-2 rounded-lg flex items-center gap-2">
+              <span className="text-lg font-medium">{currentValue.name}</span>
+              <button
+                type="button"
+                className="text-green-800 hover:text-green-900 text-2xl font-bold leading-none"
+                onClick={() => {
+                  handleFieldChange(field.id, null);
+                }}
+                aria-label={`Remove ${currentValue.name}`}
+              >
+                ×
+              </button>
+            </div>
+          </div>
         )}
+        {/* Show error message if required and no asset selected */}
+        {((field.required && !currentValue) || error) &&
+          touchedFields[field.id] && (
+            <p className="text-xs text-red-500 mt-1">
+              {error || "This field is required."}
+            </p>
+          )}
       </div>
     );
   }

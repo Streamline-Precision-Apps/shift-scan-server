@@ -2,13 +2,20 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@/app/v1/components/ui/button";
 import { toast } from "sonner";
-import { createFormSubmission } from "@/app/lib/actions/adminActions";
+import {
+  createFormSubmission,
+  ApproveFormSubmission,
+} from "@/app/lib/actions/adminActions";
 import Spinner from "@/app/v1/components/(animations)/spinner";
 import { X } from "lucide-react";
 import { Label } from "@/app/v1/components/ui/label";
 import { Textarea } from "@/app/v1/components/ui/textarea";
 import { useUserStore } from "@/app/lib/store/userStore";
 import { apiRequest } from "@/app/lib/utils/api-Utils";
+import {
+  denormalizeFormValues,
+  validateFieldStructure,
+} from "@/app/lib/utils/formNormalization";
 import { FormTemplate, FormFieldValue } from "@/app/lib/types/forms";
 import FormBridge from "@/app/admins/forms/_components/RenderFields/FormBridge";
 
@@ -173,96 +180,108 @@ const CreateFormSubmissionModal: React.FC<CreateFormSubmissionModalProps> = ({
 
     setLoading(true);
     try {
-      // Process formData to normalize all field types for API submission
-      const processedFormData: Record<
+      // Ensure signature value is set in the form values if required
+      const valuesToSubmit = { ...(formData || {}) } as Record<
         string,
-        string | number | boolean | null
-      > = {};
-
-      for (const [key, value] of Object.entries(formData)) {
-        // Null/undefined values
-        if (value === null || value === undefined) {
-          processedFormData[key] = null;
-        }
-        // ISO date strings (from date fields)
-        else if (
-          typeof value === "string" &&
-          value.match(/^\d{4}-\d{2}-\d{2}/)
-        ) {
-          processedFormData[key] = value;
-        }
-        // Date objects
-        else if (value instanceof Date) {
-          processedFormData[key] = value.toISOString();
-        }
-        // String and number primitives
-        else if (typeof value === "string" || typeof value === "number") {
-          processedFormData[key] = value;
-        }
-        // Boolean values
-        else if (typeof value === "boolean") {
-          processedFormData[key] = value;
-        }
-        // Arrays (multiselect, search fields with multiple selections)
-        else if (Array.isArray(value)) {
-          processedFormData[key] = value
-            .map((v) => {
-              // Extract name from asset/person objects
-              if (typeof v === "object" && v !== null && "name" in v) {
-                return String((v as { name: unknown }).name);
-              }
-              // Handle primitive values in arrays
-              return String(v);
-            })
-            .filter(Boolean)
-            .join(",");
-        }
-        // Objects (single person/asset selections)
-        else if (typeof value === "object") {
-          if ("name" in value) {
-            processedFormData[key] = String((value as { name: unknown }).name);
-          } else if ("id" in value) {
-            processedFormData[key] = String((value as { id: unknown }).id);
-          } else {
-            processedFormData[key] = String(value);
-          }
-        }
-        // Fallback
-        else {
-          processedFormData[key] = String(value);
-        }
-      }
-
-      console.log("[DEBUG] processedFormData to submit:", processedFormData);
-
+        FormFieldValue
+      >;
       if (formTemplate.isSignatureRequired) {
-        processedFormData.signature = "true";
+        valuesToSubmit.signature = true;
       }
 
-      const res = await createFormSubmission({
+      // Validate entire form against template structure
+      const tempSubmission = {
+        id: 0,
+        title: null,
         formTemplateId: formTemplate.id,
-        data: processedFormData,
+        userId: submittedBy.id,
+        formType: formTemplate.formType || null,
+        data: valuesToSubmit,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        submittedAt: new Date(),
+        status: "DRAFT",
+        User: {
+          id: submittedBy.id,
+          firstName: submittedBy.firstName,
+          lastName: submittedBy.lastName,
+        },
+        FormTemplate: formTemplate,
+      } as any;
+
+      const validation = validateFieldStructure(formTemplate, tempSubmission);
+      if (!validation.valid) {
+        validation.errors.forEach((e) => toast.error(e, { duration: 5000 }));
+        setLoading(false);
+        return;
+      }
+
+      // Denormalize values for API submission
+      const apiPayload = denormalizeFormValues(formTemplate, valuesToSubmit);
+
+      const createResult = await createFormSubmission({
+        formTemplateId: formTemplate.id,
+        data: apiPayload,
         submittedBy: {
           id: submittedBy.id,
           firstName: submittedBy.firstName,
           lastName: submittedBy.lastName,
         },
         adminUserId,
-        comment: managerComment,
-        signature: `${user?.firstName} ${user?.lastName}`,
-        status: "APPROVED",
-        // Include manager approval data if signed by manager
+        comment: managerComment || undefined,
+        signature: signatureChecked
+          ? `${user?.firstName} ${user?.lastName}`
+          : undefined,
+        status:
+          formTemplate.isApprovalRequired && managerSignature
+            ? "APPROVED"
+            : formTemplate.isApprovalRequired
+            ? "PENDING"
+            : "SUBMITTED",
       });
 
-      if (res.success) {
-        toast.success("Submission created and approved");
-        closeModal();
-        onSuccess?.();
-      } else {
-        toast.error(res.error || "Failed to create submission", {
+      if (!createResult.success) {
+        toast.error(createResult.error || "Failed to create submission", {
           duration: 3000,
         });
+        setLoading(false);
+        return;
       }
+
+      // If approval is required and manager signed, trigger approval action
+      const createdSubmission = createResult.submission;
+      const createdSubmissionId =
+        createdSubmission?.id || createdSubmission?.submissionId || null;
+
+      if (
+        formTemplate.isApprovalRequired &&
+        managerSignature &&
+        createdSubmissionId
+      ) {
+        try {
+          const formDataObj = new FormData();
+          formDataObj.append("comment", managerComment || "");
+          formDataObj.append("adminUserId", adminUserId || "");
+          await ApproveFormSubmission(
+            Number(createdSubmissionId),
+            "APPROVED",
+            formDataObj
+          );
+        } catch (apprErr) {
+          // Non-fatal: log and inform user these need manual approval or retry
+          console.error("Approval action failed:", apprErr);
+          toast.error(
+            "Submission created but manager approval failed. Please retry approval.",
+            { duration: 5000 }
+          );
+          setLoading(false);
+          return;
+        }
+      }
+
+      toast.success("Submission created successfully", { duration: 3000 });
+      closeModal();
+      onSuccess?.();
     } catch (err) {
       toast.error("An unexpected error occurred", { duration: 3000 });
     } finally {
