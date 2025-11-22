@@ -23,6 +23,9 @@ const isNative = Capacitor.isNativePlatform();
 // Store the watch ID globally (module scope)
 let watchId: string | null = null;
 
+// Timer for periodic location sending
+let periodicSendTimer: ReturnType<typeof setInterval> | null = null;
+
 // Track whether background location is active
 let isBackgroundTrackingActive = false;
 
@@ -46,12 +49,6 @@ let lastKnownCoordinates: { lat: number; lng: number } | null = null;
 
 // LOCAL STORAGE KEY for permissions and queue
 const LOCATION_PERMISSION_REQUESTED_KEY = "location_permission_requested";
-const LOCATION_QUEUE_KEY = "location_request_queue_v1";
-
-// Max backoff settings
-const MAX_RETRY_ATTEMPTS = 5;
-const BASE_BACKOFF_MS = 1000; // 1 second base
-const MAX_BACKOFF_MS = 30 * 1000; // 30s cap
 
 //=============================================================================
 // SEND LOCATION - Only call the function directly, no queue or retry logic
@@ -236,8 +233,6 @@ async function startForegroundLocationWatch() {
 
           // Keep your endpoint exactly as it was
           await sendLocation(`/api/location?clockType=clockIn`, payload);
-
-          console.debug("Foreground location sent successfully");
         } catch (err) {
           console.error("Failed to handle foreground location:", err);
         } finally {
@@ -387,8 +382,34 @@ export async function startBackgroundLocationWatch() {
 }
 
 //=============================================================================
-// CLOCK IN/OUT TRACKING - Called when user clocks in/out
+// PERIODIC LOCATION SENDING
 //=============================================================================
+
+async function sendPeriodicLocation() {
+  if (!isUserClockedIn || !currentUserId || !currentSessionId) return;
+  if (!lastKnownCoordinates) return;
+  if (locationSendInProgress) return;
+  try {
+    locationSendInProgress = true;
+    const payload: LocationLog = {
+      userId: currentUserId,
+      sessionId: currentSessionId,
+      coords: {
+        lat: lastKnownCoordinates.lat,
+        lng: lastKnownCoordinates.lng,
+      },
+      device: {
+        platform: typeof navigator !== "undefined" ? navigator.userAgent : null,
+      },
+    };
+    await sendLocation(`/api/location?clockType=clockIn`, payload);
+    console.debug("[Periodic] Location sent successfully");
+  } catch (err) {
+    console.error("[Periodic] Failed to send location:", err);
+  } finally {
+    locationSendInProgress = false;
+  }
+}
 
 /**
  * START TRACKING when user clocks in
@@ -426,6 +447,18 @@ export async function startClockInTracking(userId: string, sessionId: number) {
 
     // Background: Active when app is closed or device is locked
     startBackgroundLocationWatch(); // fire-and-forget
+
+    // Start periodic timer for sending location every WRITE_INTERVAL_MS
+    if (!periodicSendTimer) {
+      periodicSendTimer = setInterval(() => {
+        sendPeriodicLocation();
+      }, WRITE_INTERVAL_MS);
+      console.log(
+        `Periodic location sending started (every ${
+          WRITE_INTERVAL_MS / 60000
+        } min)`
+      );
+    }
 
     console.log("Location tracking started (foreground + background)");
 
@@ -489,6 +522,13 @@ export async function stopClockOutTracking() {
         console.warn("BackgroundGeolocation.stop threw:", err);
       }
       isBackgroundTrackingActive = false;
+    }
+
+    // Stop periodic timer
+    if (periodicSendTimer) {
+      clearInterval(periodicSendTimer);
+      periodicSendTimer = null;
+      console.log("Periodic location sending stopped");
     }
 
     console.log("Location tracking stopped");
