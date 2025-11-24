@@ -98,24 +98,24 @@ export default function MechanicVerificationStep({
       // Get current coordinates (fast snapshot)
       const coordinates = await getStoredCoordinates();
 
-      // Determine session ID
-      let sessionId = currentSessionId;
-      if (!sessionId) {
+      // Simplified session logic
+      let sessionId = null;
+      if (currentSessionId === null) {
+        // No session exists, create a new one
         sessionId = await createNewSession(id);
         setCurrentSession(sessionId);
       } else {
-        const currentSession = useSessionStore.getState().getSession(sessionId);
-        if (currentSession?.endTime) {
-          const FOUR_HOURS_MS = 4 * 60 * 60 * 1000;
-          const endTime = new Date(currentSession.endTime).getTime();
-          if (Date.now() - endTime > FOUR_HOURS_MS) {
-            useSessionStore.getState().clearSessions();
-            sessionId = await createNewSession(id);
-            setCurrentSession(sessionId);
-          } else {
-            sessionId = await createNewSession(id);
-            setCurrentSession(sessionId);
-          }
+        // Session exists, check if it has an endTime
+        const currentSession = useSessionStore
+          .getState()
+          .getSession(currentSessionId);
+        if (!currentSession || currentSession.endTime) {
+          // No session or session ended, create a new one
+          sessionId = await createNewSession(id);
+          setCurrentSession(sessionId);
+        } else {
+          // Session is still active, reuse it
+          sessionId = currentSessionId;
         }
       }
 

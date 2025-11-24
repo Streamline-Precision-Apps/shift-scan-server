@@ -108,33 +108,21 @@ export default function TascoVerificationStep({
       // Get current coordinates
       const coordinates = await getStoredCoordinates();
 
-      // Check for session data
+      // Simplified session logic
       let sessionId = null;
       if (currentSessionId === null) {
         // No session exists, create a new one
         sessionId = await createNewSession(id);
         setCurrentSession(sessionId);
       } else {
-        // Session exists, check if it's ended
+        // Session exists, check if it has an endTime
         const currentSession = useSessionStore
           .getState()
           .getSession(currentSessionId);
-        if (currentSession && currentSession.endTime) {
-          // Session has ended, check if 4+ hours have passed
-          const endTime = new Date(currentSession.endTime).getTime();
-          const currentTime = new Date().getTime();
-          const FOUR_HOURS_MS = 4 * 60 * 60 * 1000; // 4 hours in milliseconds
-
-          if (currentTime - endTime > FOUR_HOURS_MS) {
-            // More than 4 hours have passed, clear sessions and create a new one
-            useSessionStore.getState().clearSessions();
-            sessionId = await createNewSession(id);
-            setCurrentSession(sessionId);
-          } else {
-            // Less than 4 hours, create a new session but keep old one in history
-            sessionId = await createNewSession(id);
-            setCurrentSession(sessionId);
-          }
+        if (!currentSession || currentSession.endTime) {
+          // No session or session ended, create a new one
+          sessionId = await createNewSession(id);
+          setCurrentSession(sessionId);
         } else {
           // Session is still active, reuse it
           sessionId = currentSessionId;

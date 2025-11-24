@@ -19,6 +19,15 @@ export type Session = {
 export type SessionStoreState = {
   sessions: Session[];
   currentSessionId: number | null;
+  // Tracking state
+  isUserClockedIn: boolean;
+  currentUserId: string | null;
+  lastLocationSentAt: number | null;
+  locationSendInProgress: boolean;
+  watchId: string | null;
+  isBackgroundTrackingActive: boolean;
+  periodicSendTimer: any | null;
+  lastKnownCoordinates: { lat: number; lng: number } | null;
   // Session management
   addSession: (session: Session) => void;
   updateSession: (id: number, session: Partial<Session>) => void;
@@ -33,6 +42,14 @@ export type SessionStoreState = {
   clearSessions: () => void;
   // Location management
   setLastLocationSentAt: (sessionId: number, timestamp: number) => void;
+  // Tracking state setters
+  setIsUserClockedIn: (val: boolean) => void;
+  setCurrentUserId: (val: string | null) => void;
+  setLocationSendInProgress: (val: boolean) => void;
+  setWatchId: (val: string | null) => void;
+  setIsBackgroundTrackingActive: (val: boolean) => void;
+  setPeriodicSendTimer: (val: any | null) => void;
+  setLastKnownCoordinates: (val: { lat: number; lng: number } | null) => void;
 };
 
 export const useSessionStore = create<SessionStoreState>()(
@@ -40,6 +57,16 @@ export const useSessionStore = create<SessionStoreState>()(
     (set, get) => ({
       sessions: [],
       currentSessionId: null,
+
+      // Tracking state
+      isUserClockedIn: false,
+      currentUserId: null,
+      lastLocationSentAt: null,
+      locationSendInProgress: false,
+      watchId: null,
+      isBackgroundTrackingActive: false,
+      periodicSendTimer: null,
+      lastKnownCoordinates: null,
 
       // Session management
       addSession: (session: Session) =>
@@ -97,14 +124,6 @@ export const useSessionStore = create<SessionStoreState>()(
           currentSessionId: null,
         })),
 
-      getLastLocationSentAt: (sessionId: number) => {
-        const state = get();
-        const session = state.sessions.find(
-          (session) => session.id === sessionId
-        );
-        return session?.lastLocationSentAt;
-      },
-
       setLastLocationSentAt: (sessionId: number, timestamp: number) =>
         set((state) => ({
           sessions: state.sessions.map((session) =>
@@ -112,7 +131,23 @@ export const useSessionStore = create<SessionStoreState>()(
               ? { ...session, lastLocationSentAt: timestamp }
               : session
           ),
+          lastLocationSentAt: timestamp,
         })),
+
+      // Tracking state setters
+      setIsUserClockedIn: (val: boolean) =>
+        set(() => ({ isUserClockedIn: val })),
+      setCurrentUserId: (val: string | null) =>
+        set(() => ({ currentUserId: val })),
+      setLocationSendInProgress: (val: boolean) =>
+        set(() => ({ locationSendInProgress: val })),
+      setWatchId: (val: string | null) => set(() => ({ watchId: val })),
+      setIsBackgroundTrackingActive: (val: boolean) =>
+        set(() => ({ isBackgroundTrackingActive: val })),
+      setPeriodicSendTimer: (val: any | null) =>
+        set(() => ({ periodicSendTimer: val })),
+      setLastKnownCoordinates: (val: { lat: number; lng: number } | null) =>
+        set(() => ({ lastKnownCoordinates: val })),
     }),
     {
       name: "session-store",

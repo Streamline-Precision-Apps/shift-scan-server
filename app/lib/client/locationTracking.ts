@@ -21,61 +21,13 @@ export interface LocationLog {
 
 const isNative = Capacitor.isNativePlatform();
 
-// Geolocation tracking state
-let watchId: string | null = null; // Foreground watch ID
-let periodicSendTimer: ReturnType<typeof setInterval> | null = null; // Periodic timer
-let isBackgroundTrackingActive = false; // Background tracking flag
-let isUserClockedIn = false; // User clock-in flag
-let currentUserId: string | null = null; // Current user ID
-let currentSessionId: number | null = null; // Current session ID
-let lastLocationSentAt: number | null = null; // Last upload timestamp
-let locationSendInProgress = false; // Prevent concurrent uploads
-let lastKnownCoordinates: { lat: number; lng: number } | null = null; // Last known coords
-
 // LocalStorage key for permission request
 const LOCATION_PERMISSION_REQUESTED_KEY = "location_permission_requested";
 
 // Minimum interval between location uploads (ms)
-const WRITE_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
+const WRITE_INTERVAL_MS = 1 * 60 * 1000; // 1 minutes for testing
 
-// Initialize globals from sessionStore (persisted session)
-try {
-  const sessionState = useSessionStore.getState();
-  const currentSession = sessionState.getCurrentSession();
-  if (currentSession) {
-    currentUserId = currentSession.userId;
-    currentSessionId = currentSession.id;
-    isUserClockedIn = !currentSession.endTime;
-    lastLocationSentAt = currentSession.lastLocationSentAt || null;
-  }
-} catch (err) {
-  // Defensive: avoid crash if store is not available
-  console.warn(
-    "[locationTracking] Could not initialize globals from sessionStore",
-    err
-  );
-}
-
-// Keep globals in sync with sessionStore
-try {
-  useSessionStore.subscribe((state) => {
-    const session = state.getCurrentSession();
-    if (session) {
-      currentUserId = session.userId;
-      currentSessionId = session.id;
-      isUserClockedIn = !session.endTime;
-      lastLocationSentAt = session.lastLocationSentAt || null;
-    } else {
-      currentUserId = null;
-      currentSessionId = null;
-      isUserClockedIn = false;
-      lastLocationSentAt = null;
-    }
-  });
-} catch (err) {
-  // Defensive: avoid crash if store is not available
-  console.warn("[locationTracking] Could not subscribe to sessionStore", err);
-}
+// All state is now managed in Zustand session store
 
 //=============================================================================
 // SEND LOCATION - Only call the function directly, no queue or retry logic
@@ -164,12 +116,13 @@ export function hasLocationPermissionBeenRequested(): boolean {
  * NOTE: watchPosition fires frequently; throttling is enforced by WRITE_INTERVAL_MS
  */
 async function startForegroundLocationWatch() {
-  if (!isUserClockedIn) return;
-  if (watchId) return;
+  const s = useSessionStore.getState();
+  if (!s.isUserClockedIn) return;
+  if (s.watchId) return;
   try {
     let lastCallbackTime = 0;
     const MIN_CALLBACK_INTERVAL_MS = 2000;
-    watchId = await Geolocation.watchPosition(
+    const watchId = await Geolocation.watchPosition(
       {
         enableHighAccuracy: true,
         timeout: 10000,
@@ -177,57 +130,72 @@ async function startForegroundLocationWatch() {
       },
       async (pos, err) => {
         const now = Date.now();
+        // Debug log state
+        const s = useSessionStore.getState();
+        console.debug("[FG Watch] Callback", {
+          isUserClockedIn: s.isUserClockedIn,
+          currentUserId: s.currentUserId,
+          currentSessionId: s.currentSessionId,
+          lastLocationSentAt: s.lastLocationSentAt,
+          locationSendInProgress: s.locationSendInProgress,
+          pos,
+          err,
+        });
         if (now - lastCallbackTime < MIN_CALLBACK_INTERVAL_MS) return;
         lastCallbackTime = now;
         if (err || !pos) return;
-        if (!isUserClockedIn) return;
-        if (currentSessionId === 0) {
-          lastKnownCoordinates = {
+        if (!s.isUserClockedIn) return;
+        if (s.currentSessionId === 0) {
+          s.setLastKnownCoordinates({
             lat: pos.coords.latitude,
             lng: pos.coords.longitude,
-          };
+          });
           return;
         }
-        if (locationSendInProgress) return;
-        if (!currentUserId || !currentSessionId) return;
-        lastKnownCoordinates = {
+        if (s.locationSendInProgress) return;
+        if (!s.currentUserId || !s.currentSessionId) return;
+        s.setLastKnownCoordinates({
           lat: pos.coords.latitude,
           lng: pos.coords.longitude,
-        };
-        // Throttle: Only send if 5 minutes have passed since lastLocationSentAt
-        if (lastLocationSentAt && now - lastLocationSentAt < WRITE_INTERVAL_MS)
+        });
+        // Throttle: Only send if interval has passed
+        if (
+          s.lastLocationSentAt &&
+          now - s.lastLocationSentAt < WRITE_INTERVAL_MS
+        )
           return;
-        locationSendInProgress = true;
-        const payload: LocationLog = {
-          userId: currentUserId,
-          sessionId: currentSessionId,
-          coords: {
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude,
-            accuracy: pos.coords.accuracy,
-            speed: pos.coords.speed ?? null,
-            heading: pos.coords.heading ?? null,
-          },
-          device: {
-            platform:
-              typeof navigator !== "undefined" ? navigator.userAgent : null,
-          },
-        };
-        const result = await sendLocation(
-          `/api/location?clockType=clockIn`,
-          payload
-        );
-        if (result.success) {
-          lastLocationSentAt = now;
-          try {
-            useSessionStore
-              .getState()
-              .setLastLocationSentAt(currentSessionId, now);
-          } catch {}
+        s.setLocationSendInProgress(true);
+        try {
+          const payload: LocationLog = {
+            userId: s.currentUserId,
+            sessionId: s.currentSessionId,
+            coords: {
+              lat: pos.coords.latitude,
+              lng: pos.coords.longitude,
+              accuracy: pos.coords.accuracy,
+              speed: pos.coords.speed ?? null,
+              heading: pos.coords.heading ?? null,
+            },
+            device: {
+              platform:
+                typeof navigator !== "undefined" ? navigator.userAgent : null,
+            },
+          };
+          const result = await sendLocation(
+            `/api/location?clockType=clockIn`,
+            payload
+          );
+          if (result.success) {
+            s.setLastLocationSentAt(s.currentSessionId, now);
+          }
+        } catch (err) {
+          console.warn("[FG Watch] sendLocation error", err);
+        } finally {
+          s.setLocationSendInProgress(false);
         }
-        locationSendInProgress = false;
       }
     );
+    s.setWatchId(watchId);
   } catch (err) {
     // Only log critical errors
     console.error("Failed to start foreground geolocation watch:", err);
@@ -237,7 +205,12 @@ async function startForegroundLocationWatch() {
 // Background tracking: uses @capgo/background-geolocation
 
 export async function startBackgroundLocationWatch() {
-  if (!isUserClockedIn || isBackgroundTrackingActive || !BackgroundGeolocation)
+  const s = useSessionStore.getState();
+  if (
+    !s.isUserClockedIn ||
+    s.isBackgroundTrackingActive ||
+    !BackgroundGeolocation
+  )
     return;
   try {
     await BackgroundGeolocation.start(
@@ -249,29 +222,33 @@ export async function startBackgroundLocationWatch() {
         distanceFilter: 50,
       },
       async (location, error) => {
+        const s = useSessionStore.getState();
         if (error || !location) return;
-        if (!isUserClockedIn) return;
-        if (currentSessionId === 0) {
-          lastKnownCoordinates = {
+        if (!s.isUserClockedIn) return;
+        if (s.currentSessionId === 0) {
+          s.setLastKnownCoordinates({
             lat: location.latitude,
             lng: location.longitude,
-          };
+          });
           return;
         }
-        if (locationSendInProgress) return;
-        if (!currentUserId || !currentSessionId) return;
-        lastKnownCoordinates = {
+        if (s.locationSendInProgress) return;
+        if (!s.currentUserId || !s.currentSessionId) return;
+        s.setLastKnownCoordinates({
           lat: location.latitude,
           lng: location.longitude,
-        };
-        // Throttle: Only send if 5 minutes have passed since lastLocationSentAt
+        });
+        // Throttle: Only send if interval has passed
         const now = Date.now();
-        if (lastLocationSentAt && now - lastLocationSentAt < WRITE_INTERVAL_MS)
+        if (
+          s.lastLocationSentAt &&
+          now - s.lastLocationSentAt < WRITE_INTERVAL_MS
+        )
           return;
-        locationSendInProgress = true;
+        s.setLocationSendInProgress(true);
         const payload: LocationLog = {
-          userId: currentUserId,
-          sessionId: currentSessionId,
+          userId: s.currentUserId,
+          sessionId: s.currentSessionId,
           coords: {
             lat: location.latitude,
             lng: location.longitude,
@@ -289,17 +266,12 @@ export async function startBackgroundLocationWatch() {
           payload
         );
         if (result.success) {
-          lastLocationSentAt = now;
-          try {
-            useSessionStore
-              .getState()
-              .setLastLocationSentAt(currentSessionId, now);
-          } catch {}
+          s.setLastLocationSentAt(s.currentSessionId, now);
         }
-        locationSendInProgress = false;
+        s.setLocationSendInProgress(false);
       }
     );
-    isBackgroundTrackingActive = true;
+    s.setIsBackgroundTrackingActive(true);
   } catch (err) {
     // Only log critical errors
     console.error("Failed to start background geolocation:", err);
@@ -309,20 +281,21 @@ export async function startBackgroundLocationWatch() {
 // Periodic location sending
 
 async function sendPeriodicLocation() {
-  if (!isUserClockedIn || !currentUserId || !currentSessionId) return;
-  if (!lastKnownCoordinates) return;
-  if (locationSendInProgress) return;
+  const s = useSessionStore.getState();
+  if (!s.isUserClockedIn || !s.currentUserId || !s.currentSessionId) return;
+  if (!s.lastKnownCoordinates) return;
+  if (s.locationSendInProgress) return;
   const now = Date.now();
-  if (lastLocationSentAt && now - lastLocationSentAt < WRITE_INTERVAL_MS)
+  if (s.lastLocationSentAt && now - s.lastLocationSentAt < WRITE_INTERVAL_MS)
     return;
-  locationSendInProgress = true;
+  s.setLocationSendInProgress(true);
   try {
     const payload: LocationLog = {
-      userId: currentUserId,
-      sessionId: currentSessionId,
+      userId: s.currentUserId,
+      sessionId: s.currentSessionId,
       coords: {
-        lat: lastKnownCoordinates.lat,
-        lng: lastKnownCoordinates.lng,
+        lat: s.lastKnownCoordinates.lat,
+        lng: s.lastKnownCoordinates.lng,
       },
       device: {
         platform: typeof navigator !== "undefined" ? navigator.userAgent : null,
@@ -333,16 +306,13 @@ async function sendPeriodicLocation() {
       payload
     );
     if (result.success) {
-      lastLocationSentAt = now;
-      try {
-        useSessionStore.getState().setLastLocationSentAt(currentSessionId, now);
-      } catch {}
+      s.setLastLocationSentAt(s.currentSessionId, now);
     }
   } catch (err) {
     // Only log critical errors
     console.error("[Periodic] Failed to send location:", err);
   } finally {
-    locationSendInProgress = false;
+    s.setLocationSendInProgress(false);
   }
 }
 
@@ -353,12 +323,13 @@ async function sendPeriodicLocation() {
  */
 export async function startClockInTracking(userId: string, sessionId: number) {
   try {
+    const s = useSessionStore.getState();
     if (!userId || !sessionId) {
       throw new Error("User ID and Session ID are required to start tracking");
     }
 
     // Prevent duplicate tracking initialization
-    if (isUserClockedIn && watchId && isBackgroundTrackingActive) {
+    if (s.isUserClockedIn && s.watchId && s.isBackgroundTrackingActive) {
       console.warn(
         "Tracking already started - ignoring duplicate startClockInTracking call"
       );
@@ -366,11 +337,9 @@ export async function startClockInTracking(userId: string, sessionId: number) {
     }
 
     // Store user and session IDs for callbacks
-    currentUserId = userId;
-    currentSessionId = sessionId;
-
-    // Mark user as clocked in immediately
-    isUserClockedIn = true;
+    s.setCurrentUserId(userId);
+    s.setCurrentSession(s.currentSessionId);
+    s.setIsUserClockedIn(true);
     console.log("User clocked in - starting location tracking");
 
     // Start foreground and background tracking (fire-and-forget)
@@ -378,18 +347,20 @@ export async function startClockInTracking(userId: string, sessionId: number) {
     startBackgroundLocationWatch();
 
     // Start periodic timer for location upload
-    if (!periodicSendTimer) {
-      periodicSendTimer = setInterval(() => {
+    if (!s.periodicSendTimer) {
+      const timer = setInterval(() => {
         sendPeriodicLocation();
       }, WRITE_INTERVAL_MS);
+      s.setPeriodicSendTimer(timer);
     }
 
     return { success: true };
   } catch (err) {
+    const s = useSessionStore.getState();
     console.error("Failed to start tracking on clock in:", err);
-    isUserClockedIn = false;
-    currentUserId = null;
-    currentSessionId = null;
+    s.setIsUserClockedIn(false);
+    s.setCurrentUserId(null);
+    s.setCurrentSession(null);
     return { success: false, error: err };
   }
 }
@@ -400,12 +371,22 @@ export async function startClockInTracking(userId: string, sessionId: number) {
  */
 export async function stopClockOutTracking() {
   try {
+    const s = useSessionStore.getState();
+    console.debug("[stopClockOutTracking] Called", {
+      currentUserId: s.currentUserId,
+      currentSessionId: s.currentSessionId,
+      isUserClockedIn: s.isUserClockedIn,
+      lastLocationSentAt: s.lastLocationSentAt,
+      watchId: s.watchId,
+      isBackgroundTrackingActive: s.isBackgroundTrackingActive,
+      periodicSendTimer: s.periodicSendTimer,
+    });
     // Post final clock-out location (do not block cleanup on failure)
-    if (currentUserId && currentSessionId) {
+    if (s.currentUserId && s.currentSessionId) {
       try {
         await sendLocation(`/api/location?clockType=clockOut`, {
-          userId: currentUserId,
-          sessionId: currentSessionId,
+          userId: s.currentUserId,
+          sessionId: s.currentSessionId,
           coords: null,
         });
       } catch (err) {
@@ -415,61 +396,89 @@ export async function stopClockOutTracking() {
     }
 
     // Reset lastLocationSentAt in both global and session store
-    lastLocationSentAt = null;
-    try {
-      // Defensive: sessionId may be null, but set anyway; use 0 to reset
-      if (currentSessionId) {
-        useSessionStore.getState().setLastLocationSentAt(currentSessionId, 0);
-      }
-    } catch {}
-
-    // Always clean up all state
-    isUserClockedIn = false;
-    currentUserId = null;
-    currentSessionId = null;
-    locationSendInProgress = false;
+    s.setLastLocationSentAt(s.currentSessionId || 0, 0);
 
     // Stop foreground tracking
-    if (watchId) {
+    if (s.watchId) {
       try {
-        await Geolocation.clearWatch({ id: watchId });
+        await Geolocation.clearWatch({ id: s.watchId });
       } catch (err) {
         // Only warn if clearWatch fails
         console.warn("clearWatch threw:", err);
       }
-      watchId = null;
+      s.setWatchId(null);
     }
 
     // Stop background tracking
-    if (isBackgroundTrackingActive && BackgroundGeolocation) {
+    if (s.isBackgroundTrackingActive && BackgroundGeolocation) {
       try {
         await BackgroundGeolocation.stop();
       } catch (err) {
         // Only warn if stop fails
         console.warn("BackgroundGeolocation.stop threw:", err);
       }
-      isBackgroundTrackingActive = false;
+      s.setIsBackgroundTrackingActive(false);
     }
 
     // Stop periodic timer
-    if (periodicSendTimer) {
-      clearInterval(periodicSendTimer);
-      periodicSendTimer = null;
+    if (s.periodicSendTimer) {
+      clearInterval(s.periodicSendTimer);
+      s.setPeriodicSendTimer(null);
     }
 
+    // Always clean up all state
+    s.setIsUserClockedIn(false);
+    s.setCurrentUserId(null);
+    s.setCurrentSession(null);
+    s.setLocationSendInProgress(false);
+
+    console.debug("[stopClockOutTracking] Cleanup complete", {
+      isUserClockedIn: s.isUserClockedIn,
+      currentUserId: s.currentUserId,
+      currentSessionId: s.currentSessionId,
+      lastLocationSentAt: s.lastLocationSentAt,
+      watchId: s.watchId,
+      isBackgroundTrackingActive: s.isBackgroundTrackingActive,
+      periodicSendTimer: s.periodicSendTimer,
+    });
     return { success: true };
   } catch (err) {
+    const s = useSessionStore.getState();
     // Only log critical errors
     console.error("Failed to stop tracking on clock out:", err);
+    // Always clean up all state even on error
+    s.setIsUserClockedIn(false);
+    s.setCurrentUserId(null);
+    s.setCurrentSession(null);
+    s.setLocationSendInProgress(false);
     return { success: false, error: err };
   }
+}
+
+/**
+ * Debug utility to print current tracking state
+ */
+export function debugLocationTrackingState() {
+  // eslint-disable-next-line no-console
+  const s = useSessionStore.getState();
+  console.debug("[LocationTracking State]", {
+    isUserClockedIn: s.isUserClockedIn,
+    currentUserId: s.currentUserId,
+    currentSessionId: s.currentSessionId,
+    lastLocationSentAt: s.lastLocationSentAt,
+    watchId: s.watchId,
+    isBackgroundTrackingActive: s.isBackgroundTrackingActive,
+    periodicSendTimer: s.periodicSendTimer,
+    locationSendInProgress: s.locationSendInProgress,
+    lastKnownCoordinates: s.lastKnownCoordinates,
+  });
 }
 
 /**
  * Returns true if user is currently being tracked (clocked in)
  */
 export function isTrackingActive(): boolean {
-  return isUserClockedIn;
+  return useSessionStore.getState().isUserClockedIn;
 }
 
 const GEOLOCATION_TIMEOUT = 2000; // ms, quick snapshot for clock ops
@@ -532,14 +541,12 @@ export async function fetchLatestUserLocation(userId: string) {
  * Fires foreground tracking in the background without sending to backend yet
  */
 export async function preStartLocationTracking(userId: string) {
+  const s = useSessionStore.getState();
   // Store userId temporarily
-  currentUserId = userId;
-
+  s.setCurrentUserId(userId);
   // Fake sessionId 0 for pre-warm
-  currentSessionId = 0;
-
-  isUserClockedIn = true; // allow watch callbacks to run
-
+  s.setCurrentSession(0);
+  s.setIsUserClockedIn(true); // allow watch callbacks to run
   // Start foreground watch only; skip background to reduce unnecessary writes
   startForegroundLocationWatch();
 }
