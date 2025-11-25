@@ -31,6 +31,7 @@ gcloud run deploy shift-scan-server \
   --concurrency 80 \
   --cpu-boost \
   --set-env-vars "NODE_ENV=${NODE_ENV}" \
+  --set-env-vars "BUILD_TOKEN=${BUILD_TOKEN}" \
   --set-env-vars "CORS_ORIGIN=${CORS_ORIGIN}" \
   --set-env-vars "CORS_ORIGIN_LOCAL=${CORS_ORIGIN_LOCAL}" \
   --set-env-vars "POSTGRES_PRISMA_URL=${POSTGRES_PRISMA_URL}" \
