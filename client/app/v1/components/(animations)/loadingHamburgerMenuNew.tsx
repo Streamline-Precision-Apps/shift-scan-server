@@ -1,4 +1,4 @@
-"use server";
+"use client";
 import { Buttons } from "../(reusable)/buttons";
 import { Holds } from "../(reusable)/holds";
 

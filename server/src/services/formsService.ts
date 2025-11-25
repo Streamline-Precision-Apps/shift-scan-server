@@ -77,6 +77,18 @@ export const ServiceGetForms = async () => {
     },
   });
 };
+
+/**
+ * Get all form submissions
+ */
+export const ServiceGetFormSubmissions = async () => {
+  return await prisma.formSubmission.findMany({
+    select: {
+      id: true,
+    },
+  });
+};
+
 /**
  * Create a form submission
  * @param {Object} params

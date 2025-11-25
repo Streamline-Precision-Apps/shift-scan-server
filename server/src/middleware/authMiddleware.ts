@@ -24,6 +24,12 @@ export function verifyToken(
 
   if (!token) return res.status(401).json({ message: "No token provided" });
 
+  // Allow build token for static export/build processes
+  if (process.env.BUILD_TOKEN && token === process.env.BUILD_TOKEN) {
+    req.user = { id: "build-script" } as JwtUserPayload; // dummy user info
+    return next();
+  }
+
   try {
     const decoded = jwt.verify(token, config.jwtSecret) as JwtUserPayload;
     req.user = decoded;

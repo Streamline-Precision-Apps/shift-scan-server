@@ -165,6 +165,26 @@ export async function getAllUsers(req: Request, res: Response) {
   }
 }
 
+export async function getAllTeams(req: Request, res: Response) {
+  try {
+    const users = await UserService.getAllTeamsService();
+
+    res.status(200).json({
+      success: true,
+      data: users,
+      message: "Users retrieved successfully",
+    });
+  } catch (error) {
+    const statusCode =
+      error instanceof Error && error.message.includes("not found") ? 404 : 500;
+    res.status(statusCode).json({
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error",
+      message: "Failed to retrieve user",
+    });
+  }
+}
+
 // GET /api/users/:id || GET /api/users/:id?query
 export async function getUserById(req: Request, res: Response) {
   try {

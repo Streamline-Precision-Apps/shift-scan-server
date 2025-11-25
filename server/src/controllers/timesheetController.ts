@@ -25,6 +25,7 @@ import {
   returnToPreviousTimesheetService,
   getContinueTimesheetService,
   deleteRefuelLogService,
+  getAllEquipmentLogs,
 } from "../services/timesheetService.js";
 
 import Express from "express";
@@ -523,6 +524,20 @@ export async function getUserRecentJobsiteDetailsController(
     return res
       .status(500)
       .json({ error: "Failed to fetch recent jobsite details." });
+  }
+}
+
+// GET /v1/timesheet/equipment-log
+export async function getAllEquipmentLogsController(
+  req: Express.Request,
+  res: Express.Response
+) {
+  try {
+    const logs = await getAllEquipmentLogs();
+    return res.json({ success: true, data: logs });
+  } catch (error) {
+    console.error("[getAllEquipmentLogsController] Error:", error);
+    return res.status(500).json({ error: "Failed to fetch equipment logs." });
   }
 }
 

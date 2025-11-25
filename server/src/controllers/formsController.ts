@@ -4,6 +4,7 @@ import {
   ServiceTeamSubmissions,
   ServiceFormDraft,
   ServiceForm,
+  ServiceGetFormSubmissions,
 } from "../services/formsService.js";
 
 // Controller for forms endpoints
@@ -130,6 +131,23 @@ export const updateFormSubmission = async (
       error instanceof Error && error.message
         ? error.message
         : "Failed to create form submission";
+    res.status(400).json({ message });
+  }
+};
+
+export const getFormsSubmissions = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    // Logic to get form submissions (this is a placeholder, replace with actual logic)
+    const submissions = await ServiceGetFormSubmissions();
+    res.status(200).json(submissions);
+  } catch (error) {
+    const message =
+      error instanceof Error && error.message
+        ? error.message
+        : "Failed to retrieve form submissions";
     res.status(400).json({ message });
   }
 };

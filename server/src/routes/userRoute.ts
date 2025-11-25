@@ -19,6 +19,7 @@ import {
   sessionController,
   endSessionController,
   userSignatureController,
+  getAllTeams,
 } from "../controllers/userController.js";
 
 const router = Router();
@@ -130,6 +131,8 @@ router.get("/:userId/crew/:crewId/online", getCrewOnlineStatus);
 router.get("/", verifyToken, getUsers);
 
 router.get("/All", verifyToken, getAllUsers);
+
+router.get("/teams", getAllTeams);
 
 /**
  * @swagger

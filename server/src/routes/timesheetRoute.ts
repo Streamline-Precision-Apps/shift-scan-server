@@ -22,6 +22,7 @@ import {
   getPreviousWorkController,
   getContinueTimesheetController,
   deleteRefuelLogController,
+  getAllEquipmentLogsController,
 } from "../controllers/timesheetController.js";
 
 const router = Router();
@@ -68,6 +69,8 @@ router.get("/:id/details", getTimesheetDetailsManagerController);
 
 // Generic user route (must come AFTER all specific /user/:userId/* routes)
 router.get("/user/:userId", getUserTimesheetsByDateController);
+
+router.get("/equipment-log", getAllEquipmentLogsController);
 
 // Create a new employee equipment log
 router.post("/equipment-log", createEmployeeEquipmentLogController);

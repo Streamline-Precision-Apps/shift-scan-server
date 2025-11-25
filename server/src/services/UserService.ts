@@ -432,6 +432,14 @@ export async function getCrewMembers(crewId: string) {
   return { crewMembers, crewType };
 }
 
+export async function getAllTeamsService() {
+  return await prisma.crew.findMany({
+    select: {
+      id: true,
+    },
+  });
+}
+
 export async function getUserInfo(userId: string) {
   const employee = await prisma.user.findUnique({
     where: {

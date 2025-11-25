@@ -19,6 +19,7 @@ import {
   getManagerFormApproval,
   getFormTemplate,
   updateFormSubmission,
+  getFormsSubmissions,
 } from "../controllers/formsController.js";
 
 const router = Router();
@@ -32,6 +33,7 @@ router.get("/form/:id", verifyToken, getFormTemplate);
 
 // Form submission
 router.get("/", getForms);
+router.get("/submissions", getFormsSubmissions);
 router.post("/submission", verifyToken, createFormSubmission);
 router.put("/submission/:id", verifyToken, updateFormSubmission);
 router.delete("/submission/:id", verifyToken, deleteFormSubmission);
