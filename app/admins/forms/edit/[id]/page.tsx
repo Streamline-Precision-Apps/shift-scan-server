@@ -1,5 +1,6 @@
 "use client";
 import FormPageClient from "./FormPageClient";
+import { getAllFormTemplatesIds } from "./formTemplates";
 
 <<<<<<< HEAD:app/admins/forms/edit/[id]/page.tsx
 export async function generateStaticParams() {
