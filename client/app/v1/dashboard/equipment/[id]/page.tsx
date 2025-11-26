@@ -1,3 +1,4 @@
+"use client";
 import EquipmentIdClientPageWrapper from "./_components/EquipmentIdClientPageWrapper";
 import { getAllEquipmentLogIds } from "./_components/getAllEquipmentLogIds";
 
@@ -13,5 +14,3 @@ const EquipmentLogPage = async ({ params }: { params: { id: string } }) => {
   const id = resolvedParams.id;
   return <EquipmentIdClientPageWrapper id={id} />;
 };
-
-export default EquipmentLogPage;

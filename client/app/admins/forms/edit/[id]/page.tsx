@@ -1,4 +1,4 @@
-import { getAllFormTemplatesIds } from "./formTemplates";
+"use client";
 import FormPageClient from "./FormPageClient";
 
 export async function generateStaticParams() {

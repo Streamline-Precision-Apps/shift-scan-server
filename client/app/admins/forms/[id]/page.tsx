@@ -1,3 +1,4 @@
+"use client";
 import { getAllFormTemplatesIds } from "../edit/[id]/formTemplates";
 import FormPageClient from "./FormPageClient";
 
@@ -18,5 +19,3 @@ const FormPage = async ({ params }: PageProps) => {
 
   return <FormPageClient id={id} />;
 };
-
-export default FormPage;

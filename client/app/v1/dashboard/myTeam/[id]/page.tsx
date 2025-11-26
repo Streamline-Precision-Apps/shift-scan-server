@@ -15,5 +15,3 @@ const Page = async ({ params }: { params: { id: string } }) => {
 
   return <FormPageClient id={id} />;
 };
-
-export default Page;
