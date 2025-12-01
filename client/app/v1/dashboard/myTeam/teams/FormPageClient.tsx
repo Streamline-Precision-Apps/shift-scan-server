@@ -299,7 +299,7 @@ const FormPageClient = ({ id }: FormPageClientProps) => {
                           {crewMembers.map((member) => (
                             <Holds key={member.id} className="w-full pb-3.5 ">
                               <Buttons
-                                href={`/v1/dashboard/myTeam/${id}/employee/${member.id}?rPath=${url}`}
+                                href={`/v1/dashboard/myTeam/teams/employee?tId=${id}&eId=${member.id}&rPath=${url}`}
                                 background="lightBlue"
                                 className="w-full h-full p-2 relative"
                               >

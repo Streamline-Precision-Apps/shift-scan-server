@@ -117,7 +117,7 @@ import { CardControls } from "./CardControls";
 import GeneralReviewSection from "./GeneralReviewSection";
 import TascoReviewSection from "./TascoReviewSection";
 import TruckingReviewSection from "./TruckingReviewSection";
-import AppManagerEditTimesheetModal from "@/app/v1/dashboard/myTeam/[id]/employee/[employeeId]/_components/TimesheetEditModal";
+import AppManagerEditTimesheetModal from "@/app/v1/dashboard/myTeam/teams/employee/_components/TimesheetEditModal";
 import {
   Dispatch,
   SetStateAction,

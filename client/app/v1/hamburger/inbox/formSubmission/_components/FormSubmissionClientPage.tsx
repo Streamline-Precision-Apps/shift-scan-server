@@ -78,7 +78,7 @@ export default function FormSubmissionClientPage({ id }: FormSubmissionClientPag
   const handleEdit = useCallback(() => {
     const params = new URLSearchParams(searchParams);
     params.delete("approvingStatus");
-    router.push(`/v1/hamburger/inbox/formSubmission/${id}?${params.toString()}`);
+    router.push(`/v1/hamburger/inbox/formSubmission?id=${id}&${params.toString()}`);
   }, [id, searchParams, router]);
 
   const handleApprove = useCallback(
