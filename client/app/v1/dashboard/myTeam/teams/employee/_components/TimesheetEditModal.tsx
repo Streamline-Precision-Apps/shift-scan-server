@@ -575,7 +575,7 @@ export default function AppManagerEditTimesheetModal(
         </div>
         {/* Sticky Action Bar for Edit/Exit and Save/Cancel */}
         {!editGeneral ? (
-          <div className="fixed bottom-0 left-0 w-full max-w-md bg-linear-to-tr from-app-dark-blue/20 to-app-blue/20 border-t flex gap-2 px-4 pt-3 pb-8 z-50 shadow-lg">
+          <div className="fixed bottom-0 w-full left-1/2 -translate-x-1/2 max-w-md bg-linear-to-tr from-app-dark-blue/20 to-app-blue/20 border-t flex gap-2 px-4 pt-3 pb-8 z-50 shadow-lg">
             <Button
               variant="outline"
               className="flex-1 flex items-center justify-center gap-2 min-h-12 rounded-lg text-base font-medium"
@@ -595,7 +595,7 @@ export default function AppManagerEditTimesheetModal(
             </Button>
           </div>
         ) : (
-          <div className="fixed bottom-0 left-0 w-full max-w-md bg-neutral-200 border-t flex gap-2 px-4 pt-3 pb-8 z-50 shadow-lg animate-fade-in">
+          <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full  max-w-md bg-neutral-200 border-t flex gap-2 px-4 pt-3 pb-8 z-50 shadow-lg animate-fade-in">
             <Button
               variant="outline"
               className="flex-1 flex items-center justify-center gap-2 min-h-12 rounded-lg text-base font-medium bg-white hover:bg-gray-100 transition-colors"

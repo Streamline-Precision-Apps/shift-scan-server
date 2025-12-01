@@ -3,11 +3,7 @@ import { Inputs } from "@/app/v1/components/(reusable)/inputs";
 import { format } from "date-fns";
 import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
-import { useParams } from "next/navigation";
-
-import { Grids } from "@/app/v1/components/(reusable)/grids";
-import { Holds } from "@/app/v1/components/(reusable)/holds";
-import { Images } from "@/app/v1/components/(reusable)/images";
+import { useSearchParams } from "next/navigation";
 import AppManagerEditTimesheetModal from "./TimesheetEditModal";
 import { Button } from "@/app/v1/components/ui/button";
 import { useTimesheetDataSimple } from "./_hooks/useTimesheetDataSimple";
@@ -17,12 +13,9 @@ export default function EmployeeTimeCards() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const t = useTranslations("MyTeam");
-  const today = useMemo(() => format(new Date(), "yyyy-MM-dd"), []);
 
-  const params = useParams();
-  const employeeId = Array.isArray(params.employeeId)
-    ? params.employeeId[0]
-    : params.employeeId;
+  const searchParams = useSearchParams();
+  const employeeId = searchParams.get("eId");
 
   const { data, loading, error, updateDate, date, reset } =
     useTimesheetDataSimple(employeeId);

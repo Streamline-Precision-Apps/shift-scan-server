@@ -27,7 +27,7 @@ interface UseTimesheetDataReturn {
 }
 
 export const useTimesheetDataSimple = (
-  employeeId: string | undefined
+  employeeId: string | null
 ): UseTimesheetDataReturn => {
   const [data, setData] = useState<TimesheetDataResponse | null>(null);
   const [loading, setLoading] = useState(false);
@@ -41,6 +41,7 @@ export const useTimesheetDataSimple = (
     if (!employeeId) return;
     setLoading(true);
     setError(null);
+    setData(null); // Clear previous data when fetching new data
 
     try {
       // Use the new backend endpoint and apiRequest util
@@ -59,7 +60,7 @@ export const useTimesheetDataSimple = (
 
   useEffect(() => {
     fetchTimesheets();
-  }, [fetchTimesheets]);
+  }, [fetchTimesheets, currentDate]);
 
   const reload = async () => {
     await new Promise((resolve) => setTimeout(resolve, 2000));

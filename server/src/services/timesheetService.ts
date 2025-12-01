@@ -120,6 +120,28 @@ export async function updateTimesheetService({
   }
 }
 
+/**
+ * Helper function to get start and end of day in local timezone
+ * Converts a date string (YYYY-MM-DD) to the start and end times of that day
+ * @param dateString - Date string in format YYYY-MM-DD
+ * @returns Object with startOfDay and endOfDay as Date objects
+ */
+function getDayRangeFromString(dateString: string): {
+  startOfDay: Date;
+  endOfDay: Date;
+} {
+  // Parse the date string in local timezone
+  const parts = dateString.split("-");
+  const year = parseInt(parts[0]!, 10);
+  const month = parseInt(parts[1]!, 10) - 1; // JavaScript months are 0-indexed
+  const day = parseInt(parts[2]!, 10);
+
+  const startOfDay = new Date(year, month, day, 0, 0, 0, 0);
+  const endOfDay = new Date(year, month, day, 23, 59, 59, 999);
+
+  return { startOfDay, endOfDay };
+}
+
 export async function getUserTimesheetsByDate({
   employeeId,
   dateParam,
@@ -130,9 +152,15 @@ export async function getUserTimesheetsByDate({
   let start: Date | undefined = undefined;
   let end: Date | undefined = undefined;
   if (dateParam) {
+<<<<<<< HEAD
     const range = createDateRange(dateParam);
     start = range.start;
     end = range.end;
+=======
+    const { startOfDay, endOfDay } = getDayRangeFromString(dateParam);
+    start = startOfDay;
+    end = endOfDay;
+>>>>>>> 70f9b631 (updated the dae selector to update correctly with query parameters)
   }
 
   // Only include date filter if both start and end are defined
