@@ -30,6 +30,7 @@ export default function TeamMemberClientPage({
   const urls = useSearchParams();
   const rPath = urls.get("rPath");
   const timeCard = urls.get("timeCard");
+  const tId = urls.get("tId");
 
   const [activeTab, setActiveTab] = useState(1);
 
@@ -60,7 +61,7 @@ export default function TeamMemberClientPage({
                   router.push(
                     timeCard
                       ? timeCard
-                      : `/v1/dashboard/myTeam/${id}?rPath=${rPath}`
+                      : `/v1/dashboard/myTeam/teams?tId=${tId}&rPath=${rPath}`
                   )
                 }
               >

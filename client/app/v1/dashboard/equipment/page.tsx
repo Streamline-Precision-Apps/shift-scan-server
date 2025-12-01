@@ -311,7 +311,7 @@ export default function EquipmentLogClient() {
                                                   : "orange"
                                               }
                                               shadow={"none"}
-                                              href={`/v1/dashboard/equipment/${log.id}`}
+                                              href={`/v1/dashboard/equipment/check-out?id=${log.id}`}
                                               className="py-0.5"
                                             >
                                               <Titles size={"h4"}>

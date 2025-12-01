@@ -13,7 +13,7 @@ import {
   updateRefuelLog,
 } from "@/app/lib/actions/truckingActions";
 import Spinner from "@/app/v1/components/(animations)/spinner";
-import UsageData from "./../_components/UsageData";
+import UsageData from "./UsageData";
 import { Buttons } from "@/app/v1/components/(reusable)/buttons";
 import { Titles } from "@/app/v1/components/(reusable)/titles";
 
@@ -24,7 +24,7 @@ import {
   RefuelLogData,
   Refueled,
   EquipmentState,
-} from "./../types";
+} from "../types";
 
 import { useNotification } from "@/app/lib/context/NotificationContext";
 import { apiRequest } from "@/app/lib/utils/api-Utils";

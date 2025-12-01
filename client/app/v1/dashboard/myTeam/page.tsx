@@ -235,7 +235,7 @@ function MyTeamContent() {
                           <Buttons
                             key={team.id}
                             background="lightBlue"
-                            href={`/v1/dashboard/myTeam/${team.id}?rPath=${url}`}
+                            href={`/v1/dashboard/myTeam/teams?tId=${team.id}&rPath=${url}`}
                             className="py-3 w-full relative"
                           >
                             <Titles size="lg">{team.name}</Titles>

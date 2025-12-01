@@ -197,7 +197,7 @@ export default function RTab({ isManager }: { isManager: boolean }) {
                         background={"lightBlue"}
                         onClick={() => {
                           router.push(
-                            `/v1/hamburger/inbox/formSubmission/${form.formTemplateId}?submissionId=${form.id}&status=${form.status}&approvingStatus=${isManager}&formApprover=TRUE`
+                            `/v1/hamburger/inbox/formSubmission?id=${form.formTemplateId}&submissionId=${form.id}&status=${form.status}&approvingStatus=${isManager}&formApprover=TRUE`
                           );
                         }}
                         disabled={isLoading}

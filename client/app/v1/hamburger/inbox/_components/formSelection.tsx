@@ -188,7 +188,7 @@ export default function FormSelection({
         return;
       }
       router.push(
-        `/v1/hamburger/inbox/formSubmission/${selectedForm}?submissionId=${submission.id}&status=DRAFT`
+        `/v1/hamburger/inbox/formSubmission?id=${selectedForm}&submissionId=${submission.id}&status=DRAFT`
       );
     } catch (error) {
       setCreateLoading(false);
@@ -331,7 +331,7 @@ export default function FormSelection({
                                   }
                                   onClick={() => {
                                     router.push(
-                                      `/v1/hamburger/inbox/formSubmission/${form.formTemplateId}?submissionId=${form.id}&status=${form.status}`
+                                      `/v1/hamburger/inbox/formSubmission?id=${form.formTemplateId}&submissionId=${form.id}&status=${form.status}`
                                     );
                                   }}
                                   disabled={isLoading}
