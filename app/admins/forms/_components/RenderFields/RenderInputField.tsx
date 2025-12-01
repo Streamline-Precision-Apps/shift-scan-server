@@ -4,6 +4,9 @@ import { Label } from "@/app/v1/components/ui/label";
 
 export default function RenderInputField({
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4a3a7255 (After build with finished date polish.)
     field,
     value,
     handleFieldChange,
@@ -12,6 +15,7 @@ export default function RenderInputField({
     error,
     disabled,
     useNativeInput = false,
+<<<<<<< HEAD
 }: {
     field: {
         id: string;
@@ -61,20 +65,25 @@ export default function RenderInputField({
   error,
   disabled,
   useNativeInput = false,
+=======
+>>>>>>> 4a3a7255 (After build with finished date polish.)
 }: {
-  field: {
-    id: string;
-    label: string;
-    required: boolean;
-  };
-  value: string;
-  handleFieldChange: (id: string, value: string) => void;
-  handleFieldTouch: (id: string) => void;
-  touchedFields: Record<string, boolean>;
-  error: string | null;
-  disabled?: boolean;
-  useNativeInput?: boolean;
+    field: {
+        id: string;
+        label: string;
+        required: boolean;
+        maxLength?: number | null;
+        minLength?: number | null;
+    };
+    value: string;
+    handleFieldChange: (id: string, value: string) => void;
+    handleFieldTouch: (id: string) => void;
+    touchedFields: Record<string, boolean>;
+    error: string | null;
+    disabled?: boolean;
+    useNativeInput?: boolean;
 }) {
+<<<<<<< HEAD
   return (
     <div key={field.id} className="flex flex-col">
       <Label className="text-sm font-medium mb-1">
@@ -98,4 +107,30 @@ export default function RenderInputField({
     </div>
   );
 >>>>>>> 5e409804 (migrated client folder to main branch and removed the client structure)
+=======
+    return (
+        <div key={field.id} className="flex flex-col">
+            <Label className="text-sm font-medium mb-1">
+                {field.label}{" "}
+                {field.required && <span className="text-red-500">*</span>}
+            </Label>
+            <Input
+                type="text"
+                className={`border rounded px-2 py-1 ${
+                    touchedFields[field.id] && error ? "border-red-500" : ""
+                }`}
+                value={value}
+                onChange={(e) => handleFieldChange(field.id, e.target.value)}
+                onBlur={() => handleFieldTouch(field.id)}
+                required={field.required}
+                disabled={disabled}
+                maxLength={field.maxLength ?? undefined}
+                minLength={field.minLength ?? undefined}
+            />
+            {touchedFields[field.id] && error && (
+                <p className="text-xs text-red-500 mt-1">{error}</p>
+            )}
+        </div>
+    );
+>>>>>>> 4a3a7255 (After build with finished date polish.)
 }
