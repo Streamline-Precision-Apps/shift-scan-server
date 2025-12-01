@@ -23,32 +23,55 @@ export const useUserHistory = () => {
   const [pathHistoryUserId, setPathHistoryUserId] = useState<string | null>(
     null
   );
-  const [loadingHistory, setLoadingHistory] = useState(false);
+  const [loadingHistoryUserId, setLoadingHistoryUserId] = useState<
+    string | null
+  >(null);
   const [historyStats, setHistoryStats] = useState<{
     count: number;
     avgAccuracy: number;
   } | null>(null);
+  const [pathLayers, setPathLayers] = useState<{
+    polyline: L.Polyline | null;
+    outline: L.Polyline | null;
+    markers: L.CircleMarker[];
+  }>({
+    polyline: null,
+    outline: null,
+    markers: [],
+  });
 
-  const pathPolylineRef = useRef<L.Polyline | null>(null);
-  const pathOutlineRef = useRef<L.Polyline | null>(null);
-  const pathMarkersRef = useRef<L.CircleMarker[]>([]);
-
-  const clearPathLayers = useCallback((map: L.Map | null) => {
-    if (pathPolylineRef.current && map) {
-      map.removeLayer(pathPolylineRef.current);
-      pathPolylineRef.current = null;
-    }
-    if (pathOutlineRef.current && map) {
-      map.removeLayer(pathOutlineRef.current);
-      pathOutlineRef.current = null;
-    }
-    pathMarkersRef.current.forEach((marker) => {
-      if (map) {
-        map.removeLayer(marker);
+  const clearPathLayers = useCallback(
+    (map: L.Map | null) => {
+      if (pathLayers.polyline && map) {
+        map.removeLayer(pathLayers.polyline);
       }
-    });
-    pathMarkersRef.current = [];
-  }, []);
+      if (pathLayers.outline && map) {
+        map.removeLayer(pathLayers.outline);
+      }
+      pathLayers.markers.forEach((marker) => {
+        if (map) {
+          map.removeLayer(marker);
+        }
+      });
+      setPathLayers({
+        polyline: null,
+        outline: null,
+        markers: [],
+      });
+    },
+    [pathLayers]
+  );
+
+  const clearUserHistory = useCallback(
+    (map: L.Map | null, showAllMarkers: () => void) => {
+      clearPathLayers(map);
+      setPathHistoryUserId(null);
+      setHistoryStats(null);
+      setLoadingHistoryUserId(null);
+      showAllMarkers();
+    },
+    [clearPathLayers]
+  );
 
   const displayUserHistory = useCallback(
     async (
@@ -59,7 +82,10 @@ export const useUserHistory = () => {
       showAllMarkers: () => void
     ) => {
       try {
-        setLoadingHistory(true);
+        setLoadingHistoryUserId(userId);
+
+        // Add a small delay for better UX
+        await new Promise((resolve) => setTimeout(resolve, 300));
 
         // Clear existing paths
         clearPathLayers(map);
@@ -68,6 +94,7 @@ export const useUserHistory = () => {
         if (pathHistoryUserId === userId) {
           setPathHistoryUserId(null);
           setHistoryStats(null);
+          setLoadingHistoryUserId(null);
           showAllMarkers();
           return;
         }
@@ -82,10 +109,7 @@ export const useUserHistory = () => {
 
         // Extract and sort coordinates
         const coordinates = historyData
-          .sort(
-            (a, b) =>
-              new Date(a.ts).getTime() - new Date(b.ts).getTime()
-          )
+          .sort((a, b) => new Date(a.ts).getTime() - new Date(b.ts).getTime())
           .map((loc) => [loc.coords.lat, loc.coords.lng] as [number, number]);
 
         if (coordinates.length > 0) {
@@ -131,7 +155,7 @@ export const useUserHistory = () => {
           }
 
           // Create outline polyline
-          pathOutlineRef.current = L.polyline(routedCoordinates, {
+          const outlinePolyline = L.polyline(routedCoordinates, {
             color: "#ffffff",
             weight: 16,
             opacity: 0.8,
@@ -139,7 +163,7 @@ export const useUserHistory = () => {
           }).addTo(map);
 
           // Create main polyline
-          pathPolylineRef.current = L.polyline(routedCoordinates, {
+          const mainPolyline = L.polyline(routedCoordinates, {
             color: "#3b82f6",
             weight: 10,
             opacity: 1,
@@ -149,6 +173,7 @@ export const useUserHistory = () => {
           }).addTo(map);
 
           // Add circle markers at consolidated points
+          const circleMarkers: L.CircleMarker[] = [];
           consolidatedCoordinates.forEach((coord) => {
             const circleMarker = L.circleMarker(coord, {
               radius: 8,
@@ -158,7 +183,13 @@ export const useUserHistory = () => {
               opacity: 1,
               fillOpacity: 0.9,
             }).addTo(map);
-            pathMarkersRef.current.push(circleMarker);
+            circleMarkers.push(circleMarker);
+          });
+
+          setPathLayers({
+            polyline: mainPolyline,
+            outline: outlinePolyline,
+            markers: circleMarkers,
           });
 
           // Fit map to show entire path
@@ -173,19 +204,20 @@ export const useUserHistory = () => {
         console.error("Error fetching user history:", err);
         alert("Failed to fetch user history");
       } finally {
-        setLoadingHistory(false);
+        setLoadingHistoryUserId(null);
       }
     },
-    [pathHistoryUserId, clearPathLayers]
+    [pathHistoryUserId, clearPathLayers, pathLayers]
   );
 
   return {
     pathHistoryUserId,
     setPathHistoryUserId,
-    loadingHistory,
+    loadingHistoryUserId,
     historyStats,
     setHistoryStats,
     displayUserHistory,
+    clearUserHistory,
     clearPathLayers,
   };
 };

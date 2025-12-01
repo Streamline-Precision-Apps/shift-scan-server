@@ -20,7 +20,7 @@ export const useMarkers = () => {
     (marker: L.Marker, markerId: string, map: L.Map | null) => {
       const zoom = map?.getZoom() || 11;
       const isFocused = false; // Will be set from parent
-      const baseSize = isFocused ? 50 : 10;
+      const baseSize = isFocused ? 40 : 8;
       const iconSize = calculateIconSize(zoom, isFocused, baseSize);
 
       const userLocation = locationsRef.current.find(
@@ -45,7 +45,7 @@ export const useMarkers = () => {
     ) => {
       const zoom = map?.getZoom() || 11;
       const isFocused = false; // Will be set from parent
-      const baseSize = isFocused ? 50 : 10;
+      const baseSize = isFocused ? 40 : 8;
       const iconSize = calculateIconSize(zoom, isFocused, baseSize);
 
       const newClusterIcon = createClusterIcon(

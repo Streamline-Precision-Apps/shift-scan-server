@@ -53,9 +53,10 @@ const LocationMap: React.FC = () => {
 
   const {
     pathHistoryUserId,
-    loadingHistory,
+    loadingHistoryUserId,
     historyStats,
     displayUserHistory: displayUserHistoryFn,
+    clearUserHistory,
   } = useUserHistory();
 
   const {
@@ -136,7 +137,7 @@ const LocationMap: React.FC = () => {
       const clusterId = `cluster_${clusterIndex}`;
       const zoom = map.current?.getZoom() || 11;
       const isFocused = focusedId === clusterId;
-      const baseSize = isFocused ? 40 : 10;
+      const baseSize = 20;
       const iconSize = calculateIconSize(zoom, isFocused, baseSize);
 
       const clusterIcon = createClusterIcon(
@@ -174,7 +175,7 @@ const LocationMap: React.FC = () => {
       const { lat, lng } = userLocation.location.coords;
       const zoom = map.current?.getZoom() || 11;
       const isFocused = focusedId === `marker_${markerId}`;
-      const baseSize = isFocused ? 50 : 30;
+      const baseSize = 20;
       const iconSize = calculateIconSize(zoom, isFocused, baseSize);
 
       if (markersRef.current[markerId]) {
@@ -230,15 +231,20 @@ const LocationMap: React.FC = () => {
     );
   };
 
+  // Handle closing user history
+  const handleCloseHistory = () => {
+    clearUserHistory(map.current, showAllMarkers);
+  };
+
   // Handle sidebar close
   const handleCloseSidebar = () => {
     setSidebarOpen(false);
     setFocusedId(null);
-    showAllMarkers();
+    clearUserHistory(map.current, showAllMarkers);
   };
 
   return (
-    <div className="w-full h-full flex flex-col bg-gray-50">
+    <div className="w-full h-full flex flex-col ">
       <LocationMapHeader
         userLocationsCount={userLocations.length}
         loading={loading}
@@ -268,10 +274,12 @@ const LocationMap: React.FC = () => {
           <LocationMapSidebar
             selectedCluster={selectedCluster}
             pathHistoryUserId={pathHistoryUserId}
-            loadingHistory={loadingHistory}
+            loadingHistoryUserId={loadingHistoryUserId}
             historyStats={historyStats}
             onUserHistoryClick={handleUserHistory}
+            onCloseHistory={handleCloseHistory}
             onClose={handleCloseSidebar}
+            selectedDate={selectedDate}
           />
         )}
       </div>

@@ -27,9 +27,9 @@ export const markerStyles = `
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #4f46e5;
+    background-color: #84cfef;
     border-radius: 50%;
-    color: white;
+    color: #1e3a5f;
     font-weight: bold;
     border: 3px solid var(--color-app-dark-blue, #1e3a5f);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -141,6 +141,6 @@ export const calculateIconSize = (
   isFocused: boolean,
   baseSize: number = 10
 ): number => {
-  const focusedBase = isFocused ? 50 : baseSize;
+  const focusedBase = baseSize;
   return Math.max(focusedBase, focusedBase + zoom * 2);
 };

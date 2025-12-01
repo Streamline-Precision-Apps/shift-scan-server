@@ -5,11 +5,11 @@ export const LocationMapLegend: React.FC = () => {
     <div className="bg-white border-t border-gray-200 p-4">
       <div className="flex items-center gap-4 text-sm text-gray-600">
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 bg-blue-400 rounded-full border-2 border-blue-600"></div>
+          <div className="w-6 h-6 bg-cyan-400 rounded-full border-2 border-cyan-600"></div>
           <span>Individual User</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 bg-indigo-500 rounded-full flex items-center justify-center text-white text-xs font-bold border-2 border-white">
+          <div className="w-6 h-6 bg-cyan-400 rounded-full flex items-center justify-center text-gray-900 text-xs font-bold border-2 border-white">
             2+
           </div>
           <span>Group</span>
