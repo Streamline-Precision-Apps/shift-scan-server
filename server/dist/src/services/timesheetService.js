@@ -1,6 +1,7 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="572cf966-741d-56b7-a039-be2da390de14")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="fccb4ef6-f456-54d4-8fb0-4ff4cfa91649")}catch(e){}}();
 import { formatISO } from "date-fns";
+import { createDateRange } from "../lib/dateUtils.js";
 import prisma from "../lib/prisma.js";
 export async function updateTimesheetService({ id, editorId, changes, changeReason, numberOfChanges, startTime, endTime, Jobsite, CostCode, comment, }) {
     try {
@@ -90,8 +91,9 @@ export async function getUserTimesheetsByDate({ employeeId, dateParam, }) {
     let start = undefined;
     let end = undefined;
     if (dateParam) {
-        start = new Date(dateParam + "T00:00:00.000Z");
-        end = new Date(dateParam + "T23:59:59.999Z");
+        const range = createDateRange(dateParam);
+        start = range.start;
+        end = range.end;
     }
     // Only include date filter if both start and end are defined
     const where = {
@@ -389,11 +391,11 @@ export async function createGeneralTimesheetService({ data, type, }) {
     const createdTimeSheet = await prisma.$transaction(async (prisma) => {
         // Build create data
         const createData = {
-            date: data.date,
+            date: new Date(data.date),
             Jobsite: { connect: { id: data.jobsiteId } },
             User: { connect: { id: data.userId } },
             CostCode: { connect: { name: data.costCode } },
-            startTime: data.startTime,
+            startTime: new Date(data.startTime),
             workType: "LABOR",
             status: "DRAFT",
             clockInLat: data.clockInLat || null,
@@ -448,11 +450,11 @@ export async function createMechanicTimesheetService({ data, type, }) {
     const createdTimeCard = await prisma.$transaction(async (prisma) => {
         // Build create data
         const createData = {
-            date: formatISO(data.date),
+            date: new Date(data.date),
             Jobsite: { connect: { id: data.jobsiteId } },
             User: { connect: { id: data.userId } },
             CostCode: { connect: { name: data.costCode } },
-            startTime: formatISO(data.startTime),
+            startTime: new Date(data.startTime),
             workType: "MECHANIC",
             status: "DRAFT",
             clockInLat: data.clockInLat || null,
@@ -489,7 +491,7 @@ export async function createMechanicTimesheetService({ data, type, }) {
             await prisma.timeSheet.update({
                 where: { id: data.previousTimeSheetId },
                 data: {
-                    endTime: formatISO(data.endTime),
+                    endTime: new Date(data.endTime),
                     comment: data.previoustimeSheetComments || null,
                     status: "PENDING",
                     clockOutLat: data.clockOutLat || null,
@@ -506,11 +508,11 @@ export async function createTruckDriverTimesheetService({ data, type, }) {
     return await prisma.$transaction(async (prisma) => {
         // Build create data
         const createData = {
-            date: formatISO(data.date),
+            date: new Date(data.date),
             Jobsite: { connect: { id: data.jobsiteId } },
             User: { connect: { id: data.userId } },
             CostCode: { connect: { name: data.costCode } },
-            startTime: formatISO(data.startTime),
+            startTime: new Date(data.startTime),
             workType: "TRUCK_DRIVER",
             status: "DRAFT",
             clockInLat: data.clockInLat || null,
@@ -556,7 +558,7 @@ export async function createTruckDriverTimesheetService({ data, type, }) {
             await prisma.timeSheet.update({
                 where: { id: data.previousTimeSheetId },
                 data: {
-                    endTime: formatISO(data.endTime),
+                    endTime: new Date(data.endTime),
                     comment: data.previoustimeSheetComments || null,
                     status: "PENDING",
                     clockOutLat: data.clockOutLat || null,
@@ -573,11 +575,11 @@ export async function createTascoTimesheetService({ data, type, }) {
     return await prisma.$transaction(async (prisma) => {
         // Build create data
         const createData = {
-            date: formatISO(data.date),
+            date: new Date(data.date),
             Jobsite: { connect: { id: data.jobsiteId } },
             User: { connect: { id: data.userId } },
             CostCode: { connect: { name: data.costCode } },
-            startTime: formatISO(data.startTime),
+            startTime: new Date(data.startTime),
             workType: "TASCO",
             status: "DRAFT",
             clockInLat: data.clockInLat || null,
@@ -626,7 +628,7 @@ export async function createTascoTimesheetService({ data, type, }) {
             await prisma.timeSheet.update({
                 where: { id: data.previousTimeSheetId },
                 data: {
-                    endTime: formatISO(data.endTime),
+                    endTime: new Date(data.endTime),
                     comment: data.previoustimeSheetComments || null,
                     status: "PENDING",
                     clockOutLat: data.clockOutLat || null,
@@ -1459,4 +1461,4 @@ export async function deleteRefuelLogService(refuelLogId) {
     }
 }
 //# sourceMappingURL=timesheetService.js.map
-//# debugId=572cf966-741d-56b7-a039-be2da390de14
+//# debugId=fccb4ef6-f456-54d4-8fb0-4ff4cfa91649

@@ -76,8 +76,6 @@ export async function createJobsite(data: any) {
       creationReason: creationReasoning,
       approvalStatus: "PENDING",
       status: "ACTIVE",
-      createdAt: new Date(),
-      updatedAt: new Date(),
       CCTags: {
         connect: { id: "All" },
       },

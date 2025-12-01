@@ -191,6 +191,7 @@ export async function getTascoReport(filters?: {
       },
     },
     select: {
+      id: true,
       date: true,
       startTime: true,
       endTime: true,

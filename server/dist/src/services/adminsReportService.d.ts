@@ -1,5 +1,6 @@
 export declare function getTruckingReport(): Promise<{
     id: string;
+    timeSheetId: number;
     driver: string;
     truckId: string | null;
     truckName: string | null;
@@ -36,8 +37,14 @@ export declare function getTruckingReport(): Promise<{
     EndingMileage: number | null;
     notes: string | null;
 }[]>;
+type FLoadDetail = {
+    id: number;
+    weight: number | null;
+    screenType: "SCREENED" | "UNSCREENED" | null;
+};
 type TascoReportRow = {
     id: string;
+    timeSheetId: number;
     shiftType: string;
     submittedDate: Date;
     employee: string;
@@ -50,6 +57,7 @@ type TascoReportRow = {
     jobsiteId: string;
     loadsABCDE: number | null;
     loadsF: number | null;
+    fLoadDetails: FLoadDetail[];
     materials: string;
     startTime: Date;
     endTime: Date | null;
@@ -65,6 +73,7 @@ export declare function getTascoReport(filters?: {
 }): Promise<TascoReportRow[]>;
 export declare function getMechanicReport(): Promise<{
     id: number;
+    timeSheetId: number;
     employeeName: string;
     equipmentWorkedOn: string;
     hours: number;

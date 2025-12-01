@@ -726,9 +726,7 @@ export const updateFormSubmissionService = async (
   }
 
   // Build update data object
-  const updateData: any = {
-    updatedAt: new Date(),
-  };
+  const updateData: any = {};
   if (formData) updateData.data = formData;
   if (typeof title === "string") updateData.title = title;
   if (typeof formType === "string") updateData.formType = formType;

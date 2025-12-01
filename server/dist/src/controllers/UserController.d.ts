@@ -43,4 +43,4 @@ export declare function sessionController(req: Request, res: Response): Promise<
 export declare function endSessionController(req: Request, res: Response): Promise<Response<any, Record<string, any>> | undefined>;
 export declare function userSignatureController(req: Request, res: Response): Promise<Response<any, Record<string, any>> | undefined>;
 export {};
-//# sourceMappingURL=userController.d.ts.map
+//# sourceMappingURL=UserController.d.ts.map

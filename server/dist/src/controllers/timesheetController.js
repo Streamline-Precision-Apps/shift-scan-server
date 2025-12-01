@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="632371dd-262d-56db-a543-d0c6abadec0c")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="ced78969-b0c7-5b2c-923c-e286b5c0ff10")}catch(e){}}();
 import { createGeneralTimesheetService, approveTimesheetsBatchService, updateTimesheetService, getUserTimesheetsByDate, getTimesheetDetailsManager, getManagerCrewTimesheets, createMechanicTimesheetService, createTascoTimesheetService, createTruckDriverTimesheetService, getRecentTimeSheetForUser, getTimesheetActiveStatus, getBannerDataForTimesheet, getLogsForDashboard, getClockOutComment, getEquipmentLogs, getRecentJobDetails, createEmployeeEquipmentLogService, getEmployeeEquipmentLogDetails, deleteEmployeeEquipmentLog, updateEmployeeEquipmentLogService, getClockOutDetailsService, updateClockOutService, getPreviousTimesheet, returnToPreviousTimesheetService, getContinueTimesheetService, deleteRefuelLogService, } from "../services/timesheetService.js";
 import Express from "express";
 // GET /v1/timesheet/user/:userId/active-status
@@ -550,4 +550,4 @@ export async function deleteRefuelLogController(req, res) {
     }
 }
 //# sourceMappingURL=timesheetController.js.map
-//# debugId=632371dd-262d-56db-a543-d0c6abadec0c
+//# debugId=ced78969-b0c7-5b2c-923c-e286b5c0ff10

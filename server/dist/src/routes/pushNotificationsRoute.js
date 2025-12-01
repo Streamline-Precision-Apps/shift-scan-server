@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="b7d49823-2553-5687-a6ba-1a185464edda")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="215f7981-d9ba-5c77-a081-103727db81ec")}catch(e){}}();
 import { Router } from "express";
 import { getFirebaseAdmin } from "../lib/firebase.js";
 import NotificationService from "../services/notificationService.js";
@@ -278,4 +278,4 @@ router.post("/unsubscribe-devices-from-topic", async (req, res) => {
 router.post("/mark-read", markReadController);
 export default router;
 //# sourceMappingURL=pushNotificationsRoute.js.map
-//# debugId=b7d49823-2553-5687-a6ba-1a185464edda
+//# debugId=215f7981-d9ba-5c77-a081-103727db81ec

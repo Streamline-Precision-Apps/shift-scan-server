@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="f926564a-156c-5598-ba6a-afae281d20b4")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="d3ecd104-01b2-53da-8833-1e630911e2ba")}catch(e){}}();
 import prisma from "../lib/prisma.js";
 // Helper function to get start and end of day in user's local timezone
 function getDayRange(date = new Date()) {
@@ -464,4 +464,4 @@ export async function saveUserClockOutLocation(userId, sessionId, coords, device
     }
 }
 //# sourceMappingURL=locationService.js.map
-//# debugId=f926564a-156c-5598-ba6a-afae281d20b4
+//# debugId=d3ecd104-01b2-53da-8833-1e630911e2ba

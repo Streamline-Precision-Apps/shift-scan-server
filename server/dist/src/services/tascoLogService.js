@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="0d384df8-d225-51d5-a8e6-d6bbc4e0caa7")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="25b82cba-f5b9-59ae-bcff-0d71ed473703")}catch(e){}}();
 import prisma from "../lib/prisma.js";
 /**
  * TascoLog Service Layer
@@ -269,4 +269,4 @@ export async function getActiveTascoLogForUser(userId) {
     return activeTimesheet.TascoLogs[0];
 }
 //# sourceMappingURL=tascoLogService.js.map
-//# debugId=0d384df8-d225-51d5-a8e6-d6bbc4e0caa7
+//# debugId=25b82cba-f5b9-59ae-bcff-0d71ed473703

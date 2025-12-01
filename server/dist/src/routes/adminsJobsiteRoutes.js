@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="815c5b5c-13e9-54a1-b5b7-b3a2889dc6ef")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="9092bcf6-a00f-5434-a70d-d9960289a085")}catch(e){}}();
 import { Router } from "express";
 import { getAllJobsitesController, getJobsiteByIdController, createJobsiteController, updateJobsiteController, archiveJobsiteController, restoreJobsiteController, deleteJobsiteController, } from "../controllers/adminJobsiteController.js";
 const router = Router();
@@ -19,4 +19,4 @@ router.put("/:id/restore", restoreJobsiteController);
 router.delete("/:id", deleteJobsiteController);
 export default router;
 //# sourceMappingURL=adminsJobsiteRoutes.js.map
-//# debugId=815c5b5c-13e9-54a1-b5b7-b3a2889dc6ef
+//# debugId=9092bcf6-a00f-5434-a70d-d9960289a085

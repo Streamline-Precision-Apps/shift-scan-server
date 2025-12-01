@@ -596,16 +596,15 @@ export function validateFieldStructure(
     }
   }
 
-  // Check for required fields that are missing/empty
+  // Check for required fields and validate all field values
   for (const grouping of template.FormGrouping) {
     for (const field of grouping.Fields) {
-      if (field.required) {
-        const value = submission.data[field.id];
-        if (value === null || value === undefined || value === "") {
-          errors.push(
-            `Required field "${field.label}" (${field.id}) is missing or empty`
-          );
-        }
+      const value = submission.data[field.id];
+      
+      // Validate the field value (includes required, min/max checks)
+      const validation = validateFieldValue(template, field.id, value);
+      if (!validation.valid && validation.error) {
+        errors.push(validation.error);
       }
     }
   }
@@ -645,7 +644,7 @@ export function validateFieldValue(
   }
 
   // Check length constraints for text fields
-  if (typeof value === "string") {
+  if (typeof value === "string" && fieldInfo.type !== "NUMBER") {
     if (fieldInfo.minLength && value.length < fieldInfo.minLength) {
       return {
         valid: false,
@@ -657,6 +656,25 @@ export function validateFieldValue(
         valid: false,
         error: `${fieldInfo.label} must not exceed ${fieldInfo.maxLength} characters`,
       };
+    }
+  }
+
+  // Check numeric constraints for number fields
+  if (fieldInfo.type === "NUMBER" && value !== null && value !== undefined && value !== "") {
+    const numValue = typeof value === "string" ? Number(value) : value;
+    if (typeof numValue === "number" && !isNaN(numValue)) {
+      if (fieldInfo.minLength !== undefined && fieldInfo.minLength !== null && numValue < fieldInfo.minLength) {
+        return {
+          valid: false,
+          error: `${fieldInfo.label} must be at least ${fieldInfo.minLength}`,
+        };
+      }
+      if (fieldInfo.maxLength !== undefined && fieldInfo.maxLength !== null && numValue > fieldInfo.maxLength) {
+        return {
+          valid: false,
+          error: `${fieldInfo.label} must not exceed ${fieldInfo.maxLength}`,
+        };
+      }
     }
   }
 

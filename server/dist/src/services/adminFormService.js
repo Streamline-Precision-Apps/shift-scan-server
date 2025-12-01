@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="c30ba9cf-914e-5530-b289-1e9879e34a68")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="50961299-8bcc-5b7a-ba2f-cd59dadf2309")}catch(e){}}();
 import prisma from "../lib/prisma.js";
 import { FormTemplateCategory, FormTemplateStatus, FieldType, FormStatus, } from "../../generated/prisma/index.js";
 export async function getAllFormTemplates(search, page, pageSize, skip, status, formType) {
@@ -135,6 +135,45 @@ export async function getAllFormTemplates(search, page, pageSize, skip, status, 
     }
 }
 export async function getFormSubmissionByTemplateId(id, search, page, pageSize, pendingOnly, statusFilter, dateRangeStart, dateRangeEnd) {
+    // Helper to parse 'YYYY-MM-DD' as local date
+    function parseUTCDateString(dateStr, endOfDay = false) {
+        const [yearStr, monthStr, dayStr] = dateStr.split("-");
+        const year = Number(yearStr);
+        const month = Number(monthStr);
+        const day = Number(dayStr);
+        if (Number.isNaN(year) ||
+            Number.isNaN(month) ||
+            Number.isNaN(day) ||
+            typeof year !== "number" ||
+            typeof month !== "number" ||
+            typeof day !== "number") {
+            return undefined;
+        }
+        if (endOfDay) {
+            // 23:59:59.999 UTC
+            return new Date(Date.UTC(year, month - 1, day, 23, 59, 59, 999));
+        }
+        else {
+            // 00:00:00.000 UTC
+            return new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
+        }
+    }
+    let normalizedStart = undefined;
+    let normalizedEnd = undefined;
+    if (dateRangeStart) {
+        const start = parseUTCDateString(dateRangeStart, false);
+        if (start) {
+            normalizedStart = start;
+            console.log("Normalized Start Date (UTC):", normalizedStart);
+        }
+    }
+    if (dateRangeEnd) {
+        const end = parseUTCDateString(dateRangeEnd, true);
+        if (end) {
+            normalizedEnd = end;
+            console.log("Normalized End Date (UTC):", normalizedEnd);
+        }
+    }
     // If pendingOnly or searching, do not paginate (return all matching submissions)
     const isSearching = search !== null && search !== undefined && search !== "";
     const skip = pendingOnly || isSearching ? undefined : (page - 1) * pageSize;
@@ -199,11 +238,11 @@ export async function getFormSubmissionByTemplateId(id, search, page, pageSize, 
                 status: "DRAFT",
             },
             ...(statusCondition && { status: statusCondition }),
-            ...(dateRangeStart || dateRangeEnd
+            ...(normalizedStart || normalizedEnd
                 ? {
                     submittedAt: {
-                        ...(dateRangeStart && { gte: new Date(dateRangeStart) }),
-                        ...(dateRangeEnd && { lte: new Date(dateRangeEnd) }),
+                        ...(normalizedStart && { gte: normalizedStart }),
+                        ...(normalizedEnd && { lte: normalizedEnd }),
                     },
                 }
                 : {}),
@@ -496,7 +535,6 @@ export async function createFormSubmission(input) {
             comment: comment || null,
             signature: signature || null,
             submittedAt: new Date(),
-            updatedAt: new Date(),
         },
     });
     return created;
@@ -508,7 +546,6 @@ export async function updateFormSubmission(input) {
         where: { id: submissionId },
         data: {
             data,
-            updatedAt: new Date(),
             ...(updateStatus && { status: updateStatus }),
         },
     });
@@ -520,7 +557,6 @@ export async function updateFormSubmission(input) {
             await prisma.formApproval.update({
                 where: { id: existingApproval.id },
                 data: {
-                    updatedAt: new Date(),
                     comment: comment || existingApproval.comment,
                     signature: signature || existingApproval.signature,
                 },
@@ -531,7 +567,6 @@ export async function updateFormSubmission(input) {
                 data: {
                     formSubmissionId: submissionId,
                     signedBy: adminUserId,
-                    updatedAt: new Date(),
                     comment: comment || null,
                     signature: signature || null,
                 },
@@ -594,13 +629,11 @@ export async function approveFormSubmission(submissionId, action, formData) {
         where: { id: submissionId },
         data: {
             status: action,
-            updatedAt: new Date(),
             Approvals: {
                 create: {
                     signedBy: adminUserId || null,
                     comment: comment || null,
                     submittedAt: new Date(),
-                    updatedAt: new Date(),
                 },
             },
         },
@@ -608,4 +641,4 @@ export async function approveFormSubmission(submissionId, action, formData) {
     return updated;
 }
 //# sourceMappingURL=adminFormService.js.map
-//# debugId=c30ba9cf-914e-5530-b289-1e9879e34a68
+//# debugId=50961299-8bcc-5b7a-ba2f-cd59dadf2309

@@ -1,6 +1,7 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="22b11b90-e311-5178-9da6-2aaecbf97f03")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="c7d3d1ac-27dd-5cd6-823e-300dbef38b45")}catch(e){}}();
 import prisma from "../lib/prisma.js";
+import { createDateRange } from "../lib/dateUtils.js";
 import { hash } from "bcryptjs";
 const ALLOWED_USER_FIELDS = [
     "id",
@@ -272,19 +273,14 @@ export async function getAllActiveEmployees() {
     return activeEmployeeNames;
 }
 export async function getUsersTimeSheetByDate(userId, dateParam) {
-    const date = new Date(dateParam);
-    if (isNaN(date.getTime())) {
-        throw new Error("Invalid date format");
-    }
-    const nextDay = new Date(date);
-    nextDay.setDate(date.getDate() + 1);
+    const { start, end } = createDateRange(dateParam);
     // Query the database for timesheets on the specified date
     const timesheets = await prisma.timeSheet.findMany({
         where: {
             userId: userId,
             date: {
-                gte: date,
-                lt: nextDay,
+                gte: start,
+                lt: end,
             },
         },
         orderBy: { date: "desc" },
@@ -437,4 +433,4 @@ export async function handleUserSignature(userId) {
     });
 }
 //# sourceMappingURL=UserService.js.map
-//# debugId=22b11b90-e311-5178-9da6-2aaecbf97f03
+//# debugId=c7d3d1ac-27dd-5cd6-823e-300dbef38b45

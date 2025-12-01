@@ -655,7 +655,6 @@ export async function createFormSubmission(input: CreateFormSubmissionInput) {
       comment: comment || null,
       signature: signature || null,
       submittedAt: new Date(),
-      updatedAt: new Date(),
     },
   });
   return created;
@@ -669,7 +668,6 @@ export async function updateFormSubmission(input: UpdateFormSubmissionInput) {
     where: { id: submissionId },
     data: {
       data,
-      updatedAt: new Date(),
       ...(updateStatus && { status: updateStatus as any }),
     },
   });
@@ -681,7 +679,6 @@ export async function updateFormSubmission(input: UpdateFormSubmissionInput) {
       await prisma.formApproval.update({
         where: { id: existingApproval.id },
         data: {
-          updatedAt: new Date(),
           comment: comment || existingApproval.comment,
           signature: signature || existingApproval.signature,
         },
@@ -691,7 +688,6 @@ export async function updateFormSubmission(input: UpdateFormSubmissionInput) {
         data: {
           formSubmissionId: submissionId,
           signedBy: adminUserId,
-          updatedAt: new Date(),
           comment: comment || null,
           signature: signature || null,
         },
@@ -761,13 +757,11 @@ export async function approveFormSubmission(
     where: { id: submissionId },
     data: {
       status: action as FormStatus,
-      updatedAt: new Date(),
       Approvals: {
         create: {
           signedBy: adminUserId || null,
           comment: comment || null,
           submittedAt: new Date(),
-          updatedAt: new Date(),
         },
       },
     },

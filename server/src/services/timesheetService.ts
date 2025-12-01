@@ -1,4 +1,5 @@
 import { formatISO } from "date-fns";
+import { createDateRange } from "../lib/dateUtils.js";
 import type { EquipmentState, Prisma } from "../../generated/prisma/client.js";
 import type {
   GeneralTimesheetInput,
@@ -129,8 +130,9 @@ export async function getUserTimesheetsByDate({
   let start: Date | undefined = undefined;
   let end: Date | undefined = undefined;
   if (dateParam) {
-    start = new Date(dateParam + "T00:00:00.000Z");
-    end = new Date(dateParam + "T23:59:59.999Z");
+    const range = createDateRange(dateParam);
+    start = range.start;
+    end = range.end;
   }
 
   // Only include date filter if both start and end are defined
@@ -463,11 +465,11 @@ export async function createGeneralTimesheetService({
   const createdTimeSheet = await prisma.$transaction(async (prisma) => {
     // Build create data
     const createData: any = {
-      date: data.date,
+      date: new Date(data.date),
       Jobsite: { connect: { id: data.jobsiteId } },
       User: { connect: { id: data.userId } },
       CostCode: { connect: { name: data.costCode } },
-      startTime: data.startTime,
+      startTime: new Date(data.startTime),
       workType: "LABOR",
       status: "DRAFT",
       clockInLat: data.clockInLat || null,
@@ -532,11 +534,11 @@ export async function createMechanicTimesheetService({
   const createdTimeCard = await prisma.$transaction(async (prisma) => {
     // Build create data
     const createData: any = {
-      date: formatISO(data.date),
+      date: new Date(data.date),
       Jobsite: { connect: { id: data.jobsiteId } },
       User: { connect: { id: data.userId } },
       CostCode: { connect: { name: data.costCode } },
-      startTime: formatISO(data.startTime),
+      startTime: new Date(data.startTime),
       workType: "MECHANIC",
       status: "DRAFT",
       clockInLat: data.clockInLat || null,
@@ -576,7 +578,7 @@ export async function createMechanicTimesheetService({
       await prisma.timeSheet.update({
         where: { id: data.previousTimeSheetId },
         data: {
-          endTime: formatISO(data.endTime),
+          endTime: new Date(data.endTime),
           comment: data.previoustimeSheetComments || null,
           status: "PENDING",
           clockOutLat: data.clockOutLat || null,
@@ -601,11 +603,11 @@ export async function createTruckDriverTimesheetService({
   return await prisma.$transaction(async (prisma) => {
     // Build create data
     const createData: any = {
-      date: formatISO(data.date),
+      date: new Date(data.date),
       Jobsite: { connect: { id: data.jobsiteId } },
       User: { connect: { id: data.userId } },
       CostCode: { connect: { name: data.costCode } },
-      startTime: formatISO(data.startTime),
+      startTime: new Date(data.startTime),
       workType: "TRUCK_DRIVER",
       status: "DRAFT",
       clockInLat: data.clockInLat || null,
@@ -654,7 +656,7 @@ export async function createTruckDriverTimesheetService({
       await prisma.timeSheet.update({
         where: { id: data.previousTimeSheetId },
         data: {
-          endTime: formatISO(data.endTime),
+          endTime: new Date(data.endTime),
           comment: data.previoustimeSheetComments || null,
           status: "PENDING",
           clockOutLat: data.clockOutLat || null,
@@ -678,11 +680,11 @@ export async function createTascoTimesheetService({
   return await prisma.$transaction(async (prisma) => {
     // Build create data
     const createData: any = {
-      date: formatISO(data.date),
+      date: new Date(data.date),
       Jobsite: { connect: { id: data.jobsiteId } },
       User: { connect: { id: data.userId } },
       CostCode: { connect: { name: data.costCode } },
-      startTime: formatISO(data.startTime),
+      startTime: new Date(data.startTime),
       workType: "TASCO",
       status: "DRAFT",
       clockInLat: data.clockInLat || null,
@@ -734,7 +736,7 @@ export async function createTascoTimesheetService({
       await prisma.timeSheet.update({
         where: { id: data.previousTimeSheetId },
         data: {
-          endTime: formatISO(data.endTime),
+          endTime: new Date(data.endTime),
           comment: data.previoustimeSheetComments || null,
           status: "PENDING",
           clockOutLat: data.clockOutLat || null,

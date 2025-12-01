@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="e91b6d40-d28e-57ae-a740-0a8a7c8eb1bf")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="fe7518d2-2819-5638-acd0-62055de77d5e")}catch(e){}}();
 import prisma from "../lib/prisma.js";
 export async function getTruckingReport() {
     const overWeightReport = await prisma.truckingLog.findMany({
@@ -8,6 +8,7 @@ export async function getTruckingReport() {
         },
         select: {
             id: true,
+            timeSheetId: true,
             startingMileage: true,
             endingMileage: true,
             Truck: {
@@ -74,6 +75,7 @@ export async function getTruckingReport() {
     });
     const formattedReport = overWeightReport.map((log) => ({
         id: log.id,
+        timeSheetId: log.timeSheetId,
         driver: `${log.TimeSheet?.User?.firstName} ${log.TimeSheet?.User?.lastName}`,
         truckId: log.Truck?.id ?? null,
         truckName: log.Truck?.name ?? null,
@@ -142,6 +144,7 @@ export async function getTascoReport(filters) {
             },
         },
         select: {
+            id: true,
             date: true,
             startTime: true,
             endTime: true,
@@ -176,6 +179,13 @@ export async function getTascoReport(filters) {
                     screenType: true,
                     LoadQuantity: true,
                     materialType: true,
+                    TascoFLoads: {
+                        select: {
+                            id: true,
+                            weight: true,
+                            screenType: true,
+                        },
+                    },
                 },
             },
         },
@@ -200,8 +210,17 @@ export async function getTascoReport(filters) {
         let loadType = "UNSCREENED";
         if (firstLog.screenType === "SCREENED")
             loadType = "SCREENED";
+        // Get F-Load details if this is an F Shift
+        const fLoadDetails = shiftType === "F Shift"
+            ? (firstLog.TascoFLoads || []).map((fLoad) => ({
+                id: fLoad.id,
+                weight: fLoad.weight,
+                screenType: fLoad.screenType,
+            }))
+            : [];
         return {
             id: firstLog.id,
+            timeSheetId: log.id,
             shiftType: shiftType,
             submittedDate: log.date,
             employee: `${log.User.firstName} ${log.User.lastName}`,
@@ -214,6 +233,7 @@ export async function getTascoReport(filters) {
             jobsiteId: log.jobsiteId ?? "",
             loadsABCDE: loadsABCDE,
             loadsF: loadsF,
+            fLoadDetails: fLoadDetails,
             materials: firstLog.materialType ?? "",
             startTime: log.startTime,
             endTime: log.endTime ?? null,
@@ -225,6 +245,7 @@ export async function getTascoReport(filters) {
 export async function getMechanicReport() {
     const report = await prisma.timeSheet.findMany({
         select: {
+            id: true,
             date: true,
             User: {
                 select: {
@@ -251,6 +272,7 @@ export async function getMechanicReport() {
     // Flatten the data to have one row per mechanic project
     const mechanicReport = filteredReport.flatMap((timesheet) => timesheet.Maintenance.map((project) => ({
         id: project.id,
+        timeSheetId: timesheet.id,
         employeeName: `${timesheet.User.firstName} ${timesheet.User.lastName}`,
         equipmentWorkedOn: project.Equipment?.name ?? "Unknown Equipment",
         hours: project.hours ?? 0,
@@ -299,4 +321,4 @@ export async function getTascoFilterOptions() {
     };
 }
 //# sourceMappingURL=adminsReportService.js.map
-//# debugId=e91b6d40-d28e-57ae-a740-0a8a7c8eb1bf
+//# debugId=fe7518d2-2819-5638-acd0-62055de77d5e

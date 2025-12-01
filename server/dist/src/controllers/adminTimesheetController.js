@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="9d743f90-9620-547f-8774-f98a0d0b493f")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="d3ca8800-0efe-5cd1-821e-44f392b9d59b")}catch(e){}}();
 import { getAllTimesheets, getTimesheetById, createTimesheet, updateTimesheet, updateTimesheetStatus, deleteTimesheet, exportTimesheets, getTimesheetChangeLogs, getAllTascoMaterialTypes, resolveTimecardNotification, } from "../services/adminTimesheetService.js";
 /**
  * GET /api/v1/admins/timesheet
@@ -72,13 +72,29 @@ export async function getAllTimesheetsController(req, res) {
                 ? req.query.notificationId
                 : [req.query.notificationId]
             : [];
-        // Date range
-        const dateFrom = req.query.dateFrom
-            ? new Date(req.query.dateFrom)
-            : undefined;
-        const dateTo = req.query.dateTo
-            ? new Date(req.query.dateTo)
-            : undefined;
+        // Date range - handle date-only strings (YYYY-MM-DD) from frontend
+        let dateFrom = undefined;
+        let dateTo = undefined;
+        if (req.query.dateFrom) {
+            const dateStr = req.query.dateFrom;
+            // If date-only format (YYYY-MM-DD), set to start of day
+            if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+                dateFrom = new Date(dateStr + 'T00:00:00.000Z');
+            }
+            else {
+                dateFrom = new Date(dateStr);
+            }
+        }
+        if (req.query.dateTo) {
+            const dateStr = req.query.dateTo;
+            // If date-only format (YYYY-MM-DD), set to end of day
+            if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+                dateTo = new Date(dateStr + 'T23:59:59.999Z');
+            }
+            else {
+                dateTo = new Date(dateStr);
+            }
+        }
         const skip = (page - 1) * pageSize;
         const result = await getAllTimesheets({
             status: statusParam,
@@ -204,14 +220,30 @@ export async function exportTimesheetsController(req, res) {
                 message: "Invalid timesheet IDs format",
             });
         }
-        // Parse date range if provided
+        // Parse date range if provided - handle date-only strings (YYYY-MM-DD)
         let parsedDateRange;
         if (dateRange) {
             parsedDateRange = {};
-            if (dateRange.from)
-                parsedDateRange.from = new Date(dateRange.from);
-            if (dateRange.to)
-                parsedDateRange.to = new Date(dateRange.to);
+            if (dateRange.from) {
+                const fromStr = dateRange.from;
+                // If date-only format (YYYY-MM-DD), set to start of day
+                if (typeof fromStr === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(fromStr)) {
+                    parsedDateRange.from = new Date(fromStr + 'T00:00:00.000Z');
+                }
+                else {
+                    parsedDateRange.from = new Date(fromStr);
+                }
+            }
+            if (dateRange.to) {
+                const toStr = dateRange.to;
+                // If date-only format (YYYY-MM-DD), set to end of day
+                if (typeof toStr === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(toStr)) {
+                    parsedDateRange.to = new Date(toStr + 'T23:59:59.999Z');
+                }
+                else {
+                    parsedDateRange.to = new Date(toStr);
+                }
+            }
         }
         const result = await exportTimesheets(timesheetIds, fields, parsedDateRange, filters);
         res.status(200).json(result);
@@ -386,4 +418,4 @@ export async function resolveTimecardNotificationController(req, res) {
     }
 }
 //# sourceMappingURL=adminTimesheetController.js.map
-//# debugId=9d743f90-9620-547f-8774-f98a0d0b493f
+//# debugId=d3ca8800-0efe-5cd1-821e-44f392b9d59b

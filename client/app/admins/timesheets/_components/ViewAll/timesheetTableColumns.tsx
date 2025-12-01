@@ -44,7 +44,7 @@ export const timesheetTableColumns: ColumnDef<Timesheet>[] = [
         cell: ({ row }) => {
             return (
                 <div className=" text-xs text-center">
-                    {format(row.original.startTime, "MM/dd/yy")}
+                    {format(row.original.date, "MM/dd/yy")}
                 </div>
             );
         },

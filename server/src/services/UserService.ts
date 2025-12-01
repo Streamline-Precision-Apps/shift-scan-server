@@ -1,4 +1,5 @@
 import prisma from "../lib/prisma.js";
+import { createDateRange } from "../lib/dateUtils.js";
 import type { User, Prisma } from "../../generated/prisma/index.js";
 import { hash } from "bcryptjs";
 
@@ -332,22 +333,15 @@ export async function getUsersTimeSheetByDate(
   userId: string,
   dateParam: string
 ) {
-  const date = new Date(dateParam);
-
-  if (isNaN(date.getTime())) {
-    throw new Error("Invalid date format");
-  }
-
-  const nextDay = new Date(date);
-  nextDay.setDate(date.getDate() + 1);
+  const { start, end } = createDateRange(dateParam);
 
   // Query the database for timesheets on the specified date
   const timesheets = await prisma.timeSheet.findMany({
     where: {
       userId: userId,
       date: {
-        gte: date,
-        lt: nextDay,
+        gte: start,
+        lt: end,
       },
     },
     orderBy: { date: "desc" },

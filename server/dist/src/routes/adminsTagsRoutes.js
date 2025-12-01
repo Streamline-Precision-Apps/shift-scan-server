@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="2923d2ec-6db8-53b6-bc21-fc54bb3eb08a")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="4a692d8b-426a-572a-8712-408275f020dc")}catch(e){}}();
 import { Router } from "express";
 import { getTagSummaryController, getTagByIdController, createTagController, updateTagController, deleteTagController, } from "../controllers/adminTagsController.js";
 const router = Router();
@@ -15,4 +15,4 @@ router.put("/:id", updateTagController);
 router.delete("/:id", deleteTagController);
 export default router;
 //# sourceMappingURL=adminsTagsRoutes.js.map
-//# debugId=2923d2ec-6db8-53b6-bc21-fc54bb3eb08a
+//# debugId=4a692d8b-426a-572a-8712-408275f020dc

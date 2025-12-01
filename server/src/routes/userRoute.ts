@@ -19,7 +19,7 @@ import {
   sessionController,
   endSessionController,
   userSignatureController,
-} from "../controllers/userController.js";
+} from "../controllers/UserController.js";
 
 const router = Router();
 

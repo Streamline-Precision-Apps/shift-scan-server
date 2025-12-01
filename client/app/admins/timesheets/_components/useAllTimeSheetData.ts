@@ -235,10 +235,18 @@ export default function useAllTimeSheetData({
     }
     // Date Range
     if (filters.dateRange && filters.dateRange.from) {
-      params.append("dateFrom", filters.dateRange.from.toISOString());
+      // Send date-only string (YYYY-MM-DD) to avoid timezone issues
+      const year = filters.dateRange.from.getFullYear();
+      const month = String(filters.dateRange.from.getMonth() + 1).padStart(2, '0');
+      const day = String(filters.dateRange.from.getDate()).padStart(2, '0');
+      params.append("dateFrom", `${year}-${month}-${day}`);
     }
     if (filters.dateRange && filters.dateRange.to) {
-      params.append("dateTo", filters.dateRange.to.toISOString());
+      // Send date-only string (YYYY-MM-DD) to avoid timezone issues
+      const year = filters.dateRange.to.getFullYear();
+      const month = String(filters.dateRange.to.getMonth() + 1).padStart(2, '0');
+      const day = String(filters.dateRange.to.getDate()).padStart(2, '0');
+      params.append("dateTo", `${year}-${month}-${day}`);
     }
     // Id (array)
     if (filters.id && filters.id.length > 0) {
@@ -585,20 +593,34 @@ export default function useAllTimeSheetData({
         .filter((t) => t.trim().length > 0);
 
       // Date filter: support single date (entire day) or range
+      // Compare dates without time to avoid timezone issues
       let inDateRange = true;
-      if (dateRange.from && !dateRange.to) {
-        const fromStart = new Date(dateRange.from);
-        fromStart.setHours(0, 0, 0, 0);
-        const fromEnd = new Date(dateRange.from);
-        fromEnd.setHours(23, 59, 59, 999);
+      if (dateRange.from || dateRange.to) {
+        // Normalize timesheet date to date-only (YYYY-MM-DD)
         const tsDate = new Date(ts.date);
-        inDateRange = tsDate >= fromStart && tsDate <= fromEnd;
-      } else {
-        if (dateRange.from) {
-          inDateRange = inDateRange && new Date(ts.date) >= dateRange.from;
-        }
-        if (dateRange.to) {
-          inDateRange = inDateRange && new Date(ts.date) <= dateRange.to;
+        const tsDateOnly = new Date(tsDate.getFullYear(), tsDate.getMonth(), tsDate.getDate());
+        
+        // Check if from and to are the same day (single date selection)
+        const fromDateOnly = dateRange.from 
+          ? new Date(dateRange.from.getFullYear(), dateRange.from.getMonth(), dateRange.from.getDate())
+          : null;
+        const toDateOnly = dateRange.to
+          ? new Date(dateRange.to.getFullYear(), dateRange.to.getMonth(), dateRange.to.getDate())
+          : null;
+        
+        const isSingleDate = fromDateOnly && toDateOnly && fromDateOnly.getTime() === toDateOnly.getTime();
+        
+        if (isSingleDate) {
+          // Single date filter - check if same day
+          inDateRange = tsDateOnly.getTime() === fromDateOnly!.getTime();
+        } else {
+          // Range filter
+          if (fromDateOnly) {
+            inDateRange = inDateRange && tsDateOnly >= fromDateOnly;
+          }
+          if (toDateOnly) {
+            inDateRange = inDateRange && tsDateOnly <= toDateOnly;
+          }
         }
       }
 
