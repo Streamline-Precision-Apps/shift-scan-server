@@ -1,5 +1,9 @@
 
+<<<<<<< HEAD
 !function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="42ec4cb8-2bd7-56ba-a726-67d2a895e11a")}catch(e){}}();
+=======
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="4a582f27-3f49-5476-ae5b-6e2672dbd1af")}catch(e){}}();
+>>>>>>> d4e4d883 (save docker, server and new privacy updates, succesfully rebuilt server on gcloud)
 import * as UserService from "../services/UserService.js";
 import prisma from "../lib/prisma.js";
 // GET /api/v1/user/settings (GET, by query param or header)
@@ -669,6 +673,7 @@ export async function userSignatureController(req, res) {
     }
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 //# sourceMappingURL=UserController.js.map
 //# debugId=42ec4cb8-2bd7-56ba-a726-67d2a895e11a
 =======
@@ -676,3 +681,7 @@ export async function userSignatureController(req, res) {
 //# sourceMappingURL=userController.js.map
 //# debugId=7939b8fb-6db7-5f54-a152-62ba5145f725
 >>>>>>> 3a0b6b0f (rebuilding server  to be updated after add some routes to solve static rendering)
+=======
+//# sourceMappingURL=UserController.js.map
+//# debugId=4a582f27-3f49-5476-ae5b-6e2672dbd1af
+>>>>>>> d4e4d883 (save docker, server and new privacy updates, succesfully rebuilt server on gcloud)

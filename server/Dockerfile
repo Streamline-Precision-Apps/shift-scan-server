@@ -48,7 +48,8 @@ RUN npm install --production
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/src/instrument.mjs ./dist/
 COPY --from=builder /app/prisma ./prisma
-# Copy generated Prisma client output files for v11.6.2
+COPY --from=builder /app/prisma/generated-schema.prisma ./prisma/
+# Copy generated Prisma client output files
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/generated ./generated
 

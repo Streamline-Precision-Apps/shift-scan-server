@@ -23,8 +23,12 @@ import {
 } from "../controllers/UserController.js";
 =======
   getAllTeams,
+<<<<<<< HEAD
 } from "../controllers/userController.js";
 >>>>>>> a81b5dc7 (got static up and working and built complete)
+=======
+} from "../controllers/UserController.js";
+>>>>>>> d4e4d883 (save docker, server and new privacy updates, succesfully rebuilt server on gcloud)
 
 const router = Router();
 

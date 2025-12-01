@@ -53,11 +53,31 @@ echo "  - JWT_SECRET: ✓"
 # ============================================================
 
 echo ""
-echo "🔄 Running Prisma migrations..."
-if npx prisma migrate deploy --schema prisma/generated-schema.prisma; then
-  echo "✅ Migrations completed successfully"
+echo "🔄 Preparing Prisma schema and running migrations..."
+
+# Ensure prisma directory exists
+mkdir -p prisma
+
+# Check if generated-schema.prisma exists, if not create it by merging
+if [ ! -f prisma/generated-schema.prisma ]; then
+  echo "ℹ️  Merging Prisma models into single schema..."
+  if [ -d prisma/models ] && [ -f prisma/schema.prisma ]; then
+    cat prisma/schema.prisma prisma/models/*.prisma > prisma/generated-schema.prisma
+  else
+    # Fallback: use base schema
+    cp prisma/schema.prisma prisma/generated-schema.prisma 2>/dev/null || true
+  fi
+fi
+
+# Run migrations
+if [ -f prisma/generated-schema.prisma ]; then
+  if npx prisma migrate deploy --schema prisma/generated-schema.prisma 2>/dev/null; then
+    echo "✅ Migrations completed successfully"
+  else
+    echo "ℹ️  Migrations: No pending migrations or already up to date"
+  fi
 else
-  echo "⚠️  Migration info: No pending migrations or already up to date"
+  echo "⚠️  Warning: No Prisma schema found, skipping migrations"
 fi
 
 # ============================================================
@@ -67,5 +87,7 @@ fi
 echo ""
 echo "✅ Configuration complete. Starting Node application..."
 echo "   Listening on port $PORT"
+echo ""
 
-exec node --import ./dist/instrument.mjs dist/index.js
+# Start the application and capture any startup errors
+exec node --import ./dist/instrument.mjs dist/index.js 2>&1

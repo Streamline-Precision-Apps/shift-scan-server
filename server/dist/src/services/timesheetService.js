@@ -1,9 +1,13 @@
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 !function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="fccb4ef6-f456-54d4-8fb0-4ff4cfa91649")}catch(e){}}();
 =======
 !function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="70b7f0e3-d899-5ca6-b7a8-36dded7a3276")}catch(e){}}();
 >>>>>>> 3a0b6b0f (rebuilding server  to be updated after add some routes to solve static rendering)
+=======
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="be10758a-cc3b-5ef2-933d-2d1b61868b4a")}catch(e){}}();
+>>>>>>> d4e4d883 (save docker, server and new privacy updates, succesfully rebuilt server on gcloud)
 import { formatISO } from "date-fns";
 import { createDateRange } from "../lib/dateUtils.js";
 import prisma from "../lib/prisma.js";
@@ -91,13 +95,35 @@ export async function updateTimesheetService({ id, editorId, changes, changeReas
         return { error: message };
     }
 }
+/**
+ * Helper function to get start and end of day in local timezone
+ * Converts a date string (YYYY-MM-DD) to the start and end times of that day
+ * @param dateString - Date string in format YYYY-MM-DD
+ * @returns Object with startOfDay and endOfDay as Date objects
+ */
+function getDayRangeFromString(dateString) {
+    // Parse the date string in local timezone
+    const parts = dateString.split("-");
+    const year = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10) - 1; // JavaScript months are 0-indexed
+    const day = parseInt(parts[2], 10);
+    const startOfDay = new Date(year, month, day, 0, 0, 0, 0);
+    const endOfDay = new Date(year, month, day, 23, 59, 59, 999);
+    return { startOfDay, endOfDay };
+}
 export async function getUserTimesheetsByDate({ employeeId, dateParam, }) {
     let start = undefined;
     let end = undefined;
     if (dateParam) {
+<<<<<<< HEAD
         const range = createDateRange(dateParam);
         start = range.start;
         end = range.end;
+=======
+        const { startOfDay, endOfDay } = getDayRangeFromString(dateParam);
+        start = startOfDay;
+        end = endOfDay;
+>>>>>>> d4e4d883 (save docker, server and new privacy updates, succesfully rebuilt server on gcloud)
     }
     // Only include date filter if both start and end are defined
     const where = {
@@ -1474,7 +1500,11 @@ export async function deleteRefuelLogService(refuelLogId) {
 }
 //# sourceMappingURL=timesheetService.js.map
 <<<<<<< HEAD
+<<<<<<< HEAD
 //# debugId=fccb4ef6-f456-54d4-8fb0-4ff4cfa91649
 =======
 //# debugId=70b7f0e3-d899-5ca6-b7a8-36dded7a3276
 >>>>>>> 3a0b6b0f (rebuilding server  to be updated after add some routes to solve static rendering)
+=======
+//# debugId=be10758a-cc3b-5ef2-933d-2d1b61868b4a
+>>>>>>> d4e4d883 (save docker, server and new privacy updates, succesfully rebuilt server on gcloud)
