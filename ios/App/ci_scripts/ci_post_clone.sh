@@ -8,13 +8,19 @@
 
 set -e
 
-# Export Node.js and npm to PATH (Xcode Cloud specific)
-export PATH="$CI_NODE_PATH:$PATH"
+# Setup Node.js environment for Xcode Cloud
+# Xcode Cloud uses Homebrew, so we need to add it to PATH
+export PATH="/usr/local/bin:/opt/homebrew/bin:$PATH"
+
+# Check if Node.js is installed, if not install it
+if ! command -v node &> /dev/null; then
+    echo "📥 Installing Node.js..."
+    brew install node
+fi
 
 # Verify Node.js is available
-echo "🔍 Checking Node.js version..."
-node --version || echo "⚠️  Node.js not found in PATH"
-npm --version || echo "⚠️  npm not found in PATH"
+echo "🔍 Node.js version: $(node --version)"
+echo "🔍 npm version: $(npm --version)"
 
 # IMPORTANT: Install npm dependencies FIRST
 # The Podfile requires @capacitor/ios scripts from node_modules
