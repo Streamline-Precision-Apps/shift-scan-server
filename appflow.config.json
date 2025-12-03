@@ -2,11 +2,11 @@
   "apps": [
     {
       "appId": "a4d7fec0",
-      "root": "/",
+      "root": ".",
       "dependencyInstallCommand": "npm install --include=dev",
       "webBuildCommand": "npm run static",
-      "iosPath": "/ios",
-      "androidPath": "/android"
+      "iosPath": "ios",
+      "androidPath": "android"
     }
   ]
 }
