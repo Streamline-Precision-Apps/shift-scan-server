@@ -119,6 +119,11 @@ server/.env.local
 android/build/
 ios/build/
 ios/Pods/
+ios/App/build.xcarchive/
+ios/App/*.ipa
+ios/App/DerivedData/
+ios/certificates/*.p12
+ios/certificates/*.mobileprovision
 
 # Prisma
 prisma/generated/
