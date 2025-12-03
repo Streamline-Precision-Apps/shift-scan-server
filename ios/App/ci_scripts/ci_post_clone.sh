@@ -8,6 +8,14 @@
 
 set -e
 
+# Export Node.js and npm to PATH (Xcode Cloud specific)
+export PATH="$CI_NODE_PATH:$PATH"
+
+# Verify Node.js is available
+echo "🔍 Checking Node.js version..."
+node --version || echo "⚠️  Node.js not found in PATH"
+npm --version || echo "⚠️  npm not found in PATH"
+
 # IMPORTANT: Install npm dependencies FIRST
 # The Podfile requires @capacitor/ios scripts from node_modules
 cd $CI_PRIMARY_REPOSITORY_PATH
