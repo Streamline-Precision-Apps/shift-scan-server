@@ -26,7 +26,12 @@ echo "🔍 npm version: $(npm --version)"
 # The Podfile requires @capacitor/ios scripts from node_modules
 cd $CI_PRIMARY_REPOSITORY_PATH
 echo "📦 Installing npm dependencies..."
-npm ci
+
+# Try npm ci first (faster), fallback to npm install if lock file has issues
+npm ci || {
+    echo "⚠️  npm ci failed, falling back to npm install..."
+    npm install
+}
 
 echo "✅ npm installation complete!"
 
