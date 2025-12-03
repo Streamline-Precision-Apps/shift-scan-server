@@ -2,11 +2,19 @@
   "apps": [
     {
       "appId": "a4d7fec0",
+<<<<<<< HEAD
       "root": ".",
       "dependencyInstallCommand": "npm install --include=dev",
       "webBuildCommand": "npm run static",
       "iosPath": "ios",
       "androidPath": "android"
+=======
+      "root": "/",
+      "dependencyInstallCommand": "npm install --include=dev",
+      "webBuildCommand": "npm run static",
+      "iosPath": "/ios",
+      "androidPath": "/android"
+>>>>>>> 41815af9 (Going back to app flow and learning that)
     }
   ]
 }
