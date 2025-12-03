@@ -18,6 +18,14 @@ default_platform(:ios)
 platform :ios do
   desc "Build development IPA for internal testing"
   lane :build_development do
+    # Set up App Store Connect API key
+    app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
+      key_filepath: "AuthKey.p8",
+      in_house: false
+    )
+
     build_app(
       workspace: "App.xcworkspace",
       scheme: "Shift Scan",
@@ -34,6 +42,14 @@ platform :ios do
 
   desc "Build IPA for TestFlight"
   lane :build_testflight do
+    # Set up App Store Connect API key
+    app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
+      key_filepath: "AuthKey.p8",
+      in_house: false
+    )
+
     build_app(
       workspace: "App.xcworkspace",
       scheme: "Shift Scan",
@@ -50,6 +66,14 @@ platform :ios do
 
   desc "Build IPA for App Store"
   lane :build_appstore do
+    # Set up App Store Connect API key
+    app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
+      key_filepath: "AuthKey.p8",
+      in_house: false
+    )
+
     build_app(
       workspace: "App.xcworkspace",
       scheme: "Shift Scan",
