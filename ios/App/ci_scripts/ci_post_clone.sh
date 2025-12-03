@@ -17,9 +17,20 @@ echo "Current directory: $(pwd)"
 echo "📥 Installing npm packages..."
 npm ci || npm install
 
+# Build the Next.js web application (CRITICAL STEP - matches Appflow)
+echo "🏗️ Building Next.js web application..."
+EXPORT_STATIC=true npm run build
+
+# Verify build output exists
+if [ ! -d "out" ]; then
+  echo "❌ ERROR: Next.js build failed - 'out' directory not found"
+  exit 1
+fi
+echo "✅ Web build completed - 'out' directory created"
+
 # Navigate to iOS app directory
 echo "🔧 Installing CocoaPods..."
-cd App
+cd ios/App
 pod install
 
 # Sync Capacitor (from project root)
