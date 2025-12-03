@@ -15,11 +15,11 @@ echo "Current directory: $(pwd)"
 
 # Install Node.js dependencies
 echo "📥 Installing npm packages..."
-npm ci || npm install
+npm ci || npm install --include=dev
 
 # Build the Next.js web application (CRITICAL STEP - matches Appflow)
 echo "🏗️ Building Next.js web application..."
-EXPORT_STATIC=true npm run build
+npm run static
 
 # Verify build output exists
 if [ ! -d "out" ]; then
