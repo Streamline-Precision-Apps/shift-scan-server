@@ -1,0 +1,66 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Build development IPA for internal testing"
+  lane :build_development do
+    build_app(
+      workspace: "App.xcworkspace",
+      scheme: "Shift Scan",
+      configuration: "Debug",
+      export_method: "development",
+      output_directory: "build",
+      output_name: "ShiftScan-Dev.ipa",
+      skip_package_ipa: false,
+      skip_package_pkg: true,
+      destination_generic_platform: false,
+      derived_data_path: "build/DerivedData"
+    )
+  end
+
+  desc "Build IPA for TestFlight"
+  lane :build_testflight do
+    build_app(
+      workspace: "App.xcworkspace",
+      scheme: "Shift Scan",
+      configuration: "Release",
+      export_method: "app-store",
+      output_directory: "build",
+      output_name: "ShiftScan-TestFlight.ipa",
+      skip_package_ipa: false,
+      skip_package_pkg: true,
+      destination_generic_platform: false,
+      derived_data_path: "build/DerivedData"
+    )
+  end
+
+  desc "Build IPA for App Store"
+  lane :build_appstore do
+    build_app(
+      workspace: "App.xcworkspace",
+      scheme: "Shift Scan",
+      configuration: "Release",
+      export_method: "app-store",
+      output_directory: "build",
+      output_name: "ShiftScan-AppStore.ipa",
+      skip_package_ipa: false,
+      skip_package_pkg: true,
+      destination_generic_platform: false,
+      derived_data_path: "build/DerivedData"
+    )
+  end
+end
