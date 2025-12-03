@@ -3,6 +3,7 @@
     {
       "appId": "a4d7fec0",
 <<<<<<< HEAD
+<<<<<<< HEAD
       "root": ".",
       "dependencyInstallCommand": "npm install --include=dev",
       "webBuildCommand": "npm run static",
@@ -15,6 +16,13 @@
       "iosPath": "/ios",
       "androidPath": "/android"
 >>>>>>> 17d5026e (Going back to app flow and learning that)
+=======
+      "root": ".",
+      "dependencyInstallCommand": "npm install --include=dev",
+      "webBuildCommand": "npm run static",
+      "iosPath": "ios",
+      "androidPath": "android"
+>>>>>>> 8ef30729 (save changes to app flow to help with build)
     }
   ]
 }
