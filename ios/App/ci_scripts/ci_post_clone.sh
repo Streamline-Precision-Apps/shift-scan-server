@@ -18,13 +18,11 @@ echo "📥 Installing npm packages..."
 npm ci || npm install
 
 # Navigate to iOS app directory
-cd ios/App
-
-# Install CocoaPods dependencies
 echo "🔧 Installing CocoaPods..."
+cd App
 pod install
 
-# Sync Capacitor
+# Sync Capacitor (from project root)
 echo "⚡ Syncing Capacitor..."
 cd ../..
 npx cap sync ios
