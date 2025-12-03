@@ -13,6 +13,9 @@ const config: CapacitorConfig = {
   android: {
     useLegacyBridge: true,
   },
+  ios: {
+    path: "ios",
+  },
   plugins: {
     CapacitorCookies: {
       enabled: true,

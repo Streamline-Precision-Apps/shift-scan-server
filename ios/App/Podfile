@@ -27,7 +27,7 @@ def capacitor_pods
   pod 'CapgoCapacitorNativeBiometric', :path => '../../node_modules/@capgo/capacitor-native-biometric'
 end
 
-target 'App' do
+target 'Shift Scan' do
   capacitor_pods
   # Add your Pods here
 end

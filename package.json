@@ -9,7 +9,7 @@
     "lint": "eslint",
     "export": "next export",
     "static": "EXPORT_STATIC=true npm run build",
-    "ios": "open ios/App/App.xcworkspace",
+    "ios": "npx cap open ios",
     "android": "npx cap open android"
   },
   "dependencies": {

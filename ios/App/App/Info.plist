@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-        <string>Shift Scan</string>
+	<string>Shift Scan</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -45,5 +45,19 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Location is tracked during shift to affirm users is on designated site.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Location is track in background if the user is clocked in until they clock out</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Location pings and share data to database of users travels and route that shift</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Takes pictures for profile and scans qr codes</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Biometrics afirm that users is the user and clock them in</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>photo library can be accessed for profile picture</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Users can share a picture for there profile picture.</string>
 </dict>
 </plist>
