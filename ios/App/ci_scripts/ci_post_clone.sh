@@ -8,23 +8,24 @@
 
 set -e
 
-echo "🔧 Installing CocoaPods dependencies..."
-
-# Navigate to the iOS app directory
-cd $CI_PRIMARY_REPOSITORY_PATH/ios/App
-
-# Install CocoaPods dependencies
-pod install --repo-update
-
-echo "✅ CocoaPods installation complete!"
-
-# Optional: Install npm dependencies if needed for Capacitor sync
+# IMPORTANT: Install npm dependencies FIRST
+# The Podfile requires @capacitor/ios scripts from node_modules
 cd $CI_PRIMARY_REPOSITORY_PATH
 echo "📦 Installing npm dependencies..."
 npm ci
 
-# Sync Capacitor
+echo "✅ npm installation complete!"
+
+# Now install CocoaPods dependencies
+echo "🔧 Installing CocoaPods dependencies..."
+cd $CI_PRIMARY_REPOSITORY_PATH/ios/App
+pod install --repo-update
+
+echo "✅ CocoaPods installation complete!"
+
+# Sync Capacitor (optional, but ensures everything is current)
 echo "⚡ Syncing Capacitor..."
+cd $CI_PRIMARY_REPOSITORY_PATH
 npx cap sync ios
 
 echo "✅ Build preparation complete!"
