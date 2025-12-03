@@ -26,6 +26,9 @@ platform :ios do
       in_house: false
     )
 
+    # Enable automatic signing with App Store Connect API
+    setup_ci if is_ci
+    
     build_app(
       workspace: "App.xcworkspace",
       scheme: "Shift Scan",
@@ -51,6 +54,9 @@ platform :ios do
       in_house: false
     )
 
+    # Enable automatic signing with App Store Connect API
+    setup_ci if is_ci
+    
     build_app(
       workspace: "App.xcworkspace",
       scheme: "Shift Scan",
@@ -62,7 +68,8 @@ platform :ios do
       skip_package_pkg: true,
       derived_data_path: "build/DerivedData",
       xcargs: "-allowProvisioningUpdates",
-      skip_profile_detection: true
+      skip_profile_detection: true,
+      use_automatic_signing: true
     )
   end
 
@@ -76,6 +83,9 @@ platform :ios do
       in_house: false
     )
 
+    # Enable automatic signing with App Store Connect API
+    setup_ci if is_ci
+    
     build_app(
       workspace: "App.xcworkspace",
       scheme: "Shift Scan",
@@ -87,7 +97,8 @@ platform :ios do
       skip_package_pkg: true,
       derived_data_path: "build/DerivedData",
       xcargs: "-allowProvisioningUpdates",
-      skip_profile_detection: true
+      skip_profile_detection: true,
+      use_automatic_signing: true
     )
   end
 end
