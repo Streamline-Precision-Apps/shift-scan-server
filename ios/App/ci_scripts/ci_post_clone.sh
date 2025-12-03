@@ -9,14 +9,7 @@
 set -e
 
 # Setup Node.js environment for Xcode Cloud
-# Xcode Cloud uses Homebrew, so we need to add it to PATH
-export PATH="/usr/local/bin:/opt/homebrew/bin:$PATH"
-
-# Check if Node.js is installed, if not install it
-if ! command -v node &> /dev/null; then
-    echo "📥 Installing Node.js..."
-    brew install node
-fi
+export PATH="$PATH"
 
 # Verify Node.js is available
 echo "🔍 Node.js version: $(node --version)"
@@ -28,10 +21,7 @@ cd $CI_PRIMARY_REPOSITORY_PATH
 echo "📦 Installing npm dependencies..."
 
 # Try npm ci first (faster), fallback to npm install if lock file has issues
-npm ci || {
-    echo "⚠️  npm ci failed, falling back to npm install..."
-    npm install
-}
+npm install
 
 echo "✅ npm installation complete!"
 
