@@ -27,7 +27,8 @@ platform :ios do
       output_name: "ShiftScan-Dev.ipa",
       skip_package_ipa: false,
       skip_package_pkg: true,
-      derived_data_path: "build/DerivedData"
+      derived_data_path: "build/DerivedData",
+      xcargs: "-allowProvisioningUpdates"
     )
   end
 
@@ -42,7 +43,8 @@ platform :ios do
       output_name: "ShiftScan-TestFlight.ipa",
       skip_package_ipa: false,
       skip_package_pkg: true,
-      derived_data_path: "build/DerivedData"
+      derived_data_path: "build/DerivedData",
+      xcargs: "-allowProvisioningUpdates"
     )
   end
 
@@ -57,7 +59,8 @@ platform :ios do
       output_name: "ShiftScan-AppStore.ipa",
       skip_package_ipa: false,
       skip_package_pkg: true,
-      derived_data_path: "build/DerivedData"
+      derived_data_path: "build/DerivedData",
+      xcargs: "-allowProvisioningUpdates"
     )
   end
 end
