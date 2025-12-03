@@ -4,6 +4,10 @@ import type { NextConfig } from "next";
 const isStaticExport = process.env.EXPORT_STATIC === "true";
 
 const nextConfig: NextConfig = {
+  typescript: {
+    // Ignore TypeScript errors in server directory during build
+    tsconfigPath: "./tsconfig.json",
+  },
   ...(isStaticExport ? { output: "export" } : {}),
   reactStrictMode: true,
   images: {
