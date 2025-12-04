@@ -132,6 +132,7 @@ ios/App/fastlane/.env.default
 *.p8
 .env.fastlane
 fastlane/report.json
+fastlane/store.json
 
 # Xcode build artifacts
 ios/App/build/
