@@ -29,12 +29,12 @@ platform :ios do
       in_house: false
     )
 
-    # Get signing certificate
-    cert(
+    # Get signing certificate using match (better for CI)
+    match(
       api_key: api_key,
-      development: true,
-      force: false,
-      keychain_password: ENV["KEYCHAIN_PASSWORD"]
+      type: "development",
+      readonly: is_ci,
+      app_identifier: "com.shiftscanapp"
     )
 
     # Get provisioning profile
@@ -73,12 +73,12 @@ platform :ios do
       in_house: false
     )
 
-    # Get signing certificate
-    cert(
+    # Get signing certificate using match (better for CI)
+    match(
       api_key: api_key,
-      development: false,
-      force: false,
-      keychain_password: ENV["KEYCHAIN_PASSWORD"]
+      type: "app-store",
+      readonly: is_ci,
+      app_identifier: "com.shiftscanapp"
     )
 
     # Get provisioning profile for App Store
@@ -117,12 +117,12 @@ platform :ios do
       in_house: false
     )
 
-    # Get signing certificate
-    cert(
+    # Get signing certificate using match (better for CI)
+    match(
       api_key: api_key,
-      development: false,
-      force: false,
-      keychain_password: ENV["KEYCHAIN_PASSWORD"]
+      type: "app-store",
+      readonly: is_ci,
+      app_identifier: "com.shiftscanapp"
     )
 
     # Get provisioning profile for App Store
