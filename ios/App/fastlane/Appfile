@@ -1,7 +1,7 @@
 app_identifier("com.shiftscanapp") # The bundle identifier of your app
-apple_id(ENV["FASTLANE_APPLE_ID"] || "[[YOUR_APPLE_ID]]") # Your Apple Developer Portal username
+apple_id("devunfoxdurst@yahoo.com") # Your Apple Developer Portal username (email)
 team_id("XSKZMV6LQV") # Your Team ID
-team_name(ENV["FASTLANE_TEAM_NAME"] || "[[YOUR_TEAM_NAME]]") # Your Team Name
+team_name("Devun Durst") # Your Team Name
 
 # For more information about the Appfile, see:
 #     https://docs.fastlane.tools/advanced/#appfile

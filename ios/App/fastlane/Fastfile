@@ -18,139 +18,21 @@ default_platform(:ios)
 platform :ios do
   desc "Build development IPA for internal testing"
   lane :build_development do
-    # Set up CI environment if running in GitHub Actions
-    setup_ci if is_ci
-
-    # Set up App Store Connect API key
-    api_key = app_store_connect_api_key(
-      key_id: ENV["APP_STORE_CONNECT_KEY_ID"],
-      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
-      key_filepath: "AuthKey.p8",
-      in_house: false
-    )
-
-    # Get signing certificate using match (better for CI)
-    match(
-      api_key: api_key,
-      type: "development",
-      readonly: is_ci,
-      storage_mode: "git",
-      git_url: ENV["MATCH_GIT_URL"],
-      app_identifier: "com.shiftscanapp"
-    )
-
-    # Get provisioning profile
-    sigh(
-      api_key: api_key,
-      app_identifier: "com.shiftscanapp",
-      provisioning_name: "Shift Scan Development",
-      development: true,
-      readonly: true
-    )
-    
+   match(app_identifier: "com.shiftscanapp", type: "development", readonly: true)
     build_app(
-      workspace: "App.xcworkspace",
-      scheme: "Shift Scan",
-      configuration: "Debug",
       export_method: "development",
-      output_directory: "build",
-      output_name: "ShiftScan-Dev.ipa",
-      skip_package_ipa: false,
-      skip_package_pkg: true,
-      derived_data_path: "build/DerivedData",
-      xcargs: "-allowProvisioningUpdates"
-    )
+     workspace: "App.xcworkspace",
+     scheme: "Shift Scan",
+     configuration: "Debug",
+     output_directory: "build",
+     output_name: "ShiftScan-Development.ipa"
+   )
+   # Optional: upload to TestFlight using API key file; comment out for pure local builds
+  #  pilot(api_key_path: "fastlane/store.json", skip_waiting_for_build_processing: true)
+  end
+  def bump_build_number()
+    increment_build_number(xcodeproj: "App.xcodeproj")
   end
 
-  desc "Build IPA for TestFlight"
-  lane :build_testflight do
-    # Set up CI environment if running in GitHub Actions
-    setup_ci if is_ci
-
-    # Set up App Store Connect API key
-    api_key = app_store_connect_api_key(
-      key_id: ENV["APP_STORE_CONNECT_KEY_ID"],
-      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
-      key_filepath: "AuthKey.p8",
-      in_house: false
-    )
-
-    # Get signing certificate using match (better for CI)
-    match(
-      api_key: api_key,
-      type: "app-store",
-      readonly: is_ci,
-        storage_mode: "git",
-      git_url: ENV["MATCH_GIT_URL"],
-      app_identifier: "com.shiftscanapp"
-    )
-
-    # Get provisioning profile for App Store
-    sigh(
-      api_key: api_key,
-      app_identifier: "com.shiftscanapp",
-      provisioning_name: "Shift Scan AppStore",
-      development: false,
-      readonly: true
-    )
-    
-    build_app(
-      workspace: "App.xcworkspace",
-      scheme: "Shift Scan",
-      configuration: "Release",
-      export_method: "app-store",
-      output_directory: "build",
-      output_name: "ShiftScan-TestFlight.ipa",
-      skip_package_ipa: false,
-      skip_package_pkg: true,
-      derived_data_path: "build/DerivedData",
-      xcargs: "-allowProvisioningUpdates"
-    )
-  end
-
-  desc "Build IPA for App Store"
-  lane :build_appstore do
-    # Set up CI environment if running in GitHub Actions
-    setup_ci if is_ci
-
-    # Set up App Store Connect API key
-    api_key = app_store_connect_api_key(
-      key_id: ENV["APP_STORE_CONNECT_KEY_ID"],
-      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
-      key_filepath: "AuthKey.p8",
-      in_house: false
-    )
-
-    # Get signing certificate using match (better for CI)
-    match(
-      api_key: api_key,
-      type: "app-store",
-      readonly: is_ci,
-        storage_mode: "git",
-      git_url: ENV["MATCH_GIT_URL"],
-      app_identifier: "com.shiftscanapp"
-    )
-
-    # Get provisioning profile for App Store
-    sigh(
-      api_key: api_key,
-      app_identifier: "com.shiftscanapp",
-      provisioning_name: "Shift Scan AppStore",
-      development: false,
-      readonly: true
-    )
-    
-    build_app(
-      workspace: "App.xcworkspace",
-      scheme: "Shift Scan",
-      configuration: "Release",
-      export_method: "app-store",
-      output_directory: "build",
-      output_name: "ShiftScan-AppStore.ipa",
-      skip_package_ipa: false,
-      skip_package_pkg: true,
-      derived_data_path: "build/DerivedData",
-      xcargs: "-allowProvisioningUpdates"
-    )
-  end
+ 
 end

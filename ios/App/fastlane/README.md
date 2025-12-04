@@ -23,22 +23,6 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 Build development IPA for internal testing
 
-### ios build_testflight
-
-```sh
-[bundle exec] fastlane ios build_testflight
-```
-
-Build IPA for TestFlight
-
-### ios build_appstore
-
-```sh
-[bundle exec] fastlane ios build_appstore
-```
-
-Build IPA for App Store
-
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.
