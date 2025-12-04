@@ -34,6 +34,8 @@ platform :ios do
       api_key: api_key,
       type: "development",
       readonly: is_ci,
+      storage_mode: "git",
+      git_url: ENV["MATCH_GIT_URL"],
       app_identifier: "com.shiftscanapp"
     )
 
@@ -78,6 +80,8 @@ platform :ios do
       api_key: api_key,
       type: "app-store",
       readonly: is_ci,
+        storage_mode: "git",
+      git_url: ENV["MATCH_GIT_URL"],
       app_identifier: "com.shiftscanapp"
     )
 
@@ -122,6 +126,8 @@ platform :ios do
       api_key: api_key,
       type: "app-store",
       readonly: is_ci,
+        storage_mode: "git",
+      git_url: ENV["MATCH_GIT_URL"],
       app_identifier: "com.shiftscanapp"
     )
 
