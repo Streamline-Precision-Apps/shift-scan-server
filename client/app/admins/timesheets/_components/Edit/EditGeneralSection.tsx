@@ -52,33 +52,6 @@ export default function EditGeneralSection({
 }: EditGeneralSectionProps) {
     return (
         <>
-            {/* <div className="w-full flex flex-row items-end gap-2  ">
-        <div className="w-full">
-          <Popover>
-            <PopoverTrigger asChild>
-              <div className="w-full flex flex-col">
-                <label className="w-full text-xs font-semibold mb-1">
-                  Created On
-                </label>
-
-                <Button
-                  disabled
-                  type="button"
-                  variant="outline"
-                  className="w-full justify-start text-left font-normal"
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {form.date ? (
-                    format(form.date, "PPP")
-                  ) : (
-                    <span>Pick a date</span>
-                  )}
-                </Button>
-              </div>
-            </PopoverTrigger>
-          </Popover>
-        </div>
-      </div> */}
             <div className="flex flex-row items-end col-span-2">
                 <div className="w-full">
                     <SingleCombobox

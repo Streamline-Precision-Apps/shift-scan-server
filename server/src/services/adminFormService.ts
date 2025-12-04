@@ -56,6 +56,7 @@ export interface CreateFormSubmissionInput {
   comment?: string;
   signature?: string;
   status?: string;
+  submittedAt?: Date | string;
 }
 
 export interface UpdateFormSubmissionInput {
@@ -65,6 +66,7 @@ export interface UpdateFormSubmissionInput {
   comment?: string;
   signature?: string;
   updateStatus?: string;
+  submittedAt?: Date | string;
 }
 
 export interface ApproveFormSubmissionInput {
@@ -636,23 +638,48 @@ export async function draftFormTemplate(id: string) {
 
 // input: { formTemplateId, data, submittedBy, adminUserId, comment, signature }
 export async function createFormSubmission(input: CreateFormSubmissionInput) {
-  const { formTemplateId, data, submittedBy, adminUserId, comment, signature } =
+  const { formTemplateId, data, submittedBy, adminUserId, comment, signature, submittedAt } =
     input;
   if (!submittedBy.id) throw new Error("Submitted By is required");
+  
+  // Validate and parse submittedAt
+  let parsedSubmittedAt: Date;
+  if (submittedAt) {
+    if (submittedAt instanceof Date) {
+      parsedSubmittedAt = submittedAt;
+    } else {
+      const parsed = new Date(submittedAt);
+      if (isNaN(parsed.getTime())) {
+        throw new Error("Invalid submittedAt date format");
+      }
+      parsedSubmittedAt = parsed;
+    }
+  } else {
+    parsedSubmittedAt = new Date();
+  }
+  
   const created = await prisma.formSubmission.create({
     data: {
       formTemplateId,
       userId: submittedBy.id,
       data,
       status: "APPROVED",
-      submittedAt: new Date(),
+      submittedAt: parsedSubmittedAt,
     },
   });
   await prisma.formApproval.create({
     data: {
       formSubmissionId: created.id,
       signedBy: adminUserId ?? null,
-      comment: comment || null,
+      ...(submittedAt
+        ? (() => {
+            const date = new Date(submittedAt);
+            if (isNaN(date.getTime())) {
+              throw new Error("Invalid submittedAt date string");
+            }
+            return { submittedAt: date };
+          })()
+        : {}),
       signature: signature || null,
       submittedAt: new Date(),
     },
@@ -662,13 +689,29 @@ export async function createFormSubmission(input: CreateFormSubmissionInput) {
 
 // input: { submissionId, data, adminUserId, comment, signature, updateStatus }
 export async function updateFormSubmission(input: UpdateFormSubmissionInput) {
-  const { submissionId, data, adminUserId, comment, signature, updateStatus } =
+  const { submissionId, data, adminUserId, comment, signature, updateStatus, submittedAt } =
     input;
+  
+  // Validate and parse submittedAt if provided
+  let parsedSubmittedAt: Date | undefined;
+  if (submittedAt) {
+    if (submittedAt instanceof Date) {
+      parsedSubmittedAt = submittedAt;
+    } else {
+      const parsed = new Date(submittedAt);
+      if (isNaN(parsed.getTime())) {
+        throw new Error("Invalid submittedAt date format");
+      }
+      parsedSubmittedAt = parsed;
+    }
+  }
+  
   const updated = await prisma.formSubmission.update({
     where: { id: submissionId },
     data: {
       data,
       ...(updateStatus && { status: updateStatus as any }),
+      ...(parsedSubmittedAt && { submittedAt: parsedSubmittedAt }),
     },
   });
   if (adminUserId) {

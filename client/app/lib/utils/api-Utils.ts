@@ -91,12 +91,14 @@ export async function apiRequest(
       // Special handling for auth errors
       if (res.status === 401 || res.status === 403) {
         console.error("🔐 Authentication failed - token may be invalid or expired");
-        console.error("Please sign out and sign in again to refresh your session");
+        console.error("Clearing local storage and redirecting to sign in page...");
         
-        // Optionally redirect to signin (uncomment if desired)
-        // if (typeof window !== 'undefined') {
-        //   window.location.href = '/signin';
-        // }
+        // Clear local storage and redirect to signin
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem("token");
+          localStorage.removeItem("userId");
+          window.location.href = '/signin';
+        }
       }
       
       throw new Error(errorText);
@@ -141,6 +143,18 @@ export async function apiRequestNoResCheck(
       body: fetchBody,
       credentials: "include", // ✅ CRITICAL: Allow cookies to be sent and received
     });
+
+    // Check for auth errors even in no-response-check mode
+    if (res.status === 401 || res.status === 403) {
+      console.error("🔐 Authentication failed - token may be invalid or expired");
+      console.error("Clearing local storage and redirecting to sign in page...");
+      
+      // Clear local storage and redirect to signin
+      if (typeof window !== 'undefined') {
+        localStorage.clear();
+        window.location.href = '/signin';
+      }
+    }
 
     return res;
   } catch (error) {

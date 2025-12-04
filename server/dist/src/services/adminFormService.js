@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="50961299-8bcc-5b7a-ba2f-cd59dadf2309")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="dfd3d5c5-d96a-526e-9f29-0c600f4c92ea")}catch(e){}}();
 import prisma from "../lib/prisma.js";
 import { FormTemplateCategory, FormTemplateStatus, FieldType, FormStatus, } from "../../generated/prisma/index.js";
 export async function getAllFormTemplates(search, page, pageSize, skip, status, formType) {
@@ -516,23 +516,48 @@ export async function draftFormTemplate(id) {
 }
 // input: { formTemplateId, data, submittedBy, adminUserId, comment, signature }
 export async function createFormSubmission(input) {
-    const { formTemplateId, data, submittedBy, adminUserId, comment, signature } = input;
+    const { formTemplateId, data, submittedBy, adminUserId, comment, signature, submittedAt } = input;
     if (!submittedBy.id)
         throw new Error("Submitted By is required");
+    // Validate and parse submittedAt
+    let parsedSubmittedAt;
+    if (submittedAt) {
+        if (submittedAt instanceof Date) {
+            parsedSubmittedAt = submittedAt;
+        }
+        else {
+            const parsed = new Date(submittedAt);
+            if (isNaN(parsed.getTime())) {
+                throw new Error("Invalid submittedAt date format");
+            }
+            parsedSubmittedAt = parsed;
+        }
+    }
+    else {
+        parsedSubmittedAt = new Date();
+    }
     const created = await prisma.formSubmission.create({
         data: {
             formTemplateId,
             userId: submittedBy.id,
             data,
             status: "APPROVED",
-            submittedAt: new Date(),
+            submittedAt: parsedSubmittedAt,
         },
     });
     await prisma.formApproval.create({
         data: {
             formSubmissionId: created.id,
             signedBy: adminUserId ?? null,
-            comment: comment || null,
+            ...(submittedAt
+                ? (() => {
+                    const date = new Date(submittedAt);
+                    if (isNaN(date.getTime())) {
+                        throw new Error("Invalid submittedAt date string");
+                    }
+                    return { submittedAt: date };
+                })()
+                : {}),
             signature: signature || null,
             submittedAt: new Date(),
         },
@@ -541,12 +566,27 @@ export async function createFormSubmission(input) {
 }
 // input: { submissionId, data, adminUserId, comment, signature, updateStatus }
 export async function updateFormSubmission(input) {
-    const { submissionId, data, adminUserId, comment, signature, updateStatus } = input;
+    const { submissionId, data, adminUserId, comment, signature, updateStatus, submittedAt } = input;
+    // Validate and parse submittedAt if provided
+    let parsedSubmittedAt;
+    if (submittedAt) {
+        if (submittedAt instanceof Date) {
+            parsedSubmittedAt = submittedAt;
+        }
+        else {
+            const parsed = new Date(submittedAt);
+            if (isNaN(parsed.getTime())) {
+                throw new Error("Invalid submittedAt date format");
+            }
+            parsedSubmittedAt = parsed;
+        }
+    }
     const updated = await prisma.formSubmission.update({
         where: { id: submissionId },
         data: {
             data,
             ...(updateStatus && { status: updateStatus }),
+            ...(parsedSubmittedAt && { submittedAt: parsedSubmittedAt }),
         },
     });
     if (adminUserId) {
@@ -641,4 +681,4 @@ export async function approveFormSubmission(submissionId, action, formData) {
     return updated;
 }
 //# sourceMappingURL=adminFormService.js.map
-//# debugId=50961299-8bcc-5b7a-ba2f-cd59dadf2309
+//# debugId=dfd3d5c5-d96a-526e-9f29-0c600f4c92ea

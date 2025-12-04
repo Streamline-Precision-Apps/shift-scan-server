@@ -55,7 +55,6 @@ export function CreateTimesheetModal({
     >([]);
 
     const [submitting, setSubmitting] = useState(false);
-    const [datePickerOpen, setDatePickerOpen] = useState(false);
 
     // Mechanic project logs state
     type Maintenance = {
@@ -691,8 +690,15 @@ export function CreateTimesheetModal({
                     description: project.description || "",
                 }));
 
+            // Set date to the beginning of the day based on startTime
+            let timesheetDate = form.date;
+            if (form.startTime) {
+                timesheetDate = new Date(form.startTime);
+                timesheetDate.setHours(0, 0, 0, 0);
+            }
+
             const data = {
-                date: form.date.toISOString(),
+                date: timesheetDate.toISOString(),
                 userId: form.user.id,
                 jobsiteId: form.jobsite.id,
                 costcode: form.costcode.name, // Use name (the actual cost code) not id (UUID)
@@ -916,8 +922,6 @@ export function CreateTimesheetModal({
                             jobsiteOptions={jobsiteOptions}
                             costCodeOptions={costCodeOptions}
                             workTypeOptions={workTypeOptions}
-                            datePickerOpen={datePickerOpen}
-                            setDatePickerOpen={setDatePickerOpen}
                             users={users}
                             jobsites={jobsites}
                         />

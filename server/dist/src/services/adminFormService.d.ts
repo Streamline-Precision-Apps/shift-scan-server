@@ -43,6 +43,7 @@ export interface CreateFormSubmissionInput {
     comment?: string;
     signature?: string;
     status?: string;
+    submittedAt?: Date | string;
 }
 export interface UpdateFormSubmissionInput {
     submissionId: number;
@@ -51,6 +52,7 @@ export interface UpdateFormSubmissionInput {
     comment?: string;
     signature?: string;
     updateStatus?: string;
+    submittedAt?: Date | string;
 }
 export interface ApproveFormSubmissionInput {
     comment?: string;

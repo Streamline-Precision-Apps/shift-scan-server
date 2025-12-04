@@ -211,13 +211,21 @@ export const EditTimesheetModal: React.FC<EditTimesheetModalProps> = ({
             setLoading(true);
             setError(null);
 
-            // Use the hook to detect changes between original and current form
+            // Set date to the beginning of the day based on startTime before updating
+            let updatedForm = { ...form };
+            if (form.startTime) {
+                const timesheetDate = new Date(form.startTime);
+                timesheetDate.setHours(0, 0, 0, 0);
+                updatedForm = { ...form, date: timesheetDate.toISOString() };
+            }
+
+            // Use the hook to detect changes between original and updated form (with corrected date)
             const { changes, wasStatusChanged, numberOfChanges } =
-                detectChanges(originalForm, form);
+                detectChanges(originalForm, updatedForm);
 
             // Deep comparison check for any changes in the form
             const hasAnyChanges =
-                JSON.stringify(originalForm) !== JSON.stringify(form);
+                JSON.stringify(originalForm) !== JSON.stringify(updatedForm);
 
             // If no changes were made at any level, inform the user
             if (!hasAnyChanges) {
@@ -230,7 +238,7 @@ export const EditTimesheetModal: React.FC<EditTimesheetModalProps> = ({
 
             const formData = new FormData();
             formData.append("id", timesheetId.toString());
-            formData.append("data", JSON.stringify(form));
+            formData.append("data", JSON.stringify(updatedForm));
             formData.append("originalData", JSON.stringify(originalForm)); // Include original data for diffing
             formData.append("changes", JSON.stringify(changes));
             formData.append("editorId", editor || "");
@@ -263,7 +271,7 @@ export const EditTimesheetModal: React.FC<EditTimesheetModalProps> = ({
             }
         } catch (err) {
             console.error("Error updating timesheet:", err);
-            toast.error(`Failed to update timesheet ${form.id}`, {
+            toast.error(`Failed to update timesheet ${timesheetId}`, {
                 duration: 3000,
             });
             setError("Failed to update timesheet in admin records.");
@@ -408,18 +416,6 @@ export const EditTimesheetModal: React.FC<EditTimesheetModalProps> = ({
                                                 ? "Rejected"
                                                 : "Pending"
                                         }`}</span>
-                                        <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-lg">
-                                            {`Created on: ${
-                                                form?.createdAt
-                                                    ? format(
-                                                          new Date(
-                                                              form.createdAt
-                                                          ),
-                                                          "MMM d, yyyy"
-                                                      )
-                                                    : "Loading"
-                                            }`}
-                                        </span>
                                     </>
                                 )}
                             </div>

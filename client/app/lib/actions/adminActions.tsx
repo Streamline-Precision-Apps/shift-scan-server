@@ -40,6 +40,7 @@ export interface UpdateFormSubmissionInput {
     comment?: string;
     signature?: string;
     updateStatus?: string;
+    submittedAt?: string;
 }
 
 export interface CreateFormSubmissionInput {
@@ -54,6 +55,7 @@ export interface CreateFormSubmissionInput {
     comment?: string;
     signature?: string;
     status?: string;
+    submittedAt?: string;
 }
 
 export async function createCrew(formData: FormData) {
