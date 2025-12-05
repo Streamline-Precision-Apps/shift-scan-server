@@ -47,13 +47,7 @@ jobs:
       - name: Sync Capacitor to iOS
         run: npx cap sync ios
 
-      - name: Cache CocoaPods
-        uses: actions/cache@v3
-        with:
-          path: ios/App/Pods
-          key: ${{ runner.os }}-pods-${{ hashFiles('ios/App/Podfile.lock') }}
-
-      - name: Install CocoaPods dependencies
+      - name: Install Pods
         run: |
           cd ios/App
           pod install --repo-update
