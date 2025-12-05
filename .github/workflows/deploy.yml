@@ -14,12 +14,19 @@ jobs:
   build:
     runs-on: macos-latest
     timeout-minutes: 60
-    env:
-      MATCH_GIT_PRIVATE_KEY: ${{ secrets.MATCH_GIT_PRIVATE_KEY }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set up SSH key for Fastlane Match
+        run: |
+          mkdir -p ~/.ssh
+          echo "$MATCH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+        env:
+          MATCH_PRIVATE_KEY: ${{ secrets.MATCH_PRIVATE_KEY }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -35,6 +42,12 @@ jobs:
 
       - name: Sync Capacitor to iOS
         run: npx cap sync ios
+
+      - name: Cache CocoaPods
+        uses: actions/cache@v3
+        with:
+          path: ios/App/Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('ios/App/Podfile.lock') }}
 
       - name: Install CocoaPods dependencies
         run: |
@@ -52,9 +65,8 @@ jobs:
         if: github.event_name == 'pull_request' || github.ref == 'refs/heads/devun-branch-v1'
         run: |
           cd ios/App
-          bundle exec fastlane build_development --verbose
+          bundle exec fastlane build_development
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           ASC_JSON_KEY: ${{ secrets.ASC_JSON_KEY }}
           MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
-          MATCH_GIT_PRIVATE_KEY: ${{ secrets.MATCH_GIT_PRIVATE_KEY }}
