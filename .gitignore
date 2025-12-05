@@ -67,6 +67,7 @@ ios/certificates/*.mobileprovision
 
 # Fastlane
 ios/App/fastlane/report.xml
+ios/App/fastlane/store.json
 ios/App/fastlane/.env.default
 *.mobileprovision
 *.p8

@@ -65,12 +65,6 @@ jobs:
           bundler-cache: true
           working-directory: "ios/App"
 
-      - name: Set up App Store Connect
-        run: |
-          echo "$ASC_JSON_KEY_CONTENT" > ios/App/fastlane/store.json
-        env:
-          ASC_JSON_KEY_CONTENT: ${{ secrets.ASC_JSON_KEY }}
-
       - name: Build iOS app (development)
         if: github.event_name == 'pull_request' || github.ref == 'refs/heads/devun-branch-v1'
         run: |
