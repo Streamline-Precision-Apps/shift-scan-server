@@ -22,7 +22,14 @@ platform :ios do
     match(app_identifier: "com.shiftscanapp", type: "development", readonly: true)
     build_app(workspace: "App.xcworkspace", scheme: "Shift Scan" , export_method: "development")
     # Optional: upload to TestFlight using API key file; comment out for pure local builds
-    # pilot(api_key_path: "fastlane/store.json", skip_waiting_for_build_processing: true)
+    pilot(api_key_path: "fastlane/store.json", skip_waiting_for_build_processing: true)
+  end
+
+  lane :release do
+    sync_code_signing(type: "appstore")
+    build_app(scheme: "Shift Scan")
+    upload_to_app_store
+    slack(message: "Successfully released a new App Store version!")
   end
  
 
