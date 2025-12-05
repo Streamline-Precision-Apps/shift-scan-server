@@ -14,6 +14,8 @@ jobs:
   build:
     runs-on: macos-latest
     timeout-minutes: 60
+    env:
+      MATCH_GIT_PRIVATE_KEY: ${{ secrets.CERTS_REPO_SSH_KEY }}
 
     steps:
       - name: Checkout code
@@ -45,6 +47,13 @@ jobs:
           ruby-version: "3.4"
           bundler-cache: true
           working-directory: "ios/App"
+
+      - name: Set up SSH key for Fastlane
+        run: |
+          mkdir -p ~/.ssh
+          echo "$MATCH_GIT_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
 
       - name: Build iOS app (development)
         if: github.event_name == 'pull_request' || github.ref == 'refs/heads/devun-branch-v1'
