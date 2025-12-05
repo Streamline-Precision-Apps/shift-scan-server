@@ -21,6 +21,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set up SSH key for Fastlane
+        run: |
+          mkdir -p ~/.ssh
+          # Write private key safely (printf preserves newlines)
+          printf '%s\n' "$MATCH_GIT_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+
+          # Configure SSH for GitHub
+          ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null
+          cat > ~/.ssh/config <<'EOF'
+          Host github.com
+          HostName github.com
+          User git
+          IdentityFile ~/.ssh/id_ed25519
+          IdentitiesOnly yes
+          StrictHostKeyChecking accept-new
+          EOF
+          chmod 600 ~/.ssh/config
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
