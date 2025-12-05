@@ -26,7 +26,7 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan github.com >> ~/.ssh/known_hosts
         env:
-          MATCH_PRIVATE_KEY: ${{ secrets.MATCH_PRIVATE_KEY }}
+          MATCH_PRIVATE_KEY: ${{ secrets.MATCH_GIT_PRIVATE_KEY }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
