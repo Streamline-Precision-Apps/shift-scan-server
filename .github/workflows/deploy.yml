@@ -48,15 +48,6 @@ jobs:
           bundler-cache: true
           working-directory: "ios/App"
 
-      - name: Set up SSH key for Fastlane
-        run: |
-          mkdir -p ~/.ssh
-          echo "$MATCH_GIT_PRIVATE_KEY" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-          # Optional: print derived public key fingerprint for debugging
-          ssh-keygen -y -f ~/.ssh/id_ed25519 | ssh-keygen -l -E sha256 -f -
-
       - name: Build iOS app (development)
         if: github.event_name == 'pull_request' || github.ref == 'refs/heads/devun-branch-v1'
         run: |
