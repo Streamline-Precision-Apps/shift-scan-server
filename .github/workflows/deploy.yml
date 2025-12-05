@@ -21,35 +21,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up SSH key for Fastlane
-        run: |
-          mkdir -p ~/.ssh
-          # Write private key safely (printf preserves newlines)
-            printf '%s\n' "$MATCH_GIT_PRIVATE_KEY" > ~/.ssh/id_ed25519
-            chmod 600 ~/.ssh/id_ed25519
-
-            # Set env var to file path for Fastlane
-            echo "MATCH_GIT_PRIVATE_KEY=$HOME/.ssh/id_ed25519" >> $GITHUB_ENV
-
-          # Configure SSH for GitHub
-          ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null
-          cat > ~/.ssh/config <<'EOF'
-          Host github.com
-          HostName github.com
-          User git
-          IdentityFile ~/.ssh/id_ed25519
-          IdentitiesOnly yes
-          StrictHostKeyChecking accept-new
-          EOF
-          chmod 600 ~/.ssh/config
-
-      - name: Verify SSH key for Fastlane
-        run: |
-          ls -l ~/.ssh/id_ed25519
-          file ~/.ssh/id_ed25519
-          head -n 2 ~/.ssh/id_ed25519
-          cat ~/.ssh/id_ed25519
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -86,3 +57,4 @@ jobs:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           ASC_JSON_KEY: ${{ secrets.ASC_JSON_KEY }}
           MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+          MATCH_GIT_PRIVATE_KEY: ${{ secrets.MATCH_GIT_PRIVATE_KEY }}
