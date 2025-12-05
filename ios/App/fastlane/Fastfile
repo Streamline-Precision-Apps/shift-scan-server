@@ -18,7 +18,7 @@ default_platform(:ios)
 platform :ios do
   desc "Build development IPA for internal testing"
   lane :build_development do
-   match(app_identifier: "com.shiftscanapp", type: "development", readonly: true, verbose: true)
+   match(app_identifier: "com.shiftscanapp", type: "development", readonly: true)
    build_app(
      export_method: "development",
      workspace: "App.xcworkspace",
