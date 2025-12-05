@@ -18,10 +18,11 @@ default_platform(:ios)
 platform :ios do
   desc "Build development IPA for internal testing"
   lane :build_development do
-   match(app_identifier: "com.shiftscanapp", type: "development", readonly: true)
-   build_app(workspace: "App.xcworkspace", scheme: "Shift Scan" , export_method: "development")
-   # Optional: upload to TestFlight using API key file; comment out for pure local builds
-  #  pilot(api_key_path: "fastlane/store.json", skip_waiting_for_build_processing: true)
+    setup_ci if ENV['CI']
+    match(app_identifier: "com.shiftscanapp", type: "development", readonly: true)
+    build_app(workspace: "App.xcworkspace", scheme: "Shift Scan" , export_method: "development")
+    # Optional: upload to TestFlight using API key file; comment out for pure local builds
+    # pilot(api_key_path: "fastlane/store.json", skip_waiting_for_build_processing: true)
   end
  
 
