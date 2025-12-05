@@ -34,3 +34,17 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## iOS CI / fastlane (important CI secret)
+
+If you run the iOS Fastlane lanes in CI (GitHub Actions), Fastlane's `match` uses a git-backed storage mode to fetch certificates and profiles. You must add a repository secret named `MATCH_GIT_URL` (in your repo Settings → Secrets & variables → Actions) so the workflow can provide the URL to the private certs repo.
+
+- For GitHub private repos, the recommended format is:
+
+```
+https://x-access-token:${{ secrets.PAT_FOR_MATCH }}@github.com/your-org/fastlane-certs.git
+```
+
+Where `PAT_FOR_MATCH` is a Personal Access Token stored as a separate secret. If your CI is read-only (recommended), the PAT only needs read access; if you expect CI to write to the certs repo (not recommended for most setups), the PAT will need write permissions.
+
+Add `MATCH_GIT_URL` to your Actions environment (the workflow has been updated to use this secret) so `match` won't fail with "No value found for 'git_url'".

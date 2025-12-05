@@ -65,6 +65,25 @@ ios/App/DerivedData/
 ios/certificates/*.p12
 ios/certificates/*.mobileprovision
 
+# Fastlane
+ios/App/fastlane/report.xml
+ios/App/fastlane/store.json
+ios/App/fastlane/.env.default
+*.mobileprovision
+*.p8
+.env.fastlane
+fastlane/report.json
+fastlane/store.json
+
+# Xcode build artifacts
+ios/App/build/
+ios/App/*.xcarchive
+ios/App/DerivedData/
+
+# Ruby/Bundle (ios/App only, shared at root level)
+vendor/bundle/
+.bundle/config
+
 # Prisma
 prisma/generated/
 
