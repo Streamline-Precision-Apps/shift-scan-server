@@ -25,8 +25,11 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           # Write private key safely (printf preserves newlines)
-          printf '%s\n' "$MATCH_GIT_PRIVATE_KEY" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
+            printf '%s\n' "$MATCH_GIT_PRIVATE_KEY" > ~/.ssh/id_ed25519
+            chmod 600 ~/.ssh/id_ed25519
+
+            # Set env var to file path for Fastlane
+            echo "MATCH_GIT_PRIVATE_KEY=$HOME/.ssh/id_ed25519" >> $GITHUB_ENV
 
           # Configure SSH for GitHub
           ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null
