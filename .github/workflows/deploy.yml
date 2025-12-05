@@ -23,10 +23,13 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           echo "$MATCH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_ed25519
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          echo "$SSH_KEY_PASSPHRASE" | ssh-add ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan github.com >> ~/.ssh/known_hosts
         env:
           MATCH_PRIVATE_KEY: ${{ secrets.MATCH_PRIVATE_KEY }}
+          SSH_KEY_PASSPHRASE: ${{ secrets.SSH_KEY_PASSPHRASE }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
