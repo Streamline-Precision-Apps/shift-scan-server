@@ -1,4 +1,4 @@
-import { useEffect, useRef, useMemo, useCallback } from 'react';
+import { useEffect, useRef, useMemo, useCallback } from "react";
 
 interface AutoSelectionOptions {
   id: string;
@@ -41,196 +41,220 @@ export const useTimesheetAutoSelection = ({
   jobsites,
   setJobsite,
   setCostCode,
-  setMaterial
+  setMaterial,
 }: UseTimesheetAutoSelectionProps) => {
-
   // Use refs to track previous values and prevent infinite loops
   const prevValuesRef = useRef({
-    workType: '',
-    shiftType: '',
-    materialType: '',
-    laborType: '',
-    hasEquipment: false
+    workType: "",
+    shiftType: "",
+    materialType: "",
+    laborType: "",
+    hasEquipment: false,
   });
 
   // Memoize stable values to prevent unnecessary effect executions
-  const currentShiftType = useMemo(() => 
-    tascoLogs.length > 0 ? tascoLogs[0].shiftType : '', 
+  const currentShiftType = useMemo(
+    () => (tascoLogs.length > 0 ? tascoLogs[0].shiftType : ""),
     [tascoLogs]
   );
 
-  const currentLaborType = useMemo(() => 
-    tascoLogs.length > 0 ? tascoLogs[0].laborType : '', 
+  const currentLaborType = useMemo(
+    () => (tascoLogs.length > 0 ? tascoLogs[0].laborType : ""),
     [tascoLogs]
   );
 
-  const currentMaterialType = useMemo(() => 
-    tascoLogs.length > 0 ? tascoLogs[0].materialType : '', 
+  const currentMaterialType = useMemo(
+    () => (tascoLogs.length > 0 ? tascoLogs[0].materialType : ""),
     [tascoLogs]
   );
 
   // Memoize equipment status with efficient comparison
   const hasAnyEquipment = useMemo(() => {
-    return tascoLogs.some(log => {
-      return log.Equipment && log.Equipment.id && log.Equipment.id.trim() !== '';
+    return tascoLogs.some((log) => {
+      return (
+        log.Equipment && log.Equipment.id && log.Equipment.id.trim() !== ""
+      );
     });
   }, [tascoLogs]);
 
   // Helper function to handle cost code format differences
-  const findCostCode = useCallback((searchTerm: string) => {
-    if (costCodes.length === 0) return null;
-    
-    // Check if it's the old format (value/label) or new format (id/name)
-    const firstItem = costCodes[0];
-    if ('value' in firstItem && 'label' in firstItem) {
-      return (costCodes as CostCodeOption[]).find((cc) => 
-        cc.label.includes('80.40') && cc.label.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    } else {
-      return (costCodes as AutoSelectionOptions[]).find((cc) => 
-        cc.name.includes('80.40') && cc.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-  }, [costCodes]);
+  const findCostCode = useCallback(
+    (searchTerm: string) => {
+      if (costCodes.length === 0) return null;
+
+      // Check if it's the old format (value/label) or new format (id/name)
+      const firstItem = costCodes[0];
+      if ("value" in firstItem && "label" in firstItem) {
+        return (costCodes as CostCodeOption[]).find(
+          (cc) =>
+            cc.label.includes("80.40") &&
+            cc.label.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      } else {
+        return (costCodes as AutoSelectionOptions[]).find(
+          (cc) =>
+            cc.name.includes("80.40") &&
+            cc.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      }
+    },
+    [costCodes]
+  );
 
   const findLaborCostCode = useCallback(() => {
     if (costCodes.length === 0) return null;
-    
+
     const firstItem = costCodes[0];
-    if ('value' in firstItem && 'label' in firstItem) {
-      return (costCodes as CostCodeOption[]).find((cc) => 
-        cc.label.toLowerCase().includes('amalgamated labor')
+    if ("value" in firstItem && "label" in firstItem) {
+      return (costCodes as CostCodeOption[]).find((cc) =>
+        cc.label.toLowerCase().includes("amalgamated labor")
       );
     } else {
-      return (costCodes as AutoSelectionOptions[]).find((cc) => 
-        cc.name.toLowerCase().includes('amalgamated labor')
+      return (costCodes as AutoSelectionOptions[]).find((cc) =>
+        cc.name.toLowerCase().includes("amalgamated labor")
       );
     }
   }, [costCodes]);
 
   // Auto-selection for E-shift and F-shift
   useEffect(() => {
-    if (workType !== 'tasco' || tascoLogs.length === 0) return;
-    
+    if (workType !== "tasco" || tascoLogs.length === 0) return;
+
     // Only skip if we've already processed AND cost codes were available at that time
     // This allows re-running when cost codes become available after jobsite selection
-    if (prevValuesRef.current.workType === workType && 
-        prevValuesRef.current.shiftType === currentShiftType &&
-        costCodes.length === 0) {
+    if (
+      prevValuesRef.current.workType === workType &&
+      prevValuesRef.current.shiftType === currentShiftType &&
+      costCodes.length === 0
+    ) {
       return;
     }
-    
-    if (currentShiftType === 'E Shift') {
+
+    if (currentShiftType === "E Shift") {
       // Set cost code to #80.40 Amalgamated Equipment
-      const amalgamatedEquipmentCC = findCostCode('amalgamated equipment');
+      const amalgamatedEquipmentCC = findCostCode("amalgamated equipment");
       if (amalgamatedEquipmentCC) {
         setCostCode(amalgamatedEquipmentCC);
       }
 
       // Set material to Mud Conditioning
-      const mudConditioningMaterial = materialTypes.find(m => 
-        m.name === 'Mud Conditioning'
+      const mudConditioningMaterial = materialTypes.find(
+        (m) => m.name === "Mud Conditioning"
       );
       if (mudConditioningMaterial) {
         setMaterial(mudConditioningMaterial.name, 0);
       }
 
       // Set jobsite to MH2526
-      const mh2526Jobsite = jobsites.find(js => 
-        js.name.includes('MH2526')
-      );
+      const mh2526Jobsite = jobsites.find((js) => js.name.includes("MH2526"));
       if (mh2526Jobsite) {
         setJobsite(mh2526Jobsite);
       }
-    } else if (currentShiftType === 'F Shift') {
+    } else if (currentShiftType === "F Shift") {
       // Set jobsite to MH2526
-      const mh2526Jobsite = jobsites.find(js => 
-        js.name.includes('MH2526')
-      );
+      const mh2526Jobsite = jobsites.find((js) => js.name.includes("MH2526"));
       if (mh2526Jobsite) {
         setJobsite(mh2526Jobsite);
       }
 
       // Set cost code to #80.40 Amalgamated Equipment
-      const amalgamatedEquipmentCC = findCostCode('amalgamated equipment');
+      const amalgamatedEquipmentCC = findCostCode("amalgamated equipment");
       if (amalgamatedEquipmentCC) {
         setCostCode(amalgamatedEquipmentCC);
       }
 
       // Set material to Lime Rock
-      const limeRockMaterial = materialTypes.find(m => 
-        m.name === 'Lime Rock'
+      const limeRockMaterial = materialTypes.find(
+        (m) => m.name === "Lime Rock"
       );
       if (limeRockMaterial) {
         setMaterial(limeRockMaterial.name, 0);
       }
     }
-    
+
     // Update ref to track processed values
     prevValuesRef.current.workType = workType;
     prevValuesRef.current.shiftType = currentShiftType;
-  }, [workType, currentShiftType, costCodes.length, materialTypes, jobsites, setJobsite, setCostCode, setMaterial, findCostCode, tascoLogs.length]);
+  }, [
+    workType,
+    currentShiftType,
+    costCodes.length,
+    materialTypes,
+    jobsites,
+    setJobsite,
+    setCostCode,
+    setMaterial,
+    findCostCode,
+    tascoLogs.length,
+  ]);
 
   // Auto-selection for Labor Type changes (ABCD shifts only)
   useEffect(() => {
-    if (workType !== 'tasco' || tascoLogs.length === 0) return;
-    
-    const isABCDShift = currentShiftType === 'ABCD Shift';
-    
+    if (workType !== "tasco" || tascoLogs.length === 0) return;
+
+    const isABCDShift = currentShiftType === "ABCD Shift";
+
     if (!isABCDShift || !currentLaborType) return;
-    
+
     // Check if labor type has changed
-    if (prevValuesRef.current.laborType === currentLaborType && 
-        prevValuesRef.current.workType === workType) {
+    if (
+      prevValuesRef.current.laborType === currentLaborType &&
+      prevValuesRef.current.workType === workType
+    ) {
       return;
     }
-    
+
     // Set cost code based on labor type
-    if (currentLaborType === 'Labor' || currentLaborType === 'Manual Labor') {
+    if (currentLaborType === "Labor" || currentLaborType === "Manual Labor") {
       // Set to Amalgamated Labor
       const amalgamatedLaborCC = findLaborCostCode();
       if (amalgamatedLaborCC) {
         setCostCode(amalgamatedLaborCC);
       }
-    } else if (currentLaborType === 'Equipment Operator' || currentLaborType === 'Operator') {
+    } else if (
+      currentLaborType === "Equipment Operator" ||
+      currentLaborType === "Operator"
+    ) {
       // Set to Amalgamated Equipment
-      const amalgamatedEquipmentCC = findCostCode('amalgamated equipment');
+      const amalgamatedEquipmentCC = findCostCode("amalgamated equipment");
       if (amalgamatedEquipmentCC) {
         setCostCode(amalgamatedEquipmentCC);
       }
     }
-    
+
     // Update ref
     prevValuesRef.current.laborType = currentLaborType;
     prevValuesRef.current.workType = workType;
   }, [
-    workType, 
+    workType,
     currentShiftType,
     currentLaborType,
     costCodes.length,
     findCostCode,
     findLaborCostCode,
     setCostCode,
-    tascoLogs.length
+    tascoLogs.length,
   ]);
 
   // Auto-selection for equipment-based cost code (applies to all TASCO logs)
   useEffect(() => {
-    if (workType !== 'tasco' || tascoLogs.length === 0) return;
-    
+    if (workType !== "tasco" || tascoLogs.length === 0) return;
+
     // Check if equipment status has changed
-    if (prevValuesRef.current.hasEquipment === hasAnyEquipment && 
-        prevValuesRef.current.workType === workType) {
+    if (
+      prevValuesRef.current.hasEquipment === hasAnyEquipment &&
+      prevValuesRef.current.workType === workType
+    ) {
       return;
     }
-    
+
     // For non-ABCD shifts, always set based on equipment
-    const isABCDShift = currentShiftType === 'ABCD Shift';
-    
+    const isABCDShift = currentShiftType === "ABCD Shift";
+
     if (!isABCDShift) {
       if (hasAnyEquipment) {
         // Set to Amalgamated Equipment when any equipment is selected
-        const amalgamatedEquipmentCC = findCostCode('amalgamated equipment');
+        const amalgamatedEquipmentCC = findCostCode("amalgamated equipment");
         if (amalgamatedEquipmentCC) {
           setCostCode(amalgamatedEquipmentCC);
         }
@@ -238,7 +262,7 @@ export const useTimesheetAutoSelection = ({
     } else {
       // For ABCD shifts, only set if no labor type is selected yet
       if (hasAnyEquipment && !currentLaborType) {
-        const amalgamatedEquipmentCC = findCostCode('amalgamated equipment');
+        const amalgamatedEquipmentCC = findCostCode("amalgamated equipment");
         if (amalgamatedEquipmentCC) {
           setCostCode(amalgamatedEquipmentCC);
         }
@@ -250,12 +274,12 @@ export const useTimesheetAutoSelection = ({
         }
       }
     }
-    
+
     // Update ref
     prevValuesRef.current.hasEquipment = hasAnyEquipment;
     prevValuesRef.current.workType = workType;
   }, [
-    workType, 
+    workType,
     hasAnyEquipment,
     costCodes.length,
     currentShiftType,
@@ -263,62 +287,69 @@ export const useTimesheetAutoSelection = ({
     findCostCode,
     findLaborCostCode,
     setCostCode,
-    tascoLogs.length
+    tascoLogs.length,
   ]);
 
   // Auto-selection for Material-based jobsite (works for all shift types)
   useEffect(() => {
-    if (workType !== 'tasco' || tascoLogs.length === 0) return;
-    
+    if (workType !== "tasco" || tascoLogs.length === 0) return;
+
     if (!currentMaterialType) return;
-    
+
     // Check if material has changed
     if (prevValuesRef.current.materialType === currentMaterialType) {
       return;
     }
-    
+
     const material = currentMaterialType;
-    
+
     // Materials for MH2526
     const mh2526Materials = [
-      'Rock', 'Elmico', 'Coal', 'Lime Kiln', 'Ag waste', 
-      'Belt Mud', 'End of campaign', 'Mud Conditioning', 'Lime Rock'
+      "Rock",
+      "Elmico",
+      "Coal",
+      "Lime Kiln",
+      "Ag waste",
+      "Belt Mud",
+      "End of campaign",
+      "Mud Conditioning",
+      "Lime Rock",
     ];
-    
+
     // Materials for DC2526
-    const dc2526Materials = ['Dust Control'];
-    
+    const dc2526Materials = ["Dust Control"];
+
     // Materials for PCC2526
-    const pcc2526Materials = ['Push PCC', 'Rip west', 'Rip center', 'Rip east'];
-    
-    let targetJobsitePattern = '';
-    
+    const pcc2526Materials = ["Push PCC", "Rip west", "Rip center", "Rip east"];
+
+    let targetJobsitePattern = "";
+
     if (mh2526Materials.includes(material)) {
-      targetJobsitePattern = 'MH2526';
+      targetJobsitePattern = "MH2526";
     } else if (dc2526Materials.includes(material)) {
-      targetJobsitePattern = 'DC2526';
+      targetJobsitePattern = "DC2526";
     } else if (pcc2526Materials.includes(material)) {
-      targetJobsitePattern = 'PCC2526';
+      targetJobsitePattern = "PCC2526";
     }
-    
+
     if (targetJobsitePattern) {
       // Case-insensitive search for jobsite
-      const targetJobsite = jobsites.find(js => 
+      const targetJobsite = jobsites.find((js) =>
         js.name.toUpperCase().includes(targetJobsitePattern)
       );
       if (targetJobsite) {
         setJobsite(targetJobsite);
       }
     }
-    
+
     // Update ref
     prevValuesRef.current.materialType = currentMaterialType;
   }, [
-    workType, 
+    workType,
     currentShiftType,
     currentMaterialType,
     jobsites,
     setJobsite,
-    tascoLogs.length
+    tascoLogs.length,
   ]);
 };

@@ -111,7 +111,7 @@ const formatFieldValue = (fieldName: string, value: unknown): string => {
 // Get the user's full name from their ID
 const getUserName = (
   userId: string,
-  users: { id: string; firstName: string; lastName: string }[],
+  users: { id: string; firstName: string; lastName: string }[]
 ): string => {
   const user = users.find((u) => u.id === userId);
   if (user) {
@@ -220,7 +220,7 @@ export const TimeSheetHistory: React.FC<TimeSheetHistoryProps> = ({
               <span className="text-xs text-gray-500">
                 {format(
                   new Date(mostRecentChange.changedAt),
-                  "MMM d, yyyy h:mm a",
+                  "MMM d, yyyy h:mm a"
                 )}
               </span>
             </div>

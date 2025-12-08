@@ -20,21 +20,21 @@ import { MechanicProject } from "../EditMechanicProjects";
 export function useTimesheetLogs(
   form: TimesheetData | null,
   setForm: (
-    updater: (prev: TimesheetData | null) => TimesheetData | null,
+    updater: (prev: TimesheetData | null) => TimesheetData | null
   ) => void,
-  originalForm?: TimesheetData | null,
+  originalForm?: TimesheetData | null
 ) {
   // General field change handler
   const handleChange = useCallback(
     (
       e: React.ChangeEvent<
         HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-      >,
+      >
     ) => {
       const { name, value } = e.target;
       setForm((prev) => (prev ? { ...prev, [name]: value } : prev));
     },
-    [setForm],
+    [setForm]
   );
 
   // Log field change handler (for nested logs)
@@ -43,20 +43,20 @@ export function useTimesheetLogs(
       logType: keyof TimesheetData,
       logIndex: number,
       field: keyof T,
-      value: string | number | null | { id: string; name: string },
+      value: string | number | null | { id: string; name: string }
     ) => {
       setForm((prev) =>
         prev
           ? {
               ...prev,
               [logType]: (prev[logType] as T[]).map((log, idx) =>
-                idx === logIndex ? { ...log, [field]: value } : log,
+                idx === logIndex ? { ...log, [field]: value } : log
               ),
             }
-          : prev,
+          : prev
       );
     },
-    [setForm],
+    [setForm]
   );
 
   // Nested array change handler (e.g., Materials in TruckingLogs)
@@ -67,7 +67,7 @@ export function useTimesheetLogs(
       nestedType: T,
       nestedIndex: number,
       field: keyof TruckingNestedTypeMap[T],
-      value: string | number | null,
+      value: string | number | null
     ) => {
       setForm((prev) =>
         prev
@@ -82,16 +82,16 @@ export function useTimesheetLogs(
                       ).map((item, nidx) =>
                         nidx === nestedIndex
                           ? { ...item, [field]: value }
-                          : item,
+                          : item
                       ),
                     }
-                  : log,
+                  : log
               ),
             }
-          : prev,
+          : prev
       );
     },
-    [setForm],
+    [setForm]
   );
 
   // Add/Remove handlers for each log type
@@ -111,7 +111,7 @@ export function useTimesheetLogs(
               },
             ],
           }
-        : prev,
+        : prev
     );
   }, [setForm]);
 
@@ -123,10 +123,10 @@ export function useTimesheetLogs(
               ...prev,
               Maintenance: prev.Maintenance.filter((_, i) => i !== idx),
             }
-          : prev,
+          : prev
       );
     },
-    [setForm],
+    [setForm]
   );
 
   // Trucking log handlers
@@ -152,13 +152,13 @@ export function useTimesheetLogs(
                         },
                       ],
                     }
-                  : log,
+                  : log
               ),
             }
-          : prev,
+          : prev
       );
     },
-    [setForm],
+    [setForm]
   );
   const deleteEquipmentHauled = useCallback(
     (logIdx: number, eqIdx: number) => {
@@ -171,16 +171,16 @@ export function useTimesheetLogs(
                   ? {
                       ...log,
                       EquipmentHauled: log.EquipmentHauled.filter(
-                        (_, i) => i !== eqIdx,
+                        (_, i) => i !== eqIdx
                       ),
                     }
-                  : log,
+                  : log
               ),
             }
-          : prev,
+          : prev
       );
     },
-    [setForm],
+    [setForm]
   );
   const addMaterial = useCallback(
     (logIdx: number) => {
@@ -204,13 +204,13 @@ export function useTimesheetLogs(
                         },
                       ],
                     }
-                  : log,
+                  : log
               ),
             }
-          : prev,
+          : prev
       );
     },
-    [setForm],
+    [setForm]
   );
   const deleteMaterial = useCallback(
     (logIdx: number, matIdx: number) => {
@@ -224,13 +224,13 @@ export function useTimesheetLogs(
                       ...log,
                       Materials: log.Materials.filter((_, i) => i !== matIdx),
                     }
-                  : log,
+                  : log
               ),
             }
-          : prev,
+          : prev
       );
     },
-    [setForm],
+    [setForm]
   );
   const addRefuelLog = useCallback(
     (logIdx: number) => {
@@ -251,13 +251,13 @@ export function useTimesheetLogs(
                         },
                       ],
                     }
-                  : log,
+                  : log
               ),
             }
-          : prev,
+          : prev
       );
     },
-    [setForm],
+    [setForm]
   );
   const deleteRefuelLog = useCallback(
     (logIdx: number, refIdx: number) => {
@@ -271,13 +271,13 @@ export function useTimesheetLogs(
                       ...log,
                       RefuelLogs: log.RefuelLogs.filter((_, i) => i !== refIdx),
                     }
-                  : log,
+                  : log
               ),
             }
-          : prev,
+          : prev
       );
     },
-    [setForm],
+    [setForm]
   );
   const addStateMileage = useCallback(
     (logIdx: number) => {
@@ -298,13 +298,13 @@ export function useTimesheetLogs(
                         },
                       ],
                     }
-                  : log,
+                  : log
               ),
             }
-          : prev,
+          : prev
       );
     },
-    [setForm],
+    [setForm]
   );
   const deleteStateMileage = useCallback(
     (logIdx: number, smIdx: number) => {
@@ -317,16 +317,16 @@ export function useTimesheetLogs(
                   ? {
                       ...log,
                       StateMileages: log.StateMileages.filter(
-                        (_, i) => i !== smIdx,
+                        (_, i) => i !== smIdx
                       ),
                     }
-                  : log,
+                  : log
               ),
             }
-          : prev,
+          : prev
       );
     },
-    [setForm],
+    [setForm]
   );
 
   // Tasco log handlers
@@ -349,7 +349,7 @@ export function useTimesheetLogs(
               },
             ],
           }
-        : prev,
+        : prev
     );
   }, [setForm]);
   const removeTascoLog = useCallback(
@@ -360,10 +360,10 @@ export function useTimesheetLogs(
               ...prev,
               TascoLogs: prev.TascoLogs.filter((_, i) => i !== idx),
             }
-          : prev,
+          : prev
       );
     },
-    [setForm],
+    [setForm]
   );
   const addTascoRefuelLog = useCallback(
     (logIdx: number) => {
@@ -380,13 +380,13 @@ export function useTimesheetLogs(
                         { id: Date.now().toString(), gallonsRefueled: 0 },
                       ],
                     }
-                  : log,
+                  : log
               ),
             }
-          : prev,
+          : prev
       );
     },
-    [setForm],
+    [setForm]
   );
   const deleteTascoRefuelLog = useCallback(
     (logIdx: number, refIdx: number) => {
@@ -400,15 +400,15 @@ export function useTimesheetLogs(
                       ...log,
                       RefuelLogs: log.RefuelLogs.filter((_, i) => i !== refIdx),
                     }
-                  : log,
+                  : log
               ),
             }
-          : prev,
+          : prev
       );
     },
-    [setForm],
+    [setForm]
   );
-  
+
   // Tasco F-Load handlers
   const addTascoFLoad = useCallback(
     (logIdx: number) => {
@@ -429,13 +429,13 @@ export function useTimesheetLogs(
                         },
                       ],
                     }
-                  : log,
+                  : log
               ),
             }
-          : prev,
+          : prev
       );
     },
-    [setForm],
+    [setForm]
   );
 
   const deleteTascoFLoad = useCallback(
@@ -448,17 +448,19 @@ export function useTimesheetLogs(
                 idx === logIdx
                   ? {
                       ...log,
-                      TascoFLoads: log.TascoFLoads.filter((_, i) => i !== fLoadIdx),
+                      TascoFLoads: log.TascoFLoads.filter(
+                        (_, i) => i !== fLoadIdx
+                      ),
                     }
-                  : log,
+                  : log
               ),
             }
-          : prev,
+          : prev
       );
     },
-    [setForm],
+    [setForm]
   );
-  
+
   // Tasco nested log change handler (separate from TruckingNestedType handler)
   const handleTascoNestedLogChange = useCallback(
     <T extends TascoNestedType>(
@@ -467,7 +469,7 @@ export function useTimesheetLogs(
       nestedType: T,
       nestedIndex: number,
       field: keyof TascoNestedTypeMap[T],
-      value: string | number | null,
+      value: string | number | null
     ) => {
       setForm((prev) =>
         prev
@@ -482,16 +484,16 @@ export function useTimesheetLogs(
                       ).map((item, nidx) =>
                         nidx === nestedIndex
                           ? { ...item, [field]: value }
-                          : item,
+                          : item
                       ),
                     }
-                  : log,
+                  : log
               ),
             }
-          : prev,
+          : prev
       );
     },
-    [setForm],
+    [setForm]
   );
 
   // Employee Equipment log handlers
@@ -511,7 +513,7 @@ export function useTimesheetLogs(
               },
             ],
           }
-        : prev,
+        : prev
     );
   }, [setForm]);
   const removeEmployeeEquipmentLog = useCallback(
@@ -521,13 +523,13 @@ export function useTimesheetLogs(
           ? {
               ...prev,
               EmployeeEquipmentLogs: prev.EmployeeEquipmentLogs.filter(
-                (_, i) => i !== idx,
+                (_, i) => i !== idx
               ),
             }
-          : prev,
+          : prev
       );
     },
-    [setForm],
+    [setForm]
   );
 
   // Undo handler for general fields
@@ -535,10 +537,10 @@ export function useTimesheetLogs(
     (field: keyof TimesheetData) => {
       if (!originalForm) return;
       setForm((prev) =>
-        prev ? { ...prev, [field]: originalForm[field] } : prev,
+        prev ? { ...prev, [field]: originalForm[field] } : prev
       );
     },
-    [originalForm, setForm],
+    [originalForm, setForm]
   );
 
   // Granular undo for nested TruckingLogs fields
@@ -547,7 +549,7 @@ export function useTimesheetLogs(
       logIdx: number,
       nestedType: T,
       nestedIdx: number,
-      field: K,
+      field: K
     ) => {
       if (!originalForm) return;
       setForm((prev) =>
@@ -567,15 +569,15 @@ export function useTimesheetLogs(
                   [nestedType]: nestedArr.map((item, j) =>
                     j === nestedIdx
                       ? { ...item, [field]: originalArr[nestedIdx]?.[field] }
-                      : item,
+                      : item
                   ),
                 };
               }),
             }
-          : prev,
+          : prev
       );
     },
-    [originalForm, setForm],
+    [originalForm, setForm]
   );
 
   // Undo handler for a specific TruckingLog field
@@ -587,12 +589,12 @@ export function useTimesheetLogs(
         const updatedLogs = prev.TruckingLogs.map((log, i) =>
           i === idx
             ? { ...log, [field]: originalForm.TruckingLogs[idx]?.[field] }
-            : log,
+            : log
         );
         return { ...prev, TruckingLogs: updatedLogs };
       });
     },
-    [originalForm, setForm],
+    [originalForm, setForm]
   );
 
   // Undo handler for a specific TascoLog field
@@ -604,12 +606,12 @@ export function useTimesheetLogs(
         const updatedLogs = prev.TascoLogs.map((log, i) =>
           i === idx
             ? { ...log, [field]: originalForm.TascoLogs[idx]?.[field] }
-            : log,
+            : log
         );
         return { ...prev, TascoLogs: updatedLogs };
       });
     },
-    [originalForm, setForm],
+    [originalForm, setForm]
   );
 
   // Undo handler for a specific MechanicProject field
@@ -631,10 +633,10 @@ export function useTimesheetLogs(
                         ...project,
                         equipmentId: originalForm.Maintenance[idx].equipmentId,
                       }
-                    : project,
+                    : project
                 ),
               }
-            : prev,
+            : prev
         );
         return;
       }
@@ -652,13 +654,13 @@ export function useTimesheetLogs(
                           field as keyof (typeof originalForm.Maintenance)[0]
                         ],
                     }
-                  : project,
+                  : project
               ),
             }
-          : prev,
+          : prev
       );
     },
-    [originalForm, setForm],
+    [originalForm, setForm]
   );
 
   return {

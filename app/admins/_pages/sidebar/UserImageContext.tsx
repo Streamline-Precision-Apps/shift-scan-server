@@ -28,6 +28,21 @@ const fetchUserImage = async (): Promise<string | null> => {
   if (!imageCache) {
     imageCache = fetch("/api/getUserImage")
       .then(async (response) => {
+        // Check for authentication errors
+        if (response.status === 401 || response.status === 403) {
+          console.error(
+            "🔐 Authentication failed - token may be invalid or expired"
+          );
+          console.error(
+            "Clearing local storage and redirecting to sign in page..."
+          );
+          if (typeof window !== "undefined") {
+            localStorage.clear();
+            window.location.href = "/signin";
+          }
+          throw new Error("Authentication failed");
+        }
+
         if (!response.ok) throw new Error("Failed to fetch profile picture");
         const data = await response.json();
         imageData = data.image || null;

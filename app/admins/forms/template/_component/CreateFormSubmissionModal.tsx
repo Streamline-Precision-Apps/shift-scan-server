@@ -18,6 +18,7 @@ import {
 } from "@/app/lib/utils/formNormalization";
 import { FormTemplate, FormFieldValue } from "@/app/lib/types/forms";
 import FormBridge from "@/app/admins/forms/_components/RenderFields/FormBridge";
+import { DateTimePicker } from "../../../_pages/DateTimePicker";
 
 interface CreateFormSubmissionModalProps {
   formTemplate: FormTemplate;
@@ -41,6 +42,7 @@ const CreateFormSubmissionModal: React.FC<CreateFormSubmissionModalProps> = ({
     lastName: string;
   } | null>(null);
   const [submittedByTouched, setSubmittedByTouched] = useState(false);
+  const [submissionDate, setSubmissionDate] = useState<Date | null>(new Date());
 
   // State for manager approval
   const [managerComment, setManagerComment] = useState<string>("");
@@ -238,6 +240,9 @@ const CreateFormSubmissionModal: React.FC<CreateFormSubmissionModalProps> = ({
             : formTemplate.isApprovalRequired
             ? "PENDING"
             : "SUBMITTED",
+        submittedAt: submissionDate
+          ? submissionDate.toISOString()
+          : new Date().toISOString(),
       });
 
       if (!createResult.success) {
@@ -279,7 +284,9 @@ const CreateFormSubmissionModal: React.FC<CreateFormSubmissionModalProps> = ({
         }
       }
 
-      toast.success("Submission created successfully", { duration: 3000 });
+      toast.success("Submission created successfully", {
+        duration: 3000,
+      });
       closeModal();
       onSuccess?.();
     } catch (err) {
@@ -322,6 +329,16 @@ const CreateFormSubmissionModal: React.FC<CreateFormSubmissionModalProps> = ({
           </div>
         </div>
         <div className="flex-1 w-full px-2 pb-10 overflow-y-auto no-scrollbar">
+          <div className="w-full mt-3 mb-4">
+            <DateTimePicker
+              label="Submission Date"
+              value={submissionDate ? submissionDate.toISOString() : undefined}
+              onChange={(val) => {
+                setSubmissionDate(val ? new Date(val) : null);
+              }}
+              font="font-semibold"
+            />
+          </div>
           <div className="w-full mt-3">
             <FormBridge
               formTemplate={formTemplate}

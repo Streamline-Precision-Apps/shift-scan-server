@@ -50,7 +50,7 @@ export function isTascoLogComplete(log: TascoLog): boolean {
 
 /** Checks if an employee equipment log is complete. */
 export function isEmployeeEquipmentLogComplete(
-  log: EmployeeEquipmentLog,
+  log: EmployeeEquipmentLog
 ): boolean {
   return !!(log.equipmentId && log.startTime && log.endTime);
 }

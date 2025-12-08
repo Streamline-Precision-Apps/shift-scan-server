@@ -112,6 +112,7 @@ export default function MechanicReport({
 
     const tableHeaders = [
       "Id",
+      "Timesheet ID",
       "Employee Name",
       "Equipment Worked On",
       "Hours",
@@ -125,6 +126,7 @@ export default function MechanicReport({
         ...exportData.map((row) =>
           [
             row.id,
+            row.timeSheetId,
             row.employeeName,
             row.equipmentWorkedOn,
             row.hours.toFixed(2),

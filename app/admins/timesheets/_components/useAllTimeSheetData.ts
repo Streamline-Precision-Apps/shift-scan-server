@@ -168,13 +168,13 @@ export default function useAllTimeSheetData({
     notificationId: [],
   });
   const [costCodes, setCostCodes] = useState<{ code: string; name: string }[]>(
-    [],
+    []
   );
   const [jobsites, setJobsites] = useState<{ code: string; name: string }[]>(
-    [],
+    []
   );
   const [equipment, setEquipment] = useState<{ id: string; name: string }[]>(
-    [],
+    []
   );
   const [crew, setCrew] = useState<CrewData[]>([]);
   const [users, setUsers] = useState<User[]>([]);
@@ -216,13 +216,13 @@ export default function useAllTimeSheetData({
     // Equipment (array)
     if (filters.equipmentId && filters.equipmentId.length > 0) {
       filters.equipmentId.forEach((equipmentId) =>
-        params.append("equipmentId", equipmentId),
+        params.append("equipmentId", equipmentId)
       );
     }
     // Equipment Log Types (array)
     if (filters.equipmentLogTypes && filters.equipmentLogTypes.length > 0) {
       filters.equipmentLogTypes.forEach((logType) =>
-        params.append("equipmentLogTypes", logType),
+        params.append("equipmentLogTypes", logType)
       );
     }
     // Status (array)
@@ -235,10 +235,24 @@ export default function useAllTimeSheetData({
     }
     // Date Range
     if (filters.dateRange && filters.dateRange.from) {
-      params.append("dateFrom", filters.dateRange.from.toISOString());
+      // Send date-only string (YYYY-MM-DD) to avoid timezone issues
+      const year = filters.dateRange.from.getFullYear();
+      const month = String(filters.dateRange.from.getMonth() + 1).padStart(
+        2,
+        "0"
+      );
+      const day = String(filters.dateRange.from.getDate()).padStart(2, "0");
+      params.append("dateFrom", `${year}-${month}-${day}`);
     }
     if (filters.dateRange && filters.dateRange.to) {
-      params.append("dateTo", filters.dateRange.to.toISOString());
+      // Send date-only string (YYYY-MM-DD) to avoid timezone issues
+      const year = filters.dateRange.to.getFullYear();
+      const month = String(filters.dateRange.to.getMonth() + 1).padStart(
+        2,
+        "0"
+      );
+      const day = String(filters.dateRange.to.getDate()).padStart(2, "0");
+      params.append("dateTo", `${year}-${month}-${day}`);
     }
     // Id (array)
     if (filters.id && filters.id.length > 0) {
@@ -252,10 +266,15 @@ export default function useAllTimeSheetData({
   useEffect(() => {
     const fetchCostCodes = async () => {
       try {
-        const data = await apiRequest("/api/v1/admins/cost-codes/summary", "GET");
+        const data = await apiRequest(
+          "/api/v1/admins/cost-codes/summary",
+          "GET"
+        );
         if (Array.isArray(data)) {
           const filteredCostCodes = data
-            .filter((costCode: { isActive: boolean }) => costCode.isActive === true)
+            .filter(
+              (costCode: { isActive: boolean }) => costCode.isActive === true
+            )
             .map((costCode: { code: string; name: string }) => ({
               code: costCode.code,
               name: costCode.name,
@@ -296,12 +315,18 @@ export default function useAllTimeSheetData({
   useEffect(() => {
     const fetchEquipment = async () => {
       try {
-        const data = await apiRequest("/api/v1/admins/equipment/summary", "GET");
+        const data = await apiRequest(
+          "/api/v1/admins/equipment/summary",
+          "GET"
+        );
         if (data && Array.isArray(data)) {
           const filteredEquipment = data
             .filter(
-              (equipment: { id: string; name: string; approvalStatus: string }) =>
-                equipment.approvalStatus !== "REJECTED"
+              (equipment: {
+                id: string;
+                name: string;
+                approvalStatus: string;
+              }) => equipment.approvalStatus !== "REJECTED"
             )
             .map((equipment: { id: string; name: string }) => ({
               id: equipment.id,
@@ -322,7 +347,10 @@ export default function useAllTimeSheetData({
   useEffect(() => {
     const fetchCrews = async () => {
       try {
-        const data = await apiRequest("/api/v1/admins/personnel/getAllCrews", "GET");
+        const data = await apiRequest(
+          "/api/v1/admins/personnel/getAllCrews",
+          "GET"
+        );
         setCrew(data.crews || []);
       } catch (error) {
         console.error("Failed to fetch crews:", error);
@@ -335,7 +363,10 @@ export default function useAllTimeSheetData({
     // Fetch users from the server or context
     const fetchUsers = async () => {
       try {
-        const data = await apiRequest("/api/v1/admins/personnel/getAllEmployees", "GET");
+        const data = await apiRequest(
+          "/api/v1/admins/personnel/getAllEmployees",
+          "GET"
+        );
         setUsers(data.employees as User[]);
       } catch (error) {
         console.error("Failed to fetch users:", error);
@@ -357,7 +388,7 @@ export default function useAllTimeSheetData({
       notificationId,
       equipmentId,
     }),
-    [jobsiteId, costCode, id, notificationId, equipmentId],
+    [jobsiteId, costCode, id, notificationId, equipmentId]
   );
 
   useEffect(() => {
@@ -372,23 +403,32 @@ export default function useAllTimeSheetData({
       setFilters((prev) => {
         const newFilters = {
           ...prev,
-          jobsiteId: urlParams.jobsiteId ? [urlParams.jobsiteId] : prev.jobsiteId,
+          jobsiteId: urlParams.jobsiteId
+            ? [urlParams.jobsiteId]
+            : prev.jobsiteId,
           costCode: urlParams.costCode ? [urlParams.costCode] : prev.costCode,
           id: urlParams.id ? [urlParams.id] : prev.id,
-          notificationId: urlParams.notificationId ? [urlParams.notificationId] : prev.notificationId,
-          equipmentId: urlParams.equipmentId ? [urlParams.equipmentId] : prev.equipmentId,
+          notificationId: urlParams.notificationId
+            ? [urlParams.notificationId]
+            : prev.notificationId,
+          equipmentId: urlParams.equipmentId
+            ? [urlParams.equipmentId]
+            : prev.equipmentId,
         };
-        
+
         // If equipmentId is provided via URL, auto-select all equipment log types
-        if (urlParams.equipmentId && !prev.equipmentId.includes(urlParams.equipmentId)) {
+        if (
+          urlParams.equipmentId &&
+          !prev.equipmentId.includes(urlParams.equipmentId)
+        ) {
           newFilters.equipmentLogTypes = [
             "employeeEquipmentLogs",
-            "truckingLogs", 
+            "truckingLogs",
             "tascoLogs",
-            "mechanicProjects"
+            "mechanicProjects",
           ];
         }
-        
+
         return newFilters;
       });
     }
@@ -405,10 +445,14 @@ export default function useAllTimeSheetData({
       const filterQuery = buildFilterQuery();
       const encodedSearch = encodeURIComponent(searchTerm.trim());
 
-      const url = `/api/v1/admins/timesheet?status=${showPendingOnly ? "pending" : "all"}&page=${page}&pageSize=${pageSize}&search=${encodedSearch}${filterQuery ? `&${filterQuery}` : ""}`;
+      const url = `/api/v1/admins/timesheet?status=${
+        showPendingOnly ? "pending" : "all"
+      }&page=${page}&pageSize=${pageSize}&search=${encodedSearch}${
+        filterQuery ? `&${filterQuery}` : ""
+      }`;
 
       const data = await apiRequest(url, "GET");
-      
+
       setAllTimesheets(data.timesheets || []);
       setTotalPages(data.totalPages || 1);
       setTotal(data.total || 0);
@@ -435,21 +479,24 @@ export default function useAllTimeSheetData({
   }, [urlParams]);
 
   // Create stable filter strings for dependency tracking
-  const filterDependencies = useMemo(() => ({
-    jobsiteId: (filters.jobsiteId || []).join(','),
-    costCode: (filters.costCode || []).join(','),
-    equipmentId: (filters.equipmentId || []).join(','),
-    equipmentLogTypes: (filters.equipmentLogTypes || []).join(','),
-    id: (filters.id || []).join(','),
-    notificationId: (filters.notificationId || []).join(',')
-  }), [
-    filters.jobsiteId || [],
-    filters.costCode || [],
-    filters.equipmentId || [],
-    filters.equipmentLogTypes || [],
-    filters.id || [],
-    filters.notificationId || []
-  ]);
+  const filterDependencies = useMemo(
+    () => ({
+      jobsiteId: (filters.jobsiteId || []).join(","),
+      costCode: (filters.costCode || []).join(","),
+      equipmentId: (filters.equipmentId || []).join(","),
+      equipmentLogTypes: (filters.equipmentLogTypes || []).join(","),
+      id: (filters.id || []).join(","),
+      notificationId: (filters.notificationId || []).join(","),
+    }),
+    [
+      filters.jobsiteId || [],
+      filters.costCode || [],
+      filters.equipmentId || [],
+      filters.equipmentLogTypes || [],
+      filters.id || [],
+      filters.notificationId || [],
+    ]
+  );
 
   // Fetch timesheets when page/pageSize, search, or explicit refilter triggers change
   useEffect(() => {
@@ -472,7 +519,7 @@ export default function useAllTimeSheetData({
   // Approve or deny a timesheet (no modal)
   const handleApprovalAction = async (
     id: number,
-    action: "APPROVED" | "REJECTED",
+    action: "APPROVED" | "REJECTED"
   ) => {
     setStatusLoading((prev) => ({ ...prev, [id]: action }));
     try {
@@ -487,18 +534,18 @@ export default function useAllTimeSheetData({
       if (!res || res.success !== true)
         throw new Error("Failed to update timesheet status");
       setAllTimesheets((prev) =>
-        prev.map((t) => (t.id === id ? { ...t, status: action } : t)),
+        prev.map((t) => (t.id === id ? { ...t, status: action } : t))
       );
       toast.success(
         `Timesheet ${action === "APPROVED" ? "approved" : "denied"}!`,
-        { duration: 3000 },
+        { duration: 3000 }
       );
       // Only update approval inbox count after approval/denial
       rerender();
     } catch (e) {
       toast.error(
         `Failed to ${action === "APPROVED" ? "approve" : "deny"} timesheet.`,
-        { duration: 3000 },
+        { duration: 3000 }
       );
     } finally {
       setStatusLoading((prev) => {
@@ -585,20 +632,49 @@ export default function useAllTimeSheetData({
         .filter((t) => t.trim().length > 0);
 
       // Date filter: support single date (entire day) or range
+      // Compare dates without time to avoid timezone issues
       let inDateRange = true;
-      if (dateRange.from && !dateRange.to) {
-        const fromStart = new Date(dateRange.from);
-        fromStart.setHours(0, 0, 0, 0);
-        const fromEnd = new Date(dateRange.from);
-        fromEnd.setHours(23, 59, 59, 999);
+      if (dateRange.from || dateRange.to) {
+        // Normalize timesheet date to date-only (YYYY-MM-DD)
         const tsDate = new Date(ts.date);
-        inDateRange = tsDate >= fromStart && tsDate <= fromEnd;
-      } else {
-        if (dateRange.from) {
-          inDateRange = inDateRange && new Date(ts.date) >= dateRange.from;
-        }
-        if (dateRange.to) {
-          inDateRange = inDateRange && new Date(ts.date) <= dateRange.to;
+        const tsDateOnly = new Date(
+          tsDate.getFullYear(),
+          tsDate.getMonth(),
+          tsDate.getDate()
+        );
+
+        // Check if from and to are the same day (single date selection)
+        const fromDateOnly = dateRange.from
+          ? new Date(
+              dateRange.from.getFullYear(),
+              dateRange.from.getMonth(),
+              dateRange.from.getDate()
+            )
+          : null;
+        const toDateOnly = dateRange.to
+          ? new Date(
+              dateRange.to.getFullYear(),
+              dateRange.to.getMonth(),
+              dateRange.to.getDate()
+            )
+          : null;
+
+        const isSingleDate =
+          fromDateOnly &&
+          toDateOnly &&
+          fromDateOnly.getTime() === toDateOnly.getTime();
+
+        if (isSingleDate) {
+          // Single date filter - check if same day
+          inDateRange = tsDateOnly.getTime() === fromDateOnly!.getTime();
+        } else {
+          // Range filter
+          if (fromDateOnly) {
+            inDateRange = inDateRange && tsDateOnly >= fromDateOnly;
+          }
+          if (toDateOnly) {
+            inDateRange = inDateRange && tsDateOnly <= toDateOnly;
+          }
         }
       }
 
@@ -609,7 +685,7 @@ export default function useAllTimeSheetData({
           firstName.toLowerCase().includes(term) ||
           lastName.toLowerCase().includes(term) ||
           jobsite.toLowerCase().includes(term) ||
-          costCode.toLowerCase().includes(term),
+          costCode.toLowerCase().includes(term)
       );
 
       return inDateRange && (terms.length === 0 || matches);
@@ -622,7 +698,7 @@ export default function useAllTimeSheetData({
     }
 
     return [...filteredTimesheets].sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
     );
   }, [filteredTimesheets]);
 
@@ -633,30 +709,30 @@ export default function useAllTimeSheetData({
     selectedUsers?: string[],
     selectedCrew?: string[],
     selectedProfitCenters?: string[],
-    filterByUser?: boolean,
+    filterByUser?: boolean
   ) => {
     try {
       setExportingTimesheets(true);
-      
+
       // Build filters object for the export
       const exportFilters: {
         users?: string[];
         crews?: string[];
         profitCenters?: string[];
       } = {};
-      
+
       if (selectedUsers && selectedUsers.length > 0) {
         exportFilters.users = selectedUsers;
       }
-      
+
       if (selectedCrew && selectedCrew.length > 0) {
         exportFilters.crews = selectedCrew;
       }
-      
+
       if (selectedProfitCenters && selectedProfitCenters.length > 0) {
         exportFilters.profitCenters = selectedProfitCenters;
       }
-      
+
       // Call export with date range and filters instead of specific IDs
       const exportResponse = await exportTimesheets(
         [], // Empty array - we'll use date range and filters instead
@@ -678,46 +754,48 @@ export default function useAllTimeSheetData({
       }
 
       // Format dates and times for display
-      const formattedTimesheets = exportedData.map((ts: Record<string, string | number | Date | null | undefined>) => {
-        const result: Record<
-          string,
-          string | number | Date | null | undefined
-        > = {...ts};
+      const formattedTimesheets = exportedData.map(
+        (ts: Record<string, string | number | Date | null | undefined>) => {
+          const result: Record<
+            string,
+            string | number | Date | null | undefined
+          > = { ...ts };
 
-        // Format date values if present
-        if (result.Date) {
-          const dateObj = new Date(result.Date as string | Date);
-          if (!isNaN(dateObj.getTime())) {
-            result.Date = format(dateObj, "MM/dd/yyyy");
+          // Format date values if present
+          if (result.Date) {
+            const dateObj = new Date(result.Date as string | Date);
+            if (!isNaN(dateObj.getTime())) {
+              result.Date = format(dateObj, "MM/dd/yyyy");
+            }
           }
-        }
 
-        // Format time values if present
-        if (result.Start) {
-          const dateObj = new Date(result.Start as string | Date);
-          if (!isNaN(dateObj.getTime())) {
-            result.Start = format(dateObj, "hh:mm a");
+          // Format time values if present
+          if (result.Start) {
+            const dateObj = new Date(result.Start as string | Date);
+            if (!isNaN(dateObj.getTime())) {
+              result.Start = format(dateObj, "hh:mm a");
+            }
           }
-        }
 
-        if (result.End) {
-          const dateObj = new Date(result.End as string | Date);
-          if (!isNaN(dateObj.getTime())) {
-            result.End = format(dateObj, "hh:mm a");
+          if (result.End) {
+            const dateObj = new Date(result.End as string | Date);
+            if (!isNaN(dateObj.getTime())) {
+              result.End = format(dateObj, "hh:mm a");
+            }
           }
-        }
 
-        // Format Duration if present (should already be calculated on server)
-        if (typeof result.Duration === "number") {
-          result.Duration = result.Duration.toFixed(1);
-        }
+          // Format Duration if present (should already be calculated on server)
+          if (typeof result.Duration === "number") {
+            result.Duration = result.Duration.toFixed(1);
+          }
 
-        return result;
-      });
+          return result;
+        }
+      );
 
       // Get the field labels mapping from the ExportModal's EXPORT_FIELDS
       const fieldLabels = Object.fromEntries(
-        EXPORT_FIELDS.map((field) => [field.key, field.label]),
+        EXPORT_FIELDS.map((field) => [field.key, field.label])
       );
 
       // Determine which fields are actually present in our data
@@ -736,28 +814,29 @@ export default function useAllTimeSheetData({
 
         // Create CSV rows
         const rows = formattedTimesheets
-          .map((item: Record<string, string | number | Date | null | undefined>) =>
-            availableFields
-              .map((field) => {
-                let value = item[field] ?? "";
+          .map(
+            (item: Record<string, string | number | Date | null | undefined>) =>
+              availableFields
+                .map((field) => {
+                  let value = item[field] ?? "";
 
-                // For fields that might have leading zeros, ensure they're treated as text
-                // by adding a special prefix that Excel recognizes
-                if (
-                  preserveLeadingZerosFields.includes(field) &&
-                  value !== null &&
-                  value !== undefined
-                ) {
-                  // Prefix with ="<value>" syntax that Excel uses to force text format
-                  value = `="${String(value).replace(/"/g, '""')}"`;
-                  return value;
-                } else {
-                  value = String(value);
-                  // For other fields, use standard CSV escaping
-                  return `"${value.replace(/"/g, '""')}"`;
-                }
-              })
-              .join(","),
+                  // For fields that might have leading zeros, ensure they're treated as text
+                  // by adding a special prefix that Excel recognizes
+                  if (
+                    preserveLeadingZerosFields.includes(field) &&
+                    value !== null &&
+                    value !== undefined
+                  ) {
+                    // Prefix with ="<value>" syntax that Excel uses to force text format
+                    value = `="${String(value).replace(/"/g, '""')}"`;
+                    return value;
+                  } else {
+                    value = String(value);
+                    // For other fields, use standard CSV escaping
+                    return `"${value.replace(/"/g, '""')}"`;
+                  }
+                })
+                .join(",")
           )
           .join("\n");
 
@@ -767,33 +846,35 @@ export default function useAllTimeSheetData({
           blob,
           exportFileName && exportFileName.length > 0
             ? `${exportFileName.trim()}.csv`
-            : `timesheets_${new Date().toISOString().slice(0, 10)}.csv`,
+            : `timesheets_${new Date().toISOString().slice(0, 10)}.csv`
         );
       } else {
         // Export as XLSX
         // Create a clean object with properly formatted data to avoid type errors
-        const preparedData = formattedTimesheets.map((item: Record<string, string | number | Date | null | undefined>) => {
-          // Create a new object with all the existing properties
-          const prepared: Record<string, unknown> = {};
+        const preparedData = formattedTimesheets.map(
+          (item: Record<string, string | number | Date | null | undefined>) => {
+            // Create a new object with all the existing properties
+            const prepared: Record<string, unknown> = {};
 
-          // Copy all properties, ensuring proper formatting for fields that need it
-          Object.entries(item).forEach(([key, value]) => {
-            if (key === "Jobsite" || key === "CostCode") {
-              // Force these fields to be strings with leading zeros preserved
-              // Add a single quote prefix in the raw data, which Excel interprets as "format as text"
-              const strValue =
-                value !== null && value !== undefined ? String(value) : "";
-              prepared[key] = strValue.startsWith("0")
-                ? `'${strValue}`
-                : strValue;
-            } else {
-              // Keep other fields as they are
-              prepared[key] = value;
-            }
-          });
+            // Copy all properties, ensuring proper formatting for fields that need it
+            Object.entries(item).forEach(([key, value]) => {
+              if (key === "Jobsite" || key === "CostCode") {
+                // Force these fields to be strings with leading zeros preserved
+                // Add a single quote prefix in the raw data, which Excel interprets as "format as text"
+                const strValue =
+                  value !== null && value !== undefined ? String(value) : "";
+                prepared[key] = strValue.startsWith("0")
+                  ? `'${strValue}`
+                  : strValue;
+              } else {
+                // Keep other fields as they are
+                prepared[key] = value;
+              }
+            });
 
-          return prepared;
-        });
+            return prepared;
+          }
+        );
 
         // Create the worksheet with our prepared data
         const ws = XLSX.utils.json_to_sheet(preparedData);
@@ -809,7 +890,7 @@ export default function useAllTimeSheetData({
           blob,
           exportFileName && exportFileName.length > 0
             ? `${exportFileName.trim()}.xlsx`
-            : `timesheets_${new Date().toISOString().slice(0, 10)}.xlsx`,
+            : `timesheets_${new Date().toISOString().slice(0, 10)}.xlsx`
         );
       }
 

@@ -73,7 +73,7 @@ export function CrewMemberCheckboxList({
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-full justify-between text-sm md:text-xs py-2 h-auto min-h-[40px] overflow-hidden"
+            className="w-full justify-between text-sm md:text-xs py-2 h-auto min-h-10 overflow-hidden"
           >
             <span className="truncate">
               {value && value.length > 0
@@ -86,7 +86,7 @@ export function CrewMemberCheckboxList({
             <ChevronsUpDown className="ml-2 h-5 w-5 md:h-4 md:w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 max-h-[300px] overflow-hidden text-sm md:text-xs">
+        <PopoverContent className="w-(--radix-popover-trigger-width) p-0 max-h-[300px] overflow-hidden text-sm md:text-xs">
           <Command className="w-full">
             <CommandInput
               placeholder="Search crew members..."
@@ -117,7 +117,7 @@ export function CrewMemberCheckboxList({
                       <div className="flex items-center w-full gap-2">
                         <div
                           className={cn(
-                            "flex-shrink-0 h-5 w-5 rounded border flex items-center justify-center",
+                            "shrink-0 h-5 w-5 rounded border flex items-center justify-center",
                             checked
                               ? "bg-green-500 border-green-500"
                               : "border-gray-300"
@@ -133,7 +133,7 @@ export function CrewMemberCheckboxList({
                         <span className="flex-1 truncate flex items-center gap-1">
                           {option.label}
                           {isLead && (
-                            <Star className="h-3 w-3 text-yellow-500 fill-yellow-500 flex-shrink-0" />
+                            <Star className="h-3 w-3 text-yellow-500 fill-yellow-500 shrink-0" />
                           )}
                         </span>
                       </div>

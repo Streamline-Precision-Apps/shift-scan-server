@@ -6,6 +6,7 @@ import { format } from "date-fns";
 // Define the MechanicReportRow interface
 export interface MechanicReportRow {
   id: number;
+  timeSheetId: number;
   employeeName: string;
   equipmentWorkedOn: string;
   hours: number;
@@ -20,6 +21,13 @@ export const mechanicReportColumns: ColumnDef<MechanicReportRow>[] = [
     header: () => <div className="text-center">Id</div>,
     cell: ({ row }) => (
       <div className="text-xs text-center">{row.getValue("id")}</div>
+    ),
+  },
+  {
+    accessorKey: "timeSheetId",
+    header: () => <div className="text-center">Timesheet ID</div>,
+    cell: ({ row }) => (
+      <div className="text-xs text-center">{row.getValue("timeSheetId")}</div>
     ),
   },
   {

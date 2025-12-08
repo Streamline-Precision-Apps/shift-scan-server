@@ -17,7 +17,7 @@ interface EditEmployeeEquipmentLogsProps {
   onLogChange: (
     idx: number,
     field: keyof EmployeeEquipmentLog,
-    value: string,
+    value: string
   ) => void;
   onAddLog: () => void;
   onRemoveLog: (idx: number) => void;

@@ -49,6 +49,7 @@ export interface StateMileageItem {
 // Define the TruckingReportRow interface
 export interface TruckingReportRow {
   id: string;
+  timeSheetId: number;
   driver: string;
   truckId: string | null;
   truckName: string | null;
@@ -73,6 +74,13 @@ export const truckingReportColumns: ColumnDef<TruckingReportRow>[] = [
     header: () => <div className="text-center">Driver</div>,
     cell: ({ row }) => (
       <div className="text-xs text-center">{row.getValue("driver")}</div>
+    ),
+  },
+  {
+    accessorKey: "timeSheetId",
+    header: () => <div className="text-center">Timesheet ID</div>,
+    cell: ({ row }) => (
+      <div className="text-xs text-center">{row.getValue("timeSheetId")}</div>
     ),
   },
   {

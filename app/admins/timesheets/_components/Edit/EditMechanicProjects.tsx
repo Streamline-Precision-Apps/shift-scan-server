@@ -19,7 +19,7 @@ interface EditMechanicProjectsProps {
   onProjectChange: (
     idx: number,
     field: keyof MechanicProject,
-    value: string | number | null | { id: string; name: string },
+    value: string | number | null | { id: string; name: string }
   ) => void;
   onAddProject: () => void;
   onRemoveProject: (idx: number) => void;
@@ -65,21 +65,19 @@ export const EditMechanicProjects: React.FC<EditMechanicProjectsProps> = ({
               value={project.equipmentId || ""}
               onChange={(val) => {
                 const selected = equipmentOptions.find(
-                  (eq) => eq.value === val,
+                  (eq) => eq.value === val
                 );
                 // Update equipmentId directly
                 onProjectChange(
                   idx,
                   "equipmentId",
-                  selected ? selected.value : "",
+                  selected ? selected.value : ""
                 );
 
                 onProjectChange(
                   idx,
                   "Equipment",
-                  selected
-                    ? { id: selected.value, name: selected.label }
-                    : null,
+                  selected ? { id: selected.value, name: selected.label } : null
                 );
               }}
               placeholder="Select equipment"

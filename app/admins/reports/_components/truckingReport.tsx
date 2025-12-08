@@ -156,6 +156,7 @@ export default function TruckingReport({
 
     const tableHeaders = [
       "Driver",
+      "Timesheet ID",
       "Date",
       "Truck #",
       "Trailer #",
@@ -176,6 +177,7 @@ export default function TruckingReport({
         ...exportData.map((row) => {
           return [
             row.driver,
+            row.timeSheetId,
             format(new Date(row.date), "yyyy-MM-dd"),
             row.truckName || "-",
             row.trailerName || "-",

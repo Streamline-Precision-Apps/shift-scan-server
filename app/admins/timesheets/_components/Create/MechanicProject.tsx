@@ -29,7 +29,7 @@ export const MechanicProject: React.FC<MechanicProjectProps> = ({
   const handleProjectChange = (
     idx: number,
     field: keyof MechanicProject,
-    value: string | number | null | { id: string; name: string },
+    value: string | number | null | { id: string; name: string }
   ) => {
     setMechanicProjects((prev) => {
       const updated = [...prev];
@@ -94,13 +94,13 @@ export const MechanicProject: React.FC<MechanicProjectProps> = ({
                 value={project.equipmentId || ""}
                 onChange={(val) => {
                   const selected = equipmentOptions.find(
-                    (eq) => eq.value === val,
+                    (eq) => eq.value === val
                   );
                   // Update equipmentId directly
                   handleProjectChange(
                     idx,
                     "equipmentId",
-                    selected ? selected.value : "",
+                    selected ? selected.value : ""
                   );
 
                   handleProjectChange(
@@ -108,7 +108,7 @@ export const MechanicProject: React.FC<MechanicProjectProps> = ({
                     "Equipment",
                     selected
                       ? { id: selected.value, name: selected.label }
-                      : null,
+                      : null
                   );
                 }}
                 placeholder="Select equipment"
@@ -129,7 +129,7 @@ export const MechanicProject: React.FC<MechanicProjectProps> = ({
                   handleProjectChange(
                     idx,
                     "hours",
-                    Number(e.target.value) || null,
+                    Number(e.target.value) || null
                   )
                 }
                 className="bg-white w-[350px] text-xs"

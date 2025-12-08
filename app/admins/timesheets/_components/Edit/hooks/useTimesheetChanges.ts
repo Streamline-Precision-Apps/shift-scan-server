@@ -19,7 +19,7 @@ export function useTimesheetChanges() {
    */
   const detectChanges = (
     originalForm: TimesheetData,
-    form: TimesheetData,
+    form: TimesheetData
   ): ChangeRecord => {
     const changes: Record<string, { old: unknown; new: unknown }> = {};
     let wasStatusChanged = false;

@@ -55,7 +55,7 @@ export function TruckingSection({
 }: Props) {
   // Helper functions to check completeness of each nested log type
   const isEquipmentHauledComplete = (
-    eq: TruckingLogDraft["equipmentHauled"][0],
+    eq: TruckingLogDraft["equipmentHauled"][0]
   ) => !!eq.equipment.id;
 
   const isMaterialComplete = (mat: TruckingMaterialDraft) =>
@@ -146,7 +146,7 @@ export function TruckingSection({
                           }
                           if (Number(value) < Number(log.startingMileage)) {
                             e.target.setCustomValidity(
-                              "Ending mileage cannot be less than starting mileage",
+                              "Ending mileage cannot be less than starting mileage"
                             );
                           } else {
                             e.target.setCustomValidity("");
@@ -193,13 +193,13 @@ export function TruckingSection({
                     disabled={
                       log.equipmentHauled.length > 0 &&
                       !isEquipmentHauledComplete(
-                        log.equipmentHauled[log.equipmentHauled.length - 1],
+                        log.equipmentHauled[log.equipmentHauled.length - 1]
                       )
                     }
                     className={
                       log.equipmentHauled.length > 0 &&
                       !isEquipmentHauledComplete(
-                        log.equipmentHauled[log.equipmentHauled.length - 1],
+                        log.equipmentHauled[log.equipmentHauled.length - 1]
                       )
                         ? "opacity-50"
                         : ""
@@ -207,7 +207,7 @@ export function TruckingSection({
                     title={
                       log.equipmentHauled.length > 0 &&
                       !isEquipmentHauledComplete(
-                        log.equipmentHauled[log.equipmentHauled.length - 1],
+                        log.equipmentHauled[log.equipmentHauled.length - 1]
                       )
                         ? "Please complete the previous Equipment Hauled entry before adding another."
                         : ""
@@ -355,7 +355,7 @@ export function TruckingSection({
                           }
                           if (Number(value) < Number(eq.startMileage)) {
                             e.target.setCustomValidity(
-                              "Ending mileage cannot be less than starting mileage",
+                              "Ending mileage cannot be less than starting mileage"
                             );
                           } else {
                             e.target.setCustomValidity("");
@@ -593,13 +593,13 @@ export function TruckingSection({
                   disabled={
                     log.refuelLogs.length > 0 &&
                     !isRefuelLogComplete(
-                      log.refuelLogs[log.refuelLogs.length - 1],
+                      log.refuelLogs[log.refuelLogs.length - 1]
                     )
                   }
                   className={
                     log.refuelLogs.length > 0 &&
                     !isRefuelLogComplete(
-                      log.refuelLogs[log.refuelLogs.length - 1],
+                      log.refuelLogs[log.refuelLogs.length - 1]
                     )
                       ? "opacity-50"
                       : ""
@@ -607,7 +607,7 @@ export function TruckingSection({
                   title={
                     log.refuelLogs.length > 0 &&
                     !isRefuelLogComplete(
-                      log.refuelLogs[log.refuelLogs.length - 1],
+                      log.refuelLogs[log.refuelLogs.length - 1]
                     )
                       ? "Please complete the previous Refuel Log entry before adding another."
                       : ""
@@ -707,13 +707,13 @@ export function TruckingSection({
                   disabled={
                     log.stateMileages.length > 0 &&
                     !isStateMileageComplete(
-                      log.stateMileages[log.stateMileages.length - 1],
+                      log.stateMileages[log.stateMileages.length - 1]
                     )
                   }
                   className={
                     log.stateMileages.length > 0 &&
                     !isStateMileageComplete(
-                      log.stateMileages[log.stateMileages.length - 1],
+                      log.stateMileages[log.stateMileages.length - 1]
                     )
                       ? "opacity-50"
                       : ""
@@ -721,7 +721,7 @@ export function TruckingSection({
                   title={
                     log.stateMileages.length > 0 &&
                     !isStateMileageComplete(
-                      log.stateMileages[log.stateMileages.length - 1],
+                      log.stateMileages[log.stateMileages.length - 1]
                     )
                       ? "Please complete the previous State Mileage entry before adding another."
                       : ""

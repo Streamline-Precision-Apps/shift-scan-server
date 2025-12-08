@@ -186,7 +186,9 @@ export function useTimesheetData(form: TimesheetData | null) {
   const [equipment, setEquipment] = useState<EquipmentOption[]>([]);
   const [trucks, setTrucks] = useState<TruckOption[]>([]);
   const [trailers, setTrailers] = useState<TrailerOption[]>([]);
-  const [tascoMaterialTypes, setTascoMaterialTypes] = useState<MaterialType[]>([]);
+  const [tascoMaterialTypes, setTascoMaterialTypes] = useState<MaterialType[]>(
+    []
+  );
   // Cache to store cost codes by jobsite ID
   const [costCodeCache, setCostCodeCache] = useState<
     Record<string, { data: CostCodeOption[]; timestamp: number }>
@@ -195,7 +197,10 @@ export function useTimesheetData(form: TimesheetData | null) {
   // Memoized fetch functions for better performance
   const fetchUsers = useCallback(async () => {
     try {
-      const users = await apiRequest("/api/v1/admins/personnel/getAllEmployees", "GET");
+      const users = await apiRequest(
+        "/api/v1/admins/personnel/getAllEmployees",
+        "GET"
+      );
       // getAllEmployees returns users directly as an array, not wrapped in an object
       return users || [];
     } catch (error) {
@@ -206,10 +211,13 @@ export function useTimesheetData(form: TimesheetData | null) {
 
   const fetchJobsites = useCallback(async () => {
     try {
-      const data = await apiRequest("/api/v1/admins/jobsite?pageSize=1000", "GET");
+      const data = await apiRequest(
+        "/api/v1/admins/jobsite?pageSize=1000",
+        "GET"
+      );
       const filteredJobsites = data.jobsiteSummary
         .filter(
-          (j: { approvalStatus: string }) => j.approvalStatus === "APPROVED",
+          (j: { approvalStatus: string }) => j.approvalStatus === "APPROVED"
         )
         .map((j: { id: string; name: string }) => ({ id: j.id, name: j.name }));
       return filteredJobsites;
@@ -221,7 +229,10 @@ export function useTimesheetData(form: TimesheetData | null) {
 
   const fetchEquipment = useCallback(async () => {
     try {
-      const data = await apiRequest("/api/v1/admins/equipment?pageSize=1000", "GET");
+      const data = await apiRequest(
+        "/api/v1/admins/equipment?pageSize=1000",
+        "GET"
+      );
       return data.equipment || [];
     } catch (error) {
       console.error("Error fetching equipment:", error);
@@ -231,7 +242,10 @@ export function useTimesheetData(form: TimesheetData | null) {
 
   const fetchTascoMaterialTypes = useCallback(async () => {
     try {
-      const data = await apiRequest("/api/v1/admins/timesheet/tasco-material-types", "GET");
+      const data = await apiRequest(
+        "/api/v1/admins/timesheet/tasco-material-types",
+        "GET"
+      );
       return data.materialTypes || [];
     } catch (error) {
       console.error("Error fetching Tasco material types:", error);
@@ -243,12 +257,13 @@ export function useTimesheetData(form: TimesheetData | null) {
   const fetchAllData = useCallback(async () => {
     try {
       // Use Promise.all to fetch data concurrently for better performance
-      const [usersData, jobsitesData, equipmentData, materialTypesData] = await Promise.all([
-        fetchUsers(),
-        fetchJobsites(),
-        fetchEquipment(),
-        fetchTascoMaterialTypes(),
-      ]);
+      const [usersData, jobsitesData, equipmentData, materialTypesData] =
+        await Promise.all([
+          fetchUsers(),
+          fetchJobsites(),
+          fetchEquipment(),
+          fetchTascoMaterialTypes(),
+        ]);
 
       setUsers(usersData);
       setJobsites(jobsitesData);
@@ -257,11 +272,11 @@ export function useTimesheetData(form: TimesheetData | null) {
 
       // Process equipment to get trucks and trailers
       const filteredTrucks = equipmentData.filter(
-        (e: { equipmentTag: string }) => 
-          e.equipmentTag === "TRUCK" || e.equipmentTag === "VEHICLE",
+        (e: { equipmentTag: string }) =>
+          e.equipmentTag === "TRUCK" || e.equipmentTag === "VEHICLE"
       );
       const filteredTrailers = equipmentData.filter(
-        (e: { equipmentTag: string }) => e.equipmentTag === "TRAILER",
+        (e: { equipmentTag: string }) => e.equipmentTag === "TRAILER"
       );
 
       setTrucks(filteredTrucks as TruckOption[]);
@@ -285,19 +300,19 @@ export function useTimesheetData(form: TimesheetData | null) {
       // Fetch ALL cost codes without pagination
       const response = await apiRequest(
         `/api/v1/admins/cost-codes?pageSize=1000`,
-        "GET",
+        "GET"
       );
-      
+
       // Extract cost codes from the response - API returns { costCodes: [...] }
       const codes = response.costCodes || [];
-      
+
       const options = codes
         .filter((c: { isActive: boolean }) => c.isActive === true)
         .map((c: { id: string; code: string; name: string }) => ({
           value: c.id,
           label: `${c.code} - ${c.name}`,
         }));
-      
+
       return options;
     } catch (error) {
       console.error("Error fetching cost codes:", error);
@@ -389,37 +404,37 @@ export function useTimesheetData(form: TimesheetData | null) {
         value: u.id,
         label: `${u.firstName} ${u.lastName}`,
       })),
-    [users],
+    [users]
   );
 
   const jobsiteOptions = useMemo(
     () => jobsites.map((j) => ({ value: j.id, label: j.name })),
-    [jobsites],
+    [jobsites]
   );
 
   const costCodeOptions = useMemo(
     () => costCodes.map((c) => ({ value: c.value, label: c.label })),
-    [costCodes],
+    [costCodes]
   );
 
   const equipmentOptions = useMemo(
     () => equipment.map((e) => ({ value: e.id, label: e.name })),
-    [equipment],
+    [equipment]
   );
 
   const truckOptions = useMemo(
     () => trucks.map((t) => ({ value: t.id, label: t.name })),
-    [trucks],
+    [trucks]
   );
 
   const trailerOptions = useMemo(
     () => trailers.map((t) => ({ value: t.id, label: t.name })),
-    [trailers],
+    [trailers]
   );
 
   const tascoMaterialTypeOptions = useMemo(
     () => tascoMaterialTypes.map((m) => ({ value: m.name, label: m.name })),
-    [tascoMaterialTypes],
+    [tascoMaterialTypes]
   );
 
   return {

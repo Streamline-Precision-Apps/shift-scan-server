@@ -1,12 +1,5 @@
 "use client";
 import { Combobox } from "@/app/v1/components/ui/combobox";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/app/v1/components/ui/popover";
-import { Button } from "@/app/v1/components/ui/button";
-import { Calendar } from "@/app/v1/components/ui/calendar";
 import { Input } from "@/app/v1/components/ui/input";
 import {
   Select,
@@ -15,10 +8,8 @@ import {
   SelectItem,
   SelectValue,
 } from "@/app/v1/components/ui/select";
-import { format as formatDate, parseISO } from "date-fns";
 import React, { Dispatch, SetStateAction, use, useEffect } from "react";
 import { Label } from "@/app/v1/components/ui/label";
-import { CalendarIcon } from "lucide-react";
 import { DateTimePicker } from "../../../_pages/DateTimePicker";
 import { SingleCombobox } from "@/app/v1/components/ui/single-combobox";
 import { Textarea } from "@/app/v1/components/ui/textarea";
@@ -30,8 +21,6 @@ export default function GeneralSection({
   jobsiteOptions,
   costCodeOptions,
   workTypeOptions,
-  datePickerOpen,
-  setDatePickerOpen,
   users,
   jobsites,
 }: {
@@ -78,53 +67,17 @@ export default function GeneralSection({
     }>
   >;
   handleChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
   userOptions: { value: string; label: string }[];
   jobsiteOptions: { value: string; label: string }[];
   costCodeOptions: { value: string; label: string }[];
   workTypeOptions: { value: string; label: string }[];
-  datePickerOpen: boolean;
-  setDatePickerOpen: (open: boolean) => void;
   users: { id: string; firstName: string; lastName: string }[];
   jobsites: { id: string; name: string }[];
 }) {
   return (
     <>
-      {/* Creation Date (disabled) */}
-      <div className="w-full">
-        <label className="block font-semibold text-xs mb-1">
-          Creation Date
-        </label>
-        <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              className="w-1/2 justify-start text-left font-normal"
-              disabled
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {form.date
-                ? formatDate(new Date(form.date), "PPP")
-                : "Pick a date"}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
-            <Calendar
-              mode="single"
-              selected={form.date ? new Date(form.date) : undefined}
-              onSelect={(date) => {
-                setForm({
-                  ...form,
-                  date: date ? date : new Date(),
-                });
-                setDatePickerOpen(false);
-              }}
-              autoFocus
-            />
-          </PopoverContent>
-        </Popover>
-      </div>
       {/* User */}
       <div className="w-full">
         <SingleCombobox
@@ -135,7 +88,11 @@ export default function GeneralSection({
             const selected = users.find((u) => u.id === val);
             setForm({
               ...form,
-              user: selected || { id: "", firstName: "", lastName: "" },
+              user: selected || {
+                id: "",
+                firstName: "",
+                lastName: "",
+              },
             });
           }}
           placeholder="Select user"

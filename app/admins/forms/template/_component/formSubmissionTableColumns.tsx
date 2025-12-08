@@ -165,6 +165,21 @@ export const getFormSubmissionTableColumns = ({
     },
 
     {
+      accessorKey: "createdAt",
+      header: "Created At",
+      cell: ({ row }) => {
+        const submission = row.original;
+        return (
+          <div className="text-xs text-center">
+            {submission.createdAt
+              ? format(new Date(submission.createdAt), "PPp")
+              : "-"}
+          </div>
+        );
+      },
+    },
+
+    {
       accessorKey: "submittedAt",
       header: "Submitted At",
       cell: ({ row }) => {
