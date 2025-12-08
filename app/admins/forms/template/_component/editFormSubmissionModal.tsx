@@ -28,6 +28,7 @@ import { apiRequest } from "@/app/lib/utils/api-Utils";
 import { denormalizeFormValues } from "@/app/lib/utils/formNormalization";
 
 import { FormFieldValue, FormTemplate } from "@/app/lib/types/forms";
+import { DateTimePicker } from "../../../_pages/DateTimePicker";
 
 export default function EditFormSubmissionModal({
   id,
@@ -48,6 +49,7 @@ export default function EditFormSubmissionModal({
   const [loading, setLoading] = useState(true);
   const [formSubmission, setFormSubmission] =
     useState<FormSubmissionWithTemplate | null>(null);
+  const [submissionDate, setSubmissionDate] = useState<Date | null>(null);
   const [editData, setEditData] = useState<
     Record<string, string | number | boolean | null | Date | object | string[]>
   >({});
@@ -150,6 +152,11 @@ export default function EditFormSubmissionModal({
         });
       }
       setEditData(processedData);
+
+      // Initialize submission date from the submission data
+      if (submission.submittedAt) {
+        setSubmissionDate(new Date(submission.submittedAt));
+      }
 
       setLoading(false);
     };
@@ -285,7 +292,10 @@ export default function EditFormSubmissionModal({
               // Single select: name → person object
               const match = userOptions.find((opt) => opt.label === val.trim());
               if (match) {
-                displayData[field.id] = { id: match.value, name: match.label };
+                displayData[field.id] = {
+                  id: match.value,
+                  name: match.label,
+                };
               }
             }
           }
@@ -418,10 +428,13 @@ export default function EditFormSubmissionModal({
           formSubmission.status === "PENDING" && managerSignature
             ? "APPROVED"
             : undefined,
+        submittedAt: submissionDate ? submissionDate.toISOString() : undefined,
       });
 
       if (res.success) {
-        toast.success("Submission updated successfully", { duration: 3000 });
+        toast.success("Submission updated successfully", {
+          duration: 3000,
+        });
 
         refresh();
         onSuccess();
@@ -674,6 +687,17 @@ export default function EditFormSubmissionModal({
         </div>
 
         <div className="flex-1 w-full px-2 pb-10 overflow-y-auto no-scrollbar">
+          {/* Submission Date */}
+          <div className="w-full mt-3 mb-4">
+            <DateTimePicker
+              label="Submission Date"
+              value={submissionDate ? submissionDate.toISOString() : undefined}
+              onChange={(val) => {
+                setSubmissionDate(val ? new Date(val) : null);
+              }}
+              font="font-semibold"
+            />
+          </div>
           {/* Show approval information if available */}
           {formTemplate?.isApprovalRequired && (
             <>
