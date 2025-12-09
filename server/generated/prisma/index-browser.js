@@ -218,6 +218,7 @@ exports.Prisma.FormTemplateScalarFieldEnum = {
   id: 'id',
   companyId: 'companyId',
   name: 'name',
+  spanishName: 'spanishName',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   isSignatureRequired: 'isSignatureRequired',
@@ -230,13 +231,18 @@ exports.Prisma.FormTemplateScalarFieldEnum = {
 exports.Prisma.FormGroupingScalarFieldEnum = {
   id: 'id',
   title: 'title',
-  order: 'order'
+  spanishTitle: 'spanishTitle',
+  order: 'order',
+  conditionalOnFieldId: 'conditionalOnFieldId',
+  conditionType: 'conditionType',
+  conditionalOnValue: 'conditionalOnValue'
 };
 
 exports.Prisma.FormFieldScalarFieldEnum = {
   id: 'id',
   formGroupingId: 'formGroupingId',
   label: 'label',
+  spanishLabel: 'spanishLabel',
   type: 'type',
   required: 'required',
   order: 'order',
@@ -245,13 +251,17 @@ exports.Prisma.FormFieldScalarFieldEnum = {
   content: 'content',
   filter: 'filter',
   minLength: 'minLength',
-  multiple: 'multiple'
+  multiple: 'multiple',
+  conditionalOnFieldId: 'conditionalOnFieldId',
+  conditionType: 'conditionType',
+  conditionalOnValue: 'conditionalOnValue'
 };
 
 exports.Prisma.FormFieldOptionScalarFieldEnum = {
   id: 'id',
   fieldId: 'fieldId',
-  value: 'value'
+  value: 'value',
+  spanishValue: 'spanishValue'
 };
 
 exports.Prisma.FormSubmissionScalarFieldEnum = {

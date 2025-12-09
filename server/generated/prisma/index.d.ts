@@ -15595,6 +15595,7 @@ export namespace Prisma {
     id: string | null
     companyId: string | null
     name: string | null
+    spanishName: string | null
     createdAt: Date | null
     updatedAt: Date | null
     isSignatureRequired: boolean | null
@@ -15608,6 +15609,7 @@ export namespace Prisma {
     id: string | null
     companyId: string | null
     name: string | null
+    spanishName: string | null
     createdAt: Date | null
     updatedAt: Date | null
     isSignatureRequired: boolean | null
@@ -15621,6 +15623,7 @@ export namespace Prisma {
     id: number
     companyId: number
     name: number
+    spanishName: number
     createdAt: number
     updatedAt: number
     isSignatureRequired: number
@@ -15636,6 +15639,7 @@ export namespace Prisma {
     id?: true
     companyId?: true
     name?: true
+    spanishName?: true
     createdAt?: true
     updatedAt?: true
     isSignatureRequired?: true
@@ -15649,6 +15653,7 @@ export namespace Prisma {
     id?: true
     companyId?: true
     name?: true
+    spanishName?: true
     createdAt?: true
     updatedAt?: true
     isSignatureRequired?: true
@@ -15662,6 +15667,7 @@ export namespace Prisma {
     id?: true
     companyId?: true
     name?: true
+    spanishName?: true
     createdAt?: true
     updatedAt?: true
     isSignatureRequired?: true
@@ -15748,6 +15754,7 @@ export namespace Prisma {
     id: string
     companyId: string
     name: string
+    spanishName: string | null
     createdAt: Date
     updatedAt: Date
     isSignatureRequired: boolean
@@ -15778,6 +15785,7 @@ export namespace Prisma {
     id?: boolean
     companyId?: boolean
     name?: boolean
+    spanishName?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     isSignatureRequired?: boolean
@@ -15795,6 +15803,7 @@ export namespace Prisma {
     id?: boolean
     companyId?: boolean
     name?: boolean
+    spanishName?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     isSignatureRequired?: boolean
@@ -15809,6 +15818,7 @@ export namespace Prisma {
     id?: boolean
     companyId?: boolean
     name?: boolean
+    spanishName?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     isSignatureRequired?: boolean
@@ -15823,6 +15833,7 @@ export namespace Prisma {
     id?: boolean
     companyId?: boolean
     name?: boolean
+    spanishName?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     isSignatureRequired?: boolean
@@ -15832,7 +15843,7 @@ export namespace Prisma {
     isApprovalRequired?: boolean
   }
 
-  export type FormTemplateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "name" | "createdAt" | "updatedAt" | "isSignatureRequired" | "description" | "isActive" | "formType" | "isApprovalRequired", ExtArgs["result"]["formTemplate"]>
+  export type FormTemplateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "name" | "spanishName" | "createdAt" | "updatedAt" | "isSignatureRequired" | "description" | "isActive" | "formType" | "isApprovalRequired", ExtArgs["result"]["formTemplate"]>
   export type FormTemplateInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Submissions?: boolean | FormTemplate$SubmissionsArgs<ExtArgs>
     Company?: boolean | CompanyDefaultArgs<ExtArgs>
@@ -15857,6 +15868,7 @@ export namespace Prisma {
       id: string
       companyId: string
       name: string
+      spanishName: string | null
       createdAt: Date
       updatedAt: Date
       isSignatureRequired: boolean
@@ -16293,6 +16305,7 @@ export namespace Prisma {
     readonly id: FieldRef<"FormTemplate", 'String'>
     readonly companyId: FieldRef<"FormTemplate", 'String'>
     readonly name: FieldRef<"FormTemplate", 'String'>
+    readonly spanishName: FieldRef<"FormTemplate", 'String'>
     readonly createdAt: FieldRef<"FormTemplate", 'DateTime'>
     readonly updatedAt: FieldRef<"FormTemplate", 'DateTime'>
     readonly isSignatureRequired: FieldRef<"FormTemplate", 'Boolean'>
@@ -16785,19 +16798,31 @@ export namespace Prisma {
   export type FormGroupingMinAggregateOutputType = {
     id: string | null
     title: string | null
+    spanishTitle: string | null
     order: number | null
+    conditionalOnFieldId: string | null
+    conditionType: string | null
+    conditionalOnValue: string | null
   }
 
   export type FormGroupingMaxAggregateOutputType = {
     id: string | null
     title: string | null
+    spanishTitle: string | null
     order: number | null
+    conditionalOnFieldId: string | null
+    conditionType: string | null
+    conditionalOnValue: string | null
   }
 
   export type FormGroupingCountAggregateOutputType = {
     id: number
     title: number
+    spanishTitle: number
     order: number
+    conditionalOnFieldId: number
+    conditionType: number
+    conditionalOnValue: number
     _all: number
   }
 
@@ -16813,19 +16838,31 @@ export namespace Prisma {
   export type FormGroupingMinAggregateInputType = {
     id?: true
     title?: true
+    spanishTitle?: true
     order?: true
+    conditionalOnFieldId?: true
+    conditionType?: true
+    conditionalOnValue?: true
   }
 
   export type FormGroupingMaxAggregateInputType = {
     id?: true
     title?: true
+    spanishTitle?: true
     order?: true
+    conditionalOnFieldId?: true
+    conditionType?: true
+    conditionalOnValue?: true
   }
 
   export type FormGroupingCountAggregateInputType = {
     id?: true
     title?: true
+    spanishTitle?: true
     order?: true
+    conditionalOnFieldId?: true
+    conditionType?: true
+    conditionalOnValue?: true
     _all?: true
   }
 
@@ -16918,7 +16955,11 @@ export namespace Prisma {
   export type FormGroupingGroupByOutputType = {
     id: string
     title: string | null
+    spanishTitle: string | null
     order: number
+    conditionalOnFieldId: string | null
+    conditionType: string | null
+    conditionalOnValue: string | null
     _count: FormGroupingCountAggregateOutputType | null
     _avg: FormGroupingAvgAggregateOutputType | null
     _sum: FormGroupingSumAggregateOutputType | null
@@ -16943,7 +16984,11 @@ export namespace Prisma {
   export type FormGroupingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     title?: boolean
+    spanishTitle?: boolean
     order?: boolean
+    conditionalOnFieldId?: boolean
+    conditionType?: boolean
+    conditionalOnValue?: boolean
     Fields?: boolean | FormGrouping$FieldsArgs<ExtArgs>
     FormTemplate?: boolean | FormGrouping$FormTemplateArgs<ExtArgs>
     _count?: boolean | FormGroupingCountOutputTypeDefaultArgs<ExtArgs>
@@ -16952,22 +16997,34 @@ export namespace Prisma {
   export type FormGroupingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     title?: boolean
+    spanishTitle?: boolean
     order?: boolean
+    conditionalOnFieldId?: boolean
+    conditionType?: boolean
+    conditionalOnValue?: boolean
   }, ExtArgs["result"]["formGrouping"]>
 
   export type FormGroupingSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     title?: boolean
+    spanishTitle?: boolean
     order?: boolean
+    conditionalOnFieldId?: boolean
+    conditionType?: boolean
+    conditionalOnValue?: boolean
   }, ExtArgs["result"]["formGrouping"]>
 
   export type FormGroupingSelectScalar = {
     id?: boolean
     title?: boolean
+    spanishTitle?: boolean
     order?: boolean
+    conditionalOnFieldId?: boolean
+    conditionType?: boolean
+    conditionalOnValue?: boolean
   }
 
-  export type FormGroupingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "order", ExtArgs["result"]["formGrouping"]>
+  export type FormGroupingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "spanishTitle" | "order" | "conditionalOnFieldId" | "conditionType" | "conditionalOnValue", ExtArgs["result"]["formGrouping"]>
   export type FormGroupingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Fields?: boolean | FormGrouping$FieldsArgs<ExtArgs>
     FormTemplate?: boolean | FormGrouping$FormTemplateArgs<ExtArgs>
@@ -16985,7 +17042,11 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       title: string | null
+      spanishTitle: string | null
       order: number
+      conditionalOnFieldId: string | null
+      conditionType: string | null
+      conditionalOnValue: string | null
     }, ExtArgs["result"]["formGrouping"]>
     composites: {}
   }
@@ -17413,7 +17474,11 @@ export namespace Prisma {
   interface FormGroupingFieldRefs {
     readonly id: FieldRef<"FormGrouping", 'String'>
     readonly title: FieldRef<"FormGrouping", 'String'>
+    readonly spanishTitle: FieldRef<"FormGrouping", 'String'>
     readonly order: FieldRef<"FormGrouping", 'Int'>
+    readonly conditionalOnFieldId: FieldRef<"FormGrouping", 'String'>
+    readonly conditionType: FieldRef<"FormGrouping", 'String'>
+    readonly conditionalOnValue: FieldRef<"FormGrouping", 'String'>
   }
     
 
@@ -17896,6 +17961,7 @@ export namespace Prisma {
     id: string | null
     formGroupingId: string | null
     label: string | null
+    spanishLabel: string | null
     type: $Enums.FieldType | null
     required: boolean | null
     order: number | null
@@ -17905,12 +17971,16 @@ export namespace Prisma {
     filter: string | null
     minLength: number | null
     multiple: boolean | null
+    conditionalOnFieldId: string | null
+    conditionType: string | null
+    conditionalOnValue: string | null
   }
 
   export type FormFieldMaxAggregateOutputType = {
     id: string | null
     formGroupingId: string | null
     label: string | null
+    spanishLabel: string | null
     type: $Enums.FieldType | null
     required: boolean | null
     order: number | null
@@ -17920,12 +17990,16 @@ export namespace Prisma {
     filter: string | null
     minLength: number | null
     multiple: boolean | null
+    conditionalOnFieldId: string | null
+    conditionType: string | null
+    conditionalOnValue: string | null
   }
 
   export type FormFieldCountAggregateOutputType = {
     id: number
     formGroupingId: number
     label: number
+    spanishLabel: number
     type: number
     required: number
     order: number
@@ -17935,6 +18009,9 @@ export namespace Prisma {
     filter: number
     minLength: number
     multiple: number
+    conditionalOnFieldId: number
+    conditionType: number
+    conditionalOnValue: number
     _all: number
   }
 
@@ -17955,6 +18032,7 @@ export namespace Prisma {
     id?: true
     formGroupingId?: true
     label?: true
+    spanishLabel?: true
     type?: true
     required?: true
     order?: true
@@ -17964,12 +18042,16 @@ export namespace Prisma {
     filter?: true
     minLength?: true
     multiple?: true
+    conditionalOnFieldId?: true
+    conditionType?: true
+    conditionalOnValue?: true
   }
 
   export type FormFieldMaxAggregateInputType = {
     id?: true
     formGroupingId?: true
     label?: true
+    spanishLabel?: true
     type?: true
     required?: true
     order?: true
@@ -17979,12 +18061,16 @@ export namespace Prisma {
     filter?: true
     minLength?: true
     multiple?: true
+    conditionalOnFieldId?: true
+    conditionType?: true
+    conditionalOnValue?: true
   }
 
   export type FormFieldCountAggregateInputType = {
     id?: true
     formGroupingId?: true
     label?: true
+    spanishLabel?: true
     type?: true
     required?: true
     order?: true
@@ -17994,6 +18080,9 @@ export namespace Prisma {
     filter?: true
     minLength?: true
     multiple?: true
+    conditionalOnFieldId?: true
+    conditionType?: true
+    conditionalOnValue?: true
     _all?: true
   }
 
@@ -18087,6 +18176,7 @@ export namespace Prisma {
     id: string
     formGroupingId: string
     label: string
+    spanishLabel: string | null
     type: $Enums.FieldType
     required: boolean
     order: number
@@ -18096,6 +18186,9 @@ export namespace Prisma {
     filter: string | null
     minLength: number | null
     multiple: boolean | null
+    conditionalOnFieldId: string | null
+    conditionType: string | null
+    conditionalOnValue: string | null
     _count: FormFieldCountAggregateOutputType | null
     _avg: FormFieldAvgAggregateOutputType | null
     _sum: FormFieldSumAggregateOutputType | null
@@ -18121,6 +18214,7 @@ export namespace Prisma {
     id?: boolean
     formGroupingId?: boolean
     label?: boolean
+    spanishLabel?: boolean
     type?: boolean
     required?: boolean
     order?: boolean
@@ -18130,6 +18224,9 @@ export namespace Prisma {
     filter?: boolean
     minLength?: boolean
     multiple?: boolean
+    conditionalOnFieldId?: boolean
+    conditionType?: boolean
+    conditionalOnValue?: boolean
     FormGrouping?: boolean | FormGroupingDefaultArgs<ExtArgs>
     Options?: boolean | FormField$OptionsArgs<ExtArgs>
     _count?: boolean | FormFieldCountOutputTypeDefaultArgs<ExtArgs>
@@ -18139,6 +18236,7 @@ export namespace Prisma {
     id?: boolean
     formGroupingId?: boolean
     label?: boolean
+    spanishLabel?: boolean
     type?: boolean
     required?: boolean
     order?: boolean
@@ -18148,6 +18246,9 @@ export namespace Prisma {
     filter?: boolean
     minLength?: boolean
     multiple?: boolean
+    conditionalOnFieldId?: boolean
+    conditionType?: boolean
+    conditionalOnValue?: boolean
     FormGrouping?: boolean | FormGroupingDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["formField"]>
 
@@ -18155,6 +18256,7 @@ export namespace Prisma {
     id?: boolean
     formGroupingId?: boolean
     label?: boolean
+    spanishLabel?: boolean
     type?: boolean
     required?: boolean
     order?: boolean
@@ -18164,6 +18266,9 @@ export namespace Prisma {
     filter?: boolean
     minLength?: boolean
     multiple?: boolean
+    conditionalOnFieldId?: boolean
+    conditionType?: boolean
+    conditionalOnValue?: boolean
     FormGrouping?: boolean | FormGroupingDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["formField"]>
 
@@ -18171,6 +18276,7 @@ export namespace Prisma {
     id?: boolean
     formGroupingId?: boolean
     label?: boolean
+    spanishLabel?: boolean
     type?: boolean
     required?: boolean
     order?: boolean
@@ -18180,9 +18286,12 @@ export namespace Prisma {
     filter?: boolean
     minLength?: boolean
     multiple?: boolean
+    conditionalOnFieldId?: boolean
+    conditionType?: boolean
+    conditionalOnValue?: boolean
   }
 
-  export type FormFieldOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "formGroupingId" | "label" | "type" | "required" | "order" | "placeholder" | "maxLength" | "content" | "filter" | "minLength" | "multiple", ExtArgs["result"]["formField"]>
+  export type FormFieldOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "formGroupingId" | "label" | "spanishLabel" | "type" | "required" | "order" | "placeholder" | "maxLength" | "content" | "filter" | "minLength" | "multiple" | "conditionalOnFieldId" | "conditionType" | "conditionalOnValue", ExtArgs["result"]["formField"]>
   export type FormFieldInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     FormGrouping?: boolean | FormGroupingDefaultArgs<ExtArgs>
     Options?: boolean | FormField$OptionsArgs<ExtArgs>
@@ -18205,6 +18314,7 @@ export namespace Prisma {
       id: string
       formGroupingId: string
       label: string
+      spanishLabel: string | null
       type: $Enums.FieldType
       required: boolean
       order: number
@@ -18214,6 +18324,9 @@ export namespace Prisma {
       filter: string | null
       minLength: number | null
       multiple: boolean | null
+      conditionalOnFieldId: string | null
+      conditionType: string | null
+      conditionalOnValue: string | null
     }, ExtArgs["result"]["formField"]>
     composites: {}
   }
@@ -18642,6 +18755,7 @@ export namespace Prisma {
     readonly id: FieldRef<"FormField", 'String'>
     readonly formGroupingId: FieldRef<"FormField", 'String'>
     readonly label: FieldRef<"FormField", 'String'>
+    readonly spanishLabel: FieldRef<"FormField", 'String'>
     readonly type: FieldRef<"FormField", 'FieldType'>
     readonly required: FieldRef<"FormField", 'Boolean'>
     readonly order: FieldRef<"FormField", 'Int'>
@@ -18651,6 +18765,9 @@ export namespace Prisma {
     readonly filter: FieldRef<"FormField", 'String'>
     readonly minLength: FieldRef<"FormField", 'Int'>
     readonly multiple: FieldRef<"FormField", 'Boolean'>
+    readonly conditionalOnFieldId: FieldRef<"FormField", 'String'>
+    readonly conditionType: FieldRef<"FormField", 'String'>
+    readonly conditionalOnValue: FieldRef<"FormField", 'String'>
   }
     
 
@@ -19103,18 +19220,21 @@ export namespace Prisma {
     id: string | null
     fieldId: string | null
     value: string | null
+    spanishValue: string | null
   }
 
   export type FormFieldOptionMaxAggregateOutputType = {
     id: string | null
     fieldId: string | null
     value: string | null
+    spanishValue: string | null
   }
 
   export type FormFieldOptionCountAggregateOutputType = {
     id: number
     fieldId: number
     value: number
+    spanishValue: number
     _all: number
   }
 
@@ -19123,18 +19243,21 @@ export namespace Prisma {
     id?: true
     fieldId?: true
     value?: true
+    spanishValue?: true
   }
 
   export type FormFieldOptionMaxAggregateInputType = {
     id?: true
     fieldId?: true
     value?: true
+    spanishValue?: true
   }
 
   export type FormFieldOptionCountAggregateInputType = {
     id?: true
     fieldId?: true
     value?: true
+    spanishValue?: true
     _all?: true
   }
 
@@ -19214,6 +19337,7 @@ export namespace Prisma {
     id: string
     fieldId: string
     value: string
+    spanishValue: string | null
     _count: FormFieldOptionCountAggregateOutputType | null
     _min: FormFieldOptionMinAggregateOutputType | null
     _max: FormFieldOptionMaxAggregateOutputType | null
@@ -19237,6 +19361,7 @@ export namespace Prisma {
     id?: boolean
     fieldId?: boolean
     value?: boolean
+    spanishValue?: boolean
     Field?: boolean | FormFieldDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["formFieldOption"]>
 
@@ -19244,6 +19369,7 @@ export namespace Prisma {
     id?: boolean
     fieldId?: boolean
     value?: boolean
+    spanishValue?: boolean
     Field?: boolean | FormFieldDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["formFieldOption"]>
 
@@ -19251,6 +19377,7 @@ export namespace Prisma {
     id?: boolean
     fieldId?: boolean
     value?: boolean
+    spanishValue?: boolean
     Field?: boolean | FormFieldDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["formFieldOption"]>
 
@@ -19258,9 +19385,10 @@ export namespace Prisma {
     id?: boolean
     fieldId?: boolean
     value?: boolean
+    spanishValue?: boolean
   }
 
-  export type FormFieldOptionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "fieldId" | "value", ExtArgs["result"]["formFieldOption"]>
+  export type FormFieldOptionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "fieldId" | "value" | "spanishValue", ExtArgs["result"]["formFieldOption"]>
   export type FormFieldOptionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Field?: boolean | FormFieldDefaultArgs<ExtArgs>
   }
@@ -19280,6 +19408,7 @@ export namespace Prisma {
       id: string
       fieldId: string
       value: string
+      spanishValue: string | null
     }, ExtArgs["result"]["formFieldOption"]>
     composites: {}
   }
@@ -19707,6 +19836,7 @@ export namespace Prisma {
     readonly id: FieldRef<"FormFieldOption", 'String'>
     readonly fieldId: FieldRef<"FormFieldOption", 'String'>
     readonly value: FieldRef<"FormFieldOption", 'String'>
+    readonly spanishValue: FieldRef<"FormFieldOption", 'String'>
   }
     
 
@@ -56938,6 +57068,7 @@ export namespace Prisma {
     id: 'id',
     companyId: 'companyId',
     name: 'name',
+    spanishName: 'spanishName',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     isSignatureRequired: 'isSignatureRequired',
@@ -56953,7 +57084,11 @@ export namespace Prisma {
   export const FormGroupingScalarFieldEnum: {
     id: 'id',
     title: 'title',
-    order: 'order'
+    spanishTitle: 'spanishTitle',
+    order: 'order',
+    conditionalOnFieldId: 'conditionalOnFieldId',
+    conditionType: 'conditionType',
+    conditionalOnValue: 'conditionalOnValue'
   };
 
   export type FormGroupingScalarFieldEnum = (typeof FormGroupingScalarFieldEnum)[keyof typeof FormGroupingScalarFieldEnum]
@@ -56963,6 +57098,7 @@ export namespace Prisma {
     id: 'id',
     formGroupingId: 'formGroupingId',
     label: 'label',
+    spanishLabel: 'spanishLabel',
     type: 'type',
     required: 'required',
     order: 'order',
@@ -56971,7 +57107,10 @@ export namespace Prisma {
     content: 'content',
     filter: 'filter',
     minLength: 'minLength',
-    multiple: 'multiple'
+    multiple: 'multiple',
+    conditionalOnFieldId: 'conditionalOnFieldId',
+    conditionType: 'conditionType',
+    conditionalOnValue: 'conditionalOnValue'
   };
 
   export type FormFieldScalarFieldEnum = (typeof FormFieldScalarFieldEnum)[keyof typeof FormFieldScalarFieldEnum]
@@ -56980,7 +57119,8 @@ export namespace Prisma {
   export const FormFieldOptionScalarFieldEnum: {
     id: 'id',
     fieldId: 'fieldId',
-    value: 'value'
+    value: 'value',
+    spanishValue: 'spanishValue'
   };
 
   export type FormFieldOptionScalarFieldEnum = (typeof FormFieldOptionScalarFieldEnum)[keyof typeof FormFieldOptionScalarFieldEnum]
@@ -58480,6 +58620,7 @@ export namespace Prisma {
     id?: StringFilter<"FormTemplate"> | string
     companyId?: StringFilter<"FormTemplate"> | string
     name?: StringFilter<"FormTemplate"> | string
+    spanishName?: StringNullableFilter<"FormTemplate"> | string | null
     createdAt?: DateTimeFilter<"FormTemplate"> | Date | string
     updatedAt?: DateTimeFilter<"FormTemplate"> | Date | string
     isSignatureRequired?: BoolFilter<"FormTemplate"> | boolean
@@ -58496,6 +58637,7 @@ export namespace Prisma {
     id?: SortOrder
     companyId?: SortOrder
     name?: SortOrder
+    spanishName?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isSignatureRequired?: SortOrder
@@ -58515,6 +58657,7 @@ export namespace Prisma {
     NOT?: FormTemplateWhereInput | FormTemplateWhereInput[]
     companyId?: StringFilter<"FormTemplate"> | string
     name?: StringFilter<"FormTemplate"> | string
+    spanishName?: StringNullableFilter<"FormTemplate"> | string | null
     createdAt?: DateTimeFilter<"FormTemplate"> | Date | string
     updatedAt?: DateTimeFilter<"FormTemplate"> | Date | string
     isSignatureRequired?: BoolFilter<"FormTemplate"> | boolean
@@ -58531,6 +58674,7 @@ export namespace Prisma {
     id?: SortOrder
     companyId?: SortOrder
     name?: SortOrder
+    spanishName?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isSignatureRequired?: SortOrder
@@ -58550,6 +58694,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"FormTemplate"> | string
     companyId?: StringWithAggregatesFilter<"FormTemplate"> | string
     name?: StringWithAggregatesFilter<"FormTemplate"> | string
+    spanishName?: StringNullableWithAggregatesFilter<"FormTemplate"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"FormTemplate"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"FormTemplate"> | Date | string
     isSignatureRequired?: BoolWithAggregatesFilter<"FormTemplate"> | boolean
@@ -58565,7 +58710,11 @@ export namespace Prisma {
     NOT?: FormGroupingWhereInput | FormGroupingWhereInput[]
     id?: StringFilter<"FormGrouping"> | string
     title?: StringNullableFilter<"FormGrouping"> | string | null
+    spanishTitle?: StringNullableFilter<"FormGrouping"> | string | null
     order?: IntFilter<"FormGrouping"> | number
+    conditionalOnFieldId?: StringNullableFilter<"FormGrouping"> | string | null
+    conditionType?: StringNullableFilter<"FormGrouping"> | string | null
+    conditionalOnValue?: StringNullableFilter<"FormGrouping"> | string | null
     Fields?: FormFieldListRelationFilter
     FormTemplate?: FormTemplateListRelationFilter
   }
@@ -58573,7 +58722,11 @@ export namespace Prisma {
   export type FormGroupingOrderByWithRelationInput = {
     id?: SortOrder
     title?: SortOrderInput | SortOrder
+    spanishTitle?: SortOrderInput | SortOrder
     order?: SortOrder
+    conditionalOnFieldId?: SortOrderInput | SortOrder
+    conditionType?: SortOrderInput | SortOrder
+    conditionalOnValue?: SortOrderInput | SortOrder
     Fields?: FormFieldOrderByRelationAggregateInput
     FormTemplate?: FormTemplateOrderByRelationAggregateInput
   }
@@ -58584,7 +58737,11 @@ export namespace Prisma {
     OR?: FormGroupingWhereInput[]
     NOT?: FormGroupingWhereInput | FormGroupingWhereInput[]
     title?: StringNullableFilter<"FormGrouping"> | string | null
+    spanishTitle?: StringNullableFilter<"FormGrouping"> | string | null
     order?: IntFilter<"FormGrouping"> | number
+    conditionalOnFieldId?: StringNullableFilter<"FormGrouping"> | string | null
+    conditionType?: StringNullableFilter<"FormGrouping"> | string | null
+    conditionalOnValue?: StringNullableFilter<"FormGrouping"> | string | null
     Fields?: FormFieldListRelationFilter
     FormTemplate?: FormTemplateListRelationFilter
   }, "id">
@@ -58592,7 +58749,11 @@ export namespace Prisma {
   export type FormGroupingOrderByWithAggregationInput = {
     id?: SortOrder
     title?: SortOrderInput | SortOrder
+    spanishTitle?: SortOrderInput | SortOrder
     order?: SortOrder
+    conditionalOnFieldId?: SortOrderInput | SortOrder
+    conditionType?: SortOrderInput | SortOrder
+    conditionalOnValue?: SortOrderInput | SortOrder
     _count?: FormGroupingCountOrderByAggregateInput
     _avg?: FormGroupingAvgOrderByAggregateInput
     _max?: FormGroupingMaxOrderByAggregateInput
@@ -58606,7 +58767,11 @@ export namespace Prisma {
     NOT?: FormGroupingScalarWhereWithAggregatesInput | FormGroupingScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"FormGrouping"> | string
     title?: StringNullableWithAggregatesFilter<"FormGrouping"> | string | null
+    spanishTitle?: StringNullableWithAggregatesFilter<"FormGrouping"> | string | null
     order?: IntWithAggregatesFilter<"FormGrouping"> | number
+    conditionalOnFieldId?: StringNullableWithAggregatesFilter<"FormGrouping"> | string | null
+    conditionType?: StringNullableWithAggregatesFilter<"FormGrouping"> | string | null
+    conditionalOnValue?: StringNullableWithAggregatesFilter<"FormGrouping"> | string | null
   }
 
   export type FormFieldWhereInput = {
@@ -58616,6 +58781,7 @@ export namespace Prisma {
     id?: StringFilter<"FormField"> | string
     formGroupingId?: StringFilter<"FormField"> | string
     label?: StringFilter<"FormField"> | string
+    spanishLabel?: StringNullableFilter<"FormField"> | string | null
     type?: EnumFieldTypeFilter<"FormField"> | $Enums.FieldType
     required?: BoolFilter<"FormField"> | boolean
     order?: IntFilter<"FormField"> | number
@@ -58625,6 +58791,9 @@ export namespace Prisma {
     filter?: StringNullableFilter<"FormField"> | string | null
     minLength?: IntNullableFilter<"FormField"> | number | null
     multiple?: BoolNullableFilter<"FormField"> | boolean | null
+    conditionalOnFieldId?: StringNullableFilter<"FormField"> | string | null
+    conditionType?: StringNullableFilter<"FormField"> | string | null
+    conditionalOnValue?: StringNullableFilter<"FormField"> | string | null
     FormGrouping?: XOR<FormGroupingScalarRelationFilter, FormGroupingWhereInput>
     Options?: FormFieldOptionListRelationFilter
   }
@@ -58633,6 +58802,7 @@ export namespace Prisma {
     id?: SortOrder
     formGroupingId?: SortOrder
     label?: SortOrder
+    spanishLabel?: SortOrderInput | SortOrder
     type?: SortOrder
     required?: SortOrder
     order?: SortOrder
@@ -58642,6 +58812,9 @@ export namespace Prisma {
     filter?: SortOrderInput | SortOrder
     minLength?: SortOrderInput | SortOrder
     multiple?: SortOrderInput | SortOrder
+    conditionalOnFieldId?: SortOrderInput | SortOrder
+    conditionType?: SortOrderInput | SortOrder
+    conditionalOnValue?: SortOrderInput | SortOrder
     FormGrouping?: FormGroupingOrderByWithRelationInput
     Options?: FormFieldOptionOrderByRelationAggregateInput
   }
@@ -58653,6 +58826,7 @@ export namespace Prisma {
     NOT?: FormFieldWhereInput | FormFieldWhereInput[]
     formGroupingId?: StringFilter<"FormField"> | string
     label?: StringFilter<"FormField"> | string
+    spanishLabel?: StringNullableFilter<"FormField"> | string | null
     type?: EnumFieldTypeFilter<"FormField"> | $Enums.FieldType
     required?: BoolFilter<"FormField"> | boolean
     order?: IntFilter<"FormField"> | number
@@ -58662,6 +58836,9 @@ export namespace Prisma {
     filter?: StringNullableFilter<"FormField"> | string | null
     minLength?: IntNullableFilter<"FormField"> | number | null
     multiple?: BoolNullableFilter<"FormField"> | boolean | null
+    conditionalOnFieldId?: StringNullableFilter<"FormField"> | string | null
+    conditionType?: StringNullableFilter<"FormField"> | string | null
+    conditionalOnValue?: StringNullableFilter<"FormField"> | string | null
     FormGrouping?: XOR<FormGroupingScalarRelationFilter, FormGroupingWhereInput>
     Options?: FormFieldOptionListRelationFilter
   }, "id">
@@ -58670,6 +58847,7 @@ export namespace Prisma {
     id?: SortOrder
     formGroupingId?: SortOrder
     label?: SortOrder
+    spanishLabel?: SortOrderInput | SortOrder
     type?: SortOrder
     required?: SortOrder
     order?: SortOrder
@@ -58679,6 +58857,9 @@ export namespace Prisma {
     filter?: SortOrderInput | SortOrder
     minLength?: SortOrderInput | SortOrder
     multiple?: SortOrderInput | SortOrder
+    conditionalOnFieldId?: SortOrderInput | SortOrder
+    conditionType?: SortOrderInput | SortOrder
+    conditionalOnValue?: SortOrderInput | SortOrder
     _count?: FormFieldCountOrderByAggregateInput
     _avg?: FormFieldAvgOrderByAggregateInput
     _max?: FormFieldMaxOrderByAggregateInput
@@ -58693,6 +58874,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"FormField"> | string
     formGroupingId?: StringWithAggregatesFilter<"FormField"> | string
     label?: StringWithAggregatesFilter<"FormField"> | string
+    spanishLabel?: StringNullableWithAggregatesFilter<"FormField"> | string | null
     type?: EnumFieldTypeWithAggregatesFilter<"FormField"> | $Enums.FieldType
     required?: BoolWithAggregatesFilter<"FormField"> | boolean
     order?: IntWithAggregatesFilter<"FormField"> | number
@@ -58702,6 +58884,9 @@ export namespace Prisma {
     filter?: StringNullableWithAggregatesFilter<"FormField"> | string | null
     minLength?: IntNullableWithAggregatesFilter<"FormField"> | number | null
     multiple?: BoolNullableWithAggregatesFilter<"FormField"> | boolean | null
+    conditionalOnFieldId?: StringNullableWithAggregatesFilter<"FormField"> | string | null
+    conditionType?: StringNullableWithAggregatesFilter<"FormField"> | string | null
+    conditionalOnValue?: StringNullableWithAggregatesFilter<"FormField"> | string | null
   }
 
   export type FormFieldOptionWhereInput = {
@@ -58711,6 +58896,7 @@ export namespace Prisma {
     id?: StringFilter<"FormFieldOption"> | string
     fieldId?: StringFilter<"FormFieldOption"> | string
     value?: StringFilter<"FormFieldOption"> | string
+    spanishValue?: StringNullableFilter<"FormFieldOption"> | string | null
     Field?: XOR<FormFieldScalarRelationFilter, FormFieldWhereInput>
   }
 
@@ -58718,6 +58904,7 @@ export namespace Prisma {
     id?: SortOrder
     fieldId?: SortOrder
     value?: SortOrder
+    spanishValue?: SortOrderInput | SortOrder
     Field?: FormFieldOrderByWithRelationInput
   }
 
@@ -58728,6 +58915,7 @@ export namespace Prisma {
     NOT?: FormFieldOptionWhereInput | FormFieldOptionWhereInput[]
     fieldId?: StringFilter<"FormFieldOption"> | string
     value?: StringFilter<"FormFieldOption"> | string
+    spanishValue?: StringNullableFilter<"FormFieldOption"> | string | null
     Field?: XOR<FormFieldScalarRelationFilter, FormFieldWhereInput>
   }, "id">
 
@@ -58735,6 +58923,7 @@ export namespace Prisma {
     id?: SortOrder
     fieldId?: SortOrder
     value?: SortOrder
+    spanishValue?: SortOrderInput | SortOrder
     _count?: FormFieldOptionCountOrderByAggregateInput
     _max?: FormFieldOptionMaxOrderByAggregateInput
     _min?: FormFieldOptionMinOrderByAggregateInput
@@ -58747,6 +58936,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"FormFieldOption"> | string
     fieldId?: StringWithAggregatesFilter<"FormFieldOption"> | string
     value?: StringWithAggregatesFilter<"FormFieldOption"> | string
+    spanishValue?: StringNullableWithAggregatesFilter<"FormFieldOption"> | string | null
   }
 
   export type FormSubmissionWhereInput = {
@@ -61993,6 +62183,7 @@ export namespace Prisma {
   export type FormTemplateCreateInput = {
     id?: string
     name: string
+    spanishName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     isSignatureRequired?: boolean
@@ -62009,6 +62200,7 @@ export namespace Prisma {
     id?: string
     companyId: string
     name: string
+    spanishName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     isSignatureRequired?: boolean
@@ -62023,6 +62215,7 @@ export namespace Prisma {
   export type FormTemplateUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    spanishName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isSignatureRequired?: BoolFieldUpdateOperationsInput | boolean
@@ -62039,6 +62232,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    spanishName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isSignatureRequired?: BoolFieldUpdateOperationsInput | boolean
@@ -62054,6 +62248,7 @@ export namespace Prisma {
     id?: string
     companyId: string
     name: string
+    spanishName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     isSignatureRequired?: boolean
@@ -62066,6 +62261,7 @@ export namespace Prisma {
   export type FormTemplateUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    spanishName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isSignatureRequired?: BoolFieldUpdateOperationsInput | boolean
@@ -62079,6 +62275,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    spanishName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isSignatureRequired?: BoolFieldUpdateOperationsInput | boolean
@@ -62091,7 +62288,11 @@ export namespace Prisma {
   export type FormGroupingCreateInput = {
     id?: string
     title?: string | null
+    spanishTitle?: string | null
     order: number
+    conditionalOnFieldId?: string | null
+    conditionType?: string | null
+    conditionalOnValue?: string | null
     Fields?: FormFieldCreateNestedManyWithoutFormGroupingInput
     FormTemplate?: FormTemplateCreateNestedManyWithoutFormGroupingInput
   }
@@ -62099,7 +62300,11 @@ export namespace Prisma {
   export type FormGroupingUncheckedCreateInput = {
     id?: string
     title?: string | null
+    spanishTitle?: string | null
     order: number
+    conditionalOnFieldId?: string | null
+    conditionType?: string | null
+    conditionalOnValue?: string | null
     Fields?: FormFieldUncheckedCreateNestedManyWithoutFormGroupingInput
     FormTemplate?: FormTemplateUncheckedCreateNestedManyWithoutFormGroupingInput
   }
@@ -62107,7 +62312,11 @@ export namespace Prisma {
   export type FormGroupingUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    spanishTitle?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
+    conditionalOnFieldId?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionType?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionalOnValue?: NullableStringFieldUpdateOperationsInput | string | null
     Fields?: FormFieldUpdateManyWithoutFormGroupingNestedInput
     FormTemplate?: FormTemplateUpdateManyWithoutFormGroupingNestedInput
   }
@@ -62115,7 +62324,11 @@ export namespace Prisma {
   export type FormGroupingUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    spanishTitle?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
+    conditionalOnFieldId?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionType?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionalOnValue?: NullableStringFieldUpdateOperationsInput | string | null
     Fields?: FormFieldUncheckedUpdateManyWithoutFormGroupingNestedInput
     FormTemplate?: FormTemplateUncheckedUpdateManyWithoutFormGroupingNestedInput
   }
@@ -62123,24 +62336,37 @@ export namespace Prisma {
   export type FormGroupingCreateManyInput = {
     id?: string
     title?: string | null
+    spanishTitle?: string | null
     order: number
+    conditionalOnFieldId?: string | null
+    conditionType?: string | null
+    conditionalOnValue?: string | null
   }
 
   export type FormGroupingUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    spanishTitle?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
+    conditionalOnFieldId?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionType?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionalOnValue?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FormGroupingUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    spanishTitle?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
+    conditionalOnFieldId?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionType?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionalOnValue?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FormFieldCreateInput = {
     id?: string
     label: string
+    spanishLabel?: string | null
     type: $Enums.FieldType
     required?: boolean
     order: number
@@ -62150,6 +62376,9 @@ export namespace Prisma {
     filter?: string | null
     minLength?: number | null
     multiple?: boolean | null
+    conditionalOnFieldId?: string | null
+    conditionType?: string | null
+    conditionalOnValue?: string | null
     FormGrouping: FormGroupingCreateNestedOneWithoutFieldsInput
     Options?: FormFieldOptionCreateNestedManyWithoutFieldInput
   }
@@ -62158,6 +62387,7 @@ export namespace Prisma {
     id?: string
     formGroupingId: string
     label: string
+    spanishLabel?: string | null
     type: $Enums.FieldType
     required?: boolean
     order: number
@@ -62167,12 +62397,16 @@ export namespace Prisma {
     filter?: string | null
     minLength?: number | null
     multiple?: boolean | null
+    conditionalOnFieldId?: string | null
+    conditionType?: string | null
+    conditionalOnValue?: string | null
     Options?: FormFieldOptionUncheckedCreateNestedManyWithoutFieldInput
   }
 
   export type FormFieldUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
+    spanishLabel?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
     required?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
@@ -62182,6 +62416,9 @@ export namespace Prisma {
     filter?: NullableStringFieldUpdateOperationsInput | string | null
     minLength?: NullableIntFieldUpdateOperationsInput | number | null
     multiple?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    conditionalOnFieldId?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionType?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionalOnValue?: NullableStringFieldUpdateOperationsInput | string | null
     FormGrouping?: FormGroupingUpdateOneRequiredWithoutFieldsNestedInput
     Options?: FormFieldOptionUpdateManyWithoutFieldNestedInput
   }
@@ -62190,6 +62427,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     formGroupingId?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
+    spanishLabel?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
     required?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
@@ -62199,6 +62437,9 @@ export namespace Prisma {
     filter?: NullableStringFieldUpdateOperationsInput | string | null
     minLength?: NullableIntFieldUpdateOperationsInput | number | null
     multiple?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    conditionalOnFieldId?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionType?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionalOnValue?: NullableStringFieldUpdateOperationsInput | string | null
     Options?: FormFieldOptionUncheckedUpdateManyWithoutFieldNestedInput
   }
 
@@ -62206,6 +62447,7 @@ export namespace Prisma {
     id?: string
     formGroupingId: string
     label: string
+    spanishLabel?: string | null
     type: $Enums.FieldType
     required?: boolean
     order: number
@@ -62215,11 +62457,15 @@ export namespace Prisma {
     filter?: string | null
     minLength?: number | null
     multiple?: boolean | null
+    conditionalOnFieldId?: string | null
+    conditionType?: string | null
+    conditionalOnValue?: string | null
   }
 
   export type FormFieldUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
+    spanishLabel?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
     required?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
@@ -62229,12 +62475,16 @@ export namespace Prisma {
     filter?: NullableStringFieldUpdateOperationsInput | string | null
     minLength?: NullableIntFieldUpdateOperationsInput | number | null
     multiple?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    conditionalOnFieldId?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionType?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionalOnValue?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FormFieldUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     formGroupingId?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
+    spanishLabel?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
     required?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
@@ -62244,11 +62494,15 @@ export namespace Prisma {
     filter?: NullableStringFieldUpdateOperationsInput | string | null
     minLength?: NullableIntFieldUpdateOperationsInput | number | null
     multiple?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    conditionalOnFieldId?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionType?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionalOnValue?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FormFieldOptionCreateInput = {
     id?: string
     value: string
+    spanishValue?: string | null
     Field: FormFieldCreateNestedOneWithoutOptionsInput
   }
 
@@ -62256,11 +62510,13 @@ export namespace Prisma {
     id?: string
     fieldId: string
     value: string
+    spanishValue?: string | null
   }
 
   export type FormFieldOptionUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     value?: StringFieldUpdateOperationsInput | string
+    spanishValue?: NullableStringFieldUpdateOperationsInput | string | null
     Field?: FormFieldUpdateOneRequiredWithoutOptionsNestedInput
   }
 
@@ -62268,23 +62524,27 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     fieldId?: StringFieldUpdateOperationsInput | string
     value?: StringFieldUpdateOperationsInput | string
+    spanishValue?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FormFieldOptionCreateManyInput = {
     id?: string
     fieldId: string
     value: string
+    spanishValue?: string | null
   }
 
   export type FormFieldOptionUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     value?: StringFieldUpdateOperationsInput | string
+    spanishValue?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FormFieldOptionUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     fieldId?: StringFieldUpdateOperationsInput | string
     value?: StringFieldUpdateOperationsInput | string
+    spanishValue?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FormSubmissionCreateInput = {
@@ -65811,6 +66071,7 @@ export namespace Prisma {
     id?: SortOrder
     companyId?: SortOrder
     name?: SortOrder
+    spanishName?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isSignatureRequired?: SortOrder
@@ -65824,6 +66085,7 @@ export namespace Prisma {
     id?: SortOrder
     companyId?: SortOrder
     name?: SortOrder
+    spanishName?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isSignatureRequired?: SortOrder
@@ -65837,6 +66099,7 @@ export namespace Prisma {
     id?: SortOrder
     companyId?: SortOrder
     name?: SortOrder
+    spanishName?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isSignatureRequired?: SortOrder
@@ -65869,7 +66132,11 @@ export namespace Prisma {
   export type FormGroupingCountOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
+    spanishTitle?: SortOrder
     order?: SortOrder
+    conditionalOnFieldId?: SortOrder
+    conditionType?: SortOrder
+    conditionalOnValue?: SortOrder
   }
 
   export type FormGroupingAvgOrderByAggregateInput = {
@@ -65879,13 +66146,21 @@ export namespace Prisma {
   export type FormGroupingMaxOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
+    spanishTitle?: SortOrder
     order?: SortOrder
+    conditionalOnFieldId?: SortOrder
+    conditionType?: SortOrder
+    conditionalOnValue?: SortOrder
   }
 
   export type FormGroupingMinOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
+    spanishTitle?: SortOrder
     order?: SortOrder
+    conditionalOnFieldId?: SortOrder
+    conditionType?: SortOrder
+    conditionalOnValue?: SortOrder
   }
 
   export type FormGroupingSumOrderByAggregateInput = {
@@ -65929,6 +66204,7 @@ export namespace Prisma {
     id?: SortOrder
     formGroupingId?: SortOrder
     label?: SortOrder
+    spanishLabel?: SortOrder
     type?: SortOrder
     required?: SortOrder
     order?: SortOrder
@@ -65938,6 +66214,9 @@ export namespace Prisma {
     filter?: SortOrder
     minLength?: SortOrder
     multiple?: SortOrder
+    conditionalOnFieldId?: SortOrder
+    conditionType?: SortOrder
+    conditionalOnValue?: SortOrder
   }
 
   export type FormFieldAvgOrderByAggregateInput = {
@@ -65950,6 +66229,7 @@ export namespace Prisma {
     id?: SortOrder
     formGroupingId?: SortOrder
     label?: SortOrder
+    spanishLabel?: SortOrder
     type?: SortOrder
     required?: SortOrder
     order?: SortOrder
@@ -65959,12 +66239,16 @@ export namespace Prisma {
     filter?: SortOrder
     minLength?: SortOrder
     multiple?: SortOrder
+    conditionalOnFieldId?: SortOrder
+    conditionType?: SortOrder
+    conditionalOnValue?: SortOrder
   }
 
   export type FormFieldMinOrderByAggregateInput = {
     id?: SortOrder
     formGroupingId?: SortOrder
     label?: SortOrder
+    spanishLabel?: SortOrder
     type?: SortOrder
     required?: SortOrder
     order?: SortOrder
@@ -65974,6 +66258,9 @@ export namespace Prisma {
     filter?: SortOrder
     minLength?: SortOrder
     multiple?: SortOrder
+    conditionalOnFieldId?: SortOrder
+    conditionType?: SortOrder
+    conditionalOnValue?: SortOrder
   }
 
   export type FormFieldSumOrderByAggregateInput = {
@@ -66017,18 +66304,21 @@ export namespace Prisma {
     id?: SortOrder
     fieldId?: SortOrder
     value?: SortOrder
+    spanishValue?: SortOrder
   }
 
   export type FormFieldOptionMaxOrderByAggregateInput = {
     id?: SortOrder
     fieldId?: SortOrder
     value?: SortOrder
+    spanishValue?: SortOrder
   }
 
   export type FormFieldOptionMinOrderByAggregateInput = {
     id?: SortOrder
     fieldId?: SortOrder
     value?: SortOrder
+    spanishValue?: SortOrder
   }
   export type JsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -72242,6 +72532,7 @@ export namespace Prisma {
   export type FormTemplateCreateWithoutCompanyInput = {
     id?: string
     name: string
+    spanishName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     isSignatureRequired?: boolean
@@ -72256,6 +72547,7 @@ export namespace Prisma {
   export type FormTemplateUncheckedCreateWithoutCompanyInput = {
     id?: string
     name: string
+    spanishName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     isSignatureRequired?: boolean
@@ -72463,6 +72755,7 @@ export namespace Prisma {
     id?: StringFilter<"FormTemplate"> | string
     companyId?: StringFilter<"FormTemplate"> | string
     name?: StringFilter<"FormTemplate"> | string
+    spanishName?: StringNullableFilter<"FormTemplate"> | string | null
     createdAt?: DateTimeFilter<"FormTemplate"> | Date | string
     updatedAt?: DateTimeFilter<"FormTemplate"> | Date | string
     isSignatureRequired?: BoolFilter<"FormTemplate"> | boolean
@@ -74485,14 +74778,22 @@ export namespace Prisma {
   export type FormGroupingCreateWithoutFormTemplateInput = {
     id?: string
     title?: string | null
+    spanishTitle?: string | null
     order: number
+    conditionalOnFieldId?: string | null
+    conditionType?: string | null
+    conditionalOnValue?: string | null
     Fields?: FormFieldCreateNestedManyWithoutFormGroupingInput
   }
 
   export type FormGroupingUncheckedCreateWithoutFormTemplateInput = {
     id?: string
     title?: string | null
+    spanishTitle?: string | null
     order: number
+    conditionalOnFieldId?: string | null
+    conditionType?: string | null
+    conditionalOnValue?: string | null
     Fields?: FormFieldUncheckedCreateNestedManyWithoutFormGroupingInput
   }
 
@@ -74588,12 +74889,17 @@ export namespace Prisma {
     NOT?: FormGroupingScalarWhereInput | FormGroupingScalarWhereInput[]
     id?: StringFilter<"FormGrouping"> | string
     title?: StringNullableFilter<"FormGrouping"> | string | null
+    spanishTitle?: StringNullableFilter<"FormGrouping"> | string | null
     order?: IntFilter<"FormGrouping"> | number
+    conditionalOnFieldId?: StringNullableFilter<"FormGrouping"> | string | null
+    conditionType?: StringNullableFilter<"FormGrouping"> | string | null
+    conditionalOnValue?: StringNullableFilter<"FormGrouping"> | string | null
   }
 
   export type FormFieldCreateWithoutFormGroupingInput = {
     id?: string
     label: string
+    spanishLabel?: string | null
     type: $Enums.FieldType
     required?: boolean
     order: number
@@ -74603,12 +74909,16 @@ export namespace Prisma {
     filter?: string | null
     minLength?: number | null
     multiple?: boolean | null
+    conditionalOnFieldId?: string | null
+    conditionType?: string | null
+    conditionalOnValue?: string | null
     Options?: FormFieldOptionCreateNestedManyWithoutFieldInput
   }
 
   export type FormFieldUncheckedCreateWithoutFormGroupingInput = {
     id?: string
     label: string
+    spanishLabel?: string | null
     type: $Enums.FieldType
     required?: boolean
     order: number
@@ -74618,6 +74928,9 @@ export namespace Prisma {
     filter?: string | null
     minLength?: number | null
     multiple?: boolean | null
+    conditionalOnFieldId?: string | null
+    conditionType?: string | null
+    conditionalOnValue?: string | null
     Options?: FormFieldOptionUncheckedCreateNestedManyWithoutFieldInput
   }
 
@@ -74634,6 +74947,7 @@ export namespace Prisma {
   export type FormTemplateCreateWithoutFormGroupingInput = {
     id?: string
     name: string
+    spanishName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     isSignatureRequired?: boolean
@@ -74649,6 +74963,7 @@ export namespace Prisma {
     id?: string
     companyId: string
     name: string
+    spanishName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     isSignatureRequired?: boolean
@@ -74687,6 +75002,7 @@ export namespace Prisma {
     id?: StringFilter<"FormField"> | string
     formGroupingId?: StringFilter<"FormField"> | string
     label?: StringFilter<"FormField"> | string
+    spanishLabel?: StringNullableFilter<"FormField"> | string | null
     type?: EnumFieldTypeFilter<"FormField"> | $Enums.FieldType
     required?: BoolFilter<"FormField"> | boolean
     order?: IntFilter<"FormField"> | number
@@ -74696,6 +75012,9 @@ export namespace Prisma {
     filter?: StringNullableFilter<"FormField"> | string | null
     minLength?: IntNullableFilter<"FormField"> | number | null
     multiple?: BoolNullableFilter<"FormField"> | boolean | null
+    conditionalOnFieldId?: StringNullableFilter<"FormField"> | string | null
+    conditionType?: StringNullableFilter<"FormField"> | string | null
+    conditionalOnValue?: StringNullableFilter<"FormField"> | string | null
   }
 
   export type FormTemplateUpsertWithWhereUniqueWithoutFormGroupingInput = {
@@ -74717,14 +75036,22 @@ export namespace Prisma {
   export type FormGroupingCreateWithoutFieldsInput = {
     id?: string
     title?: string | null
+    spanishTitle?: string | null
     order: number
+    conditionalOnFieldId?: string | null
+    conditionType?: string | null
+    conditionalOnValue?: string | null
     FormTemplate?: FormTemplateCreateNestedManyWithoutFormGroupingInput
   }
 
   export type FormGroupingUncheckedCreateWithoutFieldsInput = {
     id?: string
     title?: string | null
+    spanishTitle?: string | null
     order: number
+    conditionalOnFieldId?: string | null
+    conditionType?: string | null
+    conditionalOnValue?: string | null
     FormTemplate?: FormTemplateUncheckedCreateNestedManyWithoutFormGroupingInput
   }
 
@@ -74736,11 +75063,13 @@ export namespace Prisma {
   export type FormFieldOptionCreateWithoutFieldInput = {
     id?: string
     value: string
+    spanishValue?: string | null
   }
 
   export type FormFieldOptionUncheckedCreateWithoutFieldInput = {
     id?: string
     value: string
+    spanishValue?: string | null
   }
 
   export type FormFieldOptionCreateOrConnectWithoutFieldInput = {
@@ -74767,14 +75096,22 @@ export namespace Prisma {
   export type FormGroupingUpdateWithoutFieldsInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    spanishTitle?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
+    conditionalOnFieldId?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionType?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionalOnValue?: NullableStringFieldUpdateOperationsInput | string | null
     FormTemplate?: FormTemplateUpdateManyWithoutFormGroupingNestedInput
   }
 
   export type FormGroupingUncheckedUpdateWithoutFieldsInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    spanishTitle?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
+    conditionalOnFieldId?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionType?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionalOnValue?: NullableStringFieldUpdateOperationsInput | string | null
     FormTemplate?: FormTemplateUncheckedUpdateManyWithoutFormGroupingNestedInput
   }
 
@@ -74801,11 +75138,13 @@ export namespace Prisma {
     id?: StringFilter<"FormFieldOption"> | string
     fieldId?: StringFilter<"FormFieldOption"> | string
     value?: StringFilter<"FormFieldOption"> | string
+    spanishValue?: StringNullableFilter<"FormFieldOption"> | string | null
   }
 
   export type FormFieldCreateWithoutOptionsInput = {
     id?: string
     label: string
+    spanishLabel?: string | null
     type: $Enums.FieldType
     required?: boolean
     order: number
@@ -74815,6 +75154,9 @@ export namespace Prisma {
     filter?: string | null
     minLength?: number | null
     multiple?: boolean | null
+    conditionalOnFieldId?: string | null
+    conditionType?: string | null
+    conditionalOnValue?: string | null
     FormGrouping: FormGroupingCreateNestedOneWithoutFieldsInput
   }
 
@@ -74822,6 +75164,7 @@ export namespace Prisma {
     id?: string
     formGroupingId: string
     label: string
+    spanishLabel?: string | null
     type: $Enums.FieldType
     required?: boolean
     order: number
@@ -74831,6 +75174,9 @@ export namespace Prisma {
     filter?: string | null
     minLength?: number | null
     multiple?: boolean | null
+    conditionalOnFieldId?: string | null
+    conditionType?: string | null
+    conditionalOnValue?: string | null
   }
 
   export type FormFieldCreateOrConnectWithoutOptionsInput = {
@@ -74852,6 +75198,7 @@ export namespace Prisma {
   export type FormFieldUpdateWithoutOptionsInput = {
     id?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
+    spanishLabel?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
     required?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
@@ -74861,6 +75208,9 @@ export namespace Prisma {
     filter?: NullableStringFieldUpdateOperationsInput | string | null
     minLength?: NullableIntFieldUpdateOperationsInput | number | null
     multiple?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    conditionalOnFieldId?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionType?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionalOnValue?: NullableStringFieldUpdateOperationsInput | string | null
     FormGrouping?: FormGroupingUpdateOneRequiredWithoutFieldsNestedInput
   }
 
@@ -74868,6 +75218,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     formGroupingId?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
+    spanishLabel?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
     required?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
@@ -74877,6 +75228,9 @@ export namespace Prisma {
     filter?: NullableStringFieldUpdateOperationsInput | string | null
     minLength?: NullableIntFieldUpdateOperationsInput | number | null
     multiple?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    conditionalOnFieldId?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionType?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionalOnValue?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FormApprovalCreateWithoutFormSubmissionInput = {
@@ -74910,6 +75264,7 @@ export namespace Prisma {
   export type FormTemplateCreateWithoutSubmissionsInput = {
     id?: string
     name: string
+    spanishName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     isSignatureRequired?: boolean
@@ -74925,6 +75280,7 @@ export namespace Prisma {
     id?: string
     companyId: string
     name: string
+    spanishName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     isSignatureRequired?: boolean
@@ -75074,6 +75430,7 @@ export namespace Prisma {
   export type FormTemplateUpdateWithoutSubmissionsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    spanishName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isSignatureRequired?: BoolFieldUpdateOperationsInput | boolean
@@ -75089,6 +75446,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    spanishName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isSignatureRequired?: BoolFieldUpdateOperationsInput | boolean
@@ -83444,6 +83802,7 @@ export namespace Prisma {
   export type FormTemplateCreateManyCompanyInput = {
     id?: string
     name: string
+    spanishName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     isSignatureRequired?: boolean
@@ -83494,6 +83853,7 @@ export namespace Prisma {
   export type FormTemplateUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    spanishName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isSignatureRequired?: BoolFieldUpdateOperationsInput | boolean
@@ -83508,6 +83868,7 @@ export namespace Prisma {
   export type FormTemplateUncheckedUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    spanishName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isSignatureRequired?: BoolFieldUpdateOperationsInput | boolean
@@ -83522,6 +83883,7 @@ export namespace Prisma {
   export type FormTemplateUncheckedUpdateManyWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    spanishName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isSignatureRequired?: BoolFieldUpdateOperationsInput | boolean
@@ -84670,26 +85032,39 @@ export namespace Prisma {
   export type FormGroupingUpdateWithoutFormTemplateInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    spanishTitle?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
+    conditionalOnFieldId?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionType?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionalOnValue?: NullableStringFieldUpdateOperationsInput | string | null
     Fields?: FormFieldUpdateManyWithoutFormGroupingNestedInput
   }
 
   export type FormGroupingUncheckedUpdateWithoutFormTemplateInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    spanishTitle?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
+    conditionalOnFieldId?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionType?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionalOnValue?: NullableStringFieldUpdateOperationsInput | string | null
     Fields?: FormFieldUncheckedUpdateManyWithoutFormGroupingNestedInput
   }
 
   export type FormGroupingUncheckedUpdateManyWithoutFormTemplateInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    spanishTitle?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
+    conditionalOnFieldId?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionType?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionalOnValue?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FormFieldCreateManyFormGroupingInput = {
     id?: string
     label: string
+    spanishLabel?: string | null
     type: $Enums.FieldType
     required?: boolean
     order: number
@@ -84699,11 +85074,15 @@ export namespace Prisma {
     filter?: string | null
     minLength?: number | null
     multiple?: boolean | null
+    conditionalOnFieldId?: string | null
+    conditionType?: string | null
+    conditionalOnValue?: string | null
   }
 
   export type FormFieldUpdateWithoutFormGroupingInput = {
     id?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
+    spanishLabel?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
     required?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
@@ -84713,12 +85092,16 @@ export namespace Prisma {
     filter?: NullableStringFieldUpdateOperationsInput | string | null
     minLength?: NullableIntFieldUpdateOperationsInput | number | null
     multiple?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    conditionalOnFieldId?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionType?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionalOnValue?: NullableStringFieldUpdateOperationsInput | string | null
     Options?: FormFieldOptionUpdateManyWithoutFieldNestedInput
   }
 
   export type FormFieldUncheckedUpdateWithoutFormGroupingInput = {
     id?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
+    spanishLabel?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
     required?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
@@ -84728,12 +85111,16 @@ export namespace Prisma {
     filter?: NullableStringFieldUpdateOperationsInput | string | null
     minLength?: NullableIntFieldUpdateOperationsInput | number | null
     multiple?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    conditionalOnFieldId?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionType?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionalOnValue?: NullableStringFieldUpdateOperationsInput | string | null
     Options?: FormFieldOptionUncheckedUpdateManyWithoutFieldNestedInput
   }
 
   export type FormFieldUncheckedUpdateManyWithoutFormGroupingInput = {
     id?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
+    spanishLabel?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
     required?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
@@ -84743,11 +85130,15 @@ export namespace Prisma {
     filter?: NullableStringFieldUpdateOperationsInput | string | null
     minLength?: NullableIntFieldUpdateOperationsInput | number | null
     multiple?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    conditionalOnFieldId?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionType?: NullableStringFieldUpdateOperationsInput | string | null
+    conditionalOnValue?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FormTemplateUpdateWithoutFormGroupingInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    spanishName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isSignatureRequired?: BoolFieldUpdateOperationsInput | boolean
@@ -84763,6 +85154,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    spanishName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isSignatureRequired?: BoolFieldUpdateOperationsInput | boolean
@@ -84777,6 +85169,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     companyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    spanishName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isSignatureRequired?: BoolFieldUpdateOperationsInput | boolean
@@ -84789,21 +85182,25 @@ export namespace Prisma {
   export type FormFieldOptionCreateManyFieldInput = {
     id?: string
     value: string
+    spanishValue?: string | null
   }
 
   export type FormFieldOptionUpdateWithoutFieldInput = {
     id?: StringFieldUpdateOperationsInput | string
     value?: StringFieldUpdateOperationsInput | string
+    spanishValue?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FormFieldOptionUncheckedUpdateWithoutFieldInput = {
     id?: StringFieldUpdateOperationsInput | string
     value?: StringFieldUpdateOperationsInput | string
+    spanishValue?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FormFieldOptionUncheckedUpdateManyWithoutFieldInput = {
     id?: StringFieldUpdateOperationsInput | string
     value?: StringFieldUpdateOperationsInput | string
+    spanishValue?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FormApprovalCreateManyFormSubmissionInput = {
