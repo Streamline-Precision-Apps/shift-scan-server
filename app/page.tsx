@@ -81,7 +81,7 @@ export default function Home() {
   if (loading)
     return (
       <div>
-        <main className="relative min-h-screen bg-app-gradient bg-to-br from-app-dark-blue via-app-blue to-app-blue px-2 md:px-8 py-0 flex flex-col items-center justify-center"></main>
+        <main className="relative min-h-screen max-h-screen overflow-hidden bg-app-gradient bg-to-br from-app-dark-blue via-app-blue to-app-blue px-2 md:px-8 py-0 flex flex-col items-center justify-center"></main>
       </div>
     );
 
@@ -196,7 +196,7 @@ export default function Home() {
         <div className="mt-6 text-center animate-fade-in delay-600">
           <a
             href="/privacy-policy"
-            className="text-gray-500 hover:text-gray-700 text-sm transition-colors underline underline-offset-2"
+            className="text-white  text-sm transition-colors underline underline-offset-2"
           >
             View Privacy Policy
           </a>

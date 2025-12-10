@@ -180,6 +180,7 @@
   --color-app-dark-gray: hsl(220, 8.94%, 46.08%);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-anton: var(--font-anton);
 }
 
 html,
