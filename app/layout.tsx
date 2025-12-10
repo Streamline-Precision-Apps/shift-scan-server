@@ -4,16 +4,8 @@ import ClientIntlProvider from "./lib/client/ClientIntlProvider";
 import AppProviders from "./v1/providers";
 import StatusBarSetup from "./lib/client/statusBar";
 import { Button } from "./v1/components/ui/button";
-import { Anton } from "next/font/google";
 
 import Link from "next/link";
-
-const anton = Anton({
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-anton",
-});
-
 // import BugLogPage from "./lib/utils/buglog";
 export const viewport: Viewport = {
   themeColor: "#57BDE9",
