@@ -37,6 +37,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
       "/privacy-policy",
       "/privacy-policy/dsa-request",
       "/contact",
+      "/demo-request",
     ];
     const currentPath =
       typeof window !== "undefined" ? window.location.pathname : "";

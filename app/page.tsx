@@ -115,25 +115,15 @@ export default function Home() {
           with instant, secure, and verifiable timekeeping—powered by QR codes.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 mb-6 animate-fade-in delay-300 relative w-full max-w-xs sm:max-w-none justify-center items-stretch">
-          <Popover>
-            <PopoverTrigger asChild>
-              <button
-                className="relative bg-white hover:bg-gray-100 text-app-dark-blue font-bold py-3 px-8 rounded-xl shadow-lg text-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-app-blue cursor-pointer"
-                type="button"
-              >
-                Book a Demo
-              </button>
-            </PopoverTrigger>
-            <PopoverContent side="top" sideOffset={8} className="text-center">
-              <span className="block text-app-dark-blue font-semibold mb-1">
-                Coming Soon
-              </span>
-            </PopoverContent>
-          </Popover>
+          <button
+            onClick={() => router.push("/demo-request")}
+            className="relative bg-white hover:bg-gray-100 text-app-dark-blue font-bold py-3 px-8 rounded-xl shadow-lg text-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-app-blue cursor-pointer"
+            type="button"
+          >
+            Book a Demo
+          </button>
         </div>
-        <div className="flex flex-row gap-2 justify-center animate-fade-in delay-400">
-          <span className="text-white/80 text-sm">Get started in minutes</span>
-        </div>
+
         <div className="mt-3 animate-fade-in delay-500">
           <span className="text-white/70 text-sm">Already a member?</span>
           <a
