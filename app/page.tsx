@@ -118,21 +118,6 @@ export default function Home() {
           <Popover>
             <PopoverTrigger asChild>
               <button
-                className="relative bg-app-dark-blue hover:bg-app-dark-blue/80 text-white font-bold py-3 px-8 rounded-xl shadow-lg text-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-app-blue cursor-pointer"
-                type="button"
-              >
-                Start Free Trial
-              </button>
-            </PopoverTrigger>
-            <PopoverContent side="top" sideOffset={8} className="text-center">
-              <span className="block text-app-dark-blue font-semibold mb-1">
-                Coming Soon
-              </span>
-            </PopoverContent>
-          </Popover>
-          <Popover>
-            <PopoverTrigger asChild>
-              <button
                 className="relative bg-white hover:bg-gray-100 text-app-dark-blue font-bold py-3 px-8 rounded-xl shadow-lg text-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-app-blue cursor-pointer"
                 type="button"
               >
@@ -156,6 +141,24 @@ export default function Home() {
             className="ml-2 text-app-dark-blue hover:text-app-dark-blue/80 font-semibold underline underline-offset-2 transition"
           >
             Sign In
+          </a>
+        </div>
+        {/* Privacy Policy Link */}
+        <div className="mt-6 text-center animate-fade-in delay-600">
+          <a
+            href="/privacy-policy"
+            className="text-gray-500 hover:text-gray-700 text-sm transition-colors underline underline-offset-2"
+          >
+            View Privacy Policy
+          </a>
+        </div>
+        {/* Privacy Policy Link */}
+        <div className="mt-6 text-center animate-fade-in delay-600">
+          <a
+            href="/contact"
+            className="text-gray-500 hover:text-gray-700 text-sm transition-colors underline underline-offset-2"
+          >
+            Contact us
           </a>
         </div>
       </section>
