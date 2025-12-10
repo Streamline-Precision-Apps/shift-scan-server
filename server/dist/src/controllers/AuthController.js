@@ -1,3 +1,5 @@
+
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="6d47b86f-2be1-5441-93b7-df4164dd1a90")}catch(e){}}();
 import express from "express";
 import { compare } from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -71,6 +73,5 @@ export const signOutUser = async (req, res) => {
         return res.status(500).json({ error: "Internal server error" });
     }
 };
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="a2f21e83-b9fd-5a50-b15b-6b3bf390d280")}catch(e){}}();
-//# sourceMappingURL=authController.js.map
-//# debugId=a2f21e83-b9fd-5a50-b15b-6b3bf390d280
+//# sourceMappingURL=AuthController.js.map
+//# debugId=6d47b86f-2be1-5441-93b7-df4164dd1a90

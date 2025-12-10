@@ -1,17 +1,11 @@
 export declare function getUserWithSettingsById(userId: string): Promise<{
     user: {
         id: string;
-        accountSetupToken: {
-            id: string;
-            userId: string;
-            code: string;
-            expiresAt: Date;
-            used: boolean;
-        } | null;
-        email: string | null;
-        username: string;
+        companyId: string;
         firstName: string;
         lastName: string;
+        username: string;
+        email: string | null;
         signature: string | null;
         DOB: Date | null;
         truckView: boolean;
@@ -23,22 +17,19 @@ export declare function getUserWithSettingsById(userId: string): Promise<{
         terminationDate: Date | null;
         accountSetup: boolean;
         clockedIn: boolean;
-        companyId: string;
         middleName: string | null;
         secondLastName: string | null;
         lastSeen: Date | null;
-        Contact: {
-            createdAt: Date;
+        accountSetupToken: {
             id: string;
+            code: string;
             userId: string;
-            updatedAt: Date;
-            phoneNumber: string | null;
-            emergencyContact: string | null;
-            emergencyContactNumber: string | null;
+            expiresAt: Date;
+            used: boolean;
         } | null;
         UserSettings: {
-            createdAt: Date;
             id: string;
+            createdAt: Date;
             userId: string;
             language: string;
             generalReminders: boolean;
@@ -48,10 +39,19 @@ export declare function getUserWithSettingsById(userId: string): Promise<{
             cookiesAccess: boolean;
             lastUpdated: Date;
         } | null;
+        Contact: {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            userId: string;
+            phoneNumber: string | null;
+            emergencyContact: string | null;
+            emergencyContactNumber: string | null;
+        } | null;
     } | null;
     jobsites: {
-        id: string;
         name: string;
+        id: string;
         qrId: string;
         approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         archiveDate: Date | null;
@@ -59,8 +59,8 @@ export declare function getUserWithSettingsById(userId: string): Promise<{
         status: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
     }[];
     equipments: {
-        id: string;
         name: string;
+        id: string;
         qrId: string;
         approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         code: string | null;
@@ -68,19 +68,19 @@ export declare function getUserWithSettingsById(userId: string): Promise<{
         equipmentTag: import("../../generated/prisma/index.js").$Enums.EquipmentTags;
     }[];
     costCodes: {
-        id: string;
         name: string;
+        id: string;
+        isActive: boolean;
         code: string | null;
         CCTags: {
-            id: string;
             name: string;
+            id: string;
             description: string | null;
             Jobsites: {
-                id: string;
                 name: string;
+                id: string;
             }[];
         }[];
-        isActive: boolean;
     }[];
 }>;
 //# sourceMappingURL=initService.d.ts.map

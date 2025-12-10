@@ -1,4 +1,4 @@
-import type { EquipmentState, Prisma } from "../../generated/prisma/client.js";
+import type { EquipmentState, Prisma } from "../../generated/prisma/index.js";
 import type { GeneralTimesheetInput, MechanicTimesheetInput, TascoTimesheetInput, TruckTimesheetInput } from "../controllers/timesheetController.js";
 export declare function updateTimesheetService({ id, editorId, changes, changeReason, numberOfChanges, startTime, endTime, Jobsite, CostCode, comment, }: {
     id: number;
@@ -14,16 +14,20 @@ export declare function updateTimesheetService({ id, editorId, changes, changeRe
 }): Promise<{
     success: boolean;
     timesheet: {
+        User: {
+            firstName: string;
+            lastName: string;
+        };
         Jobsite: {
-            createdAt: Date;
-            id: string;
             name: string;
+            id: string;
+            addressId: string | null;
+            createdAt: Date;
             updatedAt: Date;
-            qrId: string;
             description: string;
+            qrId: string;
             creationReason: string | null;
             approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
-            addressId: string | null;
             comment: string | null;
             archiveDate: Date | null;
             createdById: string | null;
@@ -34,17 +38,13 @@ export declare function updateTimesheetService({ id, editorId, changes, changeRe
             radiusMeters: number | null;
             status: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
         };
-        User: {
-            firstName: string;
-            lastName: string;
-        };
         CostCode: {
-            createdAt: Date;
-            id: string;
             name: string;
+            id: string;
+            createdAt: Date;
             updatedAt: Date;
-            code: string | null;
             isActive: boolean;
+            code: string | null;
         };
         ChangeLogs: {
             id: string;
@@ -57,16 +57,16 @@ export declare function updateTimesheetService({ id, editorId, changes, changeRe
             numberOfChanges: number;
         }[];
     } & {
-        createdAt: Date;
         id: number;
-        userId: string;
+        createdAt: Date;
         updatedAt: Date;
+        comment: string | null;
+        status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
+        userId: string;
         sessionId: number | null;
         startTime: Date;
         endTime: Date | null;
         date: Date;
-        comment: string | null;
-        status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         jobsiteId: string;
         costcode: string;
         nu: string;
@@ -119,29 +119,29 @@ export declare function getUserTimesheetsByDate({ employeeId, dateParam, }: {
     Jobsite: {
         name: string;
     };
-    startTime: Date;
-    endTime: Date | null;
     status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
-    workType: import("../../generated/prisma/index.js").$Enums.WorkType;
     CostCode: {
         name: string;
     };
+    startTime: Date;
+    endTime: Date | null;
+    workType: import("../../generated/prisma/index.js").$Enums.WorkType;
 }[]>;
 export declare function getTimesheetDetailsManager({ timesheetId, }: {
     timesheetId: number;
 }): Promise<{
     id: number;
     Jobsite: {
-        id: string;
         name: string;
+        id: string;
+    };
+    comment: string | null;
+    CostCode: {
+        name: string;
+        id: string;
     };
     startTime: Date;
     endTime: Date | null;
-    comment: string | null;
-    CostCode: {
-        id: string;
-        name: string;
-    };
 } | null>;
 export declare function getManagerCrewTimesheets({ managerId, }: {
     managerId: string;
@@ -155,38 +155,41 @@ export declare function getManagerCrewTimesheets({ managerId, }: {
         Jobsite: {
             name: string;
         };
+        status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
+        CostCode: {
+            name: string;
+        };
         startTime: Date;
         endTime: Date | null;
         date: Date;
-        status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         EmployeeEquipmentLogs: {
             id: string;
             Equipment: {
-                id: string;
                 name: string;
+                id: string;
             } | null;
-            startTime: Date;
-            endTime: Date | null;
             RefuelLog: {
                 id: string;
                 gallonsRefueled: number | null;
             } | null;
+            startTime: Date;
+            endTime: Date | null;
         }[];
         TascoLogs: {
             id: string;
             Equipment: {
-                id: string;
                 name: string;
+                id: string;
             } | null;
             laborType: string | null;
             RefuelLogs: {
                 id: string;
-                gallonsRefueled: number | null;
                 TascoLog: {
                     Equipment: {
                         name: string;
                     } | null;
                 } | null;
+                gallonsRefueled: number | null;
             }[];
             shiftType: string;
             materialType: string | null;
@@ -194,14 +197,11 @@ export declare function getManagerCrewTimesheets({ managerId, }: {
         }[];
         jobsiteId: string;
         workType: import("../../generated/prisma/index.js").$Enums.WorkType;
-        CostCode: {
-            name: string;
-        };
         TruckingLogs: {
             id: string;
             Equipment: {
-                id: string;
                 name: string;
+                id: string;
             } | null;
             EquipmentHauled: {
                 id: string;
@@ -215,8 +215,8 @@ export declare function getManagerCrewTimesheets({ managerId, }: {
             startingMileage: number | null;
             endingMileage: number | null;
             Materials: {
-                id: string;
                 name: string | null;
+                id: string;
                 LocationOfMaterial: string | null;
                 quantity: number | null;
                 materialWeight: number | null;
@@ -244,12 +244,12 @@ export declare function getManagerCrewTimesheets({ managerId, }: {
                 stateLineMileage: number | null;
             }[];
             Trailer: {
-                id: string;
                 name: string;
+                id: string;
             } | null;
             Truck: {
-                id: string;
                 name: string;
+                id: string;
             } | null;
         }[];
     }[];
@@ -279,16 +279,16 @@ export declare function createGeneralTimesheetService({ data, type, }: {
         lastName: string;
     };
 } & {
-    createdAt: Date;
     id: number;
-    userId: string;
+    createdAt: Date;
     updatedAt: Date;
+    comment: string | null;
+    status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
+    userId: string;
     sessionId: number | null;
     startTime: Date;
     endTime: Date | null;
     date: Date;
-    comment: string | null;
-    status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
     jobsiteId: string;
     costcode: string;
     nu: string;
@@ -316,16 +316,16 @@ export declare function createMechanicTimesheetService({ data, type, }: {
         lastName: string;
     };
 } & {
-    createdAt: Date;
     id: number;
-    userId: string;
+    createdAt: Date;
     updatedAt: Date;
+    comment: string | null;
+    status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
+    userId: string;
     sessionId: number | null;
     startTime: Date;
     endTime: Date | null;
     date: Date;
-    comment: string | null;
-    status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
     jobsiteId: string;
     costcode: string;
     nu: string;
@@ -353,16 +353,16 @@ export declare function createTruckDriverTimesheetService({ data, type, }: {
         lastName: string;
     };
 } & {
-    createdAt: Date;
     id: number;
-    userId: string;
+    createdAt: Date;
     updatedAt: Date;
+    comment: string | null;
+    status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
+    userId: string;
     sessionId: number | null;
     startTime: Date;
     endTime: Date | null;
     date: Date;
-    comment: string | null;
-    status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
     jobsiteId: string;
     costcode: string;
     nu: string;
@@ -390,16 +390,16 @@ export declare function createTascoTimesheetService({ data, type, }: {
         lastName: string;
     };
 } & {
-    createdAt: Date;
     id: number;
-    userId: string;
+    createdAt: Date;
     updatedAt: Date;
+    comment: string | null;
+    status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
+    userId: string;
     sessionId: number | null;
     startTime: Date;
     endTime: Date | null;
     date: Date;
-    comment: string | null;
-    status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
     jobsiteId: string;
     costcode: string;
     nu: string;
@@ -466,8 +466,8 @@ export declare function getBannerDataForTimesheet(timesheetId: number, userId: s
         startTime: Date;
         endTime: Date | null;
         equipment: {
-            id: string;
             name: string;
+            id: string;
         } | {
             id: null;
             name: string;
@@ -512,12 +512,14 @@ export declare function getLogsForDashboard(userId: string): Promise<(EquipmentL
 export declare function getClockOutComment(userId: string): Promise<string>;
 export declare function getEquipmentLogs(userId: string, timesheetId: number): Promise<({
     Equipment: {
-        createdAt: Date;
-        id: string;
+        model: string | null;
         name: string;
+        id: string;
+        createdAt: Date;
         updatedAt: Date;
-        qrId: string;
         description: string | null;
+        state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
+        qrId: string;
         creationReason: string | null;
         approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         createdById: string | null;
@@ -525,7 +527,6 @@ export declare function getEquipmentLogs(userId: string, timesheetId: number): P
         code: string | null;
         status: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
         equipmentTag: import("../../generated/prisma/index.js").$Enums.EquipmentTags;
-        state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
         overWeight: boolean | null;
         currentWeight: number | null;
         acquiredDate: Date | null;
@@ -534,7 +535,6 @@ export declare function getEquipmentLogs(userId: string, timesheetId: number): P
         licenseState: string | null;
         make: string | null;
         memo: string | null;
-        model: string | null;
         ownershipType: import("../../generated/prisma/index.js").$Enums.OwnershipType | null;
         registrationExpiration: Date | null;
         serialNumber: string | null;
@@ -543,17 +543,17 @@ export declare function getEquipmentLogs(userId: string, timesheetId: number): P
     } | null;
 } & {
     id: string;
+    comment: string | null;
     startTime: Date;
     endTime: Date | null;
-    comment: string | null;
     equipmentId: string | null;
     timeSheetId: number;
     maintenanceId: string | null;
     rental: boolean;
 })[]>;
 export declare function getRecentJobDetails(userId: string): Promise<{
-    id: string;
     name: string;
+    id: string;
     qrId: string;
 }>;
 export declare function getAllEquipmentLogs(): Promise<{
@@ -566,9 +566,9 @@ export declare function createEmployeeEquipmentLogService({ equipmentId, timeShe
     comment?: string | null;
 }): Promise<{
     id: string;
+    comment: string | null;
     startTime: Date;
     endTime: Date | null;
-    comment: string | null;
     equipmentId: string | null;
     timeSheetId: number;
     maintenanceId: string | null;
@@ -576,29 +576,29 @@ export declare function createEmployeeEquipmentLogService({ equipmentId, timeShe
 }>;
 export declare function getEmployeeEquipmentLogDetails(logId: string): Promise<{
     id: string;
+    comment: string | null;
     Equipment: {
-        id: string;
+        model: string | null;
         name: string;
-        equipmentTag: import("../../generated/prisma/index.js").$Enums.EquipmentTags;
+        id: string;
         state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
+        equipmentTag: import("../../generated/prisma/index.js").$Enums.EquipmentTags;
         licensePlate: string | null;
         make: string | null;
-        model: string | null;
         year: string | null;
     } | null;
-    startTime: Date;
-    endTime: Date | null;
-    comment: string | null;
     Maintenance: {
         id: string;
         equipmentIssue: string | null;
         additionalInfo: string | null;
     } | null;
-    equipmentId: string | null;
     RefuelLog: {
         id: string;
         gallonsRefueled: number | null;
     } | null;
+    startTime: Date;
+    endTime: Date | null;
+    equipmentId: string | null;
 } | null>;
 export declare function deleteEmployeeEquipmentLog(logId: string): Promise<{
     success: boolean;
@@ -629,15 +629,15 @@ export declare function updateEmployeeEquipmentLogService({ id, equipmentId, sta
 export declare function getClockOutDetailsService(userId: string): Promise<{
     timesheets: ({
         Jobsite: {
-            createdAt: Date;
-            id: string;
             name: string;
+            id: string;
+            addressId: string | null;
+            createdAt: Date;
             updatedAt: Date;
-            qrId: string;
             description: string;
+            qrId: string;
             creationReason: string | null;
             approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
-            addressId: string | null;
             comment: string | null;
             archiveDate: Date | null;
             createdById: string | null;
@@ -671,16 +671,16 @@ export declare function getClockOutDetailsService(userId: string): Promise<{
             timeSheetId: number;
         }[];
     } & {
-        createdAt: Date;
         id: number;
-        userId: string;
+        createdAt: Date;
         updatedAt: Date;
+        comment: string | null;
+        status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
+        userId: string;
         sessionId: number | null;
         startTime: Date;
         endTime: Date | null;
         date: Date;
-        comment: string | null;
-        status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         jobsiteId: string;
         costcode: string;
         nu: string;
@@ -710,16 +710,16 @@ export declare function updateClockOutService(timeSheetId: string, userId: strin
             lastName: string;
         };
     } & {
-        createdAt: Date;
         id: number;
-        userId: string;
+        createdAt: Date;
         updatedAt: Date;
+        comment: string | null;
+        status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
+        userId: string;
         sessionId: number | null;
         startTime: Date;
         endTime: Date | null;
         date: Date;
-        comment: string | null;
-        status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         jobsiteId: string;
         costcode: string;
         nu: string;
@@ -750,9 +750,13 @@ export declare function getPreviousTimesheet(userId: string): Promise<{
 } | null>;
 export declare function getContinueTimesheetService(id: number, userId: string): Promise<({
     Jobsite: {
-        id: string;
         name: string;
+        id: string;
         qrId: string;
+    };
+    CostCode: {
+        name: string;
+        id: string;
     };
     TascoLogs: {
         Equipment: {
@@ -763,10 +767,6 @@ export declare function getContinueTimesheetService(id: number, userId: string):
         shiftType: string;
         materialType: string | null;
     }[];
-    CostCode: {
-        id: string;
-        name: string;
-    };
     TruckingLogs: {
         Equipment: {
             name: string;
@@ -777,16 +777,16 @@ export declare function getContinueTimesheetService(id: number, userId: string):
         truckNumber: string | null;
     }[];
 } & {
-    createdAt: Date;
     id: number;
-    userId: string;
+    createdAt: Date;
     updatedAt: Date;
+    comment: string | null;
+    status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
+    userId: string;
     sessionId: number | null;
     startTime: Date;
     endTime: Date | null;
     date: Date;
-    comment: string | null;
-    status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
     jobsiteId: string;
     costcode: string;
     nu: string;
@@ -808,14 +808,18 @@ export declare function getContinueTimesheetService(id: number, userId: string):
 export declare function returnToPreviousTimesheetService(id: number): Promise<{
     id: number;
     Jobsite: {
-        id: string;
         name: string;
+        id: string;
         qrId: string;
+    };
+    CostCode: {
+        name: string;
+        id: string;
     };
     TascoLogs: {
         Equipment: {
-            id: string;
             name: string;
+            id: string;
             qrId: string;
         } | null;
         laborType: string | null;
@@ -823,10 +827,6 @@ export declare function returnToPreviousTimesheetService(id: number): Promise<{
         materialType: string | null;
     }[];
     workType: import("../../generated/prisma/index.js").$Enums.WorkType;
-    CostCode: {
-        id: string;
-        name: string;
-    };
     TruckingLogs: {
         Equipment: {
             name: string;

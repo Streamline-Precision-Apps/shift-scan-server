@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="e963e0aa-3be9-5cf6-9359-5d3262c01d4e")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="19e61296-0b8d-51c9-ad94-e6fed8b70138")}catch(e){}}();
 import { getTascoReport as getTascoReportService, getTruckingReport as getTruckingReportService, getMechanicReport as getMechanicReportService, getTascoFilterOptions as getTascoFilterOptionsService, } from "../services/adminsReportService.js";
 export async function getTascoReport(req, res) {
     try {
@@ -74,4 +74,4 @@ export async function getTascoFilterOptions(req, res) {
     }
 }
 //# sourceMappingURL=adminReportController.js.map
-//# debugId=e963e0aa-3be9-5cf6-9359-5d3262c01d4e
+//# debugId=19e61296-0b8d-51c9-ad94-e6fed8b70138

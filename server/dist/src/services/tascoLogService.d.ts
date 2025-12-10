@@ -7,12 +7,14 @@
  */
 export declare function getTascoLogById(tascoLogId: string): Promise<({
     Equipment: {
-        createdAt: Date;
-        id: string;
+        model: string | null;
         name: string;
+        id: string;
+        createdAt: Date;
         updatedAt: Date;
-        qrId: string;
         description: string | null;
+        state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
+        qrId: string;
         creationReason: string | null;
         approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         createdById: string | null;
@@ -20,7 +22,6 @@ export declare function getTascoLogById(tascoLogId: string): Promise<({
         code: string | null;
         status: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
         equipmentTag: import("../../generated/prisma/index.js").$Enums.EquipmentTags;
-        state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
         overWeight: boolean | null;
         currentWeight: number | null;
         acquiredDate: Date | null;
@@ -29,7 +30,6 @@ export declare function getTascoLogById(tascoLogId: string): Promise<({
         licenseState: string | null;
         make: string | null;
         memo: string | null;
-        model: string | null;
         ownershipType: import("../../generated/prisma/index.js").$Enums.OwnershipType | null;
         registrationExpiration: Date | null;
         serialNumber: string | null;
@@ -37,16 +37,16 @@ export declare function getTascoLogById(tascoLogId: string): Promise<({
         acquiredCondition: import("../../generated/prisma/index.js").$Enums.Condition | null;
     } | null;
     TimeSheet: {
-        createdAt: Date;
         id: number;
-        userId: string;
+        createdAt: Date;
         updatedAt: Date;
+        comment: string | null;
+        status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
+        userId: string;
         sessionId: number | null;
         startTime: Date;
         endTime: Date | null;
         date: Date;
-        comment: string | null;
-        status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         jobsiteId: string;
         costcode: string;
         nu: string;
@@ -65,6 +65,16 @@ export declare function getTascoLogById(tascoLogId: string): Promise<({
         withinFenceOut: boolean | null;
         wasInjured: boolean | null;
     };
+    TascoFLoads: {
+        id: number;
+        screenType: import("../../generated/prisma/index.js").$Enums.LoadType | null;
+        tascoLogId: string;
+        weight: number | null;
+    }[];
+    TascoMaterialTypes: {
+        name: string;
+        id: string;
+    } | null;
     RefuelLogs: {
         id: string;
         truckingLogId: string | null;
@@ -73,16 +83,6 @@ export declare function getTascoLogById(tascoLogId: string): Promise<({
         gallonsRefueled: number | null;
         milesAtFueling: number | null;
     }[];
-    TascoFLoads: {
-        id: number;
-        screenType: import("../../generated/prisma/index.js").$Enums.LoadType | null;
-        tascoLogId: string;
-        weight: number | null;
-    }[];
-    TascoMaterialTypes: {
-        id: string;
-        name: string;
-    } | null;
 } & {
     id: string;
     laborType: string | null;
@@ -98,12 +98,14 @@ export declare function getTascoLogById(tascoLogId: string): Promise<({
  */
 export declare function getTascoLogsByTimesheet(timeSheetId: number): Promise<({
     Equipment: {
-        createdAt: Date;
-        id: string;
+        model: string | null;
         name: string;
+        id: string;
+        createdAt: Date;
         updatedAt: Date;
-        qrId: string;
         description: string | null;
+        state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
+        qrId: string;
         creationReason: string | null;
         approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         createdById: string | null;
@@ -111,7 +113,6 @@ export declare function getTascoLogsByTimesheet(timeSheetId: number): Promise<({
         code: string | null;
         status: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
         equipmentTag: import("../../generated/prisma/index.js").$Enums.EquipmentTags;
-        state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
         overWeight: boolean | null;
         currentWeight: number | null;
         acquiredDate: Date | null;
@@ -120,12 +121,21 @@ export declare function getTascoLogsByTimesheet(timeSheetId: number): Promise<({
         licenseState: string | null;
         make: string | null;
         memo: string | null;
-        model: string | null;
         ownershipType: import("../../generated/prisma/index.js").$Enums.OwnershipType | null;
         registrationExpiration: Date | null;
         serialNumber: string | null;
         year: string | null;
         acquiredCondition: import("../../generated/prisma/index.js").$Enums.Condition | null;
+    } | null;
+    TascoFLoads: {
+        id: number;
+        screenType: import("../../generated/prisma/index.js").$Enums.LoadType | null;
+        tascoLogId: string;
+        weight: number | null;
+    }[];
+    TascoMaterialTypes: {
+        name: string;
+        id: string;
     } | null;
     RefuelLogs: {
         id: string;
@@ -135,16 +145,6 @@ export declare function getTascoLogsByTimesheet(timeSheetId: number): Promise<({
         gallonsRefueled: number | null;
         milesAtFueling: number | null;
     }[];
-    TascoFLoads: {
-        id: number;
-        screenType: import("../../generated/prisma/index.js").$Enums.LoadType | null;
-        tascoLogId: string;
-        weight: number | null;
-    }[];
-    TascoMaterialTypes: {
-        id: string;
-        name: string;
-    } | null;
 } & {
     id: string;
     laborType: string | null;
@@ -160,12 +160,14 @@ export declare function getTascoLogsByTimesheet(timeSheetId: number): Promise<({
  */
 export declare function updateTascoLogLoadQuantity(tascoLogId: string, loadCount: number): Promise<{
     Equipment: {
-        createdAt: Date;
-        id: string;
+        model: string | null;
         name: string;
+        id: string;
+        createdAt: Date;
         updatedAt: Date;
-        qrId: string;
         description: string | null;
+        state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
+        qrId: string;
         creationReason: string | null;
         approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         createdById: string | null;
@@ -173,7 +175,6 @@ export declare function updateTascoLogLoadQuantity(tascoLogId: string, loadCount
         code: string | null;
         status: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
         equipmentTag: import("../../generated/prisma/index.js").$Enums.EquipmentTags;
-        state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
         overWeight: boolean | null;
         currentWeight: number | null;
         acquiredDate: Date | null;
@@ -182,12 +183,21 @@ export declare function updateTascoLogLoadQuantity(tascoLogId: string, loadCount
         licenseState: string | null;
         make: string | null;
         memo: string | null;
-        model: string | null;
         ownershipType: import("../../generated/prisma/index.js").$Enums.OwnershipType | null;
         registrationExpiration: Date | null;
         serialNumber: string | null;
         year: string | null;
         acquiredCondition: import("../../generated/prisma/index.js").$Enums.Condition | null;
+    } | null;
+    TascoFLoads: {
+        id: number;
+        screenType: import("../../generated/prisma/index.js").$Enums.LoadType | null;
+        tascoLogId: string;
+        weight: number | null;
+    }[];
+    TascoMaterialTypes: {
+        name: string;
+        id: string;
     } | null;
     RefuelLogs: {
         id: string;
@@ -197,16 +207,6 @@ export declare function updateTascoLogLoadQuantity(tascoLogId: string, loadCount
         gallonsRefueled: number | null;
         milesAtFueling: number | null;
     }[];
-    TascoFLoads: {
-        id: number;
-        screenType: import("../../generated/prisma/index.js").$Enums.LoadType | null;
-        tascoLogId: string;
-        weight: number | null;
-    }[];
-    TascoMaterialTypes: {
-        id: string;
-        name: string;
-    } | null;
 } & {
     id: string;
     laborType: string | null;
@@ -222,12 +222,14 @@ export declare function updateTascoLogLoadQuantity(tascoLogId: string, loadCount
  */
 export declare function updateTascoLogComment(tascoLogId: string, comment: string): Promise<{
     Equipment: {
-        createdAt: Date;
-        id: string;
+        model: string | null;
         name: string;
+        id: string;
+        createdAt: Date;
         updatedAt: Date;
-        qrId: string;
         description: string | null;
+        state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
+        qrId: string;
         creationReason: string | null;
         approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         createdById: string | null;
@@ -235,7 +237,6 @@ export declare function updateTascoLogComment(tascoLogId: string, comment: strin
         code: string | null;
         status: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
         equipmentTag: import("../../generated/prisma/index.js").$Enums.EquipmentTags;
-        state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
         overWeight: boolean | null;
         currentWeight: number | null;
         acquiredDate: Date | null;
@@ -244,7 +245,6 @@ export declare function updateTascoLogComment(tascoLogId: string, comment: strin
         licenseState: string | null;
         make: string | null;
         memo: string | null;
-        model: string | null;
         ownershipType: import("../../generated/prisma/index.js").$Enums.OwnershipType | null;
         registrationExpiration: Date | null;
         serialNumber: string | null;
@@ -252,16 +252,16 @@ export declare function updateTascoLogComment(tascoLogId: string, comment: strin
         acquiredCondition: import("../../generated/prisma/index.js").$Enums.Condition | null;
     } | null;
     TimeSheet: {
-        createdAt: Date;
         id: number;
-        userId: string;
+        createdAt: Date;
         updatedAt: Date;
+        comment: string | null;
+        status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
+        userId: string;
         sessionId: number | null;
         startTime: Date;
         endTime: Date | null;
         date: Date;
-        comment: string | null;
-        status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         jobsiteId: string;
         costcode: string;
         nu: string;
@@ -280,6 +280,16 @@ export declare function updateTascoLogComment(tascoLogId: string, comment: strin
         withinFenceOut: boolean | null;
         wasInjured: boolean | null;
     };
+    TascoFLoads: {
+        id: number;
+        screenType: import("../../generated/prisma/index.js").$Enums.LoadType | null;
+        tascoLogId: string;
+        weight: number | null;
+    }[];
+    TascoMaterialTypes: {
+        name: string;
+        id: string;
+    } | null;
     RefuelLogs: {
         id: string;
         truckingLogId: string | null;
@@ -288,16 +298,6 @@ export declare function updateTascoLogComment(tascoLogId: string, comment: strin
         gallonsRefueled: number | null;
         milesAtFueling: number | null;
     }[];
-    TascoFLoads: {
-        id: number;
-        screenType: import("../../generated/prisma/index.js").$Enums.LoadType | null;
-        tascoLogId: string;
-        weight: number | null;
-    }[];
-    TascoMaterialTypes: {
-        id: string;
-        name: string;
-    } | null;
 } & {
     id: string;
     laborType: string | null;
@@ -393,12 +393,14 @@ export declare function deleteTascoFLoad(fLoadId: number): Promise<{
  */
 export declare function getCompleteTascoLogData(tascoLogId: string): Promise<({
     Equipment: {
-        createdAt: Date;
-        id: string;
+        model: string | null;
         name: string;
+        id: string;
+        createdAt: Date;
         updatedAt: Date;
-        qrId: string;
         description: string | null;
+        state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
+        qrId: string;
         creationReason: string | null;
         approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         createdById: string | null;
@@ -406,7 +408,6 @@ export declare function getCompleteTascoLogData(tascoLogId: string): Promise<({
         code: string | null;
         status: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
         equipmentTag: import("../../generated/prisma/index.js").$Enums.EquipmentTags;
-        state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
         overWeight: boolean | null;
         currentWeight: number | null;
         acquiredDate: Date | null;
@@ -415,7 +416,6 @@ export declare function getCompleteTascoLogData(tascoLogId: string): Promise<({
         licenseState: string | null;
         make: string | null;
         memo: string | null;
-        model: string | null;
         ownershipType: import("../../generated/prisma/index.js").$Enums.OwnershipType | null;
         registrationExpiration: Date | null;
         serialNumber: string | null;
@@ -423,16 +423,16 @@ export declare function getCompleteTascoLogData(tascoLogId: string): Promise<({
         acquiredCondition: import("../../generated/prisma/index.js").$Enums.Condition | null;
     } | null;
     TimeSheet: {
-        createdAt: Date;
         id: number;
-        userId: string;
+        createdAt: Date;
         updatedAt: Date;
+        comment: string | null;
+        status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
+        userId: string;
         sessionId: number | null;
         startTime: Date;
         endTime: Date | null;
         date: Date;
-        comment: string | null;
-        status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         jobsiteId: string;
         costcode: string;
         nu: string;
@@ -451,6 +451,16 @@ export declare function getCompleteTascoLogData(tascoLogId: string): Promise<({
         withinFenceOut: boolean | null;
         wasInjured: boolean | null;
     };
+    TascoFLoads: {
+        id: number;
+        screenType: import("../../generated/prisma/index.js").$Enums.LoadType | null;
+        tascoLogId: string;
+        weight: number | null;
+    }[];
+    TascoMaterialTypes: {
+        name: string;
+        id: string;
+    } | null;
     RefuelLogs: {
         id: string;
         truckingLogId: string | null;
@@ -459,16 +469,6 @@ export declare function getCompleteTascoLogData(tascoLogId: string): Promise<({
         gallonsRefueled: number | null;
         milesAtFueling: number | null;
     }[];
-    TascoFLoads: {
-        id: number;
-        screenType: import("../../generated/prisma/index.js").$Enums.LoadType | null;
-        tascoLogId: string;
-        weight: number | null;
-    }[];
-    TascoMaterialTypes: {
-        id: string;
-        name: string;
-    } | null;
 } & {
     id: string;
     laborType: string | null;

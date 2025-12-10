@@ -1,17 +1,17 @@
 export declare function getAllTags(search: string, page: number | undefined, pageSize: number | undefined, skip: number | undefined): Promise<{
     tagSummary: ({
         CostCodes: {
-            id: string;
             name: string;
+            id: string;
             isActive: boolean;
         }[];
         Jobsites: {
-            id: string;
             name: string;
+            id: string;
         }[];
     } & {
-        id: string;
         name: string;
+        id: string;
         description: string | null;
     })[];
     total: number;
@@ -21,17 +21,17 @@ export declare function getAllTags(search: string, page: number | undefined, pag
 } | {
     tagSummary: ({
         CostCodes: {
-            id: string;
             name: string;
+            id: string;
             isActive: boolean;
         }[];
         Jobsites: {
-            id: string;
             name: string;
+            id: string;
         }[];
     } & {
-        id: string;
         name: string;
+        id: string;
         description: string | null;
     })[];
     total: number;
@@ -41,16 +41,16 @@ export declare function getAllTags(search: string, page: number | undefined, pag
 }>;
 export declare function getTagById(id: string): Promise<({
     CostCodes: {
-        id: string;
         name: string;
+        id: string;
     }[];
     Jobsites: {
-        id: string;
         name: string;
+        id: string;
     }[];
 } & {
-    id: string;
     name: string;
+    id: string;
     description: string | null;
 }) | null>;
 export declare function createTag(payload: {
@@ -66,16 +66,16 @@ export declare function createTag(payload: {
     }[];
 }): Promise<{
     CostCodes: {
-        id: string;
         name: string;
+        id: string;
     }[];
     Jobsites: {
-        id: string;
         name: string;
+        id: string;
     }[];
 } & {
-    id: string;
     name: string;
+    id: string;
     description: string | null;
 }>;
 export type UpdateTagPayload = {
@@ -92,21 +92,21 @@ export type UpdateTagPayload = {
 };
 export declare function updateTag(id: string, payload: UpdateTagPayload): Promise<{
     CostCodes: {
-        id: string;
         name: string;
+        id: string;
     }[];
     Jobsites: {
-        id: string;
         name: string;
+        id: string;
     }[];
 } & {
-    id: string;
     name: string;
+    id: string;
     description: string | null;
 }>;
 export declare function deleteTag(id: string): Promise<{
-    id: string;
     name: string;
+    id: string;
     description: string | null;
 }>;
 //# sourceMappingURL=adminTagService.d.ts.map

@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="ff9a60a7-91d0-549c-8ceb-1e0a3cb94b19")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="55a060a2-ddee-56f6-84d4-a557a8ad175c")}catch(e){}}();
 import { Router } from "express";
 import { updateTimesheet, getUserTimesheetsByDateController, getTimesheetDetailsManagerController, getManagerCrewTimesheetsController, approveTimesheetsBatchController, createTimesheetAndSwitchJobsController, getRecentTimesheetController, getTimesheetActiveStatusController, getBannerDataController, getDashboardLogsController, getClockOutCommentController, getUserEquipmentLogsController, getUserRecentJobsiteDetailsController, createEmployeeEquipmentLogController, getEmployeeEquipmentLogDetailsController, deleteEmployeeEquipmentLogController, updateEmployeeEquipmentLogController, updateClockOutController, getRecentReturnTimesheetController, getPreviousWorkController, getContinueTimesheetController, deleteRefuelLogController, getAllEquipmentLogsController, } from "../controllers/timesheetController.js";
 const router = Router();
@@ -47,4 +47,4 @@ router.delete("/refuel-log/:refuelLogId", deleteRefuelLogController);
 router.get("/manager/:managerId/crew-timesheets", getManagerCrewTimesheetsController);
 export default router;
 //# sourceMappingURL=timesheetRoute.js.map
-//# debugId=ff9a60a7-91d0-549c-8ceb-1e0a3cb94b19
+//# debugId=55a060a2-ddee-56f6-84d4-a557a8ad175c

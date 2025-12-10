@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="7eb0cf68-d3e5-51db-9b31-5288cc922832")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="4aa50f7d-5ddf-58c5-8cc7-c5a5982f7cc7")}catch(e){}}();
 import { Router } from "express";
 import { verifyToken } from "../middleware/authMiddleware.js";
 import { createUser, deleteUser, getUserById, getUsers, updateSettings, updateUser, getUserSettingsByQuery, getUserContact, getAllUsers, getUsersTimeSheetByDate, getTeamsByUserId, getCrewMembers, getCrewOnlineStatus, getUserOnlineStatus, getUserInfo, sessionController, endSessionController, userSignatureController, getAllTeams, } from "../controllers/UserController.js";
@@ -378,4 +378,4 @@ router.put("/:id", verifyToken, updateUser);
 router.delete("/:id", verifyToken, deleteUser);
 export default router;
 //# sourceMappingURL=userRoute.js.map
-//# debugId=7eb0cf68-d3e5-51db-9b31-5288cc922832
+//# debugId=4aa50f7d-5ddf-58c5-8cc7-c5a5982f7cc7

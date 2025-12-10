@@ -55,8 +55,8 @@ export interface UpdateFormApprovalParams {
  * }[]
  */
 export declare const ServiceGetForms: () => Promise<{
-    id: string;
     name: string;
+    id: string;
 }[]>;
 /**
  * Get all form submissions
@@ -71,15 +71,15 @@ export declare const ServiceGetFormSubmissions: () => Promise<{
  * @param {string} params.userId
  */
 export declare const ServiceCreateFormSubmission: ({ formTemplateId, userId, }: CreateFormSubmissionParams) => Promise<{
+    id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    formType: string | null;
+    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     data: import("../../generated/prisma/runtime/library.js").JsonValue | null;
     title: string | null;
-    createdAt: Date;
-    id: number;
     userId: string;
-    updatedAt: Date;
-    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     formTemplateId: string;
-    formType: string | null;
     submittedAt: Date | null;
 }>;
 /**
@@ -98,15 +98,15 @@ export declare const ServiceDeleteFormSubmission: (id: number) => Promise<boolea
  * @param {string} [params.title]
  */
 export declare const ServiceSaveDraft: (params: SaveDraftParams) => Promise<{
+    id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    formType: string | null;
+    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     data: import("../../generated/prisma/runtime/library.js").JsonValue | null;
     title: string | null;
-    createdAt: Date;
-    id: number;
     userId: string;
-    updatedAt: Date;
-    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     formTemplateId: string;
-    formType: string | null;
     submittedAt: Date | null;
 }>;
 /**
@@ -126,15 +126,15 @@ export declare const ServiceSaveDraftToPending: (params: SaveDraftToPendingParam
         lastName: string;
     };
 } & {
+    id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    formType: string | null;
+    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     data: import("../../generated/prisma/runtime/library.js").JsonValue | null;
     title: string | null;
-    createdAt: Date;
-    id: number;
     userId: string;
-    updatedAt: Date;
-    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     formTemplateId: string;
-    formType: string | null;
     submittedAt: Date | null;
 }>;
 /**
@@ -148,15 +148,15 @@ export declare const ServiceSaveDraftToPending: (params: SaveDraftToPendingParam
  * @param {string} [params.title]
  */
 export declare const ServiceSavePending: (params: SavePendingParams) => Promise<{
+    id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    formType: string | null;
+    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     data: import("../../generated/prisma/runtime/library.js").JsonValue | null;
     title: string | null;
-    createdAt: Date;
-    id: number;
     userId: string;
-    updatedAt: Date;
-    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     formTemplateId: string;
-    formType: string | null;
     submittedAt: Date | null;
 }>;
 export declare const ServiceGetFormsWithRequests: () => Promise<({
@@ -165,15 +165,15 @@ export declare const ServiceGetFormsWithRequests: () => Promise<({
         lastName: string;
     };
 } & {
+    id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    formType: string | null;
+    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     data: import("../../generated/prisma/runtime/library.js").JsonValue | null;
     title: string | null;
-    createdAt: Date;
-    id: number;
     userId: string;
-    updatedAt: Date;
-    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     formTemplateId: string;
-    formType: string | null;
     submittedAt: Date | null;
 })[]>;
 /**
@@ -205,15 +205,15 @@ export declare const ServiceUpdateFormApproval: (params: UpdateFormApprovalParam
         signedBy: string | null;
     };
     updatedSubmission: {
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        formType: string | null;
+        status: import("../../generated/prisma/index.js").$Enums.FormStatus;
         data: import("../../generated/prisma/runtime/library.js").JsonValue | null;
         title: string | null;
-        createdAt: Date;
-        id: number;
         userId: string;
-        updatedAt: Date;
-        status: import("../../generated/prisma/index.js").$Enums.FormStatus;
         formTemplateId: string;
-        formType: string | null;
         submittedAt: Date | null;
     };
 }>;
@@ -221,12 +221,12 @@ export declare const ServiceUpdateFormApproval: (params: UpdateFormApprovalParam
  * Fetch employee requests for a manager, with filter, skip, take
  */
 export declare const ServiceGetEmployeeRequests: ({ filter, skip, take, managerId, }: GetEmployeeRequestsParams) => Promise<({
+    FormTemplate: {
+        formType: import("../../generated/prisma/index.js").$Enums.FormTemplateCategory;
+    };
     User: {
         firstName: string;
         lastName: string;
-    };
-    FormTemplate: {
-        formType: import("../../generated/prisma/index.js").$Enums.FormTemplateCategory;
     };
     Approvals: {
         id: string;
@@ -236,37 +236,37 @@ export declare const ServiceGetEmployeeRequests: ({ filter, skip, take, managerI
         } | null;
     }[];
 } & {
+    id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    formType: string | null;
+    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     data: import("../../generated/prisma/runtime/library.js").JsonValue | null;
     title: string | null;
-    createdAt: Date;
-    id: number;
     userId: string;
-    updatedAt: Date;
-    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     formTemplateId: string;
-    formType: string | null;
     submittedAt: Date | null;
 })[] | ({
+    FormTemplate: {
+        formType: import("../../generated/prisma/index.js").$Enums.FormTemplateCategory;
+    };
     User: {
         firstName: string;
         lastName: string;
-    };
-    FormTemplate: {
-        formType: import("../../generated/prisma/index.js").$Enums.FormTemplateCategory;
     };
     Approvals: {
         signedBy: string | null;
     }[];
 } & {
+    id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    formType: string | null;
+    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     data: import("../../generated/prisma/runtime/library.js").JsonValue | null;
     title: string | null;
-    createdAt: Date;
-    id: number;
     userId: string;
-    updatedAt: Date;
-    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     formTemplateId: string;
-    formType: string | null;
     submittedAt: Date | null;
 })[]>;
 export declare const ServiceGetUserSubmissions: ({ userId, filter, startDate, endDate, skip, take, }: {
@@ -277,25 +277,25 @@ export declare const ServiceGetUserSubmissions: ({ userId, filter, startDate, en
     skip: number;
     take: number;
 }) => Promise<({
+    FormTemplate: {
+        name: string;
+        formType: import("../../generated/prisma/index.js").$Enums.FormTemplateCategory;
+    };
     User: {
         id: string;
         firstName: string;
         lastName: string;
     };
-    FormTemplate: {
-        name: string;
-        formType: import("../../generated/prisma/index.js").$Enums.FormTemplateCategory;
-    };
 } & {
+    id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    formType: string | null;
+    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     data: import("../../generated/prisma/runtime/library.js").JsonValue | null;
     title: string | null;
-    createdAt: Date;
-    id: number;
     userId: string;
-    updatedAt: Date;
-    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     formTemplateId: string;
-    formType: string | null;
     submittedAt: Date | null;
 })[]>;
 export declare const ServiceManagerFormApprovals: (id: string) => Promise<({
@@ -314,24 +314,24 @@ export declare const ServiceManagerFormApprovals: (id: string) => Promise<({
         signedBy: string | null;
     })[];
 } & {
+    id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    formType: string | null;
+    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     data: import("../../generated/prisma/runtime/library.js").JsonValue | null;
     title: string | null;
-    createdAt: Date;
-    id: number;
     userId: string;
-    updatedAt: Date;
-    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     formTemplateId: string;
-    formType: string | null;
     submittedAt: Date | null;
 }) | null>;
 export declare const ServiceFormSubmissions: (id: string) => Promise<({
+    FormTemplate: {
+        name: string;
+        id: string;
+    };
     User: {
         signature: string | null;
-    };
-    FormTemplate: {
-        id: string;
-        name: string;
     };
     Approvals: {
         id: string;
@@ -343,15 +343,15 @@ export declare const ServiceFormSubmissions: (id: string) => Promise<({
         } | null;
     }[];
 } & {
+    id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    formType: string | null;
+    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     data: import("../../generated/prisma/runtime/library.js").JsonValue | null;
     title: string | null;
-    createdAt: Date;
-    id: number;
     userId: string;
-    updatedAt: Date;
-    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     formTemplateId: string;
-    formType: string | null;
     submittedAt: Date | null;
 }) | null>;
 export declare const ServiceTeamSubmissions: (id: string) => Promise<({
@@ -367,23 +367,23 @@ export declare const ServiceTeamSubmissions: (id: string) => Promise<({
         } | null;
     }[];
 } & {
+    id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    formType: string | null;
+    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     data: import("../../generated/prisma/runtime/library.js").JsonValue | null;
     title: string | null;
-    createdAt: Date;
-    id: number;
     userId: string;
-    updatedAt: Date;
-    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     formTemplateId: string;
-    formType: string | null;
     submittedAt: Date | null;
 }) | null>;
 export declare const ServiceFormDraft: (id: string, userId: string) => Promise<{
-    data: import("../../generated/prisma/runtime/library.js").JsonValue;
-    title: string | null;
     FormTemplate: {
         name: string;
     };
+    data: import("../../generated/prisma/runtime/library.js").JsonValue;
+    title: string | null;
 } | null>;
 export declare const ServiceForm: (id: string, userId: string) => Promise<{
     id: string;
@@ -427,12 +427,26 @@ export interface UpdateFormSubmissionParams {
  * Returns the updated submission.
  */
 export declare const updateFormSubmissionService: (body: UpdateFormSubmissionParams) => Promise<{
+    FormTemplate: {
+        name: string;
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        companyId: string;
+        spanishName: string | null;
+        isSignatureRequired: boolean;
+        description: string | null;
+        isActive: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
+        formType: import("../../generated/prisma/index.js").$Enums.FormTemplateCategory;
+        isApprovalRequired: boolean;
+    };
     User: {
         id: string;
-        email: string | null;
-        username: string;
+        companyId: string;
         firstName: string;
         lastName: string;
+        username: string;
+        email: string | null;
         password: string;
         signature: string | null;
         DOB: Date | null;
@@ -446,24 +460,11 @@ export declare const updateFormSubmissionService: (body: UpdateFormSubmissionPar
         terminationDate: Date | null;
         accountSetup: boolean;
         clockedIn: boolean;
-        companyId: string;
         passwordResetTokenId: string | null;
         workTypeId: string | null;
         middleName: string | null;
         secondLastName: string | null;
         lastSeen: Date | null;
-    };
-    FormTemplate: {
-        createdAt: Date;
-        id: string;
-        name: string;
-        updatedAt: Date;
-        companyId: string;
-        description: string | null;
-        isActive: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
-        isSignatureRequired: boolean;
-        formType: import("../../generated/prisma/index.js").$Enums.FormTemplateCategory;
-        isApprovalRequired: boolean;
     };
     Approvals: {
         id: string;
@@ -475,15 +476,15 @@ export declare const updateFormSubmissionService: (body: UpdateFormSubmissionPar
         signedBy: string | null;
     }[];
 } & {
+    id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    formType: string | null;
+    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     data: import("../../generated/prisma/runtime/library.js").JsonValue | null;
     title: string | null;
-    createdAt: Date;
-    id: number;
     userId: string;
-    updatedAt: Date;
-    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     formTemplateId: string;
-    formType: string | null;
     submittedAt: Date | null;
 }>;
 //# sourceMappingURL=formsService.d.ts.map

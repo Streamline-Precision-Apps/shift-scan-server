@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="b1b56872-1f9f-57ce-8e0f-d64c4c794a63")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="78a08668-9e18-572f-98b4-50debb8e2cd4")}catch(e){}}();
 import express from "express";
 import jwt from "jsonwebtoken";
 import config from "../lib/config.js";
@@ -40,4 +40,4 @@ export function authorizeRoles(...allowedRoles) {
     };
 }
 //# sourceMappingURL=authMiddleware.js.map
-//# debugId=b1b56872-1f9f-57ce-8e0f-d64c4c794a63
+//# debugId=78a08668-9e18-572f-98b4-50debb8e2cd4

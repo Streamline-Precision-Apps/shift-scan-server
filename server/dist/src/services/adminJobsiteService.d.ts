@@ -1,25 +1,25 @@
 import type { JobsiteUpdateBody } from "../controllers/adminJobsiteController.js";
 export declare function getAllJobsites(status: string, page: number | undefined, pageSize: number | undefined, skip: number | undefined, totalPages: number | undefined, total: number | undefined): Promise<{
     jobsiteSummary: {
-        createdAt: Date;
-        id: string;
         name: string;
+        id: string;
+        createdAt: Date;
         updatedAt: Date;
+        description: string;
         _count: {
             TimeSheets: number;
         };
+        Address: {
+            id: string;
+            street: string;
+            city: string;
+            state: string;
+            zipCode: string;
+        } | null;
         qrId: string;
-        description: string;
         approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         code: string | null;
         status: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
-        Address: {
-            id: string;
-            state: string;
-            city: string;
-            zipCode: string;
-            street: string;
-        } | null;
     }[];
     total: number;
     page: undefined;
@@ -28,25 +28,25 @@ export declare function getAllJobsites(status: string, page: number | undefined,
     totalPages: number;
 } | {
     jobsiteSummary: {
-        createdAt: Date;
-        id: string;
         name: string;
+        id: string;
+        createdAt: Date;
         updatedAt: Date;
+        description: string;
         _count: {
             TimeSheets: number;
         };
+        Address: {
+            id: string;
+            street: string;
+            city: string;
+            state: string;
+            zipCode: string;
+        } | null;
         qrId: string;
-        description: string;
         approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         code: string | null;
         status: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
-        Address: {
-            id: string;
-            state: string;
-            city: string;
-            zipCode: string;
-            street: string;
-        } | null;
     }[];
     total: number;
     page: number;
@@ -55,32 +55,32 @@ export declare function getAllJobsites(status: string, page: number | undefined,
     totalPages: number;
 }>;
 export declare function getJobsiteById(id: string): Promise<({
-    Address: {
-        id: string;
-        state: string;
-        city: string;
-        zipCode: string;
-        street: string;
-        country: string;
-    } | null;
     createdBy: {
         firstName: string;
         lastName: string;
     } | null;
-    CCTags: {
+    Address: {
         id: string;
+        street: string;
+        city: string;
+        state: string;
+        zipCode: string;
+        country: string;
+    } | null;
+    CCTags: {
         name: string;
+        id: string;
     }[];
 } & {
-    createdAt: Date;
-    id: string;
     name: string;
+    id: string;
+    addressId: string | null;
+    createdAt: Date;
     updatedAt: Date;
-    qrId: string;
     description: string;
+    qrId: string;
     creationReason: string | null;
     approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
-    addressId: string | null;
     comment: string | null;
     archiveDate: Date | null;
     createdById: string | null;
@@ -114,20 +114,20 @@ export declare function createJobsite(payload: {
 }): Promise<void>;
 export declare function updateJobsite(id: string, data: JobsiteUpdateBody): Promise<{
     CCTags: {
-        id: string;
         name: string;
+        id: string;
         description: string | null;
     }[];
 } & {
-    createdAt: Date;
-    id: string;
     name: string;
+    id: string;
+    addressId: string | null;
+    createdAt: Date;
     updatedAt: Date;
-    qrId: string;
     description: string;
+    qrId: string;
     creationReason: string | null;
     approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
-    addressId: string | null;
     comment: string | null;
     archiveDate: Date | null;
     createdById: string | null;
@@ -139,15 +139,15 @@ export declare function updateJobsite(id: string, data: JobsiteUpdateBody): Prom
     status: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
 }>;
 export declare function archiveJobsite(id: string): Promise<{
-    createdAt: Date;
-    id: string;
     name: string;
+    id: string;
+    addressId: string | null;
+    createdAt: Date;
     updatedAt: Date;
-    qrId: string;
     description: string;
+    qrId: string;
     creationReason: string | null;
     approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
-    addressId: string | null;
     comment: string | null;
     archiveDate: Date | null;
     createdById: string | null;
@@ -159,15 +159,15 @@ export declare function archiveJobsite(id: string): Promise<{
     status: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
 }>;
 export declare function restoreJobsite(id: string): Promise<{
-    createdAt: Date;
-    id: string;
     name: string;
+    id: string;
+    addressId: string | null;
+    createdAt: Date;
     updatedAt: Date;
-    qrId: string;
     description: string;
+    qrId: string;
     creationReason: string | null;
     approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
-    addressId: string | null;
     comment: string | null;
     archiveDate: Date | null;
     createdById: string | null;
@@ -179,15 +179,15 @@ export declare function restoreJobsite(id: string): Promise<{
     status: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
 }>;
 export declare function deleteJobsite(id: string): Promise<{
-    createdAt: Date;
-    id: string;
     name: string;
+    id: string;
+    addressId: string | null;
+    createdAt: Date;
     updatedAt: Date;
-    qrId: string;
     description: string;
+    qrId: string;
     creationReason: string | null;
     approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
-    addressId: string | null;
     comment: string | null;
     archiveDate: Date | null;
     createdById: string | null;

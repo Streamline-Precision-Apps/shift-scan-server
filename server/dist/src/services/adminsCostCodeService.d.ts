@@ -9,16 +9,16 @@ export declare function getCostCodes({ search, page, pageSize, skip, }: {
             Timesheets: number;
         };
         CCTags: {
-            id: string;
             name: string;
+            id: string;
         }[];
     } & {
-        createdAt: Date;
-        id: string;
         name: string;
+        id: string;
+        createdAt: Date;
         updatedAt: Date;
-        code: string | null;
         isActive: boolean;
+        code: string | null;
     })[];
     total: number;
     page: undefined;
@@ -30,16 +30,16 @@ export declare function getCostCodes({ search, page, pageSize, skip, }: {
             Timesheets: number;
         };
         CCTags: {
-            id: string;
             name: string;
+            id: string;
         }[];
     } & {
-        createdAt: Date;
-        id: string;
         name: string;
+        id: string;
+        createdAt: Date;
         updatedAt: Date;
-        code: string | null;
         isActive: boolean;
+        code: string | null;
     })[];
     total: number;
     page: number;
@@ -48,22 +48,22 @@ export declare function getCostCodes({ search, page, pageSize, skip, }: {
 }>;
 export declare function getCostCodesById(id: string): Promise<({
     CCTags: {
-        id: string;
         name: string;
+        id: string;
     }[];
 } & {
-    createdAt: Date;
-    id: string;
     name: string;
+    id: string;
+    createdAt: Date;
     updatedAt: Date;
-    code: string | null;
     isActive: boolean;
+    code: string | null;
 }) | null>;
 export declare function getCostCodeSummary(): Promise<{
-    id: string;
     name: string;
-    code: string | null;
+    id: string;
     isActive: boolean;
+    code: string | null;
 }[]>;
 export declare function createCostCodes(payload: {
     code: string;
@@ -74,12 +74,12 @@ export declare function createCostCodes(payload: {
         name: string;
     }[];
 }): Promise<{
-    createdAt: Date;
-    id: string;
     name: string;
+    id: string;
+    createdAt: Date;
     updatedAt: Date;
-    code: string | null;
     isActive: boolean;
+    code: string | null;
 }>;
 export type UpdateCostCodePayload = {
     code?: string;
@@ -92,33 +92,33 @@ export type UpdateCostCodePayload = {
 };
 export declare function updateCostCodes(id: string, payload: UpdateCostCodePayload): Promise<{
     CCTags: {
-        id: string;
         name: string;
+        id: string;
         description: string | null;
     }[];
 } & {
-    createdAt: Date;
-    id: string;
     name: string;
+    id: string;
+    createdAt: Date;
     updatedAt: Date;
-    code: string | null;
     isActive: boolean;
+    code: string | null;
 }>;
 export declare function deleteCostCodes(id: string): Promise<void>;
 export declare function restoreCostCodes(id: string): Promise<{
-    createdAt: Date;
-    id: string;
     name: string;
+    id: string;
+    createdAt: Date;
     updatedAt: Date;
-    code: string | null;
     isActive: boolean;
+    code: string | null;
 }>;
 export declare function archiveCostCodes(id: string): Promise<{
-    createdAt: Date;
-    id: string;
     name: string;
+    id: string;
+    createdAt: Date;
     updatedAt: Date;
-    code: string | null;
     isActive: boolean;
+    code: string | null;
 }>;
 //# sourceMappingURL=adminsCostCodeService.d.ts.map

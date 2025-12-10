@@ -29,9 +29,9 @@ export declare function getAllCrews({ page, pageSize, status, search, }?: {
             secondLastName: string | null;
         }[];
     } & {
-        createdAt: Date;
-        id: string;
         name: string;
+        id: string;
+        createdAt: Date;
         updatedAt: Date;
         leadId: string;
         crewType: import("../../generated/prisma/index.js").$Enums.WorkType;
@@ -43,10 +43,10 @@ export declare function getAllCrews({ page, pageSize, status, search, }?: {
 }>;
 export declare function getEmployeeInfo(id: string): Promise<{
     id: string;
-    email: string | null;
-    username: string;
     firstName: string;
     lastName: string;
+    username: string;
+    email: string | null;
     signature: string | null;
     DOB: Date | null;
     truckView: boolean;
@@ -65,8 +65,8 @@ export declare function getEmployeeInfo(id: string): Promise<{
         emergencyContactNumber: string | null;
     } | null;
     Crews: {
-        id: string;
         name: string;
+        id: string;
         leadId: string;
     }[];
 } | null>;
@@ -79,9 +79,9 @@ export declare function getCrewByIdAdmin(id: string): Promise<({
         secondLastName: string | null;
     }[];
 } & {
-    createdAt: Date;
-    id: string;
     name: string;
+    id: string;
+    createdAt: Date;
     updatedAt: Date;
     leadId: string;
     crewType: import("../../generated/prisma/index.js").$Enums.WorkType;
@@ -104,15 +104,15 @@ export declare function getPersonnelManager({ page, pageSize, status, search, ac
     users: {
         Crews: {
             leadName: any;
-            id: string;
             name: string;
+            id: string;
             leadId: string;
         }[];
         id: string;
-        email: string | null;
-        username: string;
         firstName: string;
         lastName: string;
+        username: string;
+        email: string | null;
         DOB: Date | null;
         truckView: boolean;
         tascoView: boolean;

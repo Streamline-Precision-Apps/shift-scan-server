@@ -1,6 +1,6 @@
 // server/src/services/jobsiteService.ts
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="77ce7b8b-752b-564c-8490-ea4ae4398fa4")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="62ac874b-5adc-5a7a-928e-89ac3a4c085b")}catch(e){}}();
 import prisma from "../lib/prisma.js";
 export async function getJobsites(query) {
     if (query.qrg) {
@@ -111,4 +111,4 @@ export async function deleteJobsite(id) {
     }
 }
 //# sourceMappingURL=jobsiteService.js.map
-//# debugId=77ce7b8b-752b-564c-8490-ea4ae4398fa4
+//# debugId=62ac874b-5adc-5a7a-928e-89ac3a4c085b

@@ -1,7 +1,7 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="c7909639-568e-5c77-acaf-e9200d70610b")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="1157e3da-8594-5b4a-a1bd-522b1a52d7e1")}catch(e){}}();
 import prisma from "../lib/prisma.js";
-import { FormStatus } from "../../generated/prisma/client.js";
+import { FormStatus } from "../../generated/prisma/index.js";
 /**
  * Get all forms
  * @returns {
@@ -633,4 +633,4 @@ export const updateFormSubmissionService = async (body) => {
     return updated;
 };
 //# sourceMappingURL=formsService.js.map
-//# debugId=c7909639-568e-5c77-acaf-e9200d70610b
+//# debugId=1157e3da-8594-5b4a-a1bd-522b1a52d7e1

@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="d6a68697-1b34-5875-b246-b175e6bbfb88")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="6eeb2ef4-a68e-5d87-82e9-31a0e71f008a")}catch(e){}}();
 import { Router } from "express";
 import { getTascoLogController, getTascoLogsByTimesheetController, updateLoadQuantityController, updateTascoCommentController, createRefuelLogController, getRefuelLogsController, updateRefuelLogController, deleteRefuelLogController, createFLoadController, getFLoadsController, updateFLoadController, deleteFLoadController, getCompleteTascoLogController, deleteTascoLogController, getTascoLogFieldController, getActiveTascoLogController, } from "../controllers/tascoLogController.js";
 const router = Router();
@@ -107,4 +107,4 @@ router.put("/f-loads/:fLoadId", updateFLoadController);
 router.delete("/f-loads/:fLoadId", deleteFLoadController);
 export default router;
 //# sourceMappingURL=tascoLogRoutes.js.map
-//# debugId=d6a68697-1b34-5875-b246-b175e6bbfb88
+//# debugId=6eeb2ef4-a68e-5d87-82e9-31a0e71f008a

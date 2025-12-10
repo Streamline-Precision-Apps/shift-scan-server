@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="74aab01b-fdae-5e8e-9a44-305b57fc06ca")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="14fd7f5e-1a25-5e42-b18b-41d48d8f29d0")}catch(e){}}();
 import express from "express";
 import dotenv from "dotenv";
 import { getUserWithSettingsById } from "../services/initService.js";
@@ -25,4 +25,4 @@ export const initHandler = async (req, res) => {
     }
 };
 //# sourceMappingURL=initController.js.map
-//# debugId=74aab01b-fdae-5e8e-9a44-305b57fc06ca
+//# debugId=14fd7f5e-1a25-5e42-b18b-41d48d8f29d0

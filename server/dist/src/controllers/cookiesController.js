@@ -1,6 +1,6 @@
 // GET /api/cookies?name=key
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="3b1b6516-59f7-5b49-91f6-8b9dbdb79225")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="f1a674c9-7a66-5aac-8abc-e9eb0e4a465b")}catch(e){}}();
 import express from "express";
 export function getCookie(req, res) {
     let { name } = req.query;
@@ -120,4 +120,4 @@ export function deleteCookieList(req, res) {
     res.json({ message: `Cookies deleted: ${name.join(", ")}` });
 }
 //# sourceMappingURL=cookiesController.js.map
-//# debugId=3b1b6516-59f7-5b49-91f6-8b9dbdb79225
+//# debugId=f1a674c9-7a66-5aac-8abc-e9eb0e4a465b

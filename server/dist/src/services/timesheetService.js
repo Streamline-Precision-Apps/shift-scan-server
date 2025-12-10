@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="be10758a-cc3b-5ef2-933d-2d1b61868b4a")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="079e2405-1c7d-58c2-9649-8d91c840f0bd")}catch(e){}}();
 import { formatISO } from "date-fns";
 import prisma from "../lib/prisma.js";
 export async function updateTimesheetService({ id, editorId, changes, changeReason, numberOfChanges, startTime, endTime, Jobsite, CostCode, comment, }) {
@@ -1484,4 +1484,4 @@ export async function deleteRefuelLogService(refuelLogId) {
     }
 }
 //# sourceMappingURL=timesheetService.js.map
-//# debugId=be10758a-cc3b-5ef2-933d-2d1b61868b4a
+//# debugId=079e2405-1c7d-58c2-9649-8d91c840f0bd

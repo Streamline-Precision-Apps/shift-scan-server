@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="e91b6d40-d28e-57ae-a740-0a8a7c8eb1bf")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="8a032b26-17ea-54b1-9730-a4fd3594b780")}catch(e){}}();
 import prisma from "../lib/prisma.js";
 export async function getTruckingReport() {
     const overWeightReport = await prisma.truckingLog.findMany({
@@ -299,4 +299,4 @@ export async function getTascoFilterOptions() {
     };
 }
 //# sourceMappingURL=adminsReportService.js.map
-//# debugId=e91b6d40-d28e-57ae-a740-0a8a7c8eb1bf
+//# debugId=8a032b26-17ea-54b1-9730-a4fd3594b780

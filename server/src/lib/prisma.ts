@@ -1,7 +1,13 @@
-import { PrismaClient } from "../../generated/prisma/client.js";
+import { PrismaClient } from "../../generated/prisma/index.js";
+import { PrismaPg } from "@prisma/adapter-pg";
+import pg from "pg";
 
 const prismaClientSingleton = () => {
-  return new PrismaClient();
+  const pool = new pg.Pool({
+    connectionString: process.env.POSTGRES_PRISMA_URL!,
+  });
+  const adapter = new PrismaPg(pool);
+  return new PrismaClient({ adapter });
 };
 
 declare const globalThis: {

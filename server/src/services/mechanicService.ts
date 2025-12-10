@@ -1,5 +1,5 @@
 import prisma from "../lib/prisma.js";
-import type {} from "../../generated/prisma/client.js";
+import type {} from "../../generated/prisma/index.js";
 
 export async function getMechanicLogsService(timesheetId: number) {
   const projects = await prisma.mechanicProjects.findMany({

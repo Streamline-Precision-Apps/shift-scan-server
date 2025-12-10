@@ -1,10 +1,10 @@
 export declare function getMechanicLogsService(timesheetId: number): Promise<{
     id: number;
-    Equipment: {
-        id: string;
-        name: string;
-    };
     description: string | null;
+    Equipment: {
+        name: string;
+        id: string;
+    };
     equipmentId: string;
     hours: number | null;
 }[]>;
@@ -40,11 +40,11 @@ export declare function deleteMechanicLogService(projectId: number): Promise<{
 }>;
 export declare function getMechanicLogService(id: number): Promise<{
     id: number;
-    Equipment: {
-        id: string;
-        name: string;
-    };
     description: string | null;
+    Equipment: {
+        name: string;
+        id: string;
+    };
     equipmentId: string;
     hours: number | null;
 } | null>;

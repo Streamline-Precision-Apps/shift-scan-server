@@ -1,5 +1,5 @@
 import prisma from "../lib/prisma.js";
-import { FormStatus } from "../../generated/prisma/client.js";
+import { FormStatus } from "../../generated/prisma/index.js";
 
 // --- Types ---
 // Params for ServiceGetEmployeeRequests

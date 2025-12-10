@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="26f7fa50-4c66-5b36-b84c-a187330a9e40")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="ad0ad592-93d3-5bed-a534-dad6e19ccb59")}catch(e){}}();
 import prisma from "../lib/prisma.js";
 import { hash } from "bcryptjs";
 const ALLOWED_USER_FIELDS = [
@@ -444,4 +444,4 @@ export async function handleUserSignature(userId) {
     });
 }
 //# sourceMappingURL=UserService.js.map
-//# debugId=26f7fa50-4c66-5b36-b84c-a187330a9e40
+//# debugId=ad0ad592-93d3-5bed-a534-dad6e19ccb59

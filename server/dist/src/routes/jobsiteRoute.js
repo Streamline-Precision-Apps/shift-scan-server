@@ -1,6 +1,6 @@
 // server/src/routes/jobsiteRoutes.ts
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="4b241164-22f7-5dda-b706-6a6f4db3676d")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="eb81720b-aef5-5031-bf4c-c33478b4ee87")}catch(e){}}();
 import { Router } from "express";
 import { createJobsite, deleteJobsite, getJobsiteById, getJobsites, updateJobsite, getJobsiteByQrId, } from "../controllers/jobsiteController.js";
 const router = Router();
@@ -16,4 +16,4 @@ router.put("/:id", updateJobsite);
 router.delete("/:id", deleteJobsite);
 export default router;
 //# sourceMappingURL=jobsiteRoute.js.map
-//# debugId=4b241164-22f7-5dda-b706-6a6f4db3676d
+//# debugId=eb81720b-aef5-5031-bf4c-c33478b4ee87

@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="c5391701-e2a7-5ec5-b889-c8cfbc2b675e")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="37d4e0a4-2ad7-5028-bee0-3093d3d34eb1")}catch(e){}}();
 import { Resend } from "resend";
 const resend = new Resend(process.env.AUTH_RESEND_KEY);
 /**
@@ -34,4 +34,4 @@ export const sendPasswordResetEmail = async (email, token) => {
     }
 };
 //# sourceMappingURL=mail.js.map
-//# debugId=c5391701-e2a7-5ec5-b889-c8cfbc2b675e
+//# debugId=37d4e0a4-2ad7-5028-bee0-3093d3d34eb1

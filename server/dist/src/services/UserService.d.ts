@@ -5,10 +5,11 @@ export declare function createUserWithCompanyId(userData: Omit<Prisma.UserCreate
 export declare function getAllUsers(): Promise<User[]>;
 export declare function getUserById(id: string): Promise<{
     id: string;
-    email: string | null;
-    username: string;
+    companyId: string;
     firstName: string;
     lastName: string;
+    username: string;
+    email: string | null;
     password: string;
     signature: string | null;
     DOB: Date | null;
@@ -22,7 +23,6 @@ export declare function getUserById(id: string): Promise<{
     terminationDate: Date | null;
     accountSetup: boolean;
     clockedIn: boolean;
-    companyId: string;
     passwordResetTokenId: string | null;
     workTypeId: string | null;
     middleName: string | null;
@@ -31,26 +31,28 @@ export declare function getUserById(id: string): Promise<{
 }>;
 export declare function getUserByIdQuery(id: string, query: string): Promise<{
     [x: string]: {
-        createdAt: Date;
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         userId: string;
         token: string;
         platform: string | null;
         lastUsedAt: Date | null;
         isValid: boolean;
-        updatedAt: Date;
     }[] | {
-        topic: string;
-        createdAt: Date;
         id: string;
+        createdAt: Date;
+        topic: string;
         userId: string;
     }[] | {
-        createdAt: Date;
-        id: string;
+        model: string | null;
         name: string;
+        id: string;
+        createdAt: Date;
         updatedAt: Date;
-        qrId: string;
         description: string | null;
+        state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
+        qrId: string;
         creationReason: string | null;
         approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         createdById: string | null;
@@ -58,7 +60,6 @@ export declare function getUserByIdQuery(id: string, query: string): Promise<{
         code: string | null;
         status: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
         equipmentTag: import("../../generated/prisma/index.js").$Enums.EquipmentTags;
-        state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
         overWeight: boolean | null;
         currentWeight: number | null;
         acquiredDate: Date | null;
@@ -67,22 +68,21 @@ export declare function getUserByIdQuery(id: string, query: string): Promise<{
         licenseState: string | null;
         make: string | null;
         memo: string | null;
-        model: string | null;
         ownershipType: import("../../generated/prisma/index.js").$Enums.OwnershipType | null;
         registrationExpiration: Date | null;
         serialNumber: string | null;
         year: string | null;
         acquiredCondition: import("../../generated/prisma/index.js").$Enums.Condition | null;
     }[] | {
-        createdAt: Date;
-        id: string;
         name: string;
+        id: string;
+        addressId: string | null;
+        createdAt: Date;
         updatedAt: Date;
-        qrId: string;
         description: string;
+        qrId: string;
         creationReason: string | null;
         approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
-        addressId: string | null;
         comment: string | null;
         archiveDate: Date | null;
         createdById: string | null;
@@ -93,14 +93,14 @@ export declare function getUserByIdQuery(id: string, query: string): Promise<{
         radiusMeters: number | null;
         status: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
     }[] | {
-        readAt: Date;
         id: number;
+        readAt: Date;
         userId: string;
         notificationId: number;
     }[] | {
         id: string;
-        token: string;
         email: string;
+        token: string;
         expiration: Date;
     }[] | {
         id: number;
@@ -116,22 +116,22 @@ export declare function getUserByIdQuery(id: string, query: string): Promise<{
         formSubmissionId: number;
         signedBy: string | null;
     }[] | {
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        formType: string | null;
+        status: import("../../generated/prisma/index.js").$Enums.FormStatus;
         data: Prisma.JsonValue | null;
         title: string | null;
-        createdAt: Date;
-        id: number;
         userId: string;
-        updatedAt: Date;
-        status: import("../../generated/prisma/index.js").$Enums.FormStatus;
         formTemplateId: string;
-        formType: string | null;
         submittedAt: Date | null;
     }[] | {
         id: string;
+        comment: string | null;
         userId: string;
         startTime: Date;
         endTime: Date | null;
-        comment: string | null;
         timeSheetId: number;
         maintenanceId: string;
     }[] | {
@@ -141,16 +141,16 @@ export declare function getUserByIdQuery(id: string, query: string): Promise<{
         response: string | null;
         respondedAt: Date;
     }[] | {
-        createdAt: Date;
         id: number;
-        userId: string;
+        createdAt: Date;
         updatedAt: Date;
+        comment: string | null;
+        status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
+        userId: string;
         sessionId: number | null;
         startTime: Date;
         endTime: Date | null;
         date: Date;
-        comment: string | null;
-        status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         jobsiteId: string;
         costcode: string;
         nu: string;
@@ -178,9 +178,9 @@ export declare function getUserByIdQuery(id: string, query: string): Promise<{
         wasStatusChange: boolean;
         numberOfChanges: number;
     }[] | {
-        createdAt: Date;
-        id: string;
         name: string;
+        id: string;
+        createdAt: Date;
         updatedAt: Date;
         leadId: string;
         crewType: import("../../generated/prisma/index.js").$Enums.WorkType;
@@ -190,10 +190,11 @@ export declare function createUser(userData: Prisma.UserCreateInput): Promise<Us
 export declare function updateUser(id: string, userData: Prisma.UserUpdateInput): Promise<User>;
 export declare function deleteUser(id: string): Promise<{
     id: string;
-    email: string | null;
-    username: string;
+    companyId: string;
     firstName: string;
     lastName: string;
+    username: string;
+    email: string | null;
     password: string;
     signature: string | null;
     DOB: Date | null;
@@ -207,7 +208,6 @@ export declare function deleteUser(id: string): Promise<{
     terminationDate: Date | null;
     accountSetup: boolean;
     clockedIn: boolean;
-    companyId: string;
     passwordResetTokenId: string | null;
     workTypeId: string | null;
     middleName: string | null;
@@ -215,8 +215,8 @@ export declare function deleteUser(id: string): Promise<{
     lastSeen: Date | null;
 }>;
 export declare function getUserSettings(userId: string): Promise<{
-    createdAt: Date;
     id: string;
+    createdAt: Date;
     userId: string;
     language: string;
     generalReminders: boolean;
@@ -227,8 +227,8 @@ export declare function getUserSettings(userId: string): Promise<{
     lastUpdated: Date;
 } | null>;
 export declare function updateUserSettings(userId: string, data: Partial<Prisma.UserSettingsUpdateInput>): Promise<{
-    createdAt: Date;
     id: string;
+    createdAt: Date;
     userId: string;
     language: string;
     generalReminders: boolean;
@@ -239,10 +239,10 @@ export declare function updateUserSettings(userId: string, data: Partial<Prisma.
     lastUpdated: Date;
 }>;
 export declare function updateContact(userId: string, data: Partial<Prisma.ContactsUpdateInput>): Promise<{
-    createdAt: Date;
     id: string;
-    userId: string;
+    createdAt: Date;
     updatedAt: Date;
+    userId: string;
     phoneNumber: string | null;
     emergencyContact: string | null;
     emergencyContactNumber: string | null;
@@ -257,16 +257,16 @@ export declare function getUsersTimeSheetByDate(userId: string, dateParam: strin
         name: string;
     };
 } & {
-    createdAt: Date;
     id: number;
-    userId: string;
+    createdAt: Date;
     updatedAt: Date;
+    comment: string | null;
+    status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
+    userId: string;
     sessionId: number | null;
     startTime: Date;
     endTime: Date | null;
     date: Date;
-    comment: string | null;
-    status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
     jobsiteId: string;
     costcode: string;
     nu: string;
@@ -286,8 +286,8 @@ export declare function getUsersTimeSheetByDate(userId: string, dateParam: strin
     wasInjured: boolean | null;
 })[]>;
 export declare function getTeamsByUserId(userId: string): Promise<{
-    id: string;
     name: string;
+    id: string;
     _count: {
         Users: number;
     };

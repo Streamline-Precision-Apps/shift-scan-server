@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="5fd2d436-587e-5a26-a3aa-b8963debcb6d")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="50beb883-852a-556f-a80f-6ffd724cd710")}catch(e){}}();
 import { ServiceManagerFormApprovals, ServiceFormSubmissions, ServiceTeamSubmissions, ServiceFormDraft, ServiceForm, ServiceGetFormSubmissions, } from "../services/formsService.js";
 // Controller for forms endpoints
 import express from "express";
@@ -330,4 +330,4 @@ export const getFormTemplate = async (req, res) => {
     }
 };
 //# sourceMappingURL=formsController.js.map
-//# debugId=5fd2d436-587e-5a26-a3aa-b8963debcb6d
+//# debugId=50beb883-852a-556f-a80f-6ffd724cd710

@@ -1,16 +1,16 @@
 export declare function getCostCodes(): Promise<{
-    id: string;
     name: string;
+    id: string;
+    isActive: boolean;
     code: string | null;
     CCTags: {
-        id: string;
         name: string;
+        id: string;
         description: string | null;
         Jobsites: {
-            id: string;
             name: string;
+            id: string;
         }[];
     }[];
-    isActive: boolean;
 }[]>;
 //# sourceMappingURL=costCodeService.d.ts.map

@@ -62,8 +62,8 @@ export declare function getAllFormTemplates(search: string, page: number | undef
             Submissions: number;
         };
         FormGrouping: {
-            title: string | null;
             id: string;
+            title: string | null;
             Fields: {
                 filter: string | null;
                 order: number;
@@ -79,19 +79,21 @@ export declare function getAllFormTemplates(search: string, page: number | undef
                     id: string;
                     value: string;
                     fieldId: string;
+                    spanishValue: string | null;
                 }[];
             }[];
             order: number;
         }[];
     } & {
-        createdAt: Date;
-        id: string;
         name: string;
+        id: string;
+        createdAt: Date;
         updatedAt: Date;
         companyId: string;
+        spanishName: string | null;
+        isSignatureRequired: boolean;
         description: string | null;
         isActive: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
-        isSignatureRequired: boolean;
         formType: import("../../generated/prisma/index.js").$Enums.FormTemplateCategory;
         isApprovalRequired: boolean;
     })[];
@@ -105,8 +107,8 @@ export declare function getAllFormTemplates(search: string, page: number | undef
             Submissions: number;
         };
         FormGrouping: {
-            title: string | null;
             id: string;
+            title: string | null;
             Fields: {
                 filter: string | null;
                 order: number;
@@ -122,19 +124,21 @@ export declare function getAllFormTemplates(search: string, page: number | undef
                     id: string;
                     value: string;
                     fieldId: string;
+                    spanishValue: string | null;
                 }[];
             }[];
             order: number;
         }[];
     } & {
-        createdAt: Date;
-        id: string;
         name: string;
+        id: string;
+        createdAt: Date;
         updatedAt: Date;
         companyId: string;
+        spanishName: string | null;
+        isSignatureRequired: boolean;
         description: string | null;
         isActive: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
-        isSignatureRequired: boolean;
         formType: import("../../generated/prisma/index.js").$Enums.FormTemplateCategory;
         isApprovalRequired: boolean;
     })[];
@@ -152,15 +156,15 @@ export declare function getFormSubmissionByTemplateId(id: string, search: string
             signature: string | null;
         };
     } & {
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        formType: string | null;
+        status: import("../../generated/prisma/index.js").$Enums.FormStatus;
         data: import("../../generated/prisma/runtime/library.js").JsonValue | null;
         title: string | null;
-        createdAt: Date;
-        id: number;
         userId: string;
-        updatedAt: Date;
-        status: import("../../generated/prisma/index.js").$Enums.FormStatus;
         formTemplateId: string;
-        formType: string | null;
         submittedAt: Date | null;
     })[];
     total: number;
@@ -169,11 +173,11 @@ export declare function getFormSubmissionByTemplateId(id: string, search: string
     totalPages: number;
     pendingForms: number;
     FormGrouping?: {
-        title: string | null;
         id: string;
+        title: string | null;
         Fields: {
-            filter: string | null;
             id: string;
+            filter: string | null;
             order: number;
             label: string;
             type: import("../../generated/prisma/index.js").$Enums.FieldType;
@@ -187,18 +191,20 @@ export declare function getFormSubmissionByTemplateId(id: string, search: string
                 id: string;
                 value: string;
                 fieldId: string;
+                spanishValue: string | null;
             }[];
         }[];
         order: number;
     }[];
-    createdAt?: Date;
-    id?: string;
     name?: string;
+    id?: string;
+    createdAt?: Date;
     updatedAt?: Date;
     companyId?: string;
+    spanishName?: string | null;
+    isSignatureRequired?: boolean;
     description?: string | null;
     isActive?: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
-    isSignatureRequired?: boolean;
     formType?: import("../../generated/prisma/index.js").$Enums.FormTemplateCategory;
     isApprovalRequired?: boolean;
 }>;
@@ -209,13 +215,18 @@ export declare function getFormTemplateById(id: string): Promise<({
                 id: string;
                 value: string;
                 fieldId: string;
+                spanishValue: string | null;
             }[];
         } & {
-            filter: string | null;
             id: string;
+            filter: string | null;
             order: number;
+            conditionalOnFieldId: string | null;
+            conditionType: string | null;
+            conditionalOnValue: string | null;
             formGroupingId: string;
             label: string;
+            spanishLabel: string | null;
             type: import("../../generated/prisma/index.js").$Enums.FieldType;
             required: boolean;
             placeholder: string | null;
@@ -225,19 +236,24 @@ export declare function getFormTemplateById(id: string): Promise<({
             multiple: boolean | null;
         })[];
     } & {
-        title: string | null;
         id: string;
+        title: string | null;
+        spanishTitle: string | null;
         order: number;
+        conditionalOnFieldId: string | null;
+        conditionType: string | null;
+        conditionalOnValue: string | null;
     })[];
 } & {
-    createdAt: Date;
-    id: string;
     name: string;
+    id: string;
+    createdAt: Date;
     updatedAt: Date;
     companyId: string;
+    spanishName: string | null;
+    isSignatureRequired: boolean;
     description: string | null;
     isActive: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
-    isSignatureRequired: boolean;
     formType: import("../../generated/prisma/index.js").$Enums.FormTemplateCategory;
     isApprovalRequired: boolean;
 }) | null>;
@@ -250,26 +266,27 @@ export declare function getFormSubmissions(formTemplateId: string, dateRange?: {
         lastName: string;
     };
 } & {
+    id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    formType: string | null;
+    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     data: import("../../generated/prisma/runtime/library.js").JsonValue | null;
     title: string | null;
-    createdAt: Date;
-    id: number;
     userId: string;
-    updatedAt: Date;
-    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     formTemplateId: string;
-    formType: string | null;
     submittedAt: Date | null;
 })[]>;
 export declare function createFormTemplate(data: SaveFormData): Promise<{
-    createdAt: Date;
-    id: string;
     name: string;
+    id: string;
+    createdAt: Date;
     updatedAt: Date;
     companyId: string;
+    spanishName: string | null;
+    isSignatureRequired: boolean;
     description: string | null;
     isActive: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
-    isSignatureRequired: boolean;
     formType: import("../../generated/prisma/index.js").$Enums.FormTemplateCategory;
     isApprovalRequired: boolean;
 }>;
@@ -279,96 +296,94 @@ export declare function updateFormTemplate(data: SaveFormData): Promise<{
     message: string;
 }>;
 export declare function deleteFormTemplate(id: string): Promise<{
-    createdAt: Date;
-    id: string;
     name: string;
+    id: string;
+    createdAt: Date;
     updatedAt: Date;
     companyId: string;
+    spanishName: string | null;
+    isSignatureRequired: boolean;
     description: string | null;
     isActive: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
-    isSignatureRequired: boolean;
     formType: import("../../generated/prisma/index.js").$Enums.FormTemplateCategory;
     isApprovalRequired: boolean;
 }>;
 export declare function archiveFormTemplate(id: string): Promise<{
-    createdAt: Date;
-    id: string;
     name: string;
+    id: string;
+    createdAt: Date;
     updatedAt: Date;
     companyId: string;
+    spanishName: string | null;
+    isSignatureRequired: boolean;
     description: string | null;
     isActive: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
-    isSignatureRequired: boolean;
     formType: import("../../generated/prisma/index.js").$Enums.FormTemplateCategory;
     isApprovalRequired: boolean;
 }>;
 export declare function publishFormTemplate(id: string): Promise<{
-    createdAt: Date;
-    id: string;
     name: string;
+    id: string;
+    createdAt: Date;
     updatedAt: Date;
     companyId: string;
+    spanishName: string | null;
+    isSignatureRequired: boolean;
     description: string | null;
     isActive: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
-    isSignatureRequired: boolean;
     formType: import("../../generated/prisma/index.js").$Enums.FormTemplateCategory;
     isApprovalRequired: boolean;
 }>;
 export declare function draftFormTemplate(id: string): Promise<{
-    createdAt: Date;
-    id: string;
     name: string;
+    id: string;
+    createdAt: Date;
     updatedAt: Date;
     companyId: string;
+    spanishName: string | null;
+    isSignatureRequired: boolean;
     description: string | null;
     isActive: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
-    isSignatureRequired: boolean;
     formType: import("../../generated/prisma/index.js").$Enums.FormTemplateCategory;
     isApprovalRequired: boolean;
 }>;
 export declare function createFormSubmission(input: CreateFormSubmissionInput): Promise<{
+    id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    formType: string | null;
+    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     data: import("../../generated/prisma/runtime/library.js").JsonValue | null;
     title: string | null;
-    createdAt: Date;
-    id: number;
     userId: string;
-    updatedAt: Date;
-    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     formTemplateId: string;
-    formType: string | null;
     submittedAt: Date | null;
 }>;
 export declare function updateFormSubmission(input: UpdateFormSubmissionInput): Promise<{
+    id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    formType: string | null;
+    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     data: import("../../generated/prisma/runtime/library.js").JsonValue | null;
     title: string | null;
-    createdAt: Date;
-    id: number;
     userId: string;
-    updatedAt: Date;
-    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     formTemplateId: string;
-    formType: string | null;
     submittedAt: Date | null;
 }>;
 export declare function deleteFormSubmission(submissionId: number): Promise<{
+    id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    formType: string | null;
+    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     data: import("../../generated/prisma/runtime/library.js").JsonValue | null;
     title: string | null;
-    createdAt: Date;
-    id: number;
     userId: string;
-    updatedAt: Date;
-    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     formTemplateId: string;
-    formType: string | null;
     submittedAt: Date | null;
 }>;
 export declare function getFormSubmissionById(submissionId: number): Promise<({
-    User: {
-        id: string;
-        firstName: string;
-        lastName: string;
-        signature: string | null;
-    };
     FormTemplate: {
         FormGrouping: ({
             Fields: ({
@@ -376,13 +391,18 @@ export declare function getFormSubmissionById(submissionId: number): Promise<({
                     id: string;
                     value: string;
                     fieldId: string;
+                    spanishValue: string | null;
                 }[];
             } & {
-                filter: string | null;
                 id: string;
+                filter: string | null;
                 order: number;
+                conditionalOnFieldId: string | null;
+                conditionType: string | null;
+                conditionalOnValue: string | null;
                 formGroupingId: string;
                 label: string;
+                spanishLabel: string | null;
                 type: import("../../generated/prisma/index.js").$Enums.FieldType;
                 required: boolean;
                 placeholder: string | null;
@@ -392,21 +412,32 @@ export declare function getFormSubmissionById(submissionId: number): Promise<({
                 multiple: boolean | null;
             })[];
         } & {
-            title: string | null;
             id: string;
+            title: string | null;
+            spanishTitle: string | null;
             order: number;
+            conditionalOnFieldId: string | null;
+            conditionType: string | null;
+            conditionalOnValue: string | null;
         })[];
     } & {
-        createdAt: Date;
-        id: string;
         name: string;
+        id: string;
+        createdAt: Date;
         updatedAt: Date;
         companyId: string;
+        spanishName: string | null;
+        isSignatureRequired: boolean;
         description: string | null;
         isActive: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
-        isSignatureRequired: boolean;
         formType: import("../../generated/prisma/index.js").$Enums.FormTemplateCategory;
         isApprovalRequired: boolean;
+    };
+    User: {
+        id: string;
+        firstName: string;
+        lastName: string;
+        signature: string | null;
     };
     Approvals: ({
         Approver: {
@@ -425,27 +456,27 @@ export declare function getFormSubmissionById(submissionId: number): Promise<({
         signedBy: string | null;
     })[];
 } & {
+    id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    formType: string | null;
+    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     data: import("../../generated/prisma/runtime/library.js").JsonValue | null;
     title: string | null;
-    createdAt: Date;
-    id: number;
     userId: string;
-    updatedAt: Date;
-    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     formTemplateId: string;
-    formType: string | null;
     submittedAt: Date | null;
 }) | null>;
 export declare function approveFormSubmission(submissionId: number, action: "APPROVED" | "REJECTED", formData: ApproveFormSubmissionInput): Promise<{
+    id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    formType: string | null;
+    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     data: import("../../generated/prisma/runtime/library.js").JsonValue | null;
     title: string | null;
-    createdAt: Date;
-    id: number;
     userId: string;
-    updatedAt: Date;
-    status: import("../../generated/prisma/index.js").$Enums.FormStatus;
     formTemplateId: string;
-    formType: string | null;
     submittedAt: Date | null;
 }>;
 //# sourceMappingURL=adminFormService.d.ts.map

@@ -1,7 +1,7 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="5940d097-5a6d-5cef-a1bf-0e8098fe7b26")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="3f424f32-0748-513f-bed4-7f6851acfba1")}catch(e){}}();
 import express from "express";
-import { loginUser, signOutUser } from "../controllers/authController.js";
+import { loginUser, signOutUser } from "../controllers/AuthController.js";
 import { sign } from "crypto";
 const router = express.Router();
 /**
@@ -33,4 +33,4 @@ router.post("/login", loginUser);
 router.post("/signout", signOutUser);
 export default router;
 //# sourceMappingURL=authRoutes.js.map
-//# debugId=5940d097-5a6d-5cef-a1bf-0e8098fe7b26
+//# debugId=3f424f32-0748-513f-bed4-7f6851acfba1

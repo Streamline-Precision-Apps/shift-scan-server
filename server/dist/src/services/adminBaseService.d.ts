@@ -16,17 +16,17 @@ export declare function fetchNotificationServiceByUserId(userId: string, resolve
             respondedAt: Date;
         }) | null;
     } & {
+        id: number;
+        createdAt: Date;
         topic: string | null;
         title: string;
         body: string | null;
         url: string | null;
         metadata: import("../../generated/prisma/runtime/library.js").JsonValue | null;
-        createdAt: Date;
         pushedAt: Date | null;
         pushAttempts: number;
         readAt: Date | null;
         referenceId: string | null;
-        id: number;
     })[];
     count: number;
     resolved: ({
@@ -46,17 +46,17 @@ export declare function fetchNotificationServiceByUserId(userId: string, resolve
             respondedAt: Date;
         }) | null;
     } & {
+        id: number;
+        createdAt: Date;
         topic: string | null;
         title: string;
         body: string | null;
         url: string | null;
         metadata: import("../../generated/prisma/runtime/library.js").JsonValue | null;
-        createdAt: Date;
         pushedAt: Date | null;
         pushAttempts: number;
         readAt: Date | null;
         referenceId: string | null;
-        id: number;
     })[];
     unreadCount: number;
 }>;

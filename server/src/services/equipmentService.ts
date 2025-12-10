@@ -1,6 +1,6 @@
 // server/src/services/equipmentService.ts
 import prisma from "../lib/prisma.js";
-import { EquipmentTags, OwnershipType } from "../../generated/prisma/client.js";
+import { EquipmentTags, OwnershipType } from "../../generated/prisma/index.js";
 
 export async function getEquipment(query: { qrg?: boolean; clock?: boolean }) {
   if (query.qrg) {

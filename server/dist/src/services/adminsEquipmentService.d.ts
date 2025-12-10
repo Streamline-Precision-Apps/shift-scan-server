@@ -22,12 +22,14 @@ export declare function createEquipmentService(equipmentData: {
     overWeight: boolean | null;
     currentWeight: number | null;
 }, createdById: string, qrId: string): Promise<{
-    createdAt: Date;
-    id: string;
+    model: string | null;
     name: string;
+    id: string;
+    createdAt: Date;
     updatedAt: Date;
-    qrId: string;
     description: string | null;
+    state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
+    qrId: string;
     creationReason: string | null;
     approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
     createdById: string | null;
@@ -35,7 +37,6 @@ export declare function createEquipmentService(equipmentData: {
     code: string | null;
     status: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
     equipmentTag: import("../../generated/prisma/index.js").$Enums.EquipmentTags;
-    state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
     overWeight: boolean | null;
     currentWeight: number | null;
     acquiredDate: Date | null;
@@ -44,7 +45,6 @@ export declare function createEquipmentService(equipmentData: {
     licenseState: string | null;
     make: string | null;
     memo: string | null;
-    model: string | null;
     ownershipType: import("../../generated/prisma/index.js").$Enums.OwnershipType | null;
     registrationExpiration: Date | null;
     serialNumber: string | null;
@@ -52,12 +52,14 @@ export declare function createEquipmentService(equipmentData: {
     acquiredCondition: import("../../generated/prisma/index.js").$Enums.Condition | null;
 }>;
 export declare function editEquipmentService(id: string, body: Prisma.EquipmentUpdateInput, userId: string): Promise<{
-    createdAt: Date;
-    id: string;
+    model: string | null;
     name: string;
+    id: string;
+    createdAt: Date;
     updatedAt: Date;
-    qrId: string;
     description: string | null;
+    state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
+    qrId: string;
     creationReason: string | null;
     approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
     createdById: string | null;
@@ -65,7 +67,6 @@ export declare function editEquipmentService(id: string, body: Prisma.EquipmentU
     code: string | null;
     status: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
     equipmentTag: import("../../generated/prisma/index.js").$Enums.EquipmentTags;
-    state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
     overWeight: boolean | null;
     currentWeight: number | null;
     acquiredDate: Date | null;
@@ -74,7 +75,6 @@ export declare function editEquipmentService(id: string, body: Prisma.EquipmentU
     licenseState: string | null;
     make: string | null;
     memo: string | null;
-    model: string | null;
     ownershipType: import("../../generated/prisma/index.js").$Enums.OwnershipType | null;
     registrationExpiration: Date | null;
     serialNumber: string | null;
@@ -82,12 +82,14 @@ export declare function editEquipmentService(id: string, body: Prisma.EquipmentU
     acquiredCondition: import("../../generated/prisma/index.js").$Enums.Condition | null;
 }>;
 export declare function archiveEquipmentService(id: string): Promise<{
-    createdAt: Date;
-    id: string;
+    model: string | null;
     name: string;
+    id: string;
+    createdAt: Date;
     updatedAt: Date;
-    qrId: string;
     description: string | null;
+    state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
+    qrId: string;
     creationReason: string | null;
     approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
     createdById: string | null;
@@ -95,7 +97,6 @@ export declare function archiveEquipmentService(id: string): Promise<{
     code: string | null;
     status: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
     equipmentTag: import("../../generated/prisma/index.js").$Enums.EquipmentTags;
-    state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
     overWeight: boolean | null;
     currentWeight: number | null;
     acquiredDate: Date | null;
@@ -104,7 +105,6 @@ export declare function archiveEquipmentService(id: string): Promise<{
     licenseState: string | null;
     make: string | null;
     memo: string | null;
-    model: string | null;
     ownershipType: import("../../generated/prisma/index.js").$Enums.OwnershipType | null;
     registrationExpiration: Date | null;
     serialNumber: string | null;
@@ -112,12 +112,14 @@ export declare function archiveEquipmentService(id: string): Promise<{
     acquiredCondition: import("../../generated/prisma/index.js").$Enums.Condition | null;
 }>;
 export declare function restoreEquipmentService(id: string): Promise<{
-    createdAt: Date;
-    id: string;
+    model: string | null;
     name: string;
+    id: string;
+    createdAt: Date;
     updatedAt: Date;
-    qrId: string;
     description: string | null;
+    state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
+    qrId: string;
     creationReason: string | null;
     approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
     createdById: string | null;
@@ -125,7 +127,6 @@ export declare function restoreEquipmentService(id: string): Promise<{
     code: string | null;
     status: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
     equipmentTag: import("../../generated/prisma/index.js").$Enums.EquipmentTags;
-    state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
     overWeight: boolean | null;
     currentWeight: number | null;
     acquiredDate: Date | null;
@@ -134,7 +135,6 @@ export declare function restoreEquipmentService(id: string): Promise<{
     licenseState: string | null;
     make: string | null;
     memo: string | null;
-    model: string | null;
     ownershipType: import("../../generated/prisma/index.js").$Enums.OwnershipType | null;
     registrationExpiration: Date | null;
     serialNumber: string | null;
@@ -142,12 +142,14 @@ export declare function restoreEquipmentService(id: string): Promise<{
     acquiredCondition: import("../../generated/prisma/index.js").$Enums.Condition | null;
 }>;
 export declare function deleteEquipmentService(id: string): Promise<{
-    createdAt: Date;
-    id: string;
+    model: string | null;
     name: string;
+    id: string;
+    createdAt: Date;
     updatedAt: Date;
-    qrId: string;
     description: string | null;
+    state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
+    qrId: string;
     creationReason: string | null;
     approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
     createdById: string | null;
@@ -155,7 +157,6 @@ export declare function deleteEquipmentService(id: string): Promise<{
     code: string | null;
     status: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
     equipmentTag: import("../../generated/prisma/index.js").$Enums.EquipmentTags;
-    state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
     overWeight: boolean | null;
     currentWeight: number | null;
     acquiredDate: Date | null;
@@ -164,7 +165,6 @@ export declare function deleteEquipmentService(id: string): Promise<{
     licenseState: string | null;
     make: string | null;
     memo: string | null;
-    model: string | null;
     ownershipType: import("../../generated/prisma/index.js").$Enums.OwnershipType | null;
     registrationExpiration: Date | null;
     serialNumber: string | null;
@@ -197,12 +197,14 @@ export declare function getEquipmentByIdService(id: string): Promise<({
         tagName: string;
     }[];
 } & {
-    createdAt: Date;
-    id: string;
+    model: string | null;
     name: string;
+    id: string;
+    createdAt: Date;
     updatedAt: Date;
-    qrId: string;
     description: string | null;
+    state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
+    qrId: string;
     creationReason: string | null;
     approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
     createdById: string | null;
@@ -210,7 +212,6 @@ export declare function getEquipmentByIdService(id: string): Promise<({
     code: string | null;
     status: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
     equipmentTag: import("../../generated/prisma/index.js").$Enums.EquipmentTags;
-    state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
     overWeight: boolean | null;
     currentWeight: number | null;
     acquiredDate: Date | null;
@@ -219,7 +220,6 @@ export declare function getEquipmentByIdService(id: string): Promise<({
     licenseState: string | null;
     make: string | null;
     memo: string | null;
-    model: string | null;
     ownershipType: import("../../generated/prisma/index.js").$Enums.OwnershipType | null;
     registrationExpiration: Date | null;
     serialNumber: string | null;
@@ -227,8 +227,8 @@ export declare function getEquipmentByIdService(id: string): Promise<({
     acquiredCondition: import("../../generated/prisma/index.js").$Enums.Condition | null;
 }) | null>;
 export declare function getEquipmentSummaryService(): Promise<{
-    id: string;
     name: string;
+    id: string;
     approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
 }[]>;
 //# sourceMappingURL=adminsEquipmentService.d.ts.map

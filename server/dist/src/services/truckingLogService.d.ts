@@ -21,9 +21,9 @@ export declare function getRefueledLogs(timeSheetId: string): Promise<{
     milesAtFueling: number | null;
 }[]>;
 export declare function getTruckMaterial(timeSheetId: string): Promise<{
-    createdAt: Date | null;
-    id: string;
     name: string | null;
+    id: string;
+    createdAt: Date | null;
     truckingLogId: string;
     LocationOfMaterial: string | null;
     quantity: number | null;
@@ -33,12 +33,12 @@ export declare function getTruckMaterial(timeSheetId: string): Promise<{
 }[]>;
 export declare function getTruckEquipmentHauled(timeSheetId: string): Promise<({
     Equipment: {
-        id: string;
         name: string;
+        id: string;
     } | null;
 } & {
-    createdAt: Date;
     id: string;
+    createdAt: Date;
     equipmentId: string | null;
     destination: string | null;
     truckingLogId: string | null;
@@ -53,14 +53,17 @@ export declare function getStateMileage(timeSheetId: string): Promise<{
     stateLineMileage: number | null;
 }[]>;
 export declare function getAllTruckingLogData(truckingLogId: string): Promise<({
+    TimeSheet: {
+        comment: string | null;
+    };
     EquipmentHauled: ({
         Equipment: {
-            id: string;
             name: string;
+            id: string;
         } | null;
     } & {
-        createdAt: Date;
         id: string;
+        createdAt: Date;
         equipmentId: string | null;
         destination: string | null;
         truckingLogId: string | null;
@@ -68,13 +71,10 @@ export declare function getAllTruckingLogData(truckingLogId: string): Promise<({
         startMileage: number | null;
         source: string | null;
     })[];
-    TimeSheet: {
-        comment: string | null;
-    };
     Materials: {
-        createdAt: Date | null;
-        id: string;
         name: string | null;
+        id: string;
+        createdAt: Date | null;
         truckingLogId: string;
         LocationOfMaterial: string | null;
         quantity: number | null;
@@ -109,8 +109,8 @@ export declare function getAllTruckingLogData(truckingLogId: string): Promise<({
     timeSheetId: number;
 }) | null>;
 export declare function createEquipmentHauledService(truckingLogId: string): Promise<{
-    createdAt: Date;
     id: string;
+    createdAt: Date;
     equipmentId: string | null;
     destination: string | null;
     truckingLogId: string | null;
@@ -123,9 +123,9 @@ export declare function createHaulingLogsService(truckingLogId: string, body: {
     quantity: number;
     createdAt: Date;
 }): Promise<{
-    createdAt: Date | null;
-    id: string;
     name: string | null;
+    id: string;
+    createdAt: Date | null;
     truckingLogId: string;
     LocationOfMaterial: string | null;
     quantity: number | null;
@@ -140,8 +140,8 @@ export declare function editEquipmentHauledService(id: string, body: {
     startMileage?: number | null;
     endMileage?: number | null;
 }): Promise<{
-    createdAt: Date;
     id: string;
+    createdAt: Date;
     equipmentId: string | null;
     destination: string | null;
     truckingLogId: string | null;
@@ -150,8 +150,8 @@ export declare function editEquipmentHauledService(id: string, body: {
     source: string | null;
 }>;
 export declare function deleteEquipmentHauledService(id: string): Promise<{
-    createdAt: Date;
     id: string;
+    createdAt: Date;
     equipmentId: string | null;
     destination: string | null;
     truckingLogId: string | null;
@@ -226,9 +226,9 @@ export declare function updateMaterialService(materialId: string, data: {
     unit?: string;
     loadType?: string | null;
 }): Promise<{
-    createdAt: Date | null;
-    id: string;
     name: string | null;
+    id: string;
+    createdAt: Date | null;
     truckingLogId: string;
     LocationOfMaterial: string | null;
     quantity: number | null;
@@ -251,9 +251,9 @@ export declare function deleteRefuelLogService(id: string): Promise<{
     milesAtFueling: number | null;
 }>;
 export declare function deleteMaterialService(id: string): Promise<{
-    createdAt: Date | null;
-    id: string;
     name: string | null;
+    id: string;
+    createdAt: Date | null;
     truckingLogId: string;
     LocationOfMaterial: string | null;
     quantity: number | null;
@@ -288,9 +288,9 @@ export declare function createMaterialService(truckingLogId: string, data: {
     unit?: string;
     loadType?: string | null;
 }): Promise<{
-    createdAt: Date | null;
-    id: string;
     name: string | null;
+    id: string;
+    createdAt: Date | null;
     truckingLogId: string;
     LocationOfMaterial: string | null;
     quantity: number | null;
@@ -306,12 +306,12 @@ export declare function updateEquipmentHauledService(equipmentHauledId: string, 
     endMileage?: number | null;
 }): Promise<{
     Equipment: {
-        id: string;
         name: string;
+        id: string;
     } | null;
 } & {
-    createdAt: Date;
     id: string;
+    createdAt: Date;
     equipmentId: string | null;
     destination: string | null;
     truckingLogId: string | null;

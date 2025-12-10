@@ -2,20 +2,22 @@ export declare function getEquipment(query: {
     qrg?: boolean;
     clock?: boolean;
 }): Promise<{
-    id: string;
     name: string;
+    id: string;
     qrId: string;
     code: string | null;
     status: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
 }[]>;
 export declare function getEquipmentMileageService(equipmentId: string): Promise<({
     Equipment: {
-        createdAt: Date;
-        id: string;
+        model: string | null;
         name: string;
+        id: string;
+        createdAt: Date;
         updatedAt: Date;
-        qrId: string;
         description: string | null;
+        state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
+        qrId: string;
         creationReason: string | null;
         approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         createdById: string | null;
@@ -23,7 +25,6 @@ export declare function getEquipmentMileageService(equipmentId: string): Promise
         code: string | null;
         status: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
         equipmentTag: import("../../generated/prisma/index.js").$Enums.EquipmentTags;
-        state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
         overWeight: boolean | null;
         currentWeight: number | null;
         acquiredDate: Date | null;
@@ -32,7 +33,6 @@ export declare function getEquipmentMileageService(equipmentId: string): Promise
         licenseState: string | null;
         make: string | null;
         memo: string | null;
-        model: string | null;
         ownershipType: import("../../generated/prisma/index.js").$Enums.OwnershipType | null;
         registrationExpiration: Date | null;
         serialNumber: string | null;
@@ -42,10 +42,11 @@ export declare function getEquipmentMileageService(equipmentId: string): Promise
     TimeSheet: {
         User: {
             id: string;
-            email: string | null;
-            username: string;
+            companyId: string;
             firstName: string;
             lastName: string;
+            username: string;
+            email: string | null;
             password: string;
             signature: string | null;
             DOB: Date | null;
@@ -59,7 +60,6 @@ export declare function getEquipmentMileageService(equipmentId: string): Promise
             terminationDate: Date | null;
             accountSetup: boolean;
             clockedIn: boolean;
-            companyId: string;
             passwordResetTokenId: string | null;
             workTypeId: string | null;
             middleName: string | null;
@@ -67,16 +67,16 @@ export declare function getEquipmentMileageService(equipmentId: string): Promise
             lastSeen: Date | null;
         };
     } & {
-        createdAt: Date;
         id: number;
-        userId: string;
+        createdAt: Date;
         updatedAt: Date;
+        comment: string | null;
+        status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
+        userId: string;
         sessionId: number | null;
         startTime: Date;
         endTime: Date | null;
         date: Date;
-        comment: string | null;
-        status: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
         jobsiteId: string;
         costcode: string;
         nu: string;
@@ -108,12 +108,14 @@ export declare function getEquipmentMileageService(equipmentId: string): Promise
     timeSheetId: number;
 }) | null>;
 export declare function getEquipmentByQrId(qrId: string): Promise<{
-    createdAt: Date;
-    id: string;
+    model: string | null;
     name: string;
+    id: string;
+    createdAt: Date;
     updatedAt: Date;
-    qrId: string;
     description: string | null;
+    state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
+    qrId: string;
     creationReason: string | null;
     approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
     createdById: string | null;
@@ -121,7 +123,6 @@ export declare function getEquipmentByQrId(qrId: string): Promise<{
     code: string | null;
     status: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
     equipmentTag: import("../../generated/prisma/index.js").$Enums.EquipmentTags;
-    state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
     overWeight: boolean | null;
     currentWeight: number | null;
     acquiredDate: Date | null;
@@ -130,7 +131,6 @@ export declare function getEquipmentByQrId(qrId: string): Promise<{
     licenseState: string | null;
     make: string | null;
     memo: string | null;
-    model: string | null;
     ownershipType: import("../../generated/prisma/index.js").$Enums.OwnershipType | null;
     registrationExpiration: Date | null;
     serialNumber: string | null;
@@ -152,12 +152,14 @@ export declare function createEquipment(data: {
         lastName: string;
     } | null;
 } & {
-    createdAt: Date;
-    id: string;
+    model: string | null;
     name: string;
+    id: string;
+    createdAt: Date;
     updatedAt: Date;
-    qrId: string;
     description: string | null;
+    state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
+    qrId: string;
     creationReason: string | null;
     approvalStatus: import("../../generated/prisma/index.js").$Enums.ApprovalStatus;
     createdById: string | null;
@@ -165,7 +167,6 @@ export declare function createEquipment(data: {
     code: string | null;
     status: import("../../generated/prisma/index.js").$Enums.FormTemplateStatus;
     equipmentTag: import("../../generated/prisma/index.js").$Enums.EquipmentTags;
-    state: import("../../generated/prisma/index.js").$Enums.EquipmentState;
     overWeight: boolean | null;
     currentWeight: number | null;
     acquiredDate: Date | null;
@@ -174,7 +175,6 @@ export declare function createEquipment(data: {
     licenseState: string | null;
     make: string | null;
     memo: string | null;
-    model: string | null;
     ownershipType: import("../../generated/prisma/index.js").$Enums.OwnershipType | null;
     registrationExpiration: Date | null;
     serialNumber: string | null;

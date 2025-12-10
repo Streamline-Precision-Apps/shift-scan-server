@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="67a8cdc8-f9ed-562c-beab-e25e4f34c7e8")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="b6b4ab77-8e38-5305-a257-f2213dcd7edd")}catch(e){}}();
 import prisma from "../lib/prisma.js";
 export async function fetchNotificationServiceByUserId(userId, resolvedSince) {
     // fetch subscribed notifications
@@ -151,4 +151,4 @@ export async function getUserTopicPreferences(userId) {
     return preferences;
 }
 //# sourceMappingURL=adminBaseService.js.map
-//# debugId=67a8cdc8-f9ed-562c-beab-e25e4f34c7e8
+//# debugId=b6b4ab77-8e38-5305-a257-f2213dcd7edd

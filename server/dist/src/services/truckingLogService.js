@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="58aadad9-2ba1-5c78-970c-e75d955ee1db")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="1e493030-ca89-5031-8bfe-bb89ac22a0cf")}catch(e){}}();
 import prisma from "../lib/prisma.js";
 export async function getTruckingLogService(userId) {
     return await prisma.timeSheet.findFirst({
@@ -334,4 +334,4 @@ export async function updateEquipmentHauledService(equipmentHauledId, data) {
     });
 }
 //# sourceMappingURL=truckingLogService.js.map
-//# debugId=58aadad9-2ba1-5c78-970c-e75d955ee1db
+//# debugId=1e493030-ca89-5031-8bfe-bb89ac22a0cf

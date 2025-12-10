@@ -1,8 +1,8 @@
 // server/src/services/equipmentService.ts
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="68a0be06-0227-51bc-a8c5-4de71528b86f")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="538ed54e-71da-5d40-9893-c1ddfd2942d2")}catch(e){}}();
 import prisma from "../lib/prisma.js";
-import { EquipmentTags, OwnershipType } from "../../generated/prisma/client.js";
+import { EquipmentTags, OwnershipType } from "../../generated/prisma/index.js";
 export async function getEquipment(query) {
     if (query.qrg) {
         return prisma.equipment.findMany({
@@ -108,4 +108,4 @@ export async function createEquipment(data) {
     return result;
 }
 //# sourceMappingURL=equipmentService.js.map
-//# debugId=68a0be06-0227-51bc-a8c5-4de71528b86f
+//# debugId=538ed54e-71da-5d40-9893-c1ddfd2942d2
