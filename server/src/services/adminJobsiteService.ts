@@ -8,7 +8,9 @@ import type { JobsiteUpdateBody } from "../controllers/adminJobsiteController.js
 import prisma from "../lib/prisma.js";
 
 export async function getAllJobsites(
-  status: string,
+  statusFilters: string[],
+  approvalStatusFilters: string[],
+  hasTimesheets: boolean | undefined,
   page: number | undefined,
   pageSize: number | undefined,
   skip: number | undefined,
@@ -16,7 +18,10 @@ export async function getAllJobsites(
   total: number | undefined
 ) {
   try {
-    if (status === "pending") {
+    // Check if we're fetching pending approvals (special case for inbox)
+    const isPendingMode = statusFilters.length === 1 && statusFilters[0] === "pending";
+    
+    if (isPendingMode) {
       page = undefined;
       pageSize = undefined;
       skip = undefined;
@@ -69,10 +74,39 @@ export async function getAllJobsites(
       pageSize = pageSize || 10;
       skip = (page - 1) * pageSize;
 
-      total = await prisma.jobsite.count();
+      // Build dynamic where clause based on filters
+      const whereClause: Prisma.JobsiteWhereInput = {};
+
+      // Add status filter (ACTIVE, DRAFT, ARCHIVED)
+      if (statusFilters.length > 0) {
+        whereClause.status = {
+          in: statusFilters as FormTemplateStatus[],
+        };
+      }
+
+      // Add approval status filter (APPROVED, DRAFT, PENDING, REJECTED)
+      if (approvalStatusFilters.length > 0) {
+        whereClause.approvalStatus = {
+          in: approvalStatusFilters as ApprovalStatus[],
+        };
+      }
+
+      // Add hasTimesheets filter
+      if (hasTimesheets === true) {
+        whereClause.TimeSheets = {
+          some: {}, // Has at least one timesheet
+        };
+      } else if (hasTimesheets === false) {
+        whereClause.TimeSheets = {
+          none: {}, // Has no timesheets
+        };
+      }
+
+      total = await prisma.jobsite.count({ where: whereClause });
       totalPages = Math.ceil(total / pageSize);
       // Fetch only essential fields from jobsites, paginated
       const jobsiteSummary = await prisma.jobsite.findMany({
+        where: whereClause,
         skip,
         take: pageSize,
         select: {

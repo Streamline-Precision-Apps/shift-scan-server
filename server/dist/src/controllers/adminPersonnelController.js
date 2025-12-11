@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="750bb844-338c-5399-a00b-384ecd828bb2")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="8ab55d4a-22b1-50c5-b75b-d0f96577fed8")}catch(e){}}();
 import { getCrewEmployees, getAllCrews, getEmployeeInfo, getCrewByIdAdmin, createCrew, editCrew, deleteCrew, createUserAdmin, editUserAdmin, deleteUser, getPersonnelManager, getAllActiveEmployees, } from "../services/adminPersonnelServices.js";
 export const getCrewEmployeesController = async (req, res) => {
     try {
@@ -183,6 +183,7 @@ export const getPersonnelManagerController = async (req, res) => {
         const accessLevel = typeof req.query.accessLevel === "string" ? req.query.accessLevel : "";
         const accountSetup = typeof req.query.accountSetup === "string" ? req.query.accountSetup : "";
         const crews = typeof req.query.crews === "string" ? req.query.crews : "";
+        const terminationStatus = typeof req.query.terminationStatus === "string" ? req.query.terminationStatus : "";
         const result = await getPersonnelManager({
             page,
             pageSize,
@@ -192,6 +193,7 @@ export const getPersonnelManagerController = async (req, res) => {
             accessLevel,
             accountSetup,
             crews,
+            terminationStatus,
         });
         res.json(result);
     }
@@ -204,4 +206,4 @@ export const getPersonnelManagerController = async (req, res) => {
     }
 };
 //# sourceMappingURL=adminPersonnelController.js.map
-//# debugId=750bb844-338c-5399-a00b-384ecd828bb2
+//# debugId=8ab55d4a-22b1-50c5-b75b-d0f96577fed8

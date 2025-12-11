@@ -84,7 +84,7 @@ export default function InboxContent() {
             )}
 
             <div
-              className={isManager ? `h-[calc(100%-8%)]` : `h-[calc(100%-15%)]`}
+               className={isManager ? `h-[calc(100%-8%)]` : `h-[calc(100%-15%)]`}
             >
               {activeTab === 1 ? (
                 <FormSelection

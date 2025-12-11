@@ -184,12 +184,14 @@ export async function getPersonnelManager({
   roles = "",
   accountSetup = "",
   crews = "",
+  terminationStatus = "",
 } = {}) {
   // Parse filter parameters
   const permissions = roles ? roles.split(",") : [];
   const accessLevels = accessLevel ? accessLevel.split(",") : [];
   const accountSetupValues = accountSetup ? accountSetup.split(",") : [];
   const crewsValues = crews ? crews.split(",") : [];
+  const terminationStatusValues = terminationStatus ? terminationStatus.split(",") : [];
 
   // Build filter conditions
   const buildFilterConditions = (): Record<string, any> => {
@@ -240,6 +242,20 @@ export async function getPersonnelManager({
         conditions.hasCrews = false;
       }
     }
+    // Termination status filter
+    if (terminationStatusValues.length > 0) {
+      if (
+        terminationStatusValues.includes("active") &&
+        !terminationStatusValues.includes("terminated")
+      ) {
+        conditions.terminationStatus = "active";
+      } else if (
+        terminationStatusValues.includes("terminated") &&
+        !terminationStatusValues.includes("active")
+      ) {
+        conditions.terminationStatus = "terminated";
+      }
+    }
     return conditions;
   };
 
@@ -250,9 +266,18 @@ export async function getPersonnelManager({
   if (status === "inactive") {
     skip = undefined;
     totalPages = 1;
-    const whereCondition: Record<string, any> = {
-      terminationDate: { not: null },
-    };
+    const whereCondition: Record<string, any> = {};
+    
+    // Apply termination status filter or default behavior
+    if (filterConditions.terminationStatus === "active") {
+      whereCondition.terminationDate = null;
+    } else if (filterConditions.terminationStatus === "terminated") {
+      whereCondition.terminationDate = { not: null };
+    } else {
+      // Default behavior when no filter: show terminated only
+      whereCondition.terminationDate = { not: null };
+    }
+    
     if (filterConditions.permission)
       whereCondition.permission = filterConditions.permission;
     if (filterConditions.accountSetup !== undefined)
@@ -331,9 +356,18 @@ export async function getPersonnelManager({
     page = parseInt(pageStr, 10) || 1;
     pageSize = parseInt(pageSizeStr, 10) || 25;
     skip = (page - 1) * pageSize;
-    const whereCondition: Record<string, any> = {
-      terminationDate: null,
-    };
+    const whereCondition: Record<string, any> = {};
+    
+    // Apply termination status filter or default behavior
+    if (filterConditions.terminationStatus === "active") {
+      whereCondition.terminationDate = null;
+    } else if (filterConditions.terminationStatus === "terminated") {
+      whereCondition.terminationDate = { not: null };
+    } else {
+      // Default behavior when no filter: show active only
+      whereCondition.terminationDate = null;
+    }
+    
     if (filterConditions.permission)
       whereCondition.permission = filterConditions.permission;
     if (filterConditions.accountSetup !== undefined)
@@ -618,6 +652,7 @@ export async function editUserAdmin(payload: {
         tascoView: payload.tascoView,
         mechanicView: payload.mechanicView,
         laborView: payload.laborView,
+        terminationDate: payload.terminationDate ? new Date(payload.terminationDate) : null,
         Crews: {
           set: [], // disconnect all crews first
           connect: payload.crews.map((crew) => ({ id: crew.id })),

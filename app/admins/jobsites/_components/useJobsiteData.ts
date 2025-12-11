@@ -35,6 +35,8 @@ export type JobsiteSummary = {
 
 export interface FilterOptions {
   status: string[];
+  approvalStatus: string[];
+  hasTimesheets: string[];
 }
 
 export const useJobsiteData = (initialShowPendingOnly: boolean = false) => {
@@ -50,6 +52,12 @@ export const useJobsiteData = (initialShowPendingOnly: boolean = false) => {
   const [showPendingOnly, setShowPendingOnly] = useState(
     initialShowPendingOnly
   );
+  const [refilterKey, setRefilterKey] = useState(0);
+  const [filters, setFilters] = useState<FilterOptions>({
+    status: [],
+    approvalStatus: [],
+    hasTimesheets: [],
+  });
   // State for modals
   const [editJobsiteModal, setEditJobsiteModal] = useState(false);
   const [createJobsiteModal, setCreateJobsiteModal] = useState(false);
@@ -70,6 +78,20 @@ export const useJobsiteData = (initialShowPendingOnly: boolean = false) => {
 
   const rerender = () => setRefreshKey((k) => k + 1);
 
+  const reFilterPage = () => {
+    setRefilterKey((k) => k + 1);
+  };
+
+  const handleClearFilters = async () => {
+    setFilters({
+      status: [],
+      approvalStatus: [],
+      hasTimesheets: [],
+    });
+    setPage(1);
+    setRefilterKey((k) => k + 1);
+  };
+
   useEffect(() => {
     const fetchEquipmentSummaries = async () => {
       try {
@@ -78,7 +100,31 @@ export const useJobsiteData = (initialShowPendingOnly: boolean = false) => {
         if (showPendingOnly) {
           url = `/api/v1/admins/jobsite?status=pending`;
         } else {
-          url = `/api/v1/admins/jobsite?page=${page}&pageSize=${pageSize}`;
+          // Build filter query
+          const params = new URLSearchParams();
+          params.append("page", page.toString());
+          params.append("pageSize", pageSize.toString());
+          
+          // Add status filters
+          if (filters.status && filters.status.length > 0) {
+            filters.status.forEach((status) => {
+              params.append("status", status);
+            });
+          }
+
+          // Add approval status filters
+          if (filters.approvalStatus && filters.approvalStatus.length > 0) {
+            filters.approvalStatus.forEach((status) => {
+              params.append("approvalStatus", status);
+            });
+          }
+
+          // Add timesheets filter
+          if (filters.hasTimesheets && filters.hasTimesheets.length > 0) {
+            params.append("hasTimesheets", filters.hasTimesheets[0]);
+          }
+          
+          url = `/api/v1/admins/jobsite?${params.toString()}`;
         }
 
         const data = await apiRequest(url, "GET");
@@ -93,7 +139,7 @@ export const useJobsiteData = (initialShowPendingOnly: boolean = false) => {
       }
     };
     fetchEquipmentSummaries();
-  }, [refreshKey, page, pageSize, showPendingOnly]);
+  }, [refreshKey, page, pageSize, showPendingOnly, refilterKey, filters]);
 
   // Pagination state
 
@@ -343,5 +389,10 @@ export const useJobsiteData = (initialShowPendingOnly: boolean = false) => {
     openHandleRestore,
     confirmRestore,
     cancelRestore,
+    // Filter functionality
+    filters,
+    setFilters,
+    reFilterPage,
+    handleClearFilters,
   };
 };

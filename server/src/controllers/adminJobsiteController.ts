@@ -12,7 +12,24 @@ import {
 // GET /api/v1/admins/jobsite
 export async function getAllJobsitesController(req: Request, res: Response) {
   try {
-    const status = typeof req.query.status === "string" ? req.query.status : "";
+    // Extract filter parameters - status can be array or single value
+    const statusParam = req.query.status;
+    const statusFilters = Array.isArray(statusParam) 
+      ? statusParam.filter((s): s is string => typeof s === "string")
+      : typeof statusParam === "string" ? [statusParam] : [];
+
+    // Extract approval status filters - can be array or single value
+    const approvalStatusParam = req.query.approvalStatus;
+    const approvalStatusFilters = Array.isArray(approvalStatusParam)
+      ? approvalStatusParam.filter((s): s is string => typeof s === "string")
+      : typeof approvalStatusParam === "string" ? [approvalStatusParam] : [];
+
+    // Extract hasTimesheets filter - single boolean value
+    const hasTimesheetsParam = req.query.hasTimesheets;
+    const hasTimesheets = hasTimesheetsParam === "true" ? true 
+                        : hasTimesheetsParam === "false" ? false 
+                        : undefined;
+
     const page = req.query.page ? parseInt(req.query.page as string, 10) : 1;
     const pageSize = req.query.pageSize
       ? parseInt(req.query.pageSize as string, 10)
@@ -21,7 +38,9 @@ export async function getAllJobsitesController(req: Request, res: Response) {
     let totalPages = 1;
     let total = 0;
     const result = await getAllJobsites(
-      status,
+      statusFilters,
+      approvalStatusFilters,
+      hasTimesheets,
       page,
       pageSize,
       skip,

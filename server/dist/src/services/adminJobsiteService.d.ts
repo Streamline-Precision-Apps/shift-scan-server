@@ -1,5 +1,5 @@
 import type { JobsiteUpdateBody } from "../controllers/adminJobsiteController.js";
-export declare function getAllJobsites(status: string, page: number | undefined, pageSize: number | undefined, skip: number | undefined, totalPages: number | undefined, total: number | undefined): Promise<{
+export declare function getAllJobsites(statusFilters: string[], approvalStatusFilters: string[], hasTimesheets: boolean | undefined, page: number | undefined, pageSize: number | undefined, skip: number | undefined, totalPages: number | undefined, total: number | undefined): Promise<{
     jobsiteSummary: {
         name: string;
         id: string;

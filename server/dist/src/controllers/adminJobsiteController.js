@@ -1,10 +1,24 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="fc98e05f-93b1-5e8b-9c1f-bce1bec4e935")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="d665d9b7-b665-5133-b3e5-be1c833dc3b1")}catch(e){}}();
 import { getAllJobsites, getJobsiteById, createJobsite, updateJobsite, archiveJobsite, restoreJobsite, deleteJobsite, } from "../services/adminJobsiteService.js";
 // GET /api/v1/admins/jobsite
 export async function getAllJobsitesController(req, res) {
     try {
-        const status = typeof req.query.status === "string" ? req.query.status : "";
+        // Extract filter parameters - status can be array or single value
+        const statusParam = req.query.status;
+        const statusFilters = Array.isArray(statusParam)
+            ? statusParam.filter((s) => typeof s === "string")
+            : typeof statusParam === "string" ? [statusParam] : [];
+        // Extract approval status filters - can be array or single value
+        const approvalStatusParam = req.query.approvalStatus;
+        const approvalStatusFilters = Array.isArray(approvalStatusParam)
+            ? approvalStatusParam.filter((s) => typeof s === "string")
+            : typeof approvalStatusParam === "string" ? [approvalStatusParam] : [];
+        // Extract hasTimesheets filter - single boolean value
+        const hasTimesheetsParam = req.query.hasTimesheets;
+        const hasTimesheets = hasTimesheetsParam === "true" ? true
+            : hasTimesheetsParam === "false" ? false
+                : undefined;
         const page = req.query.page ? parseInt(req.query.page, 10) : 1;
         const pageSize = req.query.pageSize
             ? parseInt(req.query.pageSize, 10)
@@ -12,7 +26,7 @@ export async function getAllJobsitesController(req, res) {
         let skip = (page - 1) * pageSize;
         let totalPages = 1;
         let total = 0;
-        const result = await getAllJobsites(status, page, pageSize, skip, totalPages, total);
+        const result = await getAllJobsites(statusFilters, approvalStatusFilters, hasTimesheets, page, pageSize, skip, totalPages, total);
         res.status(200).json(result);
     }
     catch (error) {
@@ -168,4 +182,4 @@ export async function deleteJobsiteController(req, res) {
     }
 }
 //# sourceMappingURL=adminJobsiteController.js.map
-//# debugId=fc98e05f-93b1-5e8b-9c1f-bce1bec4e935
+//# debugId=d665d9b7-b665-5133-b3e5-be1c833dc3b1

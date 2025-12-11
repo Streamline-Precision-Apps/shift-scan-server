@@ -91,7 +91,7 @@ export declare function getCrewByIdAdmin(id: string): Promise<({
  * @param {Object} params
  * @returns {Promise<Object>}
  */
-export declare function getPersonnelManager({ page, pageSize, status, search, accessLevel, roles, accountSetup, crews, }?: {
+export declare function getPersonnelManager({ page, pageSize, status, search, accessLevel, roles, accountSetup, crews, terminationStatus, }?: {
     page?: number | undefined;
     pageSize?: number | undefined;
     status?: string | undefined;
@@ -100,6 +100,7 @@ export declare function getPersonnelManager({ page, pageSize, status, search, ac
     roles?: string | undefined;
     accountSetup?: string | undefined;
     crews?: string | undefined;
+    terminationStatus?: string | undefined;
 }): Promise<{
     users: {
         Crews: {

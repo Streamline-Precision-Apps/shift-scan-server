@@ -221,6 +221,7 @@ export const getPersonnelManagerController = async (
     const accessLevel = typeof req.query.accessLevel === "string" ? req.query.accessLevel : "";
     const accountSetup = typeof req.query.accountSetup === "string" ? req.query.accountSetup : "";
     const crews = typeof req.query.crews === "string" ? req.query.crews : "";
+    const terminationStatus = typeof req.query.terminationStatus === "string" ? req.query.terminationStatus : "";
 
     const result = await getPersonnelManager({
       page,
@@ -231,6 +232,7 @@ export const getPersonnelManagerController = async (
       accessLevel,
       accountSetup,
       crews,
+      terminationStatus,
     });
     res.json(result);
   } catch (error) {

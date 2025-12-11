@@ -1,9 +1,11 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="f46cf41a-a6d9-5deb-a0aa-dab3a8e91416")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="e2d64578-79d7-5dc3-8826-b26b00e2e4b7")}catch(e){}}();
 import prisma from "../lib/prisma.js";
-export async function getAllJobsites(status, page, pageSize, skip, totalPages, total) {
+export async function getAllJobsites(statusFilters, approvalStatusFilters, hasTimesheets, page, pageSize, skip, totalPages, total) {
     try {
-        if (status === "pending") {
+        // Check if we're fetching pending approvals (special case for inbox)
+        const isPendingMode = statusFilters.length === 1 && statusFilters[0] === "pending";
+        if (isPendingMode) {
             page = undefined;
             pageSize = undefined;
             skip = undefined;
@@ -55,10 +57,36 @@ export async function getAllJobsites(status, page, pageSize, skip, totalPages, t
             page = page || 1;
             pageSize = pageSize || 10;
             skip = (page - 1) * pageSize;
-            total = await prisma.jobsite.count();
+            // Build dynamic where clause based on filters
+            const whereClause = {};
+            // Add status filter (ACTIVE, DRAFT, ARCHIVED)
+            if (statusFilters.length > 0) {
+                whereClause.status = {
+                    in: statusFilters,
+                };
+            }
+            // Add approval status filter (APPROVED, DRAFT, PENDING, REJECTED)
+            if (approvalStatusFilters.length > 0) {
+                whereClause.approvalStatus = {
+                    in: approvalStatusFilters,
+                };
+            }
+            // Add hasTimesheets filter
+            if (hasTimesheets === true) {
+                whereClause.TimeSheets = {
+                    some: {}, // Has at least one timesheet
+                };
+            }
+            else if (hasTimesheets === false) {
+                whereClause.TimeSheets = {
+                    none: {}, // Has no timesheets
+                };
+            }
+            total = await prisma.jobsite.count({ where: whereClause });
             totalPages = Math.ceil(total / pageSize);
             // Fetch only essential fields from jobsites, paginated
             const jobsiteSummary = await prisma.jobsite.findMany({
+                where: whereClause,
                 skip,
                 take: pageSize,
                 select: {
@@ -324,4 +352,4 @@ export async function deleteJobsite(id) {
     });
 }
 //# sourceMappingURL=adminJobsiteService.js.map
-//# debugId=f46cf41a-a6d9-5deb-a0aa-dab3a8e91416
+//# debugId=e2d64578-79d7-5dc3-8826-b26b00e2e4b7

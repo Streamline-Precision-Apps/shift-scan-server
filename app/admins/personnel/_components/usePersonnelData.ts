@@ -8,6 +8,7 @@ export interface PersonnelFilterOptions {
   accessLevel: string[];
   accountSetup: string[];
   crews: string[];
+  terminationStatus: string[];
 }
 
 export type PersonnelSummary = {
@@ -61,12 +62,14 @@ export const usePersonnelData = () => {
     accessLevel: [],
     accountSetup: [],
     crews: [],
+    terminationStatus: [],
   });
   const [pendingFilters, setPendingFilters] = useState<PersonnelFilterOptions>({
     roles: [],
     accessLevel: [],
     accountSetup: [],
     crews: [],
+    terminationStatus: [],
   });
 
   //   // State for modals
@@ -99,7 +102,8 @@ export const usePersonnelData = () => {
       pendingFilters.roles.length > 0 ||
       pendingFilters.accessLevel.length > 0 ||
       pendingFilters.accountSetup.length > 0 ||
-      pendingFilters.crews.length > 0;
+      pendingFilters.crews.length > 0 ||
+      pendingFilters.terminationStatus.length > 0;
     setUseFilters(hasActiveFilters);
   };
 
@@ -109,6 +113,7 @@ export const usePersonnelData = () => {
       accessLevel: [],
       accountSetup: [],
       crews: [],
+      terminationStatus: [],
     };
     setPendingFilters(emptyFilters);
     setAppliedFilters(emptyFilters);
@@ -143,6 +148,9 @@ export const usePersonnelData = () => {
           }
           if (appliedFilters.crews.length > 0) {
             filterParams.append("crews", appliedFilters.crews.join(","));
+          }
+          if (appliedFilters.terminationStatus.length > 0) {
+            filterParams.append("terminationStatus", appliedFilters.terminationStatus.join(","));
           }
         }
 

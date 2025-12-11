@@ -1,5 +1,5 @@
 
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="6288b172-a951-542a-b648-25b3a06cd2c1")}catch(e){}}();
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="98761784-5b92-5b57-a710-9e36efec0c70")}catch(e){}}();
 import { hash } from "bcryptjs";
 import prisma from "../lib/prisma.js";
 export async function getCrewEmployees() {
@@ -156,12 +156,13 @@ export async function getCrewByIdAdmin(id) {
  * @param {Object} params
  * @returns {Promise<Object>}
  */
-export async function getPersonnelManager({ page = 1, pageSize = 25, status = "all", search = "", accessLevel = "", roles = "", accountSetup = "", crews = "", } = {}) {
+export async function getPersonnelManager({ page = 1, pageSize = 25, status = "all", search = "", accessLevel = "", roles = "", accountSetup = "", crews = "", terminationStatus = "", } = {}) {
     // Parse filter parameters
     const permissions = roles ? roles.split(",") : [];
     const accessLevels = accessLevel ? accessLevel.split(",") : [];
     const accountSetupValues = accountSetup ? accountSetup.split(",") : [];
     const crewsValues = crews ? crews.split(",") : [];
+    const terminationStatusValues = terminationStatus ? terminationStatus.split(",") : [];
     // Build filter conditions
     const buildFilterConditions = () => {
         const conditions = {};
@@ -211,6 +212,17 @@ export async function getPersonnelManager({ page = 1, pageSize = 25, status = "a
                 conditions.hasCrews = false;
             }
         }
+        // Termination status filter
+        if (terminationStatusValues.length > 0) {
+            if (terminationStatusValues.includes("active") &&
+                !terminationStatusValues.includes("terminated")) {
+                conditions.terminationStatus = "active";
+            }
+            else if (terminationStatusValues.includes("terminated") &&
+                !terminationStatusValues.includes("active")) {
+                conditions.terminationStatus = "terminated";
+            }
+        }
         return conditions;
     };
     const filterConditions = buildFilterConditions();
@@ -218,9 +230,18 @@ export async function getPersonnelManager({ page = 1, pageSize = 25, status = "a
     if (status === "inactive") {
         skip = undefined;
         totalPages = 1;
-        const whereCondition = {
-            terminationDate: { not: null },
-        };
+        const whereCondition = {};
+        // Apply termination status filter or default behavior
+        if (filterConditions.terminationStatus === "active") {
+            whereCondition.terminationDate = null;
+        }
+        else if (filterConditions.terminationStatus === "terminated") {
+            whereCondition.terminationDate = { not: null };
+        }
+        else {
+            // Default behavior when no filter: show terminated only
+            whereCondition.terminationDate = { not: null };
+        }
         if (filterConditions.permission)
             whereCondition.permission = filterConditions.permission;
         if (filterConditions.accountSetup !== undefined)
@@ -293,9 +314,18 @@ export async function getPersonnelManager({ page = 1, pageSize = 25, status = "a
         page = parseInt(pageStr, 10) || 1;
         pageSize = parseInt(pageSizeStr, 10) || 25;
         skip = (page - 1) * pageSize;
-        const whereCondition = {
-            terminationDate: null,
-        };
+        const whereCondition = {};
+        // Apply termination status filter or default behavior
+        if (filterConditions.terminationStatus === "active") {
+            whereCondition.terminationDate = null;
+        }
+        else if (filterConditions.terminationStatus === "terminated") {
+            whereCondition.terminationDate = { not: null };
+        }
+        else {
+            // Default behavior when no filter: show active only
+            whereCondition.terminationDate = null;
+        }
         if (filterConditions.permission)
             whereCondition.permission = filterConditions.permission;
         if (filterConditions.accountSetup !== undefined)
@@ -520,6 +550,7 @@ export async function editUserAdmin(payload) {
                 tascoView: payload.tascoView,
                 mechanicView: payload.mechanicView,
                 laborView: payload.laborView,
+                terminationDate: payload.terminationDate ? new Date(payload.terminationDate) : null,
                 Crews: {
                     set: [], // disconnect all crews first
                     connect: payload.crews.map((crew) => ({ id: crew.id })),
@@ -548,4 +579,4 @@ export async function getAllActiveEmployees() {
     });
 }
 //# sourceMappingURL=adminPersonnelServices.js.map
-//# debugId=6288b172-a951-542a-b648-25b3a06cd2c1
+//# debugId=98761784-5b92-5b57-a710-9e36efec0c70
