@@ -24,6 +24,7 @@ import { setLocale } from "@/app/lib/actions/cookieActions";
 import { useLocale } from "@/app/lib/client/ClientIntlProvider";
 import { useSession } from "@/app/lib/context/sessionContext";
 import { useUserStore } from "@/app/lib/store/userStore";
+import { useSearchParams } from "next/navigation";
 type UserSettings = {
   userId: string;
   language?: string;
@@ -61,6 +62,9 @@ export default function SettingSelections({
   const [language, setLanguage] = useState<string>();
   const [isLangModalOpen, setIsLangModalOpen] = useState(false);
   const { resetLocale } = useLocale();
+  const searchParams = useSearchParams();
+  const rUrl = searchParams.get("returnUrl");
+
   useEffect(() => {
     if (!data?.language) return;
     setLanguage(data.language);
@@ -155,7 +159,7 @@ export default function SettingSelections({
                 </Holds>
                 <Holds size="30">
                   <Buttons
-                    href="/v1/hamburger/privacyPolicy"
+                    href={`/v1/hamburger/privacyPolicy?returnUrl=${rUrl}`}
                     shadow={"none"}
                     className="py-2 "
                   >
@@ -223,7 +227,9 @@ export default function SettingSelections({
       <Holds className="py-5">
         <Contents width="section">
           <Buttons
-            onClick={() => router.push("/v1/hamburger/changePassword")}
+            onClick={() =>
+              router.push(`/v1/hamburger/changePassword?returnUrl=${rUrl}`)
+            }
             background="orange"
             className="py-2"
           >
