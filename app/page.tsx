@@ -102,61 +102,53 @@ export default function Home() {
           className="h-32 md:h-56 w-auto mb-6 mt-2 drop-shadow-2xl rounded-2xl bg-white-90 border-4 border-white shadow-lg animate-fade-in"
           style={{ maxWidth: "220px", height: "auto", objectFit: "contain" }}
         />
-        <h1 className="text-3xl md:text-6xl font-extrabold text-white text-center mb-3 drop-shadow-lg animate-fade-in">
-          Payroll Made Simple
-        </h1>
-        <h2 className="text-xl md:text-3xl font-bold text-custom-dark-blue text-center mb-4 animate-fade-in delay-100">
-          with QR Technology
+        <h2 className="text-2xl md:text-4xl font-extrabold text-white text-center mb-3 drop-shadow-lg animate-fade-in">
+          Payroll and Workforce Management
         </h2>
-        <p className="text-base md:text-xl text-white text-center mb-6 max-w-xs md:max-w-2xl animate-fade-in delay-200">
-          <span className="font-semibold text-custom-dark-blue">
-            Revolutionize your workforce management and payroll
-          </span>{" "}
-          with instant, secure, and verifiable timekeeping—powered by QR codes.
+        <h2 className="text-xl md:text-3xl font-bold text-app-dark-blue text-center mb-4 animate-fade-in delay-100">
+          Simplified with QR Technology
+        </h2>
+        <p className="text-base md:text-lg text-white text-center mb-6 max-w-xs md:max-w-2xl animate-fade-in delay-200">
+          Shift Scan makes timekeeping, payroll, and job site management
+          instant, accurate, and secure—powered by QR codes, GPS verification,
+          and real-time reporting.
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 mb-6 animate-fade-in delay-300 relative w-full max-w-xs sm:max-w-none justify-center items-stretch">
-          <Popover>
-            <PopoverTrigger asChild>
-              <button
-                className="relative bg-app-dark-blue hover:bg-app-dark-blue/80 text-white font-bold py-3 px-8 rounded-xl shadow-lg text-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-app-blue cursor-pointer"
-                type="button"
-              >
-                Start Free Trial
-              </button>
-            </PopoverTrigger>
-            <PopoverContent side="top" sideOffset={8} className="text-center">
-              <span className="block text-app-dark-blue font-semibold mb-1">
-                Coming Soon
-              </span>
-            </PopoverContent>
-          </Popover>
-          <Popover>
-            <PopoverTrigger asChild>
-              <button
-                className="relative bg-white hover:bg-gray-100 text-app-dark-blue font-bold py-3 px-8 rounded-xl shadow-lg text-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-app-blue cursor-pointer"
-                type="button"
-              >
-                Book a Demo
-              </button>
-            </PopoverTrigger>
-            <PopoverContent side="top" sideOffset={8} className="text-center">
-              <span className="block text-app-dark-blue font-semibold mb-1">
-                Coming Soon
-              </span>
-            </PopoverContent>
-          </Popover>
-        </div>
-        <div className="flex flex-row gap-2 justify-center animate-fade-in delay-400">
-          <span className="text-white/80 text-sm">Get started in minutes</span>
-        </div>
-        <div className="mt-3 animate-fade-in delay-500">
-          <span className="text-white/70 text-sm">Already a member?</span>
-          <a
-            href="/signin"
-            className="ml-2 text-app-dark-blue hover:text-app-dark-blue/80 font-semibold underline underline-offset-2 transition"
+        <div className="w-full max-w-xs sm:max-w-md md:max-w-none flex flex-col md:flex-row gap-4 mb-6 animate-fade-in delay-300 relative justify-center items-stretch">
+          <button
+            onClick={() => router.push("/demo-request")}
+            className="w-full md:w-auto bg-app-dark-blue hover:bg-app-dark-blue/80 text-white font-bold py-3 px-8 rounded-xl shadow-lg text-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-app-blue cursor-pointer"
+            type="button"
+          >
+            Book a Demo
+          </button>
+          <button
+            onClick={() => router.push("/signin")}
+            className="w-full md:w-auto bg-white hover:bg-white/80 text-app-dark-blue font-bold py-3 px-8 rounded-xl shadow-lg text-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-app-blue cursor-pointer"
+            type="button"
           >
             Sign In
-          </a>
+          </button>
+        </div>
+
+        <div className="flex flex-col sm:flex-col md:flex-row gap-4 mt-6">
+          {/* Privacy Policy Link */}
+          <div className="text-center animate-fade-in delay-600">
+            <a
+              href="/privacy-policy"
+              className="text-white hover:text-white/80  text-sm transition-colors underline underline-offset-2"
+            >
+              View Privacy Policy
+            </a>
+          </div>
+          {/* Privacy Policy Link */}
+          <div className=" text-center animate-fade-in delay-600">
+            <a
+              href="/contact"
+              className="text-white hover:text-white/80 text-sm transition-colors underline underline-offset-2"
+            >
+              Contact us
+            </a>
+          </div>
         </div>
       </section>
     </main>

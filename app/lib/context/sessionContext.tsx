@@ -30,8 +30,22 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     const localeValue = getLocaleFromCookie();
     setLocale(localeValue);
 
+    const publicPages = [
+      "/",
+      "/signin",
+      "/signup",
+      "/privacy-policy",
+      "/privacy-policy/dsa-request",
+      "/contact",
+      "/demo-request",
+    ];
+    const currentPath =
+      typeof window !== "undefined" ? window.location.pathname : "";
+
     if (token) {
       setUser(getSession(token));
+    } else if (publicPages.includes(currentPath)) {
+      // Do not redirect if on a public page
     } else {
       router.replace("/signin");
     }
