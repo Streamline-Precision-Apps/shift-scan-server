@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "cross-env NODE_OPTIONS=\"--import ./src/instrument.mjs\" tsx watch src/index.ts",
-    "build": "tsc && npm run sentry:sourcemaps",
+    "build": "tsc && if [ \"$SKIP_SENTRY\" != \"true\" ]; then npm run sentry:sourcemaps; fi",
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject ... && sentry-cli sourcemaps upload ...",
     "start": "node --import ./src/instrument.mjs dist/index.js",
     "docker:deploy": "./deploy-to-cloudrun.sh",
     "docker:deploy-win": "bash ./deploy-to-cloudrun.sh",
@@ -14,8 +15,7 @@
     "prisma:push": "npx dotenv-cli -e .env -- npx prisma db push",
     "prisma:migrate": "npx dotenv-cli -e .env -- npx prisma migrate dev",
     "prisma:migrate deploy": "npx dotenv-cli -e .env -- npx prisma migrate deploy",
-    "prisma:studio": "npx dotenv-cli -e .env -- npx prisma studio",
-    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org streamline-precision-llc-el --project javascript-nextjs ./dist && sentry-cli sourcemaps upload --org streamline-precision-llc-el --project javascript-nextjs ./dist"
+    "prisma:studio": "npx dotenv-cli -e .env -- npx prisma studio"
   },
   "keywords": [],
   "author": "",
