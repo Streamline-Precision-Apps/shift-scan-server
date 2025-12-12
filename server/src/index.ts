@@ -32,9 +32,29 @@ async function main() {
     app.use(helmet());
 
     // CORS middleware
+    const allowedOrigin = process.env.CORS_ORIGIN || "http://localhost:3000";
+
     app.use(
       cors({
-        origin: process.env.CORS_ORIGIN || "http://localhost:3000",
+        origin: (origin, callback) => {
+          // Allow requests with no origin (mobile apps, curl, postman)
+          if (!origin) {
+            return callback(null, true);
+          }
+
+          // Check if origin matches the primary allowed origin
+          if (origin === allowedOrigin) {
+            return callback(null, true);
+          }
+
+          // Check if origin contains subdomain (app or dashboard)
+          if (origin.includes("app.") || origin.includes("dashboard.")) {
+            return callback(null, true);
+          }
+
+          // Origin not allowed
+          callback(new Error("Not allowed by CORS"));
+        },
         credentials: true,
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         allowedHeaders: ["Content-Type", "Authorization"],
