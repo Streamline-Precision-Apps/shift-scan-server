@@ -1,4 +1,4 @@
-import type { Prisma } from "../../generated/prisma/index.js";
+import type { Prisma } from "../../prisma/generated/prisma/client.js";
 import prisma from "../lib/prisma.js";
 
 export async function getAllTags(

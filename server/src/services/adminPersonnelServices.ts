@@ -1,5 +1,8 @@
 import { hash } from "bcryptjs";
-import type { Permission, WorkType } from "../../generated/prisma/index.js";
+import type {
+  Permission,
+  WorkType,
+} from "../../prisma/generated/prisma/client.js";
 import prisma from "../lib/prisma.js";
 
 export async function getCrewEmployees() {
@@ -191,7 +194,9 @@ export async function getPersonnelManager({
   const accessLevels = accessLevel ? accessLevel.split(",") : [];
   const accountSetupValues = accountSetup ? accountSetup.split(",") : [];
   const crewsValues = crews ? crews.split(",") : [];
-  const terminationStatusValues = terminationStatus ? terminationStatus.split(",") : [];
+  const terminationStatusValues = terminationStatus
+    ? terminationStatus.split(",")
+    : [];
 
   // Build filter conditions
   const buildFilterConditions = (): Record<string, any> => {
@@ -267,7 +272,7 @@ export async function getPersonnelManager({
     skip = undefined;
     totalPages = 1;
     const whereCondition: Record<string, any> = {};
-    
+
     // Apply termination status filter or default behavior
     if (filterConditions.terminationStatus === "active") {
       whereCondition.terminationDate = null;
@@ -277,7 +282,7 @@ export async function getPersonnelManager({
       // Default behavior when no filter: show terminated only
       whereCondition.terminationDate = { not: null };
     }
-    
+
     if (filterConditions.permission)
       whereCondition.permission = filterConditions.permission;
     if (filterConditions.accountSetup !== undefined)
@@ -357,7 +362,7 @@ export async function getPersonnelManager({
     pageSize = parseInt(pageSizeStr, 10) || 25;
     skip = (page - 1) * pageSize;
     const whereCondition: Record<string, any> = {};
-    
+
     // Apply termination status filter or default behavior
     if (filterConditions.terminationStatus === "active") {
       whereCondition.terminationDate = null;
@@ -367,7 +372,7 @@ export async function getPersonnelManager({
       // Default behavior when no filter: show active only
       whereCondition.terminationDate = null;
     }
-    
+
     if (filterConditions.permission)
       whereCondition.permission = filterConditions.permission;
     if (filterConditions.accountSetup !== undefined)
@@ -652,7 +657,9 @@ export async function editUserAdmin(payload: {
         tascoView: payload.tascoView,
         mechanicView: payload.mechanicView,
         laborView: payload.laborView,
-        terminationDate: payload.terminationDate ? new Date(payload.terminationDate) : null,
+        terminationDate: payload.terminationDate
+          ? new Date(payload.terminationDate)
+          : null,
         Crews: {
           set: [], // disconnect all crews first
           connect: payload.crews.map((crew) => ({ id: crew.id })),

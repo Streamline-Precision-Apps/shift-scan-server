@@ -3,7 +3,7 @@ import type {
   CreatedVia,
   FormTemplateStatus,
   Prisma,
-} from "../../generated/prisma/index.js";
+} from "../../prisma/generated/prisma/client.js";
 import type { JobsiteUpdateBody } from "../controllers/adminJobsiteController.js";
 import prisma from "../lib/prisma.js";
 
@@ -19,8 +19,9 @@ export async function getAllJobsites(
 ) {
   try {
     // Check if we're fetching pending approvals (special case for inbox)
-    const isPendingMode = statusFilters.length === 1 && statusFilters[0] === "pending";
-    
+    const isPendingMode =
+      statusFilters.length === 1 && statusFilters[0] === "pending";
+
     if (isPendingMode) {
       page = undefined;
       pageSize = undefined;

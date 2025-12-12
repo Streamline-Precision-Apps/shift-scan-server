@@ -4,7 +4,7 @@ import {
   FormTemplateStatus,
   FieldType,
   FormStatus,
-} from "../../generated/prisma/index.js";
+} from "../../prisma/generated/prisma/client.js";
 
 // --- Types ---
 export interface FormSettingsData {

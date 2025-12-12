@@ -1,5 +1,8 @@
 import { formatISO } from "date-fns";
-import type { EquipmentState, Prisma } from "../../generated/prisma/index.js";
+import type {
+  EquipmentState,
+  Prisma,
+} from "../../prisma/generated/prisma/client.js";
 import type {
   GeneralTimesheetInput,
   MechanicTimesheetInput,
