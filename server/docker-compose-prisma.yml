@@ -17,11 +17,6 @@ services:
       retries: 20
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    command: postgres -c listen_addresses='*'
-    logging:
-      options:
-        max-size: "10m"
-        max-file: "3"
 
   server:
     build:
@@ -29,8 +24,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
-    stdin_open: true
-    tty: true #keep the container running for debugging
     depends_on:
       postgres_db:
         condition: service_healthy
@@ -38,6 +31,7 @@ services:
       - .env
     networks:
       - prisma-network
+
 networks:
   prisma-network:
     name: prisma-network

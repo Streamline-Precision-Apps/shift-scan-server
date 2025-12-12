@@ -30,6 +30,9 @@ ENV SKIP_SENTRY=true
 # Compile TypeScript to JavaScript, skip Sentry if SKIP_SENTRY is true
 RUN npm run build || echo "Skipping Sentry build step"
 
+
+
+
 # Stage 2: Production image (smaller)
 FROM node:24-slim
 
@@ -46,12 +49,11 @@ RUN npm install --production
 
 # Copy built app and Prisma client from builder
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/src/instrument.mjs ./dist/
+COPY --from=builder /app/src/instrument.mjs ./dist/src/
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/prisma/generated-schema.prisma ./prisma/
-# Copy generated Prisma client output files
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/generated ./generated
+# Generate Prisma client in the production image to ensure engines are present
+RUN npx --yes prisma generate --schema prisma/generated-schema.prisma
 
 # Copy entrypoint script
 COPY entrypoint.sh /app/entrypoint.sh
