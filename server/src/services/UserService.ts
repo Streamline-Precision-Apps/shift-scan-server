@@ -1,5 +1,5 @@
 import prisma from "../lib/prisma.js";
-import type { User, Prisma } from "../../generated/prisma/index.js";
+import type { User, Prisma } from "../../prisma/generated/prisma/client.js";
 import { hash } from "bcryptjs";
 
 const ALLOWED_USER_FIELDS = [

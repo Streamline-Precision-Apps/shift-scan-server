@@ -1,5 +1,8 @@
 import prisma from "../lib/prisma.js";
-import type { ApprovalStatus, Prisma } from "../../generated/prisma/index.js";
+import type {
+  ApprovalStatus,
+  Prisma,
+} from "../../prisma/generated/prisma/client.js";
 
 interface FilterOptions {
   jobsiteId: string[];
@@ -435,8 +438,11 @@ export async function getTimesheetChangeLogs(timesheetId: string | undefined) {
 
 export async function createTimesheet(payload: any) {
   try {
-    console.log("🔵 [CREATE TIMESHEET] Received payload:", JSON.stringify(payload, null, 2));
-    
+    console.log(
+      "🔵 [CREATE TIMESHEET] Received payload:",
+      JSON.stringify(payload, null, 2)
+    );
+
     // Extract main timesheet data
     const {
       date,
@@ -511,7 +517,9 @@ export async function createTimesheet(payload: any) {
                 name: mat.name || "",
                 quantity: parseFloat(mat.quantity) || 0,
                 unit: mat.unit || "TONS",
-                loadType: mat.loadType ? mat.loadType.toUpperCase() : "SCREENED", // Convert to uppercase for Prisma enum
+                loadType: mat.loadType
+                  ? mat.loadType.toUpperCase()
+                  : "SCREENED", // Convert to uppercase for Prisma enum
               })),
             },
             RefuelLogs: {
@@ -566,7 +574,10 @@ export async function createTimesheet(payload: any) {
       },
     });
 
-    console.log("✅ [CREATE TIMESHEET] Successfully created timesheet:", timesheet.id);
+    console.log(
+      "✅ [CREATE TIMESHEET] Successfully created timesheet:",
+      timesheet.id
+    );
     return timesheet;
   } catch (error) {
     console.error("❌ [CREATE TIMESHEET] Error creating timesheet:", error);
@@ -597,14 +608,14 @@ export async function updateTimesheet(
     // Extract IDs from nested objects if they exist
     const jobsiteId = data.Jobsite?.id || data.jobsiteId;
     const userId = data.User?.id || data.userId;
-    
+
     // For costcode, we need to query the CostCode table by ID to get the actual name
     // because the foreign key references CostCode.name, not CostCode.id
     let costCodeName = data.costcode; // fallback to existing value
     if (data.CostCode?.id) {
       const costCode = await prisma.costCode.findUnique({
         where: { id: data.CostCode.id },
-        select: { name: true }
+        select: { name: true },
       });
       if (costCode) {
         costCodeName = costCode.name;
@@ -618,7 +629,8 @@ export async function updateTimesheet(
     if (jobsiteId) updateFields.jobsiteId = jobsiteId;
     if (costCodeName) updateFields.costcode = costCodeName;
     if (data.startTime) updateFields.startTime = new Date(data.startTime);
-    if (data.endTime !== undefined) updateFields.endTime = data.endTime ? new Date(data.endTime) : null;
+    if (data.endTime !== undefined)
+      updateFields.endTime = data.endTime ? new Date(data.endTime) : null;
     if (data.workType) updateFields.workType = data.workType;
     if (data.comment !== undefined) updateFields.comment = data.comment;
     if (data.status) updateFields.status = data.status;
@@ -626,7 +638,7 @@ export async function updateTimesheet(
     // Handle nested logs update
     // For nested relations, we need to delete existing and recreate
     // This is the simplest approach for handling changes in nested data
-    
+
     // Handle EmployeeEquipmentLogs
     if (data.EmployeeEquipmentLogs) {
       // Delete existing logs
@@ -799,9 +811,7 @@ export async function updateTimesheet(
       editorFullName: editor
         ? `${editor.firstName} ${editor.lastName}`
         : "Unknown",
-      userFullname: user
-        ? `${user.firstName} ${user.lastName}`
-        : "Unknown",
+      userFullname: user ? `${user.firstName} ${user.lastName}` : "Unknown",
     };
   } catch (error) {
     console.error("Error updating timesheet:", error);
@@ -817,7 +827,7 @@ export async function updateTimesheetStatus(
 ) {
   try {
     const timesheetId = parseInt(id as string, 10);
-    
+
     await prisma.timeSheet.update({
       where: { id: timesheetId },
       data: {
@@ -924,21 +934,21 @@ export async function exportTimesheets(
       // Otherwise, use date range and filters
       if (dateRange?.from || dateRange?.to) {
         const dateFilter: any = {};
-        
+
         if (dateRange.from) {
           // Ensure we start at beginning of the day
           const startDate = new Date(dateRange.from);
           startDate.setHours(0, 0, 0, 0);
           dateFilter.gte = startDate;
         }
-        
+
         if (dateRange.to) {
           // Ensure we end at end of the day
           const endDate = new Date(dateRange.to);
           endDate.setHours(23, 59, 59, 999);
           dateFilter.lte = endDate;
         }
-        
+
         whereClause.date = dateFilter;
       }
 
@@ -996,7 +1006,7 @@ export async function exportTimesheets(
         },
       },
       orderBy: {
-        date: 'asc',
+        date: "asc",
       },
     });
 
@@ -1018,7 +1028,7 @@ export async function getAllTascoMaterialTypes() {
         name: true,
       },
       orderBy: {
-        name: 'asc',
+        name: "asc",
       },
     });
 

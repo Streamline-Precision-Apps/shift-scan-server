@@ -1,4 +1,6 @@
 import "./instrument.mjs";
+import dotenv from "dotenv";
+dotenv.config();
 import * as Sentry from "@sentry/node";
 import express from "express";
 import cors from "cors";
@@ -7,7 +9,6 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import swaggerUi from "swagger-ui-express";
 import prisma from "./lib/prisma.js";
-import config from "./lib/config.js";
 import { swaggerSpec } from "./lib/swagger.js";
 import apiRoutes from "./routes/index.js";
 import {

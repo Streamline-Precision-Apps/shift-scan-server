@@ -90,4 +90,5 @@ echo "   Listening on port $PORT"
 echo ""
 
 # Start the application and capture any startup errors
-exec node --import ./dist/instrument.mjs dist/index.js 2>&1
+exec node --import ./dist/src/instrument.mjs dist/src/index.js 2>&1 
+# error out put here no dist

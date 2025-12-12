@@ -6,7 +6,7 @@ import type {
   FormTemplateStatus,
   OwnershipType,
   Prisma,
-} from "../../generated/prisma/index.js";
+} from "../../prisma/generated/prisma/client.js";
 import prisma from "../lib/prisma.js";
 
 export async function createEquipmentService(

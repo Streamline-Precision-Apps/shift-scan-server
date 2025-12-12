@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import type { User, Prisma } from "../../generated/prisma/index.js";
+import type { User, Prisma } from "../../prisma/generated/prisma/client.js";
 import * as UserService from "../services/UserService.js";
 import prisma from "../lib/prisma.js";
 

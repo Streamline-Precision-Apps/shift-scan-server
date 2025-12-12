@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+dotenv.config();
 import admin from "firebase-admin";
 import type { ServiceAccount } from "firebase-admin";
 
@@ -22,6 +24,7 @@ if (!admin.apps.length) {
       process.env.FIREBASE_SERVICE_JSON_CLIENT_X509_CERT_URL,
     universe_domain: process.env.FIREBASE_SERVICE_JSON_UNIVERSE_DOMAIN,
   };
+
   const options: admin.AppOptions = {
     credential: admin.credential.cert(serviceAccount as ServiceAccount),
     ...(storageBucket && { storageBucket }),
