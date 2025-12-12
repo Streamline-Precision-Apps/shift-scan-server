@@ -4,7 +4,7 @@ import path from "path";
 import { defineConfig } from "prisma/config";
 
 export default defineConfig({
-  schema: "prisma",
+  schema: "prisma/schema.prisma",
   datasource: {
     url: process.env.POSTGRES_PRISMA_URL!,
     ...(process.env.POSTGRES_URL_NON_POOLING && {
@@ -12,7 +12,7 @@ export default defineConfig({
     }),
   },
   migrations: {
-    path: path.join("prisma", "migrations"),
+    path: "prisma/migrations",
     seed: 'ts-node -r tsconfig-paths/register --compiler-options {"module":"CommonJS"} prisma/seed.ts',
   },
 });

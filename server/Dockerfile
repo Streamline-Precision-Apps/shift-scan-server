@@ -1,14 +1,14 @@
 # Stage 1: Builder (includes devDependencies for Prisma generation)
-FROM node:24.12.0 AS builder
+FROM node:24-alpine AS builder
 
 # Set working directory
 WORKDIR /server
 
 # Copy package.json and package-lock.json
-COPY package*.json ./
+COPY package.json package-lock.json ./
 
 # Install all dependencies (dev + prod)
-RUN npm install
+RUN npm ci
 
 # Copy tsconfig.json so tsc can find it
 COPY tsconfig.json ./
@@ -32,7 +32,7 @@ ENV SKIP_SENTRY=true
 RUN npm run build || echo "Skipping Sentry build step"
 
 # Stage 2: Production image (smaller)
-FROM node:24.12.0-slim
+FROM node:24-alpine
 
 # Install OpenSSL for Prisma
 RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
