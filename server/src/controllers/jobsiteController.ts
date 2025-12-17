@@ -65,33 +65,3 @@ export async function createJobsite(req: Request, res: Response) {
     res.status(500).json({ error: "Failed to create jobsite" });
   }
 }
-
-// Update a jobsite
-export async function updateJobsite(req: Request, res: Response) {
-  try {
-    const { id } = req.params;
-    if (!id) {
-      return res.status(400).json({ error: "Missing jobsite ID" });
-    }
-    const updated = await jobsiteService.updateJobsite(id, req.body);
-    if (!updated) return res.status(404).json({ error: "Invalid ID" });
-    res.json(updated);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to update jobsite" });
-  }
-}
-
-// Delete a jobsite
-export async function deleteJobsite(req: Request, res: Response) {
-  try {
-    const { id } = req.params;
-    if (!id) {
-      return res.status(400).json({ error: "Invalid ID" });
-    }
-    const deleted = await jobsiteService.deleteJobsite(id);
-    if (!deleted) return res.status(404).json({ error: "Jobsite not found" });
-    res.json({ success: true });
-  } catch (error) {
-    res.status(500).json({ error: "Failed to delete jobsite" });
-  }
-}

@@ -38,6 +38,7 @@ router.use("/v1/mechanic-logs", mechanicLogsRoutes);
 router.use("/v1/trucking-logs", truckingLogsRoutes);
 router.use("/v1/tasco-logs", tascoLogsRoutes);
 router.use("/v1", initRoutes);
+
 router.use("/v1/admins", adminsBaseRoutes);
 router.use("/v1/admins/personnel", adminsPersonnelRoutes);
 router.use("/v1/admins/equipment", adminsEquipmentRoutes);

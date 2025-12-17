@@ -1,11 +1,12 @@
 // server/src/routes/jobsiteRoutes.ts
+
 import { Router } from "express";
+import { validateRequest } from "../middleware/validateRequest.js";
+import { createJobsiteSchema } from "../lib/validation/app/jobsite.js";
 import {
   createJobsite,
-  deleteJobsite,
   getJobsiteById,
   getJobsites,
-  updateJobsite,
   getJobsiteByQrId,
 } from "../controllers/jobsiteController.js";
 const router = Router();
@@ -14,16 +15,8 @@ router.get("/qr/:qrId", getJobsiteByQrId);
 
 router.get("/", getJobsites);
 
-// Get a jobsite by ID
 router.get("/:id", getJobsiteById);
 
-// Create a jobsite
-router.post("/", createJobsite);
-
-// Update a jobsite
-router.put("/:id", updateJobsite);
-
-// Delete a jobsite
-router.delete("/:id", deleteJobsite);
+router.post("/", validateRequest(createJobsiteSchema), createJobsite);
 
 export default router;

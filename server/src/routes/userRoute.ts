@@ -1,8 +1,6 @@
 import { Router } from "express";
 import { verifyToken } from "../middleware/authMiddleware.js";
 import {
-  createUser,
-  deleteUser,
   getUserById,
   getUsers,
   updateSettings,
@@ -21,13 +19,29 @@ import {
   userSignatureController,
   getAllTeams,
 } from "../controllers/UserController.js";
+import { validateRequest } from "../middleware/validateRequest.js";
+import {
+  updateUserSchema,
+  updateUserSettingsSchema,
+  emptyBodySchema,
+} from "../lib/validation/app/user.js";
 
 const router = Router();
 
-router.post("/:id/session", sessionController);
-router.put("/:id/session/:sessionId", endSessionController);
+router.post(
+  "/:id/session",
+  verifyToken,
+  validateRequest(emptyBodySchema),
+  sessionController
+);
+router.put(
+  "/:id/session/:sessionId",
+  verifyToken,
+  validateRequest(emptyBodySchema),
+  endSessionController
+);
 
-router.post("/:id/signature", userSignatureController);
+router.get("/:id/signature", verifyToken, userSignatureController);
 
 /**
  * @swagger
@@ -162,176 +176,6 @@ router.get("/:id", verifyToken, getUserById);
 
 /**
  * @swagger
- * /api/v1/user:
- *   post:
- *     tags:
- *       - Users
- *     summary: Create a new user
- *     description: Create a new user (requires authentication)
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - firstName
- *               - lastName
- *               - username
- *               - password
- *               - companyId
- *               - truckView
- *               - tascoView
- *               - laborView
- *               - mechanicView
- *             properties:
- *               firstName:
- *                 type: string
- *               lastName:
- *                 type: string
- *               username:
- *                 type: string
- *               password:
- *                 type: string
- *               companyId:
- *                 type: string
- *               email:
- *                 type: string
- *                 nullable: true
- *               signature:
- *                 type: string
- *                 nullable: true
- *               DOB:
- *                 type: string
- *                 format: date-time
- *                 nullable: true
- *               truckView:
- *                 type: boolean
- *               tascoView:
- *                 type: boolean
- *               laborView:
- *                 type: boolean
- *               mechanicView:
- *                 type: boolean
- *               permission:
- *                 type: string
- *                 enum: [USER, ADMIN, SUPERADMIN]
- *               image:
- *                 type: string
- *                 nullable: true
- *               startDate:
- *                 type: string
- *                 format: date-time
- *                 nullable: true
- *               terminationDate:
- *                 type: string
- *                 format: date-time
- *                 nullable: true
- *               workTypeId:
- *                 type: string
- *                 nullable: true
- *               middleName:
- *                 type: string
- *                 nullable: true
- *               secondLastName:
- *                 type: string
- *                 nullable: true
- *     responses:
- *       201:
- *         description: User created successfully
- *       401:
- *         description: Unauthorized - invalid or missing bearer token
- *       400:
- *         description: Bad request
- */
-router.post("/", verifyToken, createUser);
-
-/**
- * @swagger
- * /api/v1/user/{id}:
- *   put:
- *     tags:
- *       - Users
- *     summary: Update user
- *     description: Update an existing user (requires authentication). You must send fields to update in the request body.
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         schema:
- *           type: string
- *     requestBody:
- *       required: false
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               firstName:
- *                 type: string
- *               lastName:
- *                 type: string
- *               username:
- *                 type: string
- *               password:
- *                 type: string
- *               companyId:
- *                 type: string
- *               email:
- *                 type: string
- *                 nullable: true
- *               signature:
- *                 type: string
- *                 nullable: true
- *               DOB:
- *                 type: string
- *                 format: date-time
- *                 nullable: true
- *               truckView:
- *                 type: boolean
- *               tascoView:
- *                 type: boolean
- *               laborView:
- *                 type: boolean
- *               mechanicView:
- *                 type: boolean
- *               permission:
- *                 type: string
- *                 enum: [USER, ADMIN, SUPERADMIN]
- *               image:
- *                 type: string
- *                 nullable: true
- *               startDate:
- *                 type: string
- *                 format: date-time
- *                 nullable: true
- *               terminationDate:
- *                 type: string
- *                 format: date-time
- *                 nullable: true
- *               workTypeId:
- *                 type: string
- *                 nullable: true
- *               middleName:
- *                 type: string
- *                 nullable: true
- *               secondLastName:
- *                 type: string
- *                 nullable: true
- *     responses:
- *       200:
- *         description: User updated successfully
- *       401:
- *         description: Unauthorized - invalid or missing bearer token
- *       404:
- *         description: User not found
- */
-/**
- * @swagger
  * /api/v1/user/settings:
  *   put:
  *     tags:
@@ -378,38 +222,17 @@ router.post("/", verifyToken, createUser);
  *         description: Bad request
  */
 
-router.post("/settings", getUserSettingsByQuery);
+router.get("/settings", getUserSettingsByQuery);
 
-router.put("/settings", verifyToken, updateSettings);
+router.put(
+  "/settings",
+  verifyToken,
+  validateRequest(updateUserSettingsSchema),
+  updateSettings
+);
 
-router.post("/contact", getUserContact);
+router.get("/contact", getUserContact);
 
-router.put("/:id", verifyToken, updateUser);
-
-/**
- * @swagger
- * /api/v1/user/{id}:
- *   delete:
- *     tags:
- *       - Users
- *     summary: Delete user
- *     description: Delete a user (requires authentication)
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: User deleted successfully
- *       401:
- *         description: Unauthorized - invalid or missing bearer token
- *       404:
- *         description: User not found
- */
-router.delete("/:id", verifyToken, deleteUser);
+router.put("/:id", verifyToken, validateRequest(updateUserSchema), updateUser);
 
 export default router;

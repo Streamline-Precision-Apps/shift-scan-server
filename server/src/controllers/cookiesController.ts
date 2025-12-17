@@ -4,12 +4,10 @@ import express from "express";
 export function getCookie(req: express.Request, res: express.Response) {
   let { name } = req.query;
   if (!name) {
-    console.warn("❌ GET cookie: Missing cookie name parameter");
     return res.status(400).json({ error: "Missing cookie name" });
   }
   if (Array.isArray(name)) name = name[0];
   if (typeof name !== "string") {
-    console.warn("❌ GET cookie: Invalid cookie name type");
     return res.status(400).json({ error: "Invalid cookie name" });
   }
 
@@ -19,7 +17,7 @@ export function getCookie(req: express.Request, res: express.Response) {
     if (name === "currentPageView") {
       return res.status(200).json({ value: "" });
     }
-    console.warn(`⚠️  Cookie not found: ${name}`);
+
     return res.status(204).send(); // No Content
   }
 
@@ -30,14 +28,12 @@ export function getCookie(req: express.Request, res: express.Response) {
 export function getCookieList(req: express.Request, res: express.Response) {
   let { name } = req.query;
   if (!name) {
-    console.warn("❌ GET cookies: Missing cookie name parameter");
     return res.status(400).json({ error: "Missing cookie name(s)" });
   }
   if (typeof name === "string") {
     name = [name];
   }
   if (!Array.isArray(name) || !name.every((n) => typeof n === "string")) {
-    console.warn("❌ GET cookies: Invalid cookie name type");
     return res.status(400).json({ error: "Invalid cookie name(s)" });
   }
 
@@ -55,7 +51,6 @@ export function setCookie(req: express.Request, res: express.Response) {
   const { name, value, options } = req.body;
 
   if (!name || value === undefined) {
-    console.error("❌ Missing name or value in request");
     return res.status(400).json({ error: "Missing name or value" });
   }
   // Get current cookie value to check if it exists

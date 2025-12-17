@@ -111,19 +111,3 @@ export async function createJobsite(data: any) {
     return jobsite;
   });
 }
-
-export async function updateJobsite(id: string, updates: any) {
-  return prisma.jobsite.update({
-    where: { id },
-    data: updates,
-  });
-}
-
-export async function deleteJobsite(id: string) {
-  try {
-    await prisma.jobsite.delete({ where: { id } });
-    return true;
-  } catch (e) {
-    return false;
-  }
-}

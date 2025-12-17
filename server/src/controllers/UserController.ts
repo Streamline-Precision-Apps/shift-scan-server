@@ -1,13 +1,13 @@
 import type { Request, Response } from "express";
-import type { User, Prisma } from "../../prisma/generated/prisma/client.js";
+import type { Prisma } from "../../prisma/generated/prisma/client.js";
 import * as UserService from "../services/UserService.js";
 import prisma from "../lib/prisma.js";
 
 // GET /api/v1/user/settings (GET, by query param or header)
 export async function getUserSettingsByQuery(req: Request, res: Response) {
   try {
-    // Accept userId from body (POST)
-    const userId = req.body.userId;
+    // Accept userId from query parameters (GET request)
+    const userId = req.query.userId as string;
 
     if (!userId || typeof userId !== "string") {
       return res.status(400).json({
@@ -52,7 +52,7 @@ export async function getUserSettingsByQuery(req: Request, res: Response) {
 // GET /api/v1/user/contact (GET, by query param or header)
 export async function getUserContact(req: Request, res: Response) {
   try {
-    const userId = req.body.userId;
+    const userId = req.query.userId as string;
 
     if (!userId || typeof userId !== "string") {
       return res.status(400).json({
@@ -226,33 +226,6 @@ export async function getUserById(req: Request, res: Response) {
   }
 }
 
-// POST /api/users
-export async function createUser(req: CreateUserRequest, res: Response) {
-  try {
-    // Convert request body to proper Prisma input
-    const userData = UserService.createUserWithCompanyId(
-      req.body as Prisma.UserCreateInput & { companyId: string }
-    );
-    const newUser: User = await UserService.createUser(userData);
-
-    res.status(201).json({
-      success: true,
-      data: newUser,
-      message: "User created successfully",
-    });
-  } catch (error) {
-    const statusCode =
-      error instanceof Error && error.message.includes("already exists")
-        ? 409
-        : 400;
-    res.status(statusCode).json({
-      success: false,
-      error: error instanceof Error ? error.message : "Unknown error",
-      message: "Failed to create user",
-    });
-  }
-}
-
 // PUT /api/users/:id
 export async function updateUser(req: Request, res: Response) {
   try {
@@ -294,34 +267,6 @@ export async function updateUser(req: Request, res: Response) {
       success: false,
       error: error instanceof Error ? error.message : "Unknown error",
       message: "Failed to update user",
-    });
-  }
-}
-
-// DELETE /api/users/:id
-export async function deleteUser(req: Request, res: Response) {
-  try {
-    const { id } = req.params;
-    if (!id) {
-      return res.status(400).json({
-        success: false,
-        error: "User ID is required",
-        message: "Failed to delete user",
-      });
-    }
-    await UserService.deleteUser(id);
-
-    res.status(200).json({
-      success: true,
-      message: "User deleted successfully",
-    });
-  } catch (error) {
-    const statusCode =
-      error instanceof Error && error.message.includes("not found") ? 404 : 500;
-    res.status(statusCode).json({
-      success: false,
-      error: error instanceof Error ? error.message : "Unknown error",
-      message: "Failed to delete user",
     });
   }
 }

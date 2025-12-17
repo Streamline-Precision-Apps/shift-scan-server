@@ -2,6 +2,12 @@
 import { Router } from "express";
 import { initHandler } from "../controllers/initController.js";
 import { payPeriodSheetsHandler } from "../controllers/payPeriodController.js";
+import { verifyToken } from "../middleware/authMiddleware.js";
+import { validateRequest } from "../middleware/validateRequest.js";
+import {
+  payPeriodTimesheetsSchema,
+  initRequestSchema,
+} from "../lib/validation/app/init.js";
 const router = Router();
 // Define your init routes here
 
@@ -46,7 +52,12 @@ const router = Router();
  *         description: Server error
  */
 
-router.post("/init", initHandler);
+router.post(
+  "/init",
+  verifyToken,
+  validateRequest(initRequestSchema),
+  initHandler
+);
 
 /**
  * @swagger
@@ -89,6 +100,11 @@ router.post("/init", initHandler);
  *       '500':
  *         description: Server error
  */
-router.post("/pay-period-timesheets", payPeriodSheetsHandler);
+router.post(
+  "/pay-period-timesheets",
+  verifyToken,
+  validateRequest(payPeriodTimesheetsSchema),
+  payPeriodSheetsHandler
+);
 
 export default router;

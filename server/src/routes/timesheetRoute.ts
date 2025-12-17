@@ -1,3 +1,4 @@
+
 import { Router } from "express";
 import {
   updateTimesheet,
@@ -24,13 +25,30 @@ import {
   deleteRefuelLogController,
   getAllEquipmentLogsController,
 } from "../controllers/timesheetController.js";
+import { validateRequest } from "../middleware/validateRequest.js";
+import {
+  generalTimesheetSchema,
+  updateTimesheetSchema,
+  approveBatchSchema,
+  createEquipmentLogSchema,
+  updateEquipmentLogSchema,
+  updateClockOutSchema,
+} from "../lib/validation/app/timesheet.js";
 
 const router = Router();
 
 // Batch approve timesheets
-router.post("/approve-batch", approveTimesheetsBatchController);
-//create a timesheet
-router.post("/create", createTimesheetAndSwitchJobsController);
+router.post(
+  "/approve-batch",
+  validateRequest(approveBatchSchema),
+  approveTimesheetsBatchController
+);
+// Create a timesheet
+router.post(
+  "/create",
+  validateRequest(generalTimesheetSchema),
+  createTimesheetAndSwitchJobsController
+);
 
 // Specific user routes (must come AFTER generic /user/:userId route)
 router.get("/user/:userId/recent", getRecentTimesheetController);
@@ -55,9 +73,18 @@ router.get(
   getContinueTimesheetController
 );
 
-// Update a timesheet
-router.put("/:id/clock-out", updateClockOutController);
-router.put("/:id", updateTimesheet);
+// Update a timesheet (clock-out)
+router.put(
+  "/:id/clock-out",
+  validateRequest(updateClockOutSchema),
+  updateClockOutController
+);
+// Update a timesheet (general update)
+router.put(
+  "/:id",
+  validateRequest(updateTimesheetSchema),
+  updateTimesheet
+);
 
 // Get previous work details for a timesheet
 router.get("/:id/previous-work", getPreviousWorkController);
@@ -73,14 +100,24 @@ router.get("/user/:userId", getUserTimesheetsByDateController);
 router.get("/equipment-log", getAllEquipmentLogsController);
 
 // Create a new employee equipment log
-router.post("/equipment-log", createEmployeeEquipmentLogController);
+router.post(
+  "/equipment-log",
+  validateRequest(createEquipmentLogSchema),
+  createEmployeeEquipmentLogController
+);
 
 // Get details of a specific employee equipment log by logId
 router.get("/equipment-log/:logId", getEmployeeEquipmentLogDetailsController);
+
+// Delete an employee equipment log
 router.delete("/equipment-log/:logId", deleteEmployeeEquipmentLogController);
 
 // Update an employee equipment log
-router.put("/equipment-log/:logId", updateEmployeeEquipmentLogController);
+router.put(
+  "/equipment-log/:logId",
+  validateRequest(updateEquipmentLogSchema),
+  updateEmployeeEquipmentLogController
+);
 
 // Delete a refuel log
 router.delete("/refuel-log/:refuelLogId", deleteRefuelLogController);
