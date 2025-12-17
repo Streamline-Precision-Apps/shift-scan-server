@@ -1,5 +1,10 @@
 import { Router } from "express";
 import { verifyToken } from "../middleware/authMiddleware.js";
+import { validateRequest } from "../middleware/validateRequest.js";
+import {
+  apiLimiter,
+  passwordResetLimiter,
+} from "../middleware/rateLimitMiddleware.js";
 import {
   saveFCMToken,
   requestPasswordReset,
@@ -8,36 +13,48 @@ import {
   deleteResetToken,
 } from "../controllers/tokenController.js";
 
+import {
+  saveFCMTokenSchema,
+  requestPasswordResetSchema,
+  resetPasswordSchema,
+} from "../lib/validation/tokens.js";
+
 const router = Router();
 
 // FCM token management (requires authentication)
-router.post("/fcm", verifyToken, saveFCMToken);
+router.post(
+  "/fcm",
+  verifyToken,
+  apiLimiter,
+  validateRequest(saveFCMTokenSchema),
+  saveFCMToken
+);
 
 // Password reset endpoints (no authentication required)
-/**
- * POST /api/tokens/password-reset
- * Request a password reset email
- * Body: { email: string }
- */
-router.post("/password-reset", requestPasswordReset);
+router.post(
+  "/password-reset",
+  passwordResetLimiter,
+  validateRequest(requestPasswordResetSchema),
+  requestPasswordReset
+);
 
-/**
- * POST /api/tokens/reset-password
- * Reset the password using a valid reset token
- * Body: { token: string, password: string }
- */
-router.post("/reset-password", resetPassword);
+router.post(
+  "/reset-password",
+  passwordResetLimiter,
+  validateRequest(resetPasswordSchema),
+  resetPassword
+);
 
 /**
  * GET /api/tokens/verify-reset-token/:token
  * Verify if a reset token is valid
  */
-router.get("/verify-reset-token/:token", verifyResetToken);
+router.get("/verify-reset-token/:token", apiLimiter, verifyResetToken);
 
 /**
  * DELETE /api/tokens/reset/:token
  * Delete a password reset token
  */
-router.delete("/reset/:token", deleteResetToken);
+router.delete("/reset/:token", apiLimiter, deleteResetToken);
 
 export default router;

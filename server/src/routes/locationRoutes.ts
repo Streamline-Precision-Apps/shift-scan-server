@@ -6,6 +6,8 @@ import {
   postUserLocation,
   getAllUsersLocations,
 } from "../controllers/locationController.js";
+import { validateRequest } from "../middleware/validateRequest.js";
+import { locationUpdateSchema } from "../lib/validation/location.js";
 
 const router = Router();
 
@@ -22,6 +24,11 @@ router.get("/:userId", verifyToken, getUserLocations);
 router.get("/:userId/history", verifyToken, getUserLocationHistory);
 
 // Post a new location log (expects userId and sessionId in body)
-router.post("/", postUserLocation);
+router.post(
+  "/",
+  verifyToken,
+  validateRequest(locationUpdateSchema),
+  postUserLocation
+);
 
 export default router;

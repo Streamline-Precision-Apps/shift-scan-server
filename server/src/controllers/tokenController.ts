@@ -1,39 +1,31 @@
 import type { AuthenticatedRequest } from "../middleware/authMiddleware.js";
 import type { Request, Response } from "express";
-import prisma from "../lib/prisma.js";
-import { v4 as uuidv4 } from "uuid";
-import { sendPasswordResetEmail } from "../lib/mail.js";
+import {
+  saveUserFCMToken,
+  requestPasswordResetService,
+  resetPasswordService,
+  verifyResetTokenService,
+  deleteResetTokenService,
+} from "../services/tokenService.js";
 
 export async function saveFCMToken(req: AuthenticatedRequest, res: Response) {
-  const userId = req.user?.id; // assuming verifyToken middleware sets req.user
+  const userId = req.user?.id;
   const { token } = req.body;
-
   if (!userId) {
     return res
       .status(401)
-      .json({ success: false, error: "No authenticated user" });
+      .json({ success: false, error: "Unauthorized request." });
   }
   if (!token) {
-    return res.status(400).json({ success: false, error: "No token provided" });
+    return res.status(400).json({ success: false, error: "Invalid request." });
   }
-
   try {
-    await prisma.fCMToken.deleteMany({ where: { userId } });
-    await prisma.fCMToken.create({
-      data: {
-        token,
-        userId,
-        platform: "web",
-        lastUsedAt: new Date(),
-        isValid: true,
-      },
-    });
+    await saveUserFCMToken({ userId, token });
     return res.json({ success: true });
   } catch (error) {
-    console.error("Error saving FCM token:", error);
     return res
       .status(500)
-      .json({ success: false, error: "Failed to save FCM token" });
+      .json({ success: false, error: "Internal server error." });
   }
 }
 
@@ -44,76 +36,15 @@ export async function saveFCMToken(req: AuthenticatedRequest, res: Response) {
 export async function requestPasswordReset(req: Request, res: Response) {
   try {
     const { email } = req.body;
-
     if (!email) {
-      console.warn("❌ Password reset request: Missing email");
-      return res.status(400).json({ error: "Email is required" });
+      return res.status(400).json({ error: "Invalid request." });
     }
-
-    // Check if user exists
-    const user = await prisma.user.findUnique({
-      where: { email },
-    });
-
-    if (!user) {
-      console.warn(
-        `❌ Password reset request: User not found for email: ${email}`
-      );
-      // Don't reveal if email exists or not (security best practice)
-      return res.status(200).json({
-        success: true,
-        message:
-          "If an account exists with this email, a reset link will be sent.",
-      });
+    const result = await requestPasswordResetService(email);
+    if (result.error) {
+      return res.status(result.status || 500).json({ error: result.error });
     }
-
-    // Delete any existing tokens for this email
-    const existingToken = await prisma.passwordResetToken.findFirst({
-      where: { email },
-    });
-
-    if (existingToken) {
-      await prisma.passwordResetToken.delete({
-        where: { id: existingToken.id },
-      });
-    }
-
-    // Generate new reset token
-    const resetToken = uuidv4();
-    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
-
-    const passwordResetToken = await prisma.passwordResetToken.create({
-      data: {
-        email,
-        token: resetToken,
-        expiration: expiresAt,
-      },
-    });
-
-    // Send reset email
-    try {
-      await sendPasswordResetEmail(email, resetToken);
-    } catch (emailError) {
-      console.error(
-        `❌ Failed to send password reset email to ${email}:`,
-        emailError
-      );
-      // Delete the token if email fails to send
-      await prisma.passwordResetToken.delete({
-        where: { id: passwordResetToken.id },
-      });
-      return res.status(500).json({
-        error: "Failed to send reset email. Please try again.",
-      });
-    }
-
-    return res.status(200).json({
-      success: true,
-      message:
-        "If an account exists with this email, a reset link will be sent.",
-    });
+    return res.status(200).json(result);
   } catch (error) {
-    console.error("❌ Error in requestPasswordReset:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
 }
@@ -125,67 +56,15 @@ export async function requestPasswordReset(req: Request, res: Response) {
 export async function resetPassword(req: Request, res: Response) {
   try {
     const { token, password } = req.body;
-
     if (!token || !password) {
-      console.warn("❌ Reset password: Missing token or password");
-      return res.status(400).json({ error: "Token and password are required" });
+      return res.status(400).json({ error: "Invalid request" });
     }
-
-    if (password.length < 6) {
-      return res
-        .status(400)
-        .json({ error: "Password must be at least 6 characters" });
+    const result = await resetPasswordService(token, password);
+    if (result.error) {
+      return res.status(result.status || 400).json({ error: result.error });
     }
-
-    // Find and validate token
-    const resetTokenRecord = await prisma.passwordResetToken.findUnique({
-      where: { token },
-    });
-
-    if (!resetTokenRecord) {
-      console.warn(`❌ Invalid password reset token: ${token}`);
-      return res.status(400).json({ error: "Invalid or expired reset token" });
-    }
-
-    // Check if token is expired
-    if (resetTokenRecord.expiration < new Date()) {
-      console.warn(
-        `❌ Password reset token expired for: ${resetTokenRecord.email}`
-      );
-      // Delete expired token
-      await prisma.passwordResetToken.delete({
-        where: { id: resetTokenRecord.id },
-      });
-      return res.status(400).json({ error: "Reset token has expired" });
-    }
-
-    // Find user
-    const user = await prisma.user.findUnique({
-      where: { email: resetTokenRecord.email },
-    });
-
-    if (!user) {
-      console.warn(`❌ User not found for email: ${resetTokenRecord.email}`);
-      return res.status(400).json({ error: "User not found" });
-    }
-
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { password }, // ⚠️ TODO: Hash password before storing
-    });
-
-    // Delete used token
-    await prisma.passwordResetToken.delete({
-      where: { id: resetTokenRecord.id },
-    });
-
-    return res.status(200).json({
-      success: true,
-      message:
-        "Password reset successfully. Please sign in with your new password.",
-    });
+    return res.status(200).json(result);
   } catch (error) {
-    console.error("❌ Error in resetPassword:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
 }
@@ -197,34 +76,15 @@ export async function resetPassword(req: Request, res: Response) {
 export async function verifyResetToken(req: Request, res: Response) {
   try {
     const { token } = req.params;
-
     if (!token) {
-      return res.status(400).json({ error: "Token is required" });
+      return res.status(400).json({ error: "Invalid request" });
     }
-
-    const resetTokenRecord = await prisma.passwordResetToken.findUnique({
-      where: { token },
-    });
-
-    if (!resetTokenRecord) {
-      console.warn(`❌ Invalid token: ${token}`);
-      return res.status(400).json({ valid: false, error: "Invalid token" });
+    const result = await verifyResetTokenService(token);
+    if (result.error) {
+      return res.status(result.status || 400).json(result);
     }
-
-    if (resetTokenRecord.expiration < new Date()) {
-      console.warn(`❌ Token expired: ${token}`);
-      await prisma.passwordResetToken.delete({
-        where: { id: resetTokenRecord.id },
-      });
-      return res.status(400).json({ valid: false, error: "Token expired" });
-    }
-
-    return res.status(200).json({
-      valid: true,
-      email: resetTokenRecord.email,
-    });
+    return res.status(200).json(result);
   } catch (error) {
-    console.error("❌ Error verifying reset token:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
 }
@@ -236,33 +96,15 @@ export async function verifyResetToken(req: Request, res: Response) {
 export async function deleteResetToken(req: Request, res: Response) {
   try {
     const { token } = req.params;
-
     if (!token) {
-      console.warn("❌ Delete reset token: Missing token");
-      return res.status(400).json({ error: "Token is required" });
+      return res.status(400).json({ error: "Invalid request" });
     }
-
-    // Find the token record
-    const resetTokenRecord = await prisma.passwordResetToken.findUnique({
-      where: { token },
-    });
-
-    if (!resetTokenRecord) {
-      console.warn(`❌ Reset token not found: ${token}`);
-      return res.status(404).json({ error: "Token not found" });
+    const result = await deleteResetTokenService(token);
+    if (result.error) {
+      return res.status(result.status || 404).json({ error: result.error });
     }
-
-    // Delete the token
-    await prisma.passwordResetToken.delete({
-      where: { id: resetTokenRecord.id },
-    });
-
-    return res.status(200).json({
-      success: true,
-      message: "Token deleted successfully",
-    });
+    return res.status(200).json(result);
   } catch (error) {
-    console.error("❌ Error deleting reset token:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
 }

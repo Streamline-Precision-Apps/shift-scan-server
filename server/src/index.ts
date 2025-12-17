@@ -11,7 +11,6 @@ import swaggerUi from "swagger-ui-express";
 import prisma from "./lib/prisma.js";
 import { swaggerSpec } from "./lib/swagger.js";
 import apiRoutes from "./routes/index.js";
-import { apiLimiter } from "./middleware/rateLimitMiddleware.js";
 import {
   errorHandler,
   notFoundHandler,
@@ -97,8 +96,7 @@ async function main() {
     });
 
     // API routes
-    app.use("/api", apiLimiter, apiRoutes);
-    // app.use("/api", apiRoutes);
+    app.use("/api", apiRoutes);
 
     // The error handler must be registered before any other error middleware and after all controllers
     Sentry.setupExpressErrorHandler(app);
