@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import prisma from "../lib/prisma.js";
 import config from "../lib/config.js";
+import { success } from "zod";
 
 dotenv.config();
 
@@ -22,17 +23,24 @@ export const loginUser = async (
 
   // 1. Check for missing credentials
   if (!username || !password)
-    return res.status(400).json({ error: "Missing credentials" });
+    return res
+      .status(400)
+      .json({ success: false, error: "Missing credentials" });
 
   try {
     // 2. Find user by username
     const user = await prisma.user.findUnique({ where: { username } });
-    if (!user) return res.status(401).json({ error: "Invalid credentials" });
+    if (!user)
+      return res
+        .status(401)
+        .json({ success: false, error: "Invalid credentials" });
 
     // 3. Verify password
     const validPassword = await compare(password, user.password);
     if (!validPassword)
-      return res.status(401).json({ error: "Invalid credentials" });
+      return res
+        .status(401)
+        .json({ success: false, error: "Invalid credentials" });
 
     const payload: JwtUserPayload = {
       id: user.id,
@@ -55,6 +63,7 @@ export const loginUser = async (
 
     // Return simplified user object with ID (full user will be fetched via /api/v1/init)
     return res.status(200).json({
+      success: true,
       message: "Login successful",
       token,
       user: {
@@ -64,7 +73,9 @@ export const loginUser = async (
     });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: "Internal server error" });
+    return res
+      .status(500)
+      .json({ success: false, error: "Internal server error" });
   }
 };
 

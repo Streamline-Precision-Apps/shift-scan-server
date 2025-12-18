@@ -4,12 +4,16 @@ import {
   getDashboardDataController,
   getUserTopicPreferencesController,
 } from "../controllers/adminBaseController.js";
-import { get } from "http";
+import { verifyToken } from "../middleware/authMiddleware.js";
 
 const router = Router();
 
-router.get("/notification-center", baseController);
-router.get("/dashboard-data", getDashboardDataController);
-router.get("/notification-preferences", getUserTopicPreferencesController);
+router.get("/notification-center", verifyToken, baseController);
+router.get("/dashboard-data", verifyToken, getDashboardDataController);
+router.get(
+  "/notification-preferences",
+  verifyToken,
+  getUserTopicPreferencesController
+);
 
 export default router;

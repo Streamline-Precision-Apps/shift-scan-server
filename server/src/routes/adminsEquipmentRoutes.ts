@@ -11,38 +11,61 @@ import {
   getEquipmentSummary,
 } from "../controllers/adminEquipmentController.js";
 import { verifyToken } from "../middleware/authMiddleware.js";
-
+import { validateRequest } from "../middleware/validateRequest.js";
+import {
+  createEquipmentSchema,
+  updateEquipmentSchema,
+  archiveEquipmentSchema,
+  restoreEquipmentSchema,
+} from "../lib/validation/dashboard/equipment.js";
 const router = Router();
-
-// Apply authentication middleware to all routes
-router.use(verifyToken);
 
 // Equipment Management REST API routes (handlers to be implemented)
 
 // GET /api/v1/admins/equipment - List all equipment
-router.get("/", listEquipment);
+router.get("/", verifyToken, listEquipment);
 
 // GET /api/v1/admins/equipment/summary - List all equipment but only important fields
-router.get("/summary", getEquipmentSummary);
+router.get("/summary", verifyToken, getEquipmentSummary);
 
 // GET /api/v1/admins/equipment/:id - Get equipment by ID
-router.get("/:id", getEquipmentById);
+router.get("/:id", verifyToken, getEquipmentById);
 
 // POST /api/v1/admins/equipment - Create new equipment
-router.post("/", createEquipment);
+router.post(
+  "/",
+  verifyToken,
+  validateRequest(createEquipmentSchema),
+  createEquipment
+);
 
 // PUT /api/v1/admins/equipment/:id - Update equipment by ID
-router.put("/:id", updateEquipment);
+router.put(
+  "/:id",
+  verifyToken,
+  validateRequest(updateEquipmentSchema),
+  updateEquipment
+);
 
 // DELETE /api/v1/admins/equipment/:id - Delete equipment by ID
-router.delete("/:id", deleteEquipment);
+router.delete("/:id", verifyToken, deleteEquipment);
 
 // PUT /api/v1/admins/equipment/:id/archive - Archive equipment by ID
-router.put("/:id/archive", archiveEquipment);
+router.put(
+  "/:id/archive",
+  verifyToken,
+  validateRequest(archiveEquipmentSchema),
+  archiveEquipment
+);
 // PUT /api/v1/admins/equipment/:id/restore - Restore archived equipment by ID
-router.put("/:id/restore", restoreEquipment);
+router.put(
+  "/:id/restore",
+  verifyToken,
+  validateRequest(restoreEquipmentSchema),
+  restoreEquipment
+);
 
 // GET /api/v1/admins/equipment/archived - List all archived equipment
-router.get("/archived", listArchivedEquipment);
+router.get("/archived", verifyToken, listArchivedEquipment);
 
 export default router;

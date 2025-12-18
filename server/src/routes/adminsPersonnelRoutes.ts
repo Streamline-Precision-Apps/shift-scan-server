@@ -14,37 +14,69 @@ import {
   getEmployeeInfoController,
   getPersonnelManagerController,
 } from "../controllers/adminPersonnelController.js";
+import { verifyToken } from "../middleware/authMiddleware.js";
+import { validateRequest } from "../middleware/validateRequest.js";
+import {
+  createUserAdminSchema,
+  editUserAdminSchema,
+  createCrewSchema,
+  editCrewSchema,
+} from "../lib/validation/dashboard/personnel.js";
 
 const router = Router();
 
 // get all users in crew
-router.get("/getAllEmployees", getCrewEmployeesController);
+router.get("/getAllEmployees", verifyToken, getCrewEmployeesController);
 
 // /api/v1/admins/employees/getAllActiveEmployees  - get all active users in crew
-router.get("/getAllActiveEmployees", getAllActiveEmployeesController);
+router.get(
+  "/getAllActiveEmployees",
+  verifyToken,
+  getAllActiveEmployeesController
+);
 // get all crews
-router.get("/getAllCrews", getAllCrewsController);
+router.get("/getAllCrews", verifyToken, getAllCrewsController);
 // get employee Info by id
-router.get("/getEmployeeInfo/:id", getEmployeeInfoController);
+router.get("/getEmployeeInfo/:id", verifyToken, getEmployeeInfoController);
 // get crew Info by id
-router.get("/getCrewByIdAdmin/:id", getCrewByIdAdminController);
+router.get("/getCrewByIdAdmin/:id", verifyToken, getCrewByIdAdminController);
 // get all crew managers
-router.get("/crewManagers", getCrewManagersController);
+router.get("/crewManagers", verifyToken, getCrewManagersController);
 
-router.get("/personnelManager", getPersonnelManagerController);
+router.get("/personnelManager", verifyToken, getPersonnelManagerController);
 
 // create user (admin)
-router.post("/createUserAdmin", createUserAdminController);
+router.post(
+  "/createUserAdmin",
+  verifyToken,
+  validateRequest(createUserAdminSchema),
+  createUserAdminController
+);
 // edit user (admin)
-router.put("/editUserAdmin/:id", editUserAdminController);
+router.put(
+  "/editUserAdmin/:id",
+  verifyToken,
+  validateRequest(editUserAdminSchema),
+  editUserAdminController
+);
 // delete user (admin)
-router.delete("/deleteUser/:id", deleteUserController);
+router.delete("/deleteUser/:id", verifyToken, deleteUserController);
 
 // create crew
-router.post("/createCrew", createCrewController);
+router.post(
+  "/createCrew",
+  verifyToken,
+  validateRequest(createCrewSchema),
+  createCrewController
+);
 // edit crew
-router.put("/editCrew/:id", editCrewController);
+router.put(
+  "/editCrew/:id",
+  verifyToken,
+  validateRequest(editCrewSchema),
+  editCrewController
+);
 // delete crew
-router.delete("/deleteCrew/:id", deleteCrewController);
+router.delete("/deleteCrew/:id", verifyToken, deleteCrewController);
 
 export default router;

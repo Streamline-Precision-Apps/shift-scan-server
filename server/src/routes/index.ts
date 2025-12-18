@@ -39,7 +39,6 @@ router.use("/v1/mechanic-logs", apiLimiter, mechanicLogsRoutes);
 router.use("/v1/trucking-logs", apiLimiter, truckingLogsRoutes);
 router.use("/v1/tasco-logs", apiLimiter, tascoLogsRoutes);
 router.use("/v1", apiLimiter, initRoutes);
-
 router.use("/v1/admins", apiLimiter, adminsBaseRoutes);
 router.use("/v1/admins/personnel", apiLimiter, adminsPersonnelRoutes);
 router.use("/v1/admins/equipment", apiLimiter, adminsEquipmentRoutes);
@@ -52,6 +51,7 @@ router.use("/v1/admins/timesheet", apiLimiter, adminsTimesheetRoutes);
 
 router.use("/notifications", apiLimiter, notificationRoutes);
 router.use("/push-notifications", apiLimiter, pushNotificationsRoute);
+
 router.use("/storage", apiLimiter, blobRoutes);
 router.use("/tokens", tokenRoutes);
 router.use("/location", apiLimiter, locationRoutes);

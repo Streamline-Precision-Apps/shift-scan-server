@@ -196,9 +196,6 @@ export async function createJobsite(payload: {
     state: string;
     zipCode: string;
   };
-  Client?: {
-    id: string;
-  } | null;
   CCTags?: Array<{ id: string }>;
   CreatedVia: string;
   createdById: string;
@@ -226,11 +223,6 @@ export async function createJobsite(payload: {
           Address: {
             connect: { id: existingAddress.id },
           },
-          ...(payload.Client?.id && {
-            Client: {
-              connect: { id: payload.Client.id },
-            },
-          }),
           ...(payload.CCTags &&
             payload.CCTags.length > 0 && {
               CCTags: {
@@ -260,11 +252,6 @@ export async function createJobsite(payload: {
               country: "US",
             },
           },
-          ...(payload.Client?.id && {
-            Client: {
-              connect: { id: payload.Client.id },
-            },
-          }),
           ...(payload.CCTags &&
             payload.CCTags.length > 0 && {
               CCTags: {

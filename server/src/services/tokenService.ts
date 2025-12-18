@@ -1,6 +1,7 @@
 import prisma from "../lib/prisma.js";
 import { v4 as uuidv4 } from "uuid";
 import { sendPasswordResetEmail } from "../lib/mail.js";
+import { success } from "zod";
 
 /**
  * Save or update a user's FCM token
@@ -124,15 +125,26 @@ export async function verifyResetTokenService(token: string) {
     where: { token },
   });
   if (!resetTokenRecord) {
-    return { valid: false, error: "Invalid request", status: 400 };
+    return {
+      success: false,
+      valid: false,
+      error: "Invalid request",
+      status: 400,
+    };
   }
   if (resetTokenRecord.expiration < new Date()) {
     await prisma.passwordResetToken.delete({
       where: { id: resetTokenRecord.id },
     });
-    return { valid: false, error: "Invalid request", status: 400 };
+    return {
+      success: false,
+      valid: false,
+      error: "Invalid request",
+      status: 400,
+    };
   }
   return {
+    success: true,
     valid: true,
     email: resetTokenRecord.email,
   };

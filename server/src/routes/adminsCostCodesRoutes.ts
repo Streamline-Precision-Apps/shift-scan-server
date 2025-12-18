@@ -9,31 +9,59 @@ import {
   updateCostCodeController,
   getCostCodeSummaryController,
 } from "../controllers/adminCostCodeController.js";
+import { verifyToken } from "../middleware/authMiddleware.js";
+import { validateRequest } from "../middleware/validateRequest.js";
+import {
+  createCostCodeSchema,
+  updateCostCodeSchema,
+  archiveCostCodeSchema,
+  restoreCostCodeSchema,
+} from "../lib/validation/dashboard/costcode.js";
 
 const router = Router();
 
 // /api/v1/admins/cost-codes - get all cost codes
-router.get("/", getCostCodesController);
+router.get("/", verifyToken, getCostCodesController);
 
 // /api/v1/admins/cost-codes/summary - get cost code summary (must come before /:id)
-router.get("/summary", getCostCodeSummaryController);
+router.get("/summary", verifyToken, getCostCodeSummaryController);
 
 // /api/v1/admins/cost-codes/:id - get cost code by id
-router.get("/:id", getCostCodeByIdController);
+router.get("/:id", verifyToken, getCostCodeByIdController);
 
 // /api/v1/admins/cost-codes/ - create cost code
-router.post("/", createCostCodeController);
+router.post(
+  "/",
+  verifyToken,
+  validateRequest(createCostCodeSchema),
+  createCostCodeController
+);
 
 // /api/v1/admins/cost-codes/:id - update cost code
-router.put("/:id", updateCostCodeController);
+router.put(
+  "/:id",
+  verifyToken,
+  validateRequest(updateCostCodeSchema),
+  updateCostCodeController
+);
 
 // /api/v1/admins/cost-codes/:id/archive - archive cost code
-router.put("/:id/archive", archiveCostCodeController);
+router.put(
+  "/:id/archive",
+  verifyToken,
+  validateRequest(archiveCostCodeSchema),
+  archiveCostCodeController
+);
 
 // /api/v1/admins/cost-codes/:id/restore - restore cost code
-router.put("/:id/restore", restoreCostCodeController);
+router.put(
+  "/:id/restore",
+  verifyToken,
+  validateRequest(restoreCostCodeSchema),
+  restoreCostCodeController
+);
 
 // /api/v1/admins/cost-codes/:id - delete cost code
-router.delete("/:id", deleteCostCodeController);
+router.delete("/:id", verifyToken, deleteCostCodeController);
 
 export default router;
