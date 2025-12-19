@@ -17,7 +17,7 @@ export class NotificationService {
       pushAttempts: 1,
     });
     // Generate URL with notificationId
-    const urlWithId = `${notification.url ? notification.url : "/admins"}${
+    const urlWithId = `${notification.url ? notification.url : "/"}${
       notification.url?.includes("?") ? "&" : "?"
     }notificationId=${notification.id}`;
     return await updateNotificationUrl(notification.id, urlWithId);
