@@ -1,14 +1,19 @@
 import { Router } from "express";
 import { verifyToken } from "../middleware/authMiddleware.js";
 import {
-  sendNotification,
   sendNotificationMulticast,
   topics,
+  markReadController,
 } from "../controllers/notificationController.js";
 import { requireFirebaseEnv } from "../middleware/requireFirebaseEnv.js";
+import { validateRequest } from "../middleware/validateRequest.js";
+import {
+  sendMulticastSchema,
+  topicsSchema,
+  markReadSchema,
+} from "../lib/validation/notification.js";
 
 const router = Router();
-
 
 /**
  * @swagger
@@ -62,60 +67,16 @@ router.post(
   "/send-multicast",
   verifyToken,
   requireFirebaseEnv,
+  validateRequest(sendMulticastSchema),
   sendNotificationMulticast
 );
 
-/**
- * @swagger
- * /api/notifications/send-notification:
- *   post:
- *     tags:
- *       - Notifications
- *     summary: Send notification to a device
- *     description: Send a notification to a specific device token. Stores the notification in the database.
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               token:
- *                 type: string
- *               title:
- *                 type: string
- *               message:
- *                 type: string
- *               link:
- *                 type: string
- *               topic:
- *                 type: string
- *     responses:
- *       200:
- *         description: Notification sent successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                 message:
- *                   type: string
- *       400:
- *         description: Bad request
- *       401:
- *         description: Unauthorized
- *       500:
- *         description: Server error
- */
 router.post(
-  "/send-notification",
+  "/mark-read",
   verifyToken,
   requireFirebaseEnv,
-  sendNotification
+  validateRequest(markReadSchema),
+  markReadController
 );
 
 /**
@@ -176,6 +137,31 @@ router.post(
  *       500:
  *         description: Server error
  */
-router.post("/topics", verifyToken, requireFirebaseEnv, topics);
+router.post(
+  "/topics",
+  verifyToken,
+  requireFirebaseEnv,
+  validateRequest(topicsSchema),
+  topics
+);
+
+// ----------------------------------------------------------------------
+//
+// Used in the push notification management Lib for
+router.post(
+  "/subscribe-to-topic",
+  verifyToken,
+  requireFirebaseEnv,
+  validateRequest(topicsSchema),
+  topics
+);
+
+router.post(
+  "/unsubscribe-from-topic",
+  verifyToken,
+  requireFirebaseEnv,
+  validateRequest(topicsSchema),
+  topics
+);
 
 export default router;

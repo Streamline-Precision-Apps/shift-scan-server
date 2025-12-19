@@ -1,6 +1,5 @@
 import { Router } from "express";
 import notificationRoutes from "./notificationsRoute.js";
-import pushNotificationsRoute from "./pushNotificationsRoute.js";
 import blobRoutes from "./blobRoute.js";
 import tokenRoutes from "./tokenRoutes.js";
 import locationRoutes from "./locationRoutes.js";
@@ -50,7 +49,6 @@ router.use("/v1/admins/forms", apiLimiter, adminsFormRoutes);
 router.use("/v1/admins/timesheet", apiLimiter, adminsTimesheetRoutes);
 
 router.use("/notifications", apiLimiter, notificationRoutes);
-router.use("/push-notifications", apiLimiter, pushNotificationsRoute);
 
 router.use("/storage", apiLimiter, blobRoutes);
 router.use("/tokens", tokenRoutes);
