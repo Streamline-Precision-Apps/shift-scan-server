@@ -25,13 +25,13 @@ model TimeSheet {
   withinFenceOut        Boolean?
   wasInjured            Boolean?               @default(false)
   id                    Int                    @id @default(autoincrement())
-  sessionId               Int?
-  Session                 Session?                  @relation(fields: [sessionId], references: [id])
+  sessionId             Int?
   EmployeeEquipmentLogs EmployeeEquipmentLog[]
   MaintenanceLogs       MaintenanceLog[]
   TascoLogs             TascoLog[]
   CostCode              CostCode               @relation(fields: [costcode], references: [name])
   Jobsite               Jobsite                @relation(fields: [jobsiteId], references: [id])
+  Session               Session?               @relation(fields: [sessionId], references: [id])
   User                  User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
   ChangeLogs            TimeSheetChangeLog[]
   TruckingLogs          TruckingLog[]

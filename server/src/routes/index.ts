@@ -49,6 +49,7 @@ router.use("/v1/admins/forms", apiLimiter, adminsFormRoutes);
 router.use("/v1/admins/timesheet", apiLimiter, adminsTimesheetRoutes);
 
 router.use("/notifications", apiLimiter, notificationRoutes);
+router.use("/push-notifications", apiLimiter, notificationRoutes);
 
 router.use("/storage", apiLimiter, blobRoutes);
 router.use("/tokens", tokenRoutes);

@@ -2,7 +2,6 @@ model FormTemplate {
   id                  String               @id @default(uuid())
   companyId           String
   name                String
-  spanishName         String?
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
   isSignatureRequired Boolean              @default(false)
@@ -10,50 +9,51 @@ model FormTemplate {
   isActive            FormTemplateStatus   @default(DRAFT)
   formType            FormTemplateCategory @default(GENERAL)
   isApprovalRequired  Boolean              @default(false)
+  spanishName         String?
   Submissions         FormSubmission[]
   Company             Company              @relation(fields: [companyId], references: [id])
   FormGrouping        FormGrouping[]       @relation("FormGroupingToFormTemplate")
 }
 
 model FormGrouping {
-  id           String         @id @default(uuid())
-  title        String?
-  spanishTitle String?
-  order        Int
-  conditionalOnFieldId String? // Field this group depends on
-  conditionType        String? // Type of condition (e.g., equals, not equals) 
-  conditionalOnValue   String? // Required value to show this group
-  Fields       FormField[]
-  FormTemplate FormTemplate[] @relation("FormGroupingToFormTemplate")
+  id                   String         @id @default(uuid())
+  title                String?
+  order                Int
+  conditionType        String?
+  conditionalOnFieldId String?
+  conditionalOnValue   String?
+  spanishTitle         String?
+  Fields               FormField[]
+  FormTemplate         FormTemplate[] @relation("FormGroupingToFormTemplate")
 }
 
 model FormField {
-  id             String            @id @default(uuid())
-  formGroupingId String
-  label          String
-  spanishLabel   String?
-  type           FieldType
-  required       Boolean           @default(false)
-  order          Int
-  placeholder    String?
-  maxLength      Int?
-  content        String?
-  filter         String?
-  minLength      Int?
-  multiple       Boolean?          @default(false)
-  conditionalOnFieldId String? // Field this group depends on
-  conditionType        String? // Type of condition (e.g., equals, not equals) 
-  conditionalOnValue   String? // Required value to show this group
-  FormGrouping   FormGrouping      @relation(fields: [formGroupingId], references: [id], onDelete: Cascade)
-  Options        FormFieldOption[]
+  id                   String            @id @default(uuid())
+  formGroupingId       String
+  label                String
+  type                 FieldType
+  required             Boolean           @default(false)
+  order                Int
+  placeholder          String?
+  maxLength            Int?
+  content              String?
+  filter               String?
+  minLength            Int?
+  multiple             Boolean?          @default(false)
+  conditionType        String?
+  conditionalOnFieldId String?
+  conditionalOnValue   String?
+  spanishLabel         String?
+  FormGrouping         FormGrouping      @relation(fields: [formGroupingId], references: [id], onDelete: Cascade)
+  Options              FormFieldOption[]
 }
 
 model FormFieldOption {
-  id      String    @id @default(uuid())
-  fieldId String
-  value   String
+  id           String    @id @default(uuid())
+  fieldId      String
+  value        String
   spanishValue String?
-  Field   FormField @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  Field        FormField @relation(fields: [fieldId], references: [id], onDelete: Cascade)
 }
 
 model FormSubmission {

@@ -23,7 +23,6 @@ model User {
   middleName           String?
   secondLastName       String?
   lastSeen             DateTime?
-  Session               Session[] // hold groups of timesheets and location markers
   accountSetupToken    AccountSetupToken?
   Contact              Contacts?
   Equipment            Equipment[]
@@ -35,6 +34,7 @@ model User {
   NotificationRead     NotificationRead[]
   NotificationResponse NotificationResponse[]
   PasswordResetTokens  PasswordResetToken[]
+  Session              Session[]
   TimeSheets           TimeSheet[]
   TimeSheetChanges     TimeSheetChangeLog[]   @relation("ChangedByUser")
   topicSubscriptions   TopicSubscription[]

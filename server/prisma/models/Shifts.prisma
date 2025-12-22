@@ -1,9 +1,9 @@
-model Session{
-    id Int @id @default(autoincrement())
-    userId String
-    startTime DateTime @default(now()) //determine the date of the shift 
-    endTime DateTime? // null when session is active
-    TimeSheets TimeSheet[]
-    locationMarkers LocationMarker[] 
-    User  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+model Session {
+  id              Int              @id @default(autoincrement())
+  userId          String
+  endTime         DateTime?
+  startTime       DateTime         @default(now())
+  locationMarkers LocationMarker[]
+  User            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  TimeSheets      TimeSheet[]
 }
