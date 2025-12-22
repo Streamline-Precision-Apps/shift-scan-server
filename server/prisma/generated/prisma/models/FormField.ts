@@ -42,7 +42,6 @@ export type FormFieldMinAggregateOutputType = {
   id: string | null
   formGroupingId: string | null
   label: string | null
-  spanishLabel: string | null
   type: $Enums.FieldType | null
   required: boolean | null
   order: number | null
@@ -52,16 +51,16 @@ export type FormFieldMinAggregateOutputType = {
   filter: string | null
   minLength: number | null
   multiple: boolean | null
-  conditionalOnFieldId: string | null
   conditionType: string | null
+  conditionalOnFieldId: string | null
   conditionalOnValue: string | null
+  spanishLabel: string | null
 }
 
 export type FormFieldMaxAggregateOutputType = {
   id: string | null
   formGroupingId: string | null
   label: string | null
-  spanishLabel: string | null
   type: $Enums.FieldType | null
   required: boolean | null
   order: number | null
@@ -71,16 +70,16 @@ export type FormFieldMaxAggregateOutputType = {
   filter: string | null
   minLength: number | null
   multiple: boolean | null
-  conditionalOnFieldId: string | null
   conditionType: string | null
+  conditionalOnFieldId: string | null
   conditionalOnValue: string | null
+  spanishLabel: string | null
 }
 
 export type FormFieldCountAggregateOutputType = {
   id: number
   formGroupingId: number
   label: number
-  spanishLabel: number
   type: number
   required: number
   order: number
@@ -90,9 +89,10 @@ export type FormFieldCountAggregateOutputType = {
   filter: number
   minLength: number
   multiple: number
-  conditionalOnFieldId: number
   conditionType: number
+  conditionalOnFieldId: number
   conditionalOnValue: number
+  spanishLabel: number
   _all: number
 }
 
@@ -113,7 +113,6 @@ export type FormFieldMinAggregateInputType = {
   id?: true
   formGroupingId?: true
   label?: true
-  spanishLabel?: true
   type?: true
   required?: true
   order?: true
@@ -123,16 +122,16 @@ export type FormFieldMinAggregateInputType = {
   filter?: true
   minLength?: true
   multiple?: true
-  conditionalOnFieldId?: true
   conditionType?: true
+  conditionalOnFieldId?: true
   conditionalOnValue?: true
+  spanishLabel?: true
 }
 
 export type FormFieldMaxAggregateInputType = {
   id?: true
   formGroupingId?: true
   label?: true
-  spanishLabel?: true
   type?: true
   required?: true
   order?: true
@@ -142,16 +141,16 @@ export type FormFieldMaxAggregateInputType = {
   filter?: true
   minLength?: true
   multiple?: true
-  conditionalOnFieldId?: true
   conditionType?: true
+  conditionalOnFieldId?: true
   conditionalOnValue?: true
+  spanishLabel?: true
 }
 
 export type FormFieldCountAggregateInputType = {
   id?: true
   formGroupingId?: true
   label?: true
-  spanishLabel?: true
   type?: true
   required?: true
   order?: true
@@ -161,9 +160,10 @@ export type FormFieldCountAggregateInputType = {
   filter?: true
   minLength?: true
   multiple?: true
-  conditionalOnFieldId?: true
   conditionType?: true
+  conditionalOnFieldId?: true
   conditionalOnValue?: true
+  spanishLabel?: true
   _all?: true
 }
 
@@ -257,7 +257,6 @@ export type FormFieldGroupByOutputType = {
   id: string
   formGroupingId: string
   label: string
-  spanishLabel: string | null
   type: $Enums.FieldType
   required: boolean
   order: number
@@ -267,9 +266,10 @@ export type FormFieldGroupByOutputType = {
   filter: string | null
   minLength: number | null
   multiple: boolean | null
-  conditionalOnFieldId: string | null
   conditionType: string | null
+  conditionalOnFieldId: string | null
   conditionalOnValue: string | null
+  spanishLabel: string | null
   _count: FormFieldCountAggregateOutputType | null
   _avg: FormFieldAvgAggregateOutputType | null
   _sum: FormFieldSumAggregateOutputType | null
@@ -299,7 +299,6 @@ export type FormFieldWhereInput = {
   id?: Prisma.StringFilter<"FormField"> | string
   formGroupingId?: Prisma.StringFilter<"FormField"> | string
   label?: Prisma.StringFilter<"FormField"> | string
-  spanishLabel?: Prisma.StringNullableFilter<"FormField"> | string | null
   type?: Prisma.EnumFieldTypeFilter<"FormField"> | $Enums.FieldType
   required?: Prisma.BoolFilter<"FormField"> | boolean
   order?: Prisma.IntFilter<"FormField"> | number
@@ -309,9 +308,10 @@ export type FormFieldWhereInput = {
   filter?: Prisma.StringNullableFilter<"FormField"> | string | null
   minLength?: Prisma.IntNullableFilter<"FormField"> | number | null
   multiple?: Prisma.BoolNullableFilter<"FormField"> | boolean | null
-  conditionalOnFieldId?: Prisma.StringNullableFilter<"FormField"> | string | null
   conditionType?: Prisma.StringNullableFilter<"FormField"> | string | null
+  conditionalOnFieldId?: Prisma.StringNullableFilter<"FormField"> | string | null
   conditionalOnValue?: Prisma.StringNullableFilter<"FormField"> | string | null
+  spanishLabel?: Prisma.StringNullableFilter<"FormField"> | string | null
   FormGrouping?: Prisma.XOR<Prisma.FormGroupingScalarRelationFilter, Prisma.FormGroupingWhereInput>
   Options?: Prisma.FormFieldOptionListRelationFilter
 }
@@ -320,7 +320,6 @@ export type FormFieldOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   formGroupingId?: Prisma.SortOrder
   label?: Prisma.SortOrder
-  spanishLabel?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrder
   required?: Prisma.SortOrder
   order?: Prisma.SortOrder
@@ -330,9 +329,10 @@ export type FormFieldOrderByWithRelationInput = {
   filter?: Prisma.SortOrderInput | Prisma.SortOrder
   minLength?: Prisma.SortOrderInput | Prisma.SortOrder
   multiple?: Prisma.SortOrderInput | Prisma.SortOrder
-  conditionalOnFieldId?: Prisma.SortOrderInput | Prisma.SortOrder
   conditionType?: Prisma.SortOrderInput | Prisma.SortOrder
+  conditionalOnFieldId?: Prisma.SortOrderInput | Prisma.SortOrder
   conditionalOnValue?: Prisma.SortOrderInput | Prisma.SortOrder
+  spanishLabel?: Prisma.SortOrderInput | Prisma.SortOrder
   FormGrouping?: Prisma.FormGroupingOrderByWithRelationInput
   Options?: Prisma.FormFieldOptionOrderByRelationAggregateInput
 }
@@ -344,7 +344,6 @@ export type FormFieldWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.FormFieldWhereInput | Prisma.FormFieldWhereInput[]
   formGroupingId?: Prisma.StringFilter<"FormField"> | string
   label?: Prisma.StringFilter<"FormField"> | string
-  spanishLabel?: Prisma.StringNullableFilter<"FormField"> | string | null
   type?: Prisma.EnumFieldTypeFilter<"FormField"> | $Enums.FieldType
   required?: Prisma.BoolFilter<"FormField"> | boolean
   order?: Prisma.IntFilter<"FormField"> | number
@@ -354,9 +353,10 @@ export type FormFieldWhereUniqueInput = Prisma.AtLeast<{
   filter?: Prisma.StringNullableFilter<"FormField"> | string | null
   minLength?: Prisma.IntNullableFilter<"FormField"> | number | null
   multiple?: Prisma.BoolNullableFilter<"FormField"> | boolean | null
-  conditionalOnFieldId?: Prisma.StringNullableFilter<"FormField"> | string | null
   conditionType?: Prisma.StringNullableFilter<"FormField"> | string | null
+  conditionalOnFieldId?: Prisma.StringNullableFilter<"FormField"> | string | null
   conditionalOnValue?: Prisma.StringNullableFilter<"FormField"> | string | null
+  spanishLabel?: Prisma.StringNullableFilter<"FormField"> | string | null
   FormGrouping?: Prisma.XOR<Prisma.FormGroupingScalarRelationFilter, Prisma.FormGroupingWhereInput>
   Options?: Prisma.FormFieldOptionListRelationFilter
 }, "id">
@@ -365,7 +365,6 @@ export type FormFieldOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   formGroupingId?: Prisma.SortOrder
   label?: Prisma.SortOrder
-  spanishLabel?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrder
   required?: Prisma.SortOrder
   order?: Prisma.SortOrder
@@ -375,9 +374,10 @@ export type FormFieldOrderByWithAggregationInput = {
   filter?: Prisma.SortOrderInput | Prisma.SortOrder
   minLength?: Prisma.SortOrderInput | Prisma.SortOrder
   multiple?: Prisma.SortOrderInput | Prisma.SortOrder
-  conditionalOnFieldId?: Prisma.SortOrderInput | Prisma.SortOrder
   conditionType?: Prisma.SortOrderInput | Prisma.SortOrder
+  conditionalOnFieldId?: Prisma.SortOrderInput | Prisma.SortOrder
   conditionalOnValue?: Prisma.SortOrderInput | Prisma.SortOrder
+  spanishLabel?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.FormFieldCountOrderByAggregateInput
   _avg?: Prisma.FormFieldAvgOrderByAggregateInput
   _max?: Prisma.FormFieldMaxOrderByAggregateInput
@@ -392,7 +392,6 @@ export type FormFieldScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"FormField"> | string
   formGroupingId?: Prisma.StringWithAggregatesFilter<"FormField"> | string
   label?: Prisma.StringWithAggregatesFilter<"FormField"> | string
-  spanishLabel?: Prisma.StringNullableWithAggregatesFilter<"FormField"> | string | null
   type?: Prisma.EnumFieldTypeWithAggregatesFilter<"FormField"> | $Enums.FieldType
   required?: Prisma.BoolWithAggregatesFilter<"FormField"> | boolean
   order?: Prisma.IntWithAggregatesFilter<"FormField"> | number
@@ -402,15 +401,15 @@ export type FormFieldScalarWhereWithAggregatesInput = {
   filter?: Prisma.StringNullableWithAggregatesFilter<"FormField"> | string | null
   minLength?: Prisma.IntNullableWithAggregatesFilter<"FormField"> | number | null
   multiple?: Prisma.BoolNullableWithAggregatesFilter<"FormField"> | boolean | null
-  conditionalOnFieldId?: Prisma.StringNullableWithAggregatesFilter<"FormField"> | string | null
   conditionType?: Prisma.StringNullableWithAggregatesFilter<"FormField"> | string | null
+  conditionalOnFieldId?: Prisma.StringNullableWithAggregatesFilter<"FormField"> | string | null
   conditionalOnValue?: Prisma.StringNullableWithAggregatesFilter<"FormField"> | string | null
+  spanishLabel?: Prisma.StringNullableWithAggregatesFilter<"FormField"> | string | null
 }
 
 export type FormFieldCreateInput = {
   id?: string
   label: string
-  spanishLabel?: string | null
   type: $Enums.FieldType
   required?: boolean
   order: number
@@ -420,9 +419,10 @@ export type FormFieldCreateInput = {
   filter?: string | null
   minLength?: number | null
   multiple?: boolean | null
-  conditionalOnFieldId?: string | null
   conditionType?: string | null
+  conditionalOnFieldId?: string | null
   conditionalOnValue?: string | null
+  spanishLabel?: string | null
   FormGrouping: Prisma.FormGroupingCreateNestedOneWithoutFieldsInput
   Options?: Prisma.FormFieldOptionCreateNestedManyWithoutFieldInput
 }
@@ -431,7 +431,6 @@ export type FormFieldUncheckedCreateInput = {
   id?: string
   formGroupingId: string
   label: string
-  spanishLabel?: string | null
   type: $Enums.FieldType
   required?: boolean
   order: number
@@ -441,16 +440,16 @@ export type FormFieldUncheckedCreateInput = {
   filter?: string | null
   minLength?: number | null
   multiple?: boolean | null
-  conditionalOnFieldId?: string | null
   conditionType?: string | null
+  conditionalOnFieldId?: string | null
   conditionalOnValue?: string | null
+  spanishLabel?: string | null
   Options?: Prisma.FormFieldOptionUncheckedCreateNestedManyWithoutFieldInput
 }
 
 export type FormFieldUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
-  spanishLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
   required?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
@@ -460,9 +459,10 @@ export type FormFieldUpdateInput = {
   filter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   minLength?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   multiple?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  conditionalOnFieldId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conditionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conditionalOnFieldId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conditionalOnValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  spanishLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   FormGrouping?: Prisma.FormGroupingUpdateOneRequiredWithoutFieldsNestedInput
   Options?: Prisma.FormFieldOptionUpdateManyWithoutFieldNestedInput
 }
@@ -471,7 +471,6 @@ export type FormFieldUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   formGroupingId?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
-  spanishLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
   required?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
@@ -481,9 +480,10 @@ export type FormFieldUncheckedUpdateInput = {
   filter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   minLength?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   multiple?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  conditionalOnFieldId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conditionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conditionalOnFieldId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conditionalOnValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  spanishLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   Options?: Prisma.FormFieldOptionUncheckedUpdateManyWithoutFieldNestedInput
 }
 
@@ -491,7 +491,6 @@ export type FormFieldCreateManyInput = {
   id?: string
   formGroupingId: string
   label: string
-  spanishLabel?: string | null
   type: $Enums.FieldType
   required?: boolean
   order: number
@@ -501,15 +500,15 @@ export type FormFieldCreateManyInput = {
   filter?: string | null
   minLength?: number | null
   multiple?: boolean | null
-  conditionalOnFieldId?: string | null
   conditionType?: string | null
+  conditionalOnFieldId?: string | null
   conditionalOnValue?: string | null
+  spanishLabel?: string | null
 }
 
 export type FormFieldUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
-  spanishLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
   required?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
@@ -519,16 +518,16 @@ export type FormFieldUpdateManyMutationInput = {
   filter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   minLength?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   multiple?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  conditionalOnFieldId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conditionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conditionalOnFieldId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conditionalOnValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  spanishLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type FormFieldUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   formGroupingId?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
-  spanishLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
   required?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
@@ -538,9 +537,10 @@ export type FormFieldUncheckedUpdateManyInput = {
   filter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   minLength?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   multiple?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  conditionalOnFieldId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conditionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conditionalOnFieldId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conditionalOnValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  spanishLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type FormFieldListRelationFilter = {
@@ -557,7 +557,6 @@ export type FormFieldCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   formGroupingId?: Prisma.SortOrder
   label?: Prisma.SortOrder
-  spanishLabel?: Prisma.SortOrder
   type?: Prisma.SortOrder
   required?: Prisma.SortOrder
   order?: Prisma.SortOrder
@@ -567,9 +566,10 @@ export type FormFieldCountOrderByAggregateInput = {
   filter?: Prisma.SortOrder
   minLength?: Prisma.SortOrder
   multiple?: Prisma.SortOrder
-  conditionalOnFieldId?: Prisma.SortOrder
   conditionType?: Prisma.SortOrder
+  conditionalOnFieldId?: Prisma.SortOrder
   conditionalOnValue?: Prisma.SortOrder
+  spanishLabel?: Prisma.SortOrder
 }
 
 export type FormFieldAvgOrderByAggregateInput = {
@@ -582,7 +582,6 @@ export type FormFieldMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   formGroupingId?: Prisma.SortOrder
   label?: Prisma.SortOrder
-  spanishLabel?: Prisma.SortOrder
   type?: Prisma.SortOrder
   required?: Prisma.SortOrder
   order?: Prisma.SortOrder
@@ -592,16 +591,16 @@ export type FormFieldMaxOrderByAggregateInput = {
   filter?: Prisma.SortOrder
   minLength?: Prisma.SortOrder
   multiple?: Prisma.SortOrder
-  conditionalOnFieldId?: Prisma.SortOrder
   conditionType?: Prisma.SortOrder
+  conditionalOnFieldId?: Prisma.SortOrder
   conditionalOnValue?: Prisma.SortOrder
+  spanishLabel?: Prisma.SortOrder
 }
 
 export type FormFieldMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   formGroupingId?: Prisma.SortOrder
   label?: Prisma.SortOrder
-  spanishLabel?: Prisma.SortOrder
   type?: Prisma.SortOrder
   required?: Prisma.SortOrder
   order?: Prisma.SortOrder
@@ -611,9 +610,10 @@ export type FormFieldMinOrderByAggregateInput = {
   filter?: Prisma.SortOrder
   minLength?: Prisma.SortOrder
   multiple?: Prisma.SortOrder
-  conditionalOnFieldId?: Prisma.SortOrder
   conditionType?: Prisma.SortOrder
+  conditionalOnFieldId?: Prisma.SortOrder
   conditionalOnValue?: Prisma.SortOrder
+  spanishLabel?: Prisma.SortOrder
 }
 
 export type FormFieldSumOrderByAggregateInput = {
@@ -698,7 +698,6 @@ export type FormFieldUpdateOneRequiredWithoutOptionsNestedInput = {
 export type FormFieldCreateWithoutFormGroupingInput = {
   id?: string
   label: string
-  spanishLabel?: string | null
   type: $Enums.FieldType
   required?: boolean
   order: number
@@ -708,16 +707,16 @@ export type FormFieldCreateWithoutFormGroupingInput = {
   filter?: string | null
   minLength?: number | null
   multiple?: boolean | null
-  conditionalOnFieldId?: string | null
   conditionType?: string | null
+  conditionalOnFieldId?: string | null
   conditionalOnValue?: string | null
+  spanishLabel?: string | null
   Options?: Prisma.FormFieldOptionCreateNestedManyWithoutFieldInput
 }
 
 export type FormFieldUncheckedCreateWithoutFormGroupingInput = {
   id?: string
   label: string
-  spanishLabel?: string | null
   type: $Enums.FieldType
   required?: boolean
   order: number
@@ -727,9 +726,10 @@ export type FormFieldUncheckedCreateWithoutFormGroupingInput = {
   filter?: string | null
   minLength?: number | null
   multiple?: boolean | null
-  conditionalOnFieldId?: string | null
   conditionType?: string | null
+  conditionalOnFieldId?: string | null
   conditionalOnValue?: string | null
+  spanishLabel?: string | null
   Options?: Prisma.FormFieldOptionUncheckedCreateNestedManyWithoutFieldInput
 }
 
@@ -766,7 +766,6 @@ export type FormFieldScalarWhereInput = {
   id?: Prisma.StringFilter<"FormField"> | string
   formGroupingId?: Prisma.StringFilter<"FormField"> | string
   label?: Prisma.StringFilter<"FormField"> | string
-  spanishLabel?: Prisma.StringNullableFilter<"FormField"> | string | null
   type?: Prisma.EnumFieldTypeFilter<"FormField"> | $Enums.FieldType
   required?: Prisma.BoolFilter<"FormField"> | boolean
   order?: Prisma.IntFilter<"FormField"> | number
@@ -776,15 +775,15 @@ export type FormFieldScalarWhereInput = {
   filter?: Prisma.StringNullableFilter<"FormField"> | string | null
   minLength?: Prisma.IntNullableFilter<"FormField"> | number | null
   multiple?: Prisma.BoolNullableFilter<"FormField"> | boolean | null
-  conditionalOnFieldId?: Prisma.StringNullableFilter<"FormField"> | string | null
   conditionType?: Prisma.StringNullableFilter<"FormField"> | string | null
+  conditionalOnFieldId?: Prisma.StringNullableFilter<"FormField"> | string | null
   conditionalOnValue?: Prisma.StringNullableFilter<"FormField"> | string | null
+  spanishLabel?: Prisma.StringNullableFilter<"FormField"> | string | null
 }
 
 export type FormFieldCreateWithoutOptionsInput = {
   id?: string
   label: string
-  spanishLabel?: string | null
   type: $Enums.FieldType
   required?: boolean
   order: number
@@ -794,9 +793,10 @@ export type FormFieldCreateWithoutOptionsInput = {
   filter?: string | null
   minLength?: number | null
   multiple?: boolean | null
-  conditionalOnFieldId?: string | null
   conditionType?: string | null
+  conditionalOnFieldId?: string | null
   conditionalOnValue?: string | null
+  spanishLabel?: string | null
   FormGrouping: Prisma.FormGroupingCreateNestedOneWithoutFieldsInput
 }
 
@@ -804,7 +804,6 @@ export type FormFieldUncheckedCreateWithoutOptionsInput = {
   id?: string
   formGroupingId: string
   label: string
-  spanishLabel?: string | null
   type: $Enums.FieldType
   required?: boolean
   order: number
@@ -814,9 +813,10 @@ export type FormFieldUncheckedCreateWithoutOptionsInput = {
   filter?: string | null
   minLength?: number | null
   multiple?: boolean | null
-  conditionalOnFieldId?: string | null
   conditionType?: string | null
+  conditionalOnFieldId?: string | null
   conditionalOnValue?: string | null
+  spanishLabel?: string | null
 }
 
 export type FormFieldCreateOrConnectWithoutOptionsInput = {
@@ -838,7 +838,6 @@ export type FormFieldUpdateToOneWithWhereWithoutOptionsInput = {
 export type FormFieldUpdateWithoutOptionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
-  spanishLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
   required?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
@@ -848,9 +847,10 @@ export type FormFieldUpdateWithoutOptionsInput = {
   filter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   minLength?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   multiple?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  conditionalOnFieldId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conditionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conditionalOnFieldId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conditionalOnValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  spanishLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   FormGrouping?: Prisma.FormGroupingUpdateOneRequiredWithoutFieldsNestedInput
 }
 
@@ -858,7 +858,6 @@ export type FormFieldUncheckedUpdateWithoutOptionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   formGroupingId?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
-  spanishLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
   required?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
@@ -868,15 +867,15 @@ export type FormFieldUncheckedUpdateWithoutOptionsInput = {
   filter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   minLength?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   multiple?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  conditionalOnFieldId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conditionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conditionalOnFieldId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conditionalOnValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  spanishLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type FormFieldCreateManyFormGroupingInput = {
   id?: string
   label: string
-  spanishLabel?: string | null
   type: $Enums.FieldType
   required?: boolean
   order: number
@@ -886,15 +885,15 @@ export type FormFieldCreateManyFormGroupingInput = {
   filter?: string | null
   minLength?: number | null
   multiple?: boolean | null
-  conditionalOnFieldId?: string | null
   conditionType?: string | null
+  conditionalOnFieldId?: string | null
   conditionalOnValue?: string | null
+  spanishLabel?: string | null
 }
 
 export type FormFieldUpdateWithoutFormGroupingInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
-  spanishLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
   required?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
@@ -904,16 +903,16 @@ export type FormFieldUpdateWithoutFormGroupingInput = {
   filter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   minLength?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   multiple?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  conditionalOnFieldId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conditionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conditionalOnFieldId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conditionalOnValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  spanishLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   Options?: Prisma.FormFieldOptionUpdateManyWithoutFieldNestedInput
 }
 
 export type FormFieldUncheckedUpdateWithoutFormGroupingInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
-  spanishLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
   required?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
@@ -923,16 +922,16 @@ export type FormFieldUncheckedUpdateWithoutFormGroupingInput = {
   filter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   minLength?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   multiple?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  conditionalOnFieldId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conditionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conditionalOnFieldId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conditionalOnValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  spanishLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   Options?: Prisma.FormFieldOptionUncheckedUpdateManyWithoutFieldNestedInput
 }
 
 export type FormFieldUncheckedUpdateManyWithoutFormGroupingInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
-  spanishLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
   required?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
@@ -942,9 +941,10 @@ export type FormFieldUncheckedUpdateManyWithoutFormGroupingInput = {
   filter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   minLength?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   multiple?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  conditionalOnFieldId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conditionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conditionalOnFieldId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conditionalOnValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  spanishLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -982,7 +982,6 @@ export type FormFieldSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   id?: boolean
   formGroupingId?: boolean
   label?: boolean
-  spanishLabel?: boolean
   type?: boolean
   required?: boolean
   order?: boolean
@@ -992,9 +991,10 @@ export type FormFieldSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   filter?: boolean
   minLength?: boolean
   multiple?: boolean
-  conditionalOnFieldId?: boolean
   conditionType?: boolean
+  conditionalOnFieldId?: boolean
   conditionalOnValue?: boolean
+  spanishLabel?: boolean
   FormGrouping?: boolean | Prisma.FormGroupingDefaultArgs<ExtArgs>
   Options?: boolean | Prisma.FormField$OptionsArgs<ExtArgs>
   _count?: boolean | Prisma.FormFieldCountOutputTypeDefaultArgs<ExtArgs>
@@ -1004,7 +1004,6 @@ export type FormFieldSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   id?: boolean
   formGroupingId?: boolean
   label?: boolean
-  spanishLabel?: boolean
   type?: boolean
   required?: boolean
   order?: boolean
@@ -1014,9 +1013,10 @@ export type FormFieldSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   filter?: boolean
   minLength?: boolean
   multiple?: boolean
-  conditionalOnFieldId?: boolean
   conditionType?: boolean
+  conditionalOnFieldId?: boolean
   conditionalOnValue?: boolean
+  spanishLabel?: boolean
   FormGrouping?: boolean | Prisma.FormGroupingDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["formField"]>
 
@@ -1024,7 +1024,6 @@ export type FormFieldSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   id?: boolean
   formGroupingId?: boolean
   label?: boolean
-  spanishLabel?: boolean
   type?: boolean
   required?: boolean
   order?: boolean
@@ -1034,9 +1033,10 @@ export type FormFieldSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   filter?: boolean
   minLength?: boolean
   multiple?: boolean
-  conditionalOnFieldId?: boolean
   conditionType?: boolean
+  conditionalOnFieldId?: boolean
   conditionalOnValue?: boolean
+  spanishLabel?: boolean
   FormGrouping?: boolean | Prisma.FormGroupingDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["formField"]>
 
@@ -1044,7 +1044,6 @@ export type FormFieldSelectScalar = {
   id?: boolean
   formGroupingId?: boolean
   label?: boolean
-  spanishLabel?: boolean
   type?: boolean
   required?: boolean
   order?: boolean
@@ -1054,12 +1053,13 @@ export type FormFieldSelectScalar = {
   filter?: boolean
   minLength?: boolean
   multiple?: boolean
-  conditionalOnFieldId?: boolean
   conditionType?: boolean
+  conditionalOnFieldId?: boolean
   conditionalOnValue?: boolean
+  spanishLabel?: boolean
 }
 
-export type FormFieldOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "formGroupingId" | "label" | "spanishLabel" | "type" | "required" | "order" | "placeholder" | "maxLength" | "content" | "filter" | "minLength" | "multiple" | "conditionalOnFieldId" | "conditionType" | "conditionalOnValue", ExtArgs["result"]["formField"]>
+export type FormFieldOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "formGroupingId" | "label" | "type" | "required" | "order" | "placeholder" | "maxLength" | "content" | "filter" | "minLength" | "multiple" | "conditionType" | "conditionalOnFieldId" | "conditionalOnValue" | "spanishLabel", ExtArgs["result"]["formField"]>
 export type FormFieldInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   FormGrouping?: boolean | Prisma.FormGroupingDefaultArgs<ExtArgs>
   Options?: boolean | Prisma.FormField$OptionsArgs<ExtArgs>
@@ -1082,7 +1082,6 @@ export type $FormFieldPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     id: string
     formGroupingId: string
     label: string
-    spanishLabel: string | null
     type: $Enums.FieldType
     required: boolean
     order: number
@@ -1092,9 +1091,10 @@ export type $FormFieldPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     filter: string | null
     minLength: number | null
     multiple: boolean | null
-    conditionalOnFieldId: string | null
     conditionType: string | null
+    conditionalOnFieldId: string | null
     conditionalOnValue: string | null
+    spanishLabel: string | null
   }, ExtArgs["result"]["formField"]>
   composites: {}
 }
@@ -1523,7 +1523,6 @@ export interface FormFieldFieldRefs {
   readonly id: Prisma.FieldRef<"FormField", 'String'>
   readonly formGroupingId: Prisma.FieldRef<"FormField", 'String'>
   readonly label: Prisma.FieldRef<"FormField", 'String'>
-  readonly spanishLabel: Prisma.FieldRef<"FormField", 'String'>
   readonly type: Prisma.FieldRef<"FormField", 'FieldType'>
   readonly required: Prisma.FieldRef<"FormField", 'Boolean'>
   readonly order: Prisma.FieldRef<"FormField", 'Int'>
@@ -1533,9 +1532,10 @@ export interface FormFieldFieldRefs {
   readonly filter: Prisma.FieldRef<"FormField", 'String'>
   readonly minLength: Prisma.FieldRef<"FormField", 'Int'>
   readonly multiple: Prisma.FieldRef<"FormField", 'Boolean'>
-  readonly conditionalOnFieldId: Prisma.FieldRef<"FormField", 'String'>
   readonly conditionType: Prisma.FieldRef<"FormField", 'String'>
+  readonly conditionalOnFieldId: Prisma.FieldRef<"FormField", 'String'>
   readonly conditionalOnValue: Prisma.FieldRef<"FormField", 'String'>
+  readonly spanishLabel: Prisma.FieldRef<"FormField", 'String'>
 }
     
 

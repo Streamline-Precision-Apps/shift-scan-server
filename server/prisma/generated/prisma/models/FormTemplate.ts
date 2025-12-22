@@ -28,7 +28,6 @@ export type FormTemplateMinAggregateOutputType = {
   id: string | null
   companyId: string | null
   name: string | null
-  spanishName: string | null
   createdAt: Date | null
   updatedAt: Date | null
   isSignatureRequired: boolean | null
@@ -36,13 +35,13 @@ export type FormTemplateMinAggregateOutputType = {
   isActive: $Enums.FormTemplateStatus | null
   formType: $Enums.FormTemplateCategory | null
   isApprovalRequired: boolean | null
+  spanishName: string | null
 }
 
 export type FormTemplateMaxAggregateOutputType = {
   id: string | null
   companyId: string | null
   name: string | null
-  spanishName: string | null
   createdAt: Date | null
   updatedAt: Date | null
   isSignatureRequired: boolean | null
@@ -50,13 +49,13 @@ export type FormTemplateMaxAggregateOutputType = {
   isActive: $Enums.FormTemplateStatus | null
   formType: $Enums.FormTemplateCategory | null
   isApprovalRequired: boolean | null
+  spanishName: string | null
 }
 
 export type FormTemplateCountAggregateOutputType = {
   id: number
   companyId: number
   name: number
-  spanishName: number
   createdAt: number
   updatedAt: number
   isSignatureRequired: number
@@ -64,6 +63,7 @@ export type FormTemplateCountAggregateOutputType = {
   isActive: number
   formType: number
   isApprovalRequired: number
+  spanishName: number
   _all: number
 }
 
@@ -72,7 +72,6 @@ export type FormTemplateMinAggregateInputType = {
   id?: true
   companyId?: true
   name?: true
-  spanishName?: true
   createdAt?: true
   updatedAt?: true
   isSignatureRequired?: true
@@ -80,13 +79,13 @@ export type FormTemplateMinAggregateInputType = {
   isActive?: true
   formType?: true
   isApprovalRequired?: true
+  spanishName?: true
 }
 
 export type FormTemplateMaxAggregateInputType = {
   id?: true
   companyId?: true
   name?: true
-  spanishName?: true
   createdAt?: true
   updatedAt?: true
   isSignatureRequired?: true
@@ -94,13 +93,13 @@ export type FormTemplateMaxAggregateInputType = {
   isActive?: true
   formType?: true
   isApprovalRequired?: true
+  spanishName?: true
 }
 
 export type FormTemplateCountAggregateInputType = {
   id?: true
   companyId?: true
   name?: true
-  spanishName?: true
   createdAt?: true
   updatedAt?: true
   isSignatureRequired?: true
@@ -108,6 +107,7 @@ export type FormTemplateCountAggregateInputType = {
   isActive?: true
   formType?: true
   isApprovalRequired?: true
+  spanishName?: true
   _all?: true
 }
 
@@ -187,7 +187,6 @@ export type FormTemplateGroupByOutputType = {
   id: string
   companyId: string
   name: string
-  spanishName: string | null
   createdAt: Date
   updatedAt: Date
   isSignatureRequired: boolean
@@ -195,6 +194,7 @@ export type FormTemplateGroupByOutputType = {
   isActive: $Enums.FormTemplateStatus
   formType: $Enums.FormTemplateCategory
   isApprovalRequired: boolean
+  spanishName: string | null
   _count: FormTemplateCountAggregateOutputType | null
   _min: FormTemplateMinAggregateOutputType | null
   _max: FormTemplateMaxAggregateOutputType | null
@@ -222,7 +222,6 @@ export type FormTemplateWhereInput = {
   id?: Prisma.StringFilter<"FormTemplate"> | string
   companyId?: Prisma.StringFilter<"FormTemplate"> | string
   name?: Prisma.StringFilter<"FormTemplate"> | string
-  spanishName?: Prisma.StringNullableFilter<"FormTemplate"> | string | null
   createdAt?: Prisma.DateTimeFilter<"FormTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FormTemplate"> | Date | string
   isSignatureRequired?: Prisma.BoolFilter<"FormTemplate"> | boolean
@@ -230,6 +229,7 @@ export type FormTemplateWhereInput = {
   isActive?: Prisma.EnumFormTemplateStatusFilter<"FormTemplate"> | $Enums.FormTemplateStatus
   formType?: Prisma.EnumFormTemplateCategoryFilter<"FormTemplate"> | $Enums.FormTemplateCategory
   isApprovalRequired?: Prisma.BoolFilter<"FormTemplate"> | boolean
+  spanishName?: Prisma.StringNullableFilter<"FormTemplate"> | string | null
   Submissions?: Prisma.FormSubmissionListRelationFilter
   Company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
   FormGrouping?: Prisma.FormGroupingListRelationFilter
@@ -239,7 +239,6 @@ export type FormTemplateOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   companyId?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  spanishName?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   isSignatureRequired?: Prisma.SortOrder
@@ -247,6 +246,7 @@ export type FormTemplateOrderByWithRelationInput = {
   isActive?: Prisma.SortOrder
   formType?: Prisma.SortOrder
   isApprovalRequired?: Prisma.SortOrder
+  spanishName?: Prisma.SortOrderInput | Prisma.SortOrder
   Submissions?: Prisma.FormSubmissionOrderByRelationAggregateInput
   Company?: Prisma.CompanyOrderByWithRelationInput
   FormGrouping?: Prisma.FormGroupingOrderByRelationAggregateInput
@@ -259,7 +259,6 @@ export type FormTemplateWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.FormTemplateWhereInput | Prisma.FormTemplateWhereInput[]
   companyId?: Prisma.StringFilter<"FormTemplate"> | string
   name?: Prisma.StringFilter<"FormTemplate"> | string
-  spanishName?: Prisma.StringNullableFilter<"FormTemplate"> | string | null
   createdAt?: Prisma.DateTimeFilter<"FormTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FormTemplate"> | Date | string
   isSignatureRequired?: Prisma.BoolFilter<"FormTemplate"> | boolean
@@ -267,6 +266,7 @@ export type FormTemplateWhereUniqueInput = Prisma.AtLeast<{
   isActive?: Prisma.EnumFormTemplateStatusFilter<"FormTemplate"> | $Enums.FormTemplateStatus
   formType?: Prisma.EnumFormTemplateCategoryFilter<"FormTemplate"> | $Enums.FormTemplateCategory
   isApprovalRequired?: Prisma.BoolFilter<"FormTemplate"> | boolean
+  spanishName?: Prisma.StringNullableFilter<"FormTemplate"> | string | null
   Submissions?: Prisma.FormSubmissionListRelationFilter
   Company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
   FormGrouping?: Prisma.FormGroupingListRelationFilter
@@ -276,7 +276,6 @@ export type FormTemplateOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   companyId?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  spanishName?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   isSignatureRequired?: Prisma.SortOrder
@@ -284,6 +283,7 @@ export type FormTemplateOrderByWithAggregationInput = {
   isActive?: Prisma.SortOrder
   formType?: Prisma.SortOrder
   isApprovalRequired?: Prisma.SortOrder
+  spanishName?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.FormTemplateCountOrderByAggregateInput
   _max?: Prisma.FormTemplateMaxOrderByAggregateInput
   _min?: Prisma.FormTemplateMinOrderByAggregateInput
@@ -296,7 +296,6 @@ export type FormTemplateScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"FormTemplate"> | string
   companyId?: Prisma.StringWithAggregatesFilter<"FormTemplate"> | string
   name?: Prisma.StringWithAggregatesFilter<"FormTemplate"> | string
-  spanishName?: Prisma.StringNullableWithAggregatesFilter<"FormTemplate"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"FormTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"FormTemplate"> | Date | string
   isSignatureRequired?: Prisma.BoolWithAggregatesFilter<"FormTemplate"> | boolean
@@ -304,12 +303,12 @@ export type FormTemplateScalarWhereWithAggregatesInput = {
   isActive?: Prisma.EnumFormTemplateStatusWithAggregatesFilter<"FormTemplate"> | $Enums.FormTemplateStatus
   formType?: Prisma.EnumFormTemplateCategoryWithAggregatesFilter<"FormTemplate"> | $Enums.FormTemplateCategory
   isApprovalRequired?: Prisma.BoolWithAggregatesFilter<"FormTemplate"> | boolean
+  spanishName?: Prisma.StringNullableWithAggregatesFilter<"FormTemplate"> | string | null
 }
 
 export type FormTemplateCreateInput = {
   id?: string
   name: string
-  spanishName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   isSignatureRequired?: boolean
@@ -317,6 +316,7 @@ export type FormTemplateCreateInput = {
   isActive?: $Enums.FormTemplateStatus
   formType?: $Enums.FormTemplateCategory
   isApprovalRequired?: boolean
+  spanishName?: string | null
   Submissions?: Prisma.FormSubmissionCreateNestedManyWithoutFormTemplateInput
   Company: Prisma.CompanyCreateNestedOneWithoutFormTemplatesInput
   FormGrouping?: Prisma.FormGroupingCreateNestedManyWithoutFormTemplateInput
@@ -326,7 +326,6 @@ export type FormTemplateUncheckedCreateInput = {
   id?: string
   companyId: string
   name: string
-  spanishName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   isSignatureRequired?: boolean
@@ -334,6 +333,7 @@ export type FormTemplateUncheckedCreateInput = {
   isActive?: $Enums.FormTemplateStatus
   formType?: $Enums.FormTemplateCategory
   isApprovalRequired?: boolean
+  spanishName?: string | null
   Submissions?: Prisma.FormSubmissionUncheckedCreateNestedManyWithoutFormTemplateInput
   FormGrouping?: Prisma.FormGroupingUncheckedCreateNestedManyWithoutFormTemplateInput
 }
@@ -341,7 +341,6 @@ export type FormTemplateUncheckedCreateInput = {
 export type FormTemplateUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  spanishName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isSignatureRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -349,6 +348,7 @@ export type FormTemplateUpdateInput = {
   isActive?: Prisma.EnumFormTemplateStatusFieldUpdateOperationsInput | $Enums.FormTemplateStatus
   formType?: Prisma.EnumFormTemplateCategoryFieldUpdateOperationsInput | $Enums.FormTemplateCategory
   isApprovalRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  spanishName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   Submissions?: Prisma.FormSubmissionUpdateManyWithoutFormTemplateNestedInput
   Company?: Prisma.CompanyUpdateOneRequiredWithoutFormTemplatesNestedInput
   FormGrouping?: Prisma.FormGroupingUpdateManyWithoutFormTemplateNestedInput
@@ -358,7 +358,6 @@ export type FormTemplateUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  spanishName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isSignatureRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -366,6 +365,7 @@ export type FormTemplateUncheckedUpdateInput = {
   isActive?: Prisma.EnumFormTemplateStatusFieldUpdateOperationsInput | $Enums.FormTemplateStatus
   formType?: Prisma.EnumFormTemplateCategoryFieldUpdateOperationsInput | $Enums.FormTemplateCategory
   isApprovalRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  spanishName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   Submissions?: Prisma.FormSubmissionUncheckedUpdateManyWithoutFormTemplateNestedInput
   FormGrouping?: Prisma.FormGroupingUncheckedUpdateManyWithoutFormTemplateNestedInput
 }
@@ -374,7 +374,6 @@ export type FormTemplateCreateManyInput = {
   id?: string
   companyId: string
   name: string
-  spanishName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   isSignatureRequired?: boolean
@@ -382,12 +381,12 @@ export type FormTemplateCreateManyInput = {
   isActive?: $Enums.FormTemplateStatus
   formType?: $Enums.FormTemplateCategory
   isApprovalRequired?: boolean
+  spanishName?: string | null
 }
 
 export type FormTemplateUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  spanishName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isSignatureRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -395,13 +394,13 @@ export type FormTemplateUpdateManyMutationInput = {
   isActive?: Prisma.EnumFormTemplateStatusFieldUpdateOperationsInput | $Enums.FormTemplateStatus
   formType?: Prisma.EnumFormTemplateCategoryFieldUpdateOperationsInput | $Enums.FormTemplateCategory
   isApprovalRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  spanishName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type FormTemplateUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  spanishName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isSignatureRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -409,6 +408,7 @@ export type FormTemplateUncheckedUpdateManyInput = {
   isActive?: Prisma.EnumFormTemplateStatusFieldUpdateOperationsInput | $Enums.FormTemplateStatus
   formType?: Prisma.EnumFormTemplateCategoryFieldUpdateOperationsInput | $Enums.FormTemplateCategory
   isApprovalRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  spanishName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type FormTemplateListRelationFilter = {
@@ -425,7 +425,6 @@ export type FormTemplateCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   companyId?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  spanishName?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   isSignatureRequired?: Prisma.SortOrder
@@ -433,13 +432,13 @@ export type FormTemplateCountOrderByAggregateInput = {
   isActive?: Prisma.SortOrder
   formType?: Prisma.SortOrder
   isApprovalRequired?: Prisma.SortOrder
+  spanishName?: Prisma.SortOrder
 }
 
 export type FormTemplateMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   companyId?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  spanishName?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   isSignatureRequired?: Prisma.SortOrder
@@ -447,13 +446,13 @@ export type FormTemplateMaxOrderByAggregateInput = {
   isActive?: Prisma.SortOrder
   formType?: Prisma.SortOrder
   isApprovalRequired?: Prisma.SortOrder
+  spanishName?: Prisma.SortOrder
 }
 
 export type FormTemplateMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   companyId?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  spanishName?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   isSignatureRequired?: Prisma.SortOrder
@@ -461,6 +460,7 @@ export type FormTemplateMinOrderByAggregateInput = {
   isActive?: Prisma.SortOrder
   formType?: Prisma.SortOrder
   isApprovalRequired?: Prisma.SortOrder
+  spanishName?: Prisma.SortOrder
 }
 
 export type FormTemplateScalarRelationFilter = {
@@ -569,7 +569,6 @@ export type FormTemplateUpdateOneRequiredWithoutSubmissionsNestedInput = {
 export type FormTemplateCreateWithoutCompanyInput = {
   id?: string
   name: string
-  spanishName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   isSignatureRequired?: boolean
@@ -577,6 +576,7 @@ export type FormTemplateCreateWithoutCompanyInput = {
   isActive?: $Enums.FormTemplateStatus
   formType?: $Enums.FormTemplateCategory
   isApprovalRequired?: boolean
+  spanishName?: string | null
   Submissions?: Prisma.FormSubmissionCreateNestedManyWithoutFormTemplateInput
   FormGrouping?: Prisma.FormGroupingCreateNestedManyWithoutFormTemplateInput
 }
@@ -584,7 +584,6 @@ export type FormTemplateCreateWithoutCompanyInput = {
 export type FormTemplateUncheckedCreateWithoutCompanyInput = {
   id?: string
   name: string
-  spanishName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   isSignatureRequired?: boolean
@@ -592,6 +591,7 @@ export type FormTemplateUncheckedCreateWithoutCompanyInput = {
   isActive?: $Enums.FormTemplateStatus
   formType?: $Enums.FormTemplateCategory
   isApprovalRequired?: boolean
+  spanishName?: string | null
   Submissions?: Prisma.FormSubmissionUncheckedCreateNestedManyWithoutFormTemplateInput
   FormGrouping?: Prisma.FormGroupingUncheckedCreateNestedManyWithoutFormTemplateInput
 }
@@ -629,7 +629,6 @@ export type FormTemplateScalarWhereInput = {
   id?: Prisma.StringFilter<"FormTemplate"> | string
   companyId?: Prisma.StringFilter<"FormTemplate"> | string
   name?: Prisma.StringFilter<"FormTemplate"> | string
-  spanishName?: Prisma.StringNullableFilter<"FormTemplate"> | string | null
   createdAt?: Prisma.DateTimeFilter<"FormTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FormTemplate"> | Date | string
   isSignatureRequired?: Prisma.BoolFilter<"FormTemplate"> | boolean
@@ -637,12 +636,12 @@ export type FormTemplateScalarWhereInput = {
   isActive?: Prisma.EnumFormTemplateStatusFilter<"FormTemplate"> | $Enums.FormTemplateStatus
   formType?: Prisma.EnumFormTemplateCategoryFilter<"FormTemplate"> | $Enums.FormTemplateCategory
   isApprovalRequired?: Prisma.BoolFilter<"FormTemplate"> | boolean
+  spanishName?: Prisma.StringNullableFilter<"FormTemplate"> | string | null
 }
 
 export type FormTemplateCreateWithoutFormGroupingInput = {
   id?: string
   name: string
-  spanishName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   isSignatureRequired?: boolean
@@ -650,6 +649,7 @@ export type FormTemplateCreateWithoutFormGroupingInput = {
   isActive?: $Enums.FormTemplateStatus
   formType?: $Enums.FormTemplateCategory
   isApprovalRequired?: boolean
+  spanishName?: string | null
   Submissions?: Prisma.FormSubmissionCreateNestedManyWithoutFormTemplateInput
   Company: Prisma.CompanyCreateNestedOneWithoutFormTemplatesInput
 }
@@ -658,7 +658,6 @@ export type FormTemplateUncheckedCreateWithoutFormGroupingInput = {
   id?: string
   companyId: string
   name: string
-  spanishName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   isSignatureRequired?: boolean
@@ -666,6 +665,7 @@ export type FormTemplateUncheckedCreateWithoutFormGroupingInput = {
   isActive?: $Enums.FormTemplateStatus
   formType?: $Enums.FormTemplateCategory
   isApprovalRequired?: boolean
+  spanishName?: string | null
   Submissions?: Prisma.FormSubmissionUncheckedCreateNestedManyWithoutFormTemplateInput
 }
 
@@ -693,7 +693,6 @@ export type FormTemplateUpdateManyWithWhereWithoutFormGroupingInput = {
 export type FormTemplateCreateWithoutSubmissionsInput = {
   id?: string
   name: string
-  spanishName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   isSignatureRequired?: boolean
@@ -701,6 +700,7 @@ export type FormTemplateCreateWithoutSubmissionsInput = {
   isActive?: $Enums.FormTemplateStatus
   formType?: $Enums.FormTemplateCategory
   isApprovalRequired?: boolean
+  spanishName?: string | null
   Company: Prisma.CompanyCreateNestedOneWithoutFormTemplatesInput
   FormGrouping?: Prisma.FormGroupingCreateNestedManyWithoutFormTemplateInput
 }
@@ -709,7 +709,6 @@ export type FormTemplateUncheckedCreateWithoutSubmissionsInput = {
   id?: string
   companyId: string
   name: string
-  spanishName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   isSignatureRequired?: boolean
@@ -717,6 +716,7 @@ export type FormTemplateUncheckedCreateWithoutSubmissionsInput = {
   isActive?: $Enums.FormTemplateStatus
   formType?: $Enums.FormTemplateCategory
   isApprovalRequired?: boolean
+  spanishName?: string | null
   FormGrouping?: Prisma.FormGroupingUncheckedCreateNestedManyWithoutFormTemplateInput
 }
 
@@ -739,7 +739,6 @@ export type FormTemplateUpdateToOneWithWhereWithoutSubmissionsInput = {
 export type FormTemplateUpdateWithoutSubmissionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  spanishName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isSignatureRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -747,6 +746,7 @@ export type FormTemplateUpdateWithoutSubmissionsInput = {
   isActive?: Prisma.EnumFormTemplateStatusFieldUpdateOperationsInput | $Enums.FormTemplateStatus
   formType?: Prisma.EnumFormTemplateCategoryFieldUpdateOperationsInput | $Enums.FormTemplateCategory
   isApprovalRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  spanishName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   Company?: Prisma.CompanyUpdateOneRequiredWithoutFormTemplatesNestedInput
   FormGrouping?: Prisma.FormGroupingUpdateManyWithoutFormTemplateNestedInput
 }
@@ -755,7 +755,6 @@ export type FormTemplateUncheckedUpdateWithoutSubmissionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  spanishName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isSignatureRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -763,13 +762,13 @@ export type FormTemplateUncheckedUpdateWithoutSubmissionsInput = {
   isActive?: Prisma.EnumFormTemplateStatusFieldUpdateOperationsInput | $Enums.FormTemplateStatus
   formType?: Prisma.EnumFormTemplateCategoryFieldUpdateOperationsInput | $Enums.FormTemplateCategory
   isApprovalRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  spanishName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   FormGrouping?: Prisma.FormGroupingUncheckedUpdateManyWithoutFormTemplateNestedInput
 }
 
 export type FormTemplateCreateManyCompanyInput = {
   id?: string
   name: string
-  spanishName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   isSignatureRequired?: boolean
@@ -777,12 +776,12 @@ export type FormTemplateCreateManyCompanyInput = {
   isActive?: $Enums.FormTemplateStatus
   formType?: $Enums.FormTemplateCategory
   isApprovalRequired?: boolean
+  spanishName?: string | null
 }
 
 export type FormTemplateUpdateWithoutCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  spanishName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isSignatureRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -790,6 +789,7 @@ export type FormTemplateUpdateWithoutCompanyInput = {
   isActive?: Prisma.EnumFormTemplateStatusFieldUpdateOperationsInput | $Enums.FormTemplateStatus
   formType?: Prisma.EnumFormTemplateCategoryFieldUpdateOperationsInput | $Enums.FormTemplateCategory
   isApprovalRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  spanishName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   Submissions?: Prisma.FormSubmissionUpdateManyWithoutFormTemplateNestedInput
   FormGrouping?: Prisma.FormGroupingUpdateManyWithoutFormTemplateNestedInput
 }
@@ -797,7 +797,6 @@ export type FormTemplateUpdateWithoutCompanyInput = {
 export type FormTemplateUncheckedUpdateWithoutCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  spanishName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isSignatureRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -805,6 +804,7 @@ export type FormTemplateUncheckedUpdateWithoutCompanyInput = {
   isActive?: Prisma.EnumFormTemplateStatusFieldUpdateOperationsInput | $Enums.FormTemplateStatus
   formType?: Prisma.EnumFormTemplateCategoryFieldUpdateOperationsInput | $Enums.FormTemplateCategory
   isApprovalRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  spanishName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   Submissions?: Prisma.FormSubmissionUncheckedUpdateManyWithoutFormTemplateNestedInput
   FormGrouping?: Prisma.FormGroupingUncheckedUpdateManyWithoutFormTemplateNestedInput
 }
@@ -812,7 +812,6 @@ export type FormTemplateUncheckedUpdateWithoutCompanyInput = {
 export type FormTemplateUncheckedUpdateManyWithoutCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  spanishName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isSignatureRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -820,12 +819,12 @@ export type FormTemplateUncheckedUpdateManyWithoutCompanyInput = {
   isActive?: Prisma.EnumFormTemplateStatusFieldUpdateOperationsInput | $Enums.FormTemplateStatus
   formType?: Prisma.EnumFormTemplateCategoryFieldUpdateOperationsInput | $Enums.FormTemplateCategory
   isApprovalRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  spanishName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type FormTemplateUpdateWithoutFormGroupingInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  spanishName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isSignatureRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -833,6 +832,7 @@ export type FormTemplateUpdateWithoutFormGroupingInput = {
   isActive?: Prisma.EnumFormTemplateStatusFieldUpdateOperationsInput | $Enums.FormTemplateStatus
   formType?: Prisma.EnumFormTemplateCategoryFieldUpdateOperationsInput | $Enums.FormTemplateCategory
   isApprovalRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  spanishName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   Submissions?: Prisma.FormSubmissionUpdateManyWithoutFormTemplateNestedInput
   Company?: Prisma.CompanyUpdateOneRequiredWithoutFormTemplatesNestedInput
 }
@@ -841,7 +841,6 @@ export type FormTemplateUncheckedUpdateWithoutFormGroupingInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  spanishName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isSignatureRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -849,6 +848,7 @@ export type FormTemplateUncheckedUpdateWithoutFormGroupingInput = {
   isActive?: Prisma.EnumFormTemplateStatusFieldUpdateOperationsInput | $Enums.FormTemplateStatus
   formType?: Prisma.EnumFormTemplateCategoryFieldUpdateOperationsInput | $Enums.FormTemplateCategory
   isApprovalRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  spanishName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   Submissions?: Prisma.FormSubmissionUncheckedUpdateManyWithoutFormTemplateNestedInput
 }
 
@@ -856,7 +856,6 @@ export type FormTemplateUncheckedUpdateManyWithoutFormGroupingInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  spanishName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isSignatureRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -864,6 +863,7 @@ export type FormTemplateUncheckedUpdateManyWithoutFormGroupingInput = {
   isActive?: Prisma.EnumFormTemplateStatusFieldUpdateOperationsInput | $Enums.FormTemplateStatus
   formType?: Prisma.EnumFormTemplateCategoryFieldUpdateOperationsInput | $Enums.FormTemplateCategory
   isApprovalRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  spanishName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -910,7 +910,6 @@ export type FormTemplateSelect<ExtArgs extends runtime.Types.Extensions.Internal
   id?: boolean
   companyId?: boolean
   name?: boolean
-  spanishName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   isSignatureRequired?: boolean
@@ -918,6 +917,7 @@ export type FormTemplateSelect<ExtArgs extends runtime.Types.Extensions.Internal
   isActive?: boolean
   formType?: boolean
   isApprovalRequired?: boolean
+  spanishName?: boolean
   Submissions?: boolean | Prisma.FormTemplate$SubmissionsArgs<ExtArgs>
   Company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   FormGrouping?: boolean | Prisma.FormTemplate$FormGroupingArgs<ExtArgs>
@@ -928,7 +928,6 @@ export type FormTemplateSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   id?: boolean
   companyId?: boolean
   name?: boolean
-  spanishName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   isSignatureRequired?: boolean
@@ -936,6 +935,7 @@ export type FormTemplateSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   isActive?: boolean
   formType?: boolean
   isApprovalRequired?: boolean
+  spanishName?: boolean
   Company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["formTemplate"]>
 
@@ -943,7 +943,6 @@ export type FormTemplateSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   id?: boolean
   companyId?: boolean
   name?: boolean
-  spanishName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   isSignatureRequired?: boolean
@@ -951,6 +950,7 @@ export type FormTemplateSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   isActive?: boolean
   formType?: boolean
   isApprovalRequired?: boolean
+  spanishName?: boolean
   Company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["formTemplate"]>
 
@@ -958,7 +958,6 @@ export type FormTemplateSelectScalar = {
   id?: boolean
   companyId?: boolean
   name?: boolean
-  spanishName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   isSignatureRequired?: boolean
@@ -966,9 +965,10 @@ export type FormTemplateSelectScalar = {
   isActive?: boolean
   formType?: boolean
   isApprovalRequired?: boolean
+  spanishName?: boolean
 }
 
-export type FormTemplateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "name" | "spanishName" | "createdAt" | "updatedAt" | "isSignatureRequired" | "description" | "isActive" | "formType" | "isApprovalRequired", ExtArgs["result"]["formTemplate"]>
+export type FormTemplateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "name" | "createdAt" | "updatedAt" | "isSignatureRequired" | "description" | "isActive" | "formType" | "isApprovalRequired" | "spanishName", ExtArgs["result"]["formTemplate"]>
 export type FormTemplateInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   Submissions?: boolean | Prisma.FormTemplate$SubmissionsArgs<ExtArgs>
   Company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
@@ -993,7 +993,6 @@ export type $FormTemplatePayload<ExtArgs extends runtime.Types.Extensions.Intern
     id: string
     companyId: string
     name: string
-    spanishName: string | null
     createdAt: Date
     updatedAt: Date
     isSignatureRequired: boolean
@@ -1001,6 +1000,7 @@ export type $FormTemplatePayload<ExtArgs extends runtime.Types.Extensions.Intern
     isActive: $Enums.FormTemplateStatus
     formType: $Enums.FormTemplateCategory
     isApprovalRequired: boolean
+    spanishName: string | null
   }, ExtArgs["result"]["formTemplate"]>
   composites: {}
 }
@@ -1430,7 +1430,6 @@ export interface FormTemplateFieldRefs {
   readonly id: Prisma.FieldRef<"FormTemplate", 'String'>
   readonly companyId: Prisma.FieldRef<"FormTemplate", 'String'>
   readonly name: Prisma.FieldRef<"FormTemplate", 'String'>
-  readonly spanishName: Prisma.FieldRef<"FormTemplate", 'String'>
   readonly createdAt: Prisma.FieldRef<"FormTemplate", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"FormTemplate", 'DateTime'>
   readonly isSignatureRequired: Prisma.FieldRef<"FormTemplate", 'Boolean'>
@@ -1438,6 +1437,7 @@ export interface FormTemplateFieldRefs {
   readonly isActive: Prisma.FieldRef<"FormTemplate", 'FormTemplateStatus'>
   readonly formType: Prisma.FieldRef<"FormTemplate", 'FormTemplateCategory'>
   readonly isApprovalRequired: Prisma.FieldRef<"FormTemplate", 'Boolean'>
+  readonly spanishName: Prisma.FieldRef<"FormTemplate", 'String'>
 }
     
 

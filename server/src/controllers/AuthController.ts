@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import prisma from "../lib/prisma.js";
 import config from "../lib/config.js";
-import { success } from "zod";
 
 dotenv.config();
 

@@ -3,6 +3,7 @@ model FCMToken {
   token      String    @unique
   userId     String
   platform   String?
+  identifier String?
   lastUsedAt DateTime?
   isValid    Boolean   @default(true)
   createdAt  DateTime  @default(now())

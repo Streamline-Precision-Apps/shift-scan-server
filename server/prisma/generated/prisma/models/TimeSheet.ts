@@ -412,12 +412,12 @@ export type TimeSheetWhereInput = {
   wasInjured?: Prisma.BoolNullableFilter<"TimeSheet"> | boolean | null
   id?: Prisma.IntFilter<"TimeSheet"> | number
   sessionId?: Prisma.IntNullableFilter<"TimeSheet"> | number | null
-  Session?: Prisma.XOR<Prisma.SessionNullableScalarRelationFilter, Prisma.SessionWhereInput> | null
   EmployeeEquipmentLogs?: Prisma.EmployeeEquipmentLogListRelationFilter
   MaintenanceLogs?: Prisma.MaintenanceLogListRelationFilter
   TascoLogs?: Prisma.TascoLogListRelationFilter
   CostCode?: Prisma.XOR<Prisma.CostCodeScalarRelationFilter, Prisma.CostCodeWhereInput>
   Jobsite?: Prisma.XOR<Prisma.JobsiteScalarRelationFilter, Prisma.JobsiteWhereInput>
+  Session?: Prisma.XOR<Prisma.SessionNullableScalarRelationFilter, Prisma.SessionWhereInput> | null
   User?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   ChangeLogs?: Prisma.TimeSheetChangeLogListRelationFilter
   TruckingLogs?: Prisma.TruckingLogListRelationFilter
@@ -452,12 +452,12 @@ export type TimeSheetOrderByWithRelationInput = {
   wasInjured?: Prisma.SortOrderInput | Prisma.SortOrder
   id?: Prisma.SortOrder
   sessionId?: Prisma.SortOrderInput | Prisma.SortOrder
-  Session?: Prisma.SessionOrderByWithRelationInput
   EmployeeEquipmentLogs?: Prisma.EmployeeEquipmentLogOrderByRelationAggregateInput
   MaintenanceLogs?: Prisma.MaintenanceLogOrderByRelationAggregateInput
   TascoLogs?: Prisma.TascoLogOrderByRelationAggregateInput
   CostCode?: Prisma.CostCodeOrderByWithRelationInput
   Jobsite?: Prisma.JobsiteOrderByWithRelationInput
+  Session?: Prisma.SessionOrderByWithRelationInput
   User?: Prisma.UserOrderByWithRelationInput
   ChangeLogs?: Prisma.TimeSheetChangeLogOrderByRelationAggregateInput
   TruckingLogs?: Prisma.TruckingLogOrderByRelationAggregateInput
@@ -495,12 +495,12 @@ export type TimeSheetWhereUniqueInput = Prisma.AtLeast<{
   withinFenceOut?: Prisma.BoolNullableFilter<"TimeSheet"> | boolean | null
   wasInjured?: Prisma.BoolNullableFilter<"TimeSheet"> | boolean | null
   sessionId?: Prisma.IntNullableFilter<"TimeSheet"> | number | null
-  Session?: Prisma.XOR<Prisma.SessionNullableScalarRelationFilter, Prisma.SessionWhereInput> | null
   EmployeeEquipmentLogs?: Prisma.EmployeeEquipmentLogListRelationFilter
   MaintenanceLogs?: Prisma.MaintenanceLogListRelationFilter
   TascoLogs?: Prisma.TascoLogListRelationFilter
   CostCode?: Prisma.XOR<Prisma.CostCodeScalarRelationFilter, Prisma.CostCodeWhereInput>
   Jobsite?: Prisma.XOR<Prisma.JobsiteScalarRelationFilter, Prisma.JobsiteWhereInput>
+  Session?: Prisma.XOR<Prisma.SessionNullableScalarRelationFilter, Prisma.SessionWhereInput> | null
   User?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   ChangeLogs?: Prisma.TimeSheetChangeLogListRelationFilter
   TruckingLogs?: Prisma.TruckingLogListRelationFilter
@@ -598,12 +598,12 @@ export type TimeSheetCreateInput = {
   withinFenceIn?: boolean | null
   withinFenceOut?: boolean | null
   wasInjured?: boolean | null
-  Session?: Prisma.SessionCreateNestedOneWithoutTimeSheetsInput
   EmployeeEquipmentLogs?: Prisma.EmployeeEquipmentLogCreateNestedManyWithoutTimeSheetInput
   MaintenanceLogs?: Prisma.MaintenanceLogCreateNestedManyWithoutTimeSheetInput
   TascoLogs?: Prisma.TascoLogCreateNestedManyWithoutTimeSheetInput
   CostCode: Prisma.CostCodeCreateNestedOneWithoutTimesheetsInput
   Jobsite: Prisma.JobsiteCreateNestedOneWithoutTimeSheetsInput
+  Session?: Prisma.SessionCreateNestedOneWithoutTimeSheetsInput
   User: Prisma.UserCreateNestedOneWithoutTimeSheetsInput
   ChangeLogs?: Prisma.TimeSheetChangeLogCreateNestedManyWithoutTimeSheetInput
   TruckingLogs?: Prisma.TruckingLogCreateNestedManyWithoutTimeSheetInput
@@ -669,12 +669,12 @@ export type TimeSheetUpdateInput = {
   withinFenceIn?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   withinFenceOut?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   wasInjured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  Session?: Prisma.SessionUpdateOneWithoutTimeSheetsNestedInput
   EmployeeEquipmentLogs?: Prisma.EmployeeEquipmentLogUpdateManyWithoutTimeSheetNestedInput
   MaintenanceLogs?: Prisma.MaintenanceLogUpdateManyWithoutTimeSheetNestedInput
   TascoLogs?: Prisma.TascoLogUpdateManyWithoutTimeSheetNestedInput
   CostCode?: Prisma.CostCodeUpdateOneRequiredWithoutTimesheetsNestedInput
   Jobsite?: Prisma.JobsiteUpdateOneRequiredWithoutTimeSheetsNestedInput
+  Session?: Prisma.SessionUpdateOneWithoutTimeSheetsNestedInput
   User?: Prisma.UserUpdateOneRequiredWithoutTimeSheetsNestedInput
   ChangeLogs?: Prisma.TimeSheetChangeLogUpdateManyWithoutTimeSheetNestedInput
   TruckingLogs?: Prisma.TruckingLogUpdateManyWithoutTimeSheetNestedInput
@@ -1200,11 +1200,11 @@ export type TimeSheetCreateWithoutCostCodeInput = {
   withinFenceIn?: boolean | null
   withinFenceOut?: boolean | null
   wasInjured?: boolean | null
-  Session?: Prisma.SessionCreateNestedOneWithoutTimeSheetsInput
   EmployeeEquipmentLogs?: Prisma.EmployeeEquipmentLogCreateNestedManyWithoutTimeSheetInput
   MaintenanceLogs?: Prisma.MaintenanceLogCreateNestedManyWithoutTimeSheetInput
   TascoLogs?: Prisma.TascoLogCreateNestedManyWithoutTimeSheetInput
   Jobsite: Prisma.JobsiteCreateNestedOneWithoutTimeSheetsInput
+  Session?: Prisma.SessionCreateNestedOneWithoutTimeSheetsInput
   User: Prisma.UserCreateNestedOneWithoutTimeSheetsInput
   ChangeLogs?: Prisma.TimeSheetChangeLogCreateNestedManyWithoutTimeSheetInput
   TruckingLogs?: Prisma.TruckingLogCreateNestedManyWithoutTimeSheetInput
@@ -1328,11 +1328,11 @@ export type TimeSheetCreateWithoutEmployeeEquipmentLogsInput = {
   withinFenceIn?: boolean | null
   withinFenceOut?: boolean | null
   wasInjured?: boolean | null
-  Session?: Prisma.SessionCreateNestedOneWithoutTimeSheetsInput
   MaintenanceLogs?: Prisma.MaintenanceLogCreateNestedManyWithoutTimeSheetInput
   TascoLogs?: Prisma.TascoLogCreateNestedManyWithoutTimeSheetInput
   CostCode: Prisma.CostCodeCreateNestedOneWithoutTimesheetsInput
   Jobsite: Prisma.JobsiteCreateNestedOneWithoutTimeSheetsInput
+  Session?: Prisma.SessionCreateNestedOneWithoutTimeSheetsInput
   User: Prisma.UserCreateNestedOneWithoutTimeSheetsInput
   ChangeLogs?: Prisma.TimeSheetChangeLogCreateNestedManyWithoutTimeSheetInput
   TruckingLogs?: Prisma.TruckingLogCreateNestedManyWithoutTimeSheetInput
@@ -1413,11 +1413,11 @@ export type TimeSheetUpdateWithoutEmployeeEquipmentLogsInput = {
   withinFenceIn?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   withinFenceOut?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   wasInjured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  Session?: Prisma.SessionUpdateOneWithoutTimeSheetsNestedInput
   MaintenanceLogs?: Prisma.MaintenanceLogUpdateManyWithoutTimeSheetNestedInput
   TascoLogs?: Prisma.TascoLogUpdateManyWithoutTimeSheetNestedInput
   CostCode?: Prisma.CostCodeUpdateOneRequiredWithoutTimesheetsNestedInput
   Jobsite?: Prisma.JobsiteUpdateOneRequiredWithoutTimeSheetsNestedInput
+  Session?: Prisma.SessionUpdateOneWithoutTimeSheetsNestedInput
   User?: Prisma.UserUpdateOneRequiredWithoutTimeSheetsNestedInput
   ChangeLogs?: Prisma.TimeSheetChangeLogUpdateManyWithoutTimeSheetNestedInput
   TruckingLogs?: Prisma.TruckingLogUpdateManyWithoutTimeSheetNestedInput
@@ -1482,11 +1482,11 @@ export type TimeSheetCreateWithoutJobsiteInput = {
   withinFenceIn?: boolean | null
   withinFenceOut?: boolean | null
   wasInjured?: boolean | null
-  Session?: Prisma.SessionCreateNestedOneWithoutTimeSheetsInput
   EmployeeEquipmentLogs?: Prisma.EmployeeEquipmentLogCreateNestedManyWithoutTimeSheetInput
   MaintenanceLogs?: Prisma.MaintenanceLogCreateNestedManyWithoutTimeSheetInput
   TascoLogs?: Prisma.TascoLogCreateNestedManyWithoutTimeSheetInput
   CostCode: Prisma.CostCodeCreateNestedOneWithoutTimesheetsInput
+  Session?: Prisma.SessionCreateNestedOneWithoutTimeSheetsInput
   User: Prisma.UserCreateNestedOneWithoutTimeSheetsInput
   ChangeLogs?: Prisma.TimeSheetChangeLogCreateNestedManyWithoutTimeSheetInput
   TruckingLogs?: Prisma.TruckingLogCreateNestedManyWithoutTimeSheetInput
@@ -1672,12 +1672,12 @@ export type TimeSheetCreateWithoutMaintenanceInput = {
   withinFenceIn?: boolean | null
   withinFenceOut?: boolean | null
   wasInjured?: boolean | null
-  Session?: Prisma.SessionCreateNestedOneWithoutTimeSheetsInput
   EmployeeEquipmentLogs?: Prisma.EmployeeEquipmentLogCreateNestedManyWithoutTimeSheetInput
   MaintenanceLogs?: Prisma.MaintenanceLogCreateNestedManyWithoutTimeSheetInput
   TascoLogs?: Prisma.TascoLogCreateNestedManyWithoutTimeSheetInput
   CostCode: Prisma.CostCodeCreateNestedOneWithoutTimesheetsInput
   Jobsite: Prisma.JobsiteCreateNestedOneWithoutTimeSheetsInput
+  Session?: Prisma.SessionCreateNestedOneWithoutTimeSheetsInput
   User: Prisma.UserCreateNestedOneWithoutTimeSheetsInput
   ChangeLogs?: Prisma.TimeSheetChangeLogCreateNestedManyWithoutTimeSheetInput
   TruckingLogs?: Prisma.TruckingLogCreateNestedManyWithoutTimeSheetInput
@@ -1757,12 +1757,12 @@ export type TimeSheetUpdateWithoutMaintenanceInput = {
   withinFenceIn?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   withinFenceOut?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   wasInjured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  Session?: Prisma.SessionUpdateOneWithoutTimeSheetsNestedInput
   EmployeeEquipmentLogs?: Prisma.EmployeeEquipmentLogUpdateManyWithoutTimeSheetNestedInput
   MaintenanceLogs?: Prisma.MaintenanceLogUpdateManyWithoutTimeSheetNestedInput
   TascoLogs?: Prisma.TascoLogUpdateManyWithoutTimeSheetNestedInput
   CostCode?: Prisma.CostCodeUpdateOneRequiredWithoutTimesheetsNestedInput
   Jobsite?: Prisma.JobsiteUpdateOneRequiredWithoutTimeSheetsNestedInput
+  Session?: Prisma.SessionUpdateOneWithoutTimeSheetsNestedInput
   User?: Prisma.UserUpdateOneRequiredWithoutTimeSheetsNestedInput
   ChangeLogs?: Prisma.TimeSheetChangeLogUpdateManyWithoutTimeSheetNestedInput
   TruckingLogs?: Prisma.TruckingLogUpdateManyWithoutTimeSheetNestedInput
@@ -1826,11 +1826,11 @@ export type TimeSheetCreateWithoutMaintenanceLogsInput = {
   withinFenceIn?: boolean | null
   withinFenceOut?: boolean | null
   wasInjured?: boolean | null
-  Session?: Prisma.SessionCreateNestedOneWithoutTimeSheetsInput
   EmployeeEquipmentLogs?: Prisma.EmployeeEquipmentLogCreateNestedManyWithoutTimeSheetInput
   TascoLogs?: Prisma.TascoLogCreateNestedManyWithoutTimeSheetInput
   CostCode: Prisma.CostCodeCreateNestedOneWithoutTimesheetsInput
   Jobsite: Prisma.JobsiteCreateNestedOneWithoutTimeSheetsInput
+  Session?: Prisma.SessionCreateNestedOneWithoutTimeSheetsInput
   User: Prisma.UserCreateNestedOneWithoutTimeSheetsInput
   ChangeLogs?: Prisma.TimeSheetChangeLogCreateNestedManyWithoutTimeSheetInput
   TruckingLogs?: Prisma.TruckingLogCreateNestedManyWithoutTimeSheetInput
@@ -1911,11 +1911,11 @@ export type TimeSheetUpdateWithoutMaintenanceLogsInput = {
   withinFenceIn?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   withinFenceOut?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   wasInjured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  Session?: Prisma.SessionUpdateOneWithoutTimeSheetsNestedInput
   EmployeeEquipmentLogs?: Prisma.EmployeeEquipmentLogUpdateManyWithoutTimeSheetNestedInput
   TascoLogs?: Prisma.TascoLogUpdateManyWithoutTimeSheetNestedInput
   CostCode?: Prisma.CostCodeUpdateOneRequiredWithoutTimesheetsNestedInput
   Jobsite?: Prisma.JobsiteUpdateOneRequiredWithoutTimeSheetsNestedInput
+  Session?: Prisma.SessionUpdateOneWithoutTimeSheetsNestedInput
   User?: Prisma.UserUpdateOneRequiredWithoutTimeSheetsNestedInput
   ChangeLogs?: Prisma.TimeSheetChangeLogUpdateManyWithoutTimeSheetNestedInput
   TruckingLogs?: Prisma.TruckingLogUpdateManyWithoutTimeSheetNestedInput
@@ -1980,11 +1980,11 @@ export type TimeSheetCreateWithoutTascoLogsInput = {
   withinFenceIn?: boolean | null
   withinFenceOut?: boolean | null
   wasInjured?: boolean | null
-  Session?: Prisma.SessionCreateNestedOneWithoutTimeSheetsInput
   EmployeeEquipmentLogs?: Prisma.EmployeeEquipmentLogCreateNestedManyWithoutTimeSheetInput
   MaintenanceLogs?: Prisma.MaintenanceLogCreateNestedManyWithoutTimeSheetInput
   CostCode: Prisma.CostCodeCreateNestedOneWithoutTimesheetsInput
   Jobsite: Prisma.JobsiteCreateNestedOneWithoutTimeSheetsInput
+  Session?: Prisma.SessionCreateNestedOneWithoutTimeSheetsInput
   User: Prisma.UserCreateNestedOneWithoutTimeSheetsInput
   ChangeLogs?: Prisma.TimeSheetChangeLogCreateNestedManyWithoutTimeSheetInput
   TruckingLogs?: Prisma.TruckingLogCreateNestedManyWithoutTimeSheetInput
@@ -2065,11 +2065,11 @@ export type TimeSheetUpdateWithoutTascoLogsInput = {
   withinFenceIn?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   withinFenceOut?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   wasInjured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  Session?: Prisma.SessionUpdateOneWithoutTimeSheetsNestedInput
   EmployeeEquipmentLogs?: Prisma.EmployeeEquipmentLogUpdateManyWithoutTimeSheetNestedInput
   MaintenanceLogs?: Prisma.MaintenanceLogUpdateManyWithoutTimeSheetNestedInput
   CostCode?: Prisma.CostCodeUpdateOneRequiredWithoutTimesheetsNestedInput
   Jobsite?: Prisma.JobsiteUpdateOneRequiredWithoutTimeSheetsNestedInput
+  Session?: Prisma.SessionUpdateOneWithoutTimeSheetsNestedInput
   User?: Prisma.UserUpdateOneRequiredWithoutTimeSheetsNestedInput
   ChangeLogs?: Prisma.TimeSheetChangeLogUpdateManyWithoutTimeSheetNestedInput
   TruckingLogs?: Prisma.TruckingLogUpdateManyWithoutTimeSheetNestedInput
@@ -2134,12 +2134,12 @@ export type TimeSheetCreateWithoutTruckingLogsInput = {
   withinFenceIn?: boolean | null
   withinFenceOut?: boolean | null
   wasInjured?: boolean | null
-  Session?: Prisma.SessionCreateNestedOneWithoutTimeSheetsInput
   EmployeeEquipmentLogs?: Prisma.EmployeeEquipmentLogCreateNestedManyWithoutTimeSheetInput
   MaintenanceLogs?: Prisma.MaintenanceLogCreateNestedManyWithoutTimeSheetInput
   TascoLogs?: Prisma.TascoLogCreateNestedManyWithoutTimeSheetInput
   CostCode: Prisma.CostCodeCreateNestedOneWithoutTimesheetsInput
   Jobsite: Prisma.JobsiteCreateNestedOneWithoutTimeSheetsInput
+  Session?: Prisma.SessionCreateNestedOneWithoutTimeSheetsInput
   User: Prisma.UserCreateNestedOneWithoutTimeSheetsInput
   ChangeLogs?: Prisma.TimeSheetChangeLogCreateNestedManyWithoutTimeSheetInput
   Maintenance?: Prisma.mechanicProjectsCreateNestedManyWithoutTimeSheetInput
@@ -2219,12 +2219,12 @@ export type TimeSheetUpdateWithoutTruckingLogsInput = {
   withinFenceIn?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   withinFenceOut?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   wasInjured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  Session?: Prisma.SessionUpdateOneWithoutTimeSheetsNestedInput
   EmployeeEquipmentLogs?: Prisma.EmployeeEquipmentLogUpdateManyWithoutTimeSheetNestedInput
   MaintenanceLogs?: Prisma.MaintenanceLogUpdateManyWithoutTimeSheetNestedInput
   TascoLogs?: Prisma.TascoLogUpdateManyWithoutTimeSheetNestedInput
   CostCode?: Prisma.CostCodeUpdateOneRequiredWithoutTimesheetsNestedInput
   Jobsite?: Prisma.JobsiteUpdateOneRequiredWithoutTimeSheetsNestedInput
+  Session?: Prisma.SessionUpdateOneWithoutTimeSheetsNestedInput
   User?: Prisma.UserUpdateOneRequiredWithoutTimeSheetsNestedInput
   ChangeLogs?: Prisma.TimeSheetChangeLogUpdateManyWithoutTimeSheetNestedInput
   Maintenance?: Prisma.mechanicProjectsUpdateManyWithoutTimeSheetNestedInput
@@ -2288,12 +2288,12 @@ export type TimeSheetCreateWithoutChangeLogsInput = {
   withinFenceIn?: boolean | null
   withinFenceOut?: boolean | null
   wasInjured?: boolean | null
-  Session?: Prisma.SessionCreateNestedOneWithoutTimeSheetsInput
   EmployeeEquipmentLogs?: Prisma.EmployeeEquipmentLogCreateNestedManyWithoutTimeSheetInput
   MaintenanceLogs?: Prisma.MaintenanceLogCreateNestedManyWithoutTimeSheetInput
   TascoLogs?: Prisma.TascoLogCreateNestedManyWithoutTimeSheetInput
   CostCode: Prisma.CostCodeCreateNestedOneWithoutTimesheetsInput
   Jobsite: Prisma.JobsiteCreateNestedOneWithoutTimeSheetsInput
+  Session?: Prisma.SessionCreateNestedOneWithoutTimeSheetsInput
   User: Prisma.UserCreateNestedOneWithoutTimeSheetsInput
   TruckingLogs?: Prisma.TruckingLogCreateNestedManyWithoutTimeSheetInput
   Maintenance?: Prisma.mechanicProjectsCreateNestedManyWithoutTimeSheetInput
@@ -2373,12 +2373,12 @@ export type TimeSheetUpdateWithoutChangeLogsInput = {
   withinFenceIn?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   withinFenceOut?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   wasInjured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  Session?: Prisma.SessionUpdateOneWithoutTimeSheetsNestedInput
   EmployeeEquipmentLogs?: Prisma.EmployeeEquipmentLogUpdateManyWithoutTimeSheetNestedInput
   MaintenanceLogs?: Prisma.MaintenanceLogUpdateManyWithoutTimeSheetNestedInput
   TascoLogs?: Prisma.TascoLogUpdateManyWithoutTimeSheetNestedInput
   CostCode?: Prisma.CostCodeUpdateOneRequiredWithoutTimesheetsNestedInput
   Jobsite?: Prisma.JobsiteUpdateOneRequiredWithoutTimeSheetsNestedInput
+  Session?: Prisma.SessionUpdateOneWithoutTimeSheetsNestedInput
   User?: Prisma.UserUpdateOneRequiredWithoutTimeSheetsNestedInput
   TruckingLogs?: Prisma.TruckingLogUpdateManyWithoutTimeSheetNestedInput
   Maintenance?: Prisma.mechanicProjectsUpdateManyWithoutTimeSheetNestedInput
@@ -2442,12 +2442,12 @@ export type TimeSheetCreateWithoutUserInput = {
   withinFenceIn?: boolean | null
   withinFenceOut?: boolean | null
   wasInjured?: boolean | null
-  Session?: Prisma.SessionCreateNestedOneWithoutTimeSheetsInput
   EmployeeEquipmentLogs?: Prisma.EmployeeEquipmentLogCreateNestedManyWithoutTimeSheetInput
   MaintenanceLogs?: Prisma.MaintenanceLogCreateNestedManyWithoutTimeSheetInput
   TascoLogs?: Prisma.TascoLogCreateNestedManyWithoutTimeSheetInput
   CostCode: Prisma.CostCodeCreateNestedOneWithoutTimesheetsInput
   Jobsite: Prisma.JobsiteCreateNestedOneWithoutTimeSheetsInput
+  Session?: Prisma.SessionCreateNestedOneWithoutTimeSheetsInput
   ChangeLogs?: Prisma.TimeSheetChangeLogCreateNestedManyWithoutTimeSheetInput
   TruckingLogs?: Prisma.TruckingLogCreateNestedManyWithoutTimeSheetInput
   Maintenance?: Prisma.mechanicProjectsCreateNestedManyWithoutTimeSheetInput
@@ -2566,11 +2566,11 @@ export type TimeSheetUpdateWithoutCostCodeInput = {
   withinFenceIn?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   withinFenceOut?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   wasInjured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  Session?: Prisma.SessionUpdateOneWithoutTimeSheetsNestedInput
   EmployeeEquipmentLogs?: Prisma.EmployeeEquipmentLogUpdateManyWithoutTimeSheetNestedInput
   MaintenanceLogs?: Prisma.MaintenanceLogUpdateManyWithoutTimeSheetNestedInput
   TascoLogs?: Prisma.TascoLogUpdateManyWithoutTimeSheetNestedInput
   Jobsite?: Prisma.JobsiteUpdateOneRequiredWithoutTimeSheetsNestedInput
+  Session?: Prisma.SessionUpdateOneWithoutTimeSheetsNestedInput
   User?: Prisma.UserUpdateOneRequiredWithoutTimeSheetsNestedInput
   ChangeLogs?: Prisma.TimeSheetChangeLogUpdateManyWithoutTimeSheetNestedInput
   TruckingLogs?: Prisma.TruckingLogUpdateManyWithoutTimeSheetNestedInput
@@ -2693,11 +2693,11 @@ export type TimeSheetUpdateWithoutJobsiteInput = {
   withinFenceIn?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   withinFenceOut?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   wasInjured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  Session?: Prisma.SessionUpdateOneWithoutTimeSheetsNestedInput
   EmployeeEquipmentLogs?: Prisma.EmployeeEquipmentLogUpdateManyWithoutTimeSheetNestedInput
   MaintenanceLogs?: Prisma.MaintenanceLogUpdateManyWithoutTimeSheetNestedInput
   TascoLogs?: Prisma.TascoLogUpdateManyWithoutTimeSheetNestedInput
   CostCode?: Prisma.CostCodeUpdateOneRequiredWithoutTimesheetsNestedInput
+  Session?: Prisma.SessionUpdateOneWithoutTimeSheetsNestedInput
   User?: Prisma.UserUpdateOneRequiredWithoutTimeSheetsNestedInput
   ChangeLogs?: Prisma.TimeSheetChangeLogUpdateManyWithoutTimeSheetNestedInput
   TruckingLogs?: Prisma.TruckingLogUpdateManyWithoutTimeSheetNestedInput
@@ -2947,12 +2947,12 @@ export type TimeSheetUpdateWithoutUserInput = {
   withinFenceIn?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   withinFenceOut?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   wasInjured?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  Session?: Prisma.SessionUpdateOneWithoutTimeSheetsNestedInput
   EmployeeEquipmentLogs?: Prisma.EmployeeEquipmentLogUpdateManyWithoutTimeSheetNestedInput
   MaintenanceLogs?: Prisma.MaintenanceLogUpdateManyWithoutTimeSheetNestedInput
   TascoLogs?: Prisma.TascoLogUpdateManyWithoutTimeSheetNestedInput
   CostCode?: Prisma.CostCodeUpdateOneRequiredWithoutTimesheetsNestedInput
   Jobsite?: Prisma.JobsiteUpdateOneRequiredWithoutTimeSheetsNestedInput
+  Session?: Prisma.SessionUpdateOneWithoutTimeSheetsNestedInput
   ChangeLogs?: Prisma.TimeSheetChangeLogUpdateManyWithoutTimeSheetNestedInput
   TruckingLogs?: Prisma.TruckingLogUpdateManyWithoutTimeSheetNestedInput
   Maintenance?: Prisma.mechanicProjectsUpdateManyWithoutTimeSheetNestedInput
@@ -3126,12 +3126,12 @@ export type TimeSheetSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   wasInjured?: boolean
   id?: boolean
   sessionId?: boolean
-  Session?: boolean | Prisma.TimeSheet$SessionArgs<ExtArgs>
   EmployeeEquipmentLogs?: boolean | Prisma.TimeSheet$EmployeeEquipmentLogsArgs<ExtArgs>
   MaintenanceLogs?: boolean | Prisma.TimeSheet$MaintenanceLogsArgs<ExtArgs>
   TascoLogs?: boolean | Prisma.TimeSheet$TascoLogsArgs<ExtArgs>
   CostCode?: boolean | Prisma.CostCodeDefaultArgs<ExtArgs>
   Jobsite?: boolean | Prisma.JobsiteDefaultArgs<ExtArgs>
+  Session?: boolean | Prisma.TimeSheet$SessionArgs<ExtArgs>
   User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   ChangeLogs?: boolean | Prisma.TimeSheet$ChangeLogsArgs<ExtArgs>
   TruckingLogs?: boolean | Prisma.TimeSheet$TruckingLogsArgs<ExtArgs>
@@ -3167,9 +3167,9 @@ export type TimeSheetSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   wasInjured?: boolean
   id?: boolean
   sessionId?: boolean
-  Session?: boolean | Prisma.TimeSheet$SessionArgs<ExtArgs>
   CostCode?: boolean | Prisma.CostCodeDefaultArgs<ExtArgs>
   Jobsite?: boolean | Prisma.JobsiteDefaultArgs<ExtArgs>
+  Session?: boolean | Prisma.TimeSheet$SessionArgs<ExtArgs>
   User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["timeSheet"]>
 
@@ -3201,9 +3201,9 @@ export type TimeSheetSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   wasInjured?: boolean
   id?: boolean
   sessionId?: boolean
-  Session?: boolean | Prisma.TimeSheet$SessionArgs<ExtArgs>
   CostCode?: boolean | Prisma.CostCodeDefaultArgs<ExtArgs>
   Jobsite?: boolean | Prisma.JobsiteDefaultArgs<ExtArgs>
+  Session?: boolean | Prisma.TimeSheet$SessionArgs<ExtArgs>
   User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["timeSheet"]>
 
@@ -3239,12 +3239,12 @@ export type TimeSheetSelectScalar = {
 
 export type TimeSheetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"date" | "userId" | "jobsiteId" | "costcode" | "nu" | "Fp" | "startTime" | "endTime" | "comment" | "statusComment" | "location" | "status" | "workType" | "editedByUserId" | "newTimeSheetId" | "createdByAdmin" | "createdAt" | "updatedAt" | "clockInLat" | "clockInLng" | "clockOutLat" | "clockOutLng" | "withinFenceIn" | "withinFenceOut" | "wasInjured" | "id" | "sessionId", ExtArgs["result"]["timeSheet"]>
 export type TimeSheetInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  Session?: boolean | Prisma.TimeSheet$SessionArgs<ExtArgs>
   EmployeeEquipmentLogs?: boolean | Prisma.TimeSheet$EmployeeEquipmentLogsArgs<ExtArgs>
   MaintenanceLogs?: boolean | Prisma.TimeSheet$MaintenanceLogsArgs<ExtArgs>
   TascoLogs?: boolean | Prisma.TimeSheet$TascoLogsArgs<ExtArgs>
   CostCode?: boolean | Prisma.CostCodeDefaultArgs<ExtArgs>
   Jobsite?: boolean | Prisma.JobsiteDefaultArgs<ExtArgs>
+  Session?: boolean | Prisma.TimeSheet$SessionArgs<ExtArgs>
   User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   ChangeLogs?: boolean | Prisma.TimeSheet$ChangeLogsArgs<ExtArgs>
   TruckingLogs?: boolean | Prisma.TimeSheet$TruckingLogsArgs<ExtArgs>
@@ -3252,27 +3252,27 @@ export type TimeSheetInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   _count?: boolean | Prisma.TimeSheetCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TimeSheetIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  Session?: boolean | Prisma.TimeSheet$SessionArgs<ExtArgs>
   CostCode?: boolean | Prisma.CostCodeDefaultArgs<ExtArgs>
   Jobsite?: boolean | Prisma.JobsiteDefaultArgs<ExtArgs>
+  Session?: boolean | Prisma.TimeSheet$SessionArgs<ExtArgs>
   User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type TimeSheetIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  Session?: boolean | Prisma.TimeSheet$SessionArgs<ExtArgs>
   CostCode?: boolean | Prisma.CostCodeDefaultArgs<ExtArgs>
   Jobsite?: boolean | Prisma.JobsiteDefaultArgs<ExtArgs>
+  Session?: boolean | Prisma.TimeSheet$SessionArgs<ExtArgs>
   User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $TimeSheetPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "TimeSheet"
   objects: {
-    Session: Prisma.$SessionPayload<ExtArgs> | null
     EmployeeEquipmentLogs: Prisma.$EmployeeEquipmentLogPayload<ExtArgs>[]
     MaintenanceLogs: Prisma.$MaintenanceLogPayload<ExtArgs>[]
     TascoLogs: Prisma.$TascoLogPayload<ExtArgs>[]
     CostCode: Prisma.$CostCodePayload<ExtArgs>
     Jobsite: Prisma.$JobsitePayload<ExtArgs>
+    Session: Prisma.$SessionPayload<ExtArgs> | null
     User: Prisma.$UserPayload<ExtArgs>
     ChangeLogs: Prisma.$TimeSheetChangeLogPayload<ExtArgs>[]
     TruckingLogs: Prisma.$TruckingLogPayload<ExtArgs>[]
@@ -3700,12 +3700,12 @@ readonly fields: TimeSheetFieldRefs;
  */
 export interface Prisma__TimeSheetClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  Session<T extends Prisma.TimeSheet$SessionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TimeSheet$SessionArgs<ExtArgs>>): Prisma.Prisma__SessionClient<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   EmployeeEquipmentLogs<T extends Prisma.TimeSheet$EmployeeEquipmentLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TimeSheet$EmployeeEquipmentLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeeEquipmentLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   MaintenanceLogs<T extends Prisma.TimeSheet$MaintenanceLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TimeSheet$MaintenanceLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MaintenanceLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   TascoLogs<T extends Prisma.TimeSheet$TascoLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TimeSheet$TascoLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TascoLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   CostCode<T extends Prisma.CostCodeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CostCodeDefaultArgs<ExtArgs>>): Prisma.Prisma__CostCodeClient<runtime.Types.Result.GetResult<Prisma.$CostCodePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   Jobsite<T extends Prisma.JobsiteDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.JobsiteDefaultArgs<ExtArgs>>): Prisma.Prisma__JobsiteClient<runtime.Types.Result.GetResult<Prisma.$JobsitePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  Session<T extends Prisma.TimeSheet$SessionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TimeSheet$SessionArgs<ExtArgs>>): Prisma.Prisma__SessionClient<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   User<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   ChangeLogs<T extends Prisma.TimeSheet$ChangeLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TimeSheet$ChangeLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TimeSheetChangeLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   TruckingLogs<T extends Prisma.TimeSheet$TruckingLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TimeSheet$TruckingLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TruckingLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -4162,25 +4162,6 @@ export type TimeSheetDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Int
 }
 
 /**
- * TimeSheet.Session
- */
-export type TimeSheet$SessionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Session
-   */
-  select?: Prisma.SessionSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Session
-   */
-  omit?: Prisma.SessionOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.SessionInclude<ExtArgs> | null
-  where?: Prisma.SessionWhereInput
-}
-
-/**
  * TimeSheet.EmployeeEquipmentLogs
  */
 export type TimeSheet$EmployeeEquipmentLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4250,6 +4231,25 @@ export type TimeSheet$TascoLogsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.TascoLogScalarFieldEnum | Prisma.TascoLogScalarFieldEnum[]
+}
+
+/**
+ * TimeSheet.Session
+ */
+export type TimeSheet$SessionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Session
+   */
+  select?: Prisma.SessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Session
+   */
+  omit?: Prisma.SessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SessionInclude<ExtArgs> | null
+  where?: Prisma.SessionWhereInput
 }
 
 /**

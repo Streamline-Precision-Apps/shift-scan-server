@@ -37,22 +37,22 @@ export type SessionSumAggregateOutputType = {
 export type SessionMinAggregateOutputType = {
   id: number | null
   userId: string | null
-  startTime: Date | null
   endTime: Date | null
+  startTime: Date | null
 }
 
 export type SessionMaxAggregateOutputType = {
   id: number | null
   userId: string | null
-  startTime: Date | null
   endTime: Date | null
+  startTime: Date | null
 }
 
 export type SessionCountAggregateOutputType = {
   id: number
   userId: number
-  startTime: number
   endTime: number
+  startTime: number
   _all: number
 }
 
@@ -68,22 +68,22 @@ export type SessionSumAggregateInputType = {
 export type SessionMinAggregateInputType = {
   id?: true
   userId?: true
-  startTime?: true
   endTime?: true
+  startTime?: true
 }
 
 export type SessionMaxAggregateInputType = {
   id?: true
   userId?: true
-  startTime?: true
   endTime?: true
+  startTime?: true
 }
 
 export type SessionCountAggregateInputType = {
   id?: true
   userId?: true
-  startTime?: true
   endTime?: true
+  startTime?: true
   _all?: true
 }
 
@@ -176,8 +176,8 @@ export type SessionGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 export type SessionGroupByOutputType = {
   id: number
   userId: string
-  startTime: Date
   endTime: Date | null
+  startTime: Date
   _count: SessionCountAggregateOutputType | null
   _avg: SessionAvgAggregateOutputType | null
   _sum: SessionSumAggregateOutputType | null
@@ -206,21 +206,21 @@ export type SessionWhereInput = {
   NOT?: Prisma.SessionWhereInput | Prisma.SessionWhereInput[]
   id?: Prisma.IntFilter<"Session"> | number
   userId?: Prisma.StringFilter<"Session"> | string
-  startTime?: Prisma.DateTimeFilter<"Session"> | Date | string
   endTime?: Prisma.DateTimeNullableFilter<"Session"> | Date | string | null
-  TimeSheets?: Prisma.TimeSheetListRelationFilter
+  startTime?: Prisma.DateTimeFilter<"Session"> | Date | string
   locationMarkers?: Prisma.LocationMarkerListRelationFilter
   User?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  TimeSheets?: Prisma.TimeSheetListRelationFilter
 }
 
 export type SessionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrderInput | Prisma.SortOrder
-  TimeSheets?: Prisma.TimeSheetOrderByRelationAggregateInput
+  startTime?: Prisma.SortOrder
   locationMarkers?: Prisma.LocationMarkerOrderByRelationAggregateInput
   User?: Prisma.UserOrderByWithRelationInput
+  TimeSheets?: Prisma.TimeSheetOrderByRelationAggregateInput
 }
 
 export type SessionWhereUniqueInput = Prisma.AtLeast<{
@@ -229,18 +229,18 @@ export type SessionWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.SessionWhereInput[]
   NOT?: Prisma.SessionWhereInput | Prisma.SessionWhereInput[]
   userId?: Prisma.StringFilter<"Session"> | string
-  startTime?: Prisma.DateTimeFilter<"Session"> | Date | string
   endTime?: Prisma.DateTimeNullableFilter<"Session"> | Date | string | null
-  TimeSheets?: Prisma.TimeSheetListRelationFilter
+  startTime?: Prisma.DateTimeFilter<"Session"> | Date | string
   locationMarkers?: Prisma.LocationMarkerListRelationFilter
   User?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  TimeSheets?: Prisma.TimeSheetListRelationFilter
 }, "id">
 
 export type SessionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrderInput | Prisma.SortOrder
+  startTime?: Prisma.SortOrder
   _count?: Prisma.SessionCountOrderByAggregateInput
   _avg?: Prisma.SessionAvgOrderByAggregateInput
   _max?: Prisma.SessionMaxOrderByAggregateInput
@@ -254,61 +254,61 @@ export type SessionScalarWhereWithAggregatesInput = {
   NOT?: Prisma.SessionScalarWhereWithAggregatesInput | Prisma.SessionScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Session"> | number
   userId?: Prisma.StringWithAggregatesFilter<"Session"> | string
-  startTime?: Prisma.DateTimeWithAggregatesFilter<"Session"> | Date | string
   endTime?: Prisma.DateTimeNullableWithAggregatesFilter<"Session"> | Date | string | null
+  startTime?: Prisma.DateTimeWithAggregatesFilter<"Session"> | Date | string
 }
 
 export type SessionCreateInput = {
-  startTime?: Date | string
   endTime?: Date | string | null
-  TimeSheets?: Prisma.TimeSheetCreateNestedManyWithoutSessionInput
+  startTime?: Date | string
   locationMarkers?: Prisma.LocationMarkerCreateNestedManyWithoutSessionInput
   User: Prisma.UserCreateNestedOneWithoutSessionInput
+  TimeSheets?: Prisma.TimeSheetCreateNestedManyWithoutSessionInput
 }
 
 export type SessionUncheckedCreateInput = {
   id?: number
   userId: string
-  startTime?: Date | string
   endTime?: Date | string | null
-  TimeSheets?: Prisma.TimeSheetUncheckedCreateNestedManyWithoutSessionInput
+  startTime?: Date | string
   locationMarkers?: Prisma.LocationMarkerUncheckedCreateNestedManyWithoutSessionInput
+  TimeSheets?: Prisma.TimeSheetUncheckedCreateNestedManyWithoutSessionInput
 }
 
 export type SessionUpdateInput = {
-  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  TimeSheets?: Prisma.TimeSheetUpdateManyWithoutSessionNestedInput
+  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   locationMarkers?: Prisma.LocationMarkerUpdateManyWithoutSessionNestedInput
   User?: Prisma.UserUpdateOneRequiredWithoutSessionNestedInput
+  TimeSheets?: Prisma.TimeSheetUpdateManyWithoutSessionNestedInput
 }
 
 export type SessionUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  TimeSheets?: Prisma.TimeSheetUncheckedUpdateManyWithoutSessionNestedInput
+  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   locationMarkers?: Prisma.LocationMarkerUncheckedUpdateManyWithoutSessionNestedInput
+  TimeSheets?: Prisma.TimeSheetUncheckedUpdateManyWithoutSessionNestedInput
 }
 
 export type SessionCreateManyInput = {
   id?: number
   userId: string
-  startTime?: Date | string
   endTime?: Date | string | null
+  startTime?: Date | string
 }
 
 export type SessionUpdateManyMutationInput = {
-  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SessionUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SessionScalarRelationFilter = {
@@ -319,8 +319,8 @@ export type SessionScalarRelationFilter = {
 export type SessionCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
+  startTime?: Prisma.SortOrder
 }
 
 export type SessionAvgOrderByAggregateInput = {
@@ -330,15 +330,15 @@ export type SessionAvgOrderByAggregateInput = {
 export type SessionMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
+  startTime?: Prisma.SortOrder
 }
 
 export type SessionMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
+  startTime?: Prisma.SortOrder
 }
 
 export type SessionSumOrderByAggregateInput = {
@@ -433,17 +433,17 @@ export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
 }
 
 export type SessionCreateWithoutLocationMarkersInput = {
-  startTime?: Date | string
   endTime?: Date | string | null
-  TimeSheets?: Prisma.TimeSheetCreateNestedManyWithoutSessionInput
+  startTime?: Date | string
   User: Prisma.UserCreateNestedOneWithoutSessionInput
+  TimeSheets?: Prisma.TimeSheetCreateNestedManyWithoutSessionInput
 }
 
 export type SessionUncheckedCreateWithoutLocationMarkersInput = {
   id?: number
   userId: string
-  startTime?: Date | string
   endTime?: Date | string | null
+  startTime?: Date | string
   TimeSheets?: Prisma.TimeSheetUncheckedCreateNestedManyWithoutSessionInput
 }
 
@@ -464,23 +464,23 @@ export type SessionUpdateToOneWithWhereWithoutLocationMarkersInput = {
 }
 
 export type SessionUpdateWithoutLocationMarkersInput = {
-  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  TimeSheets?: Prisma.TimeSheetUpdateManyWithoutSessionNestedInput
+  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   User?: Prisma.UserUpdateOneRequiredWithoutSessionNestedInput
+  TimeSheets?: Prisma.TimeSheetUpdateManyWithoutSessionNestedInput
 }
 
 export type SessionUncheckedUpdateWithoutLocationMarkersInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   TimeSheets?: Prisma.TimeSheetUncheckedUpdateManyWithoutSessionNestedInput
 }
 
 export type SessionCreateWithoutTimeSheetsInput = {
-  startTime?: Date | string
   endTime?: Date | string | null
+  startTime?: Date | string
   locationMarkers?: Prisma.LocationMarkerCreateNestedManyWithoutSessionInput
   User: Prisma.UserCreateNestedOneWithoutSessionInput
 }
@@ -488,8 +488,8 @@ export type SessionCreateWithoutTimeSheetsInput = {
 export type SessionUncheckedCreateWithoutTimeSheetsInput = {
   id?: number
   userId: string
-  startTime?: Date | string
   endTime?: Date | string | null
+  startTime?: Date | string
   locationMarkers?: Prisma.LocationMarkerUncheckedCreateNestedManyWithoutSessionInput
 }
 
@@ -510,8 +510,8 @@ export type SessionUpdateToOneWithWhereWithoutTimeSheetsInput = {
 }
 
 export type SessionUpdateWithoutTimeSheetsInput = {
-  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   locationMarkers?: Prisma.LocationMarkerUpdateManyWithoutSessionNestedInput
   User?: Prisma.UserUpdateOneRequiredWithoutSessionNestedInput
 }
@@ -519,24 +519,24 @@ export type SessionUpdateWithoutTimeSheetsInput = {
 export type SessionUncheckedUpdateWithoutTimeSheetsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   locationMarkers?: Prisma.LocationMarkerUncheckedUpdateManyWithoutSessionNestedInput
 }
 
 export type SessionCreateWithoutUserInput = {
-  startTime?: Date | string
   endTime?: Date | string | null
-  TimeSheets?: Prisma.TimeSheetCreateNestedManyWithoutSessionInput
+  startTime?: Date | string
   locationMarkers?: Prisma.LocationMarkerCreateNestedManyWithoutSessionInput
+  TimeSheets?: Prisma.TimeSheetCreateNestedManyWithoutSessionInput
 }
 
 export type SessionUncheckedCreateWithoutUserInput = {
   id?: number
-  startTime?: Date | string
   endTime?: Date | string | null
-  TimeSheets?: Prisma.TimeSheetUncheckedCreateNestedManyWithoutSessionInput
+  startTime?: Date | string
   locationMarkers?: Prisma.LocationMarkerUncheckedCreateNestedManyWithoutSessionInput
+  TimeSheets?: Prisma.TimeSheetUncheckedCreateNestedManyWithoutSessionInput
 }
 
 export type SessionCreateOrConnectWithoutUserInput = {
@@ -571,35 +571,35 @@ export type SessionScalarWhereInput = {
   NOT?: Prisma.SessionScalarWhereInput | Prisma.SessionScalarWhereInput[]
   id?: Prisma.IntFilter<"Session"> | number
   userId?: Prisma.StringFilter<"Session"> | string
-  startTime?: Prisma.DateTimeFilter<"Session"> | Date | string
   endTime?: Prisma.DateTimeNullableFilter<"Session"> | Date | string | null
+  startTime?: Prisma.DateTimeFilter<"Session"> | Date | string
 }
 
 export type SessionCreateManyUserInput = {
   id?: number
-  startTime?: Date | string
   endTime?: Date | string | null
+  startTime?: Date | string
 }
 
 export type SessionUpdateWithoutUserInput = {
-  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  TimeSheets?: Prisma.TimeSheetUpdateManyWithoutSessionNestedInput
+  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   locationMarkers?: Prisma.LocationMarkerUpdateManyWithoutSessionNestedInput
+  TimeSheets?: Prisma.TimeSheetUpdateManyWithoutSessionNestedInput
 }
 
 export type SessionUncheckedUpdateWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  TimeSheets?: Prisma.TimeSheetUncheckedUpdateManyWithoutSessionNestedInput
+  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   locationMarkers?: Prisma.LocationMarkerUncheckedUpdateManyWithoutSessionNestedInput
+  TimeSheets?: Prisma.TimeSheetUncheckedUpdateManyWithoutSessionNestedInput
 }
 
 export type SessionUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -608,13 +608,13 @@ export type SessionUncheckedUpdateManyWithoutUserInput = {
  */
 
 export type SessionCountOutputType = {
-  TimeSheets: number
   locationMarkers: number
+  TimeSheets: number
 }
 
 export type SessionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  TimeSheets?: boolean | SessionCountOutputTypeCountTimeSheetsArgs
   locationMarkers?: boolean | SessionCountOutputTypeCountLocationMarkersArgs
+  TimeSheets?: boolean | SessionCountOutputTypeCountTimeSheetsArgs
 }
 
 /**
@@ -630,57 +630,57 @@ export type SessionCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
 /**
  * SessionCountOutputType without action
  */
-export type SessionCountOutputTypeCountTimeSheetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.TimeSheetWhereInput
+export type SessionCountOutputTypeCountLocationMarkersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LocationMarkerWhereInput
 }
 
 /**
  * SessionCountOutputType without action
  */
-export type SessionCountOutputTypeCountLocationMarkersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.LocationMarkerWhereInput
+export type SessionCountOutputTypeCountTimeSheetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TimeSheetWhereInput
 }
 
 
 export type SessionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  startTime?: boolean
   endTime?: boolean
-  TimeSheets?: boolean | Prisma.Session$TimeSheetsArgs<ExtArgs>
+  startTime?: boolean
   locationMarkers?: boolean | Prisma.Session$locationMarkersArgs<ExtArgs>
   User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  TimeSheets?: boolean | Prisma.Session$TimeSheetsArgs<ExtArgs>
   _count?: boolean | Prisma.SessionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["session"]>
 
 export type SessionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  startTime?: boolean
   endTime?: boolean
+  startTime?: boolean
   User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["session"]>
 
 export type SessionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  startTime?: boolean
   endTime?: boolean
+  startTime?: boolean
   User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["session"]>
 
 export type SessionSelectScalar = {
   id?: boolean
   userId?: boolean
-  startTime?: boolean
   endTime?: boolean
+  startTime?: boolean
 }
 
-export type SessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "startTime" | "endTime", ExtArgs["result"]["session"]>
+export type SessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "endTime" | "startTime", ExtArgs["result"]["session"]>
 export type SessionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  TimeSheets?: boolean | Prisma.Session$TimeSheetsArgs<ExtArgs>
   locationMarkers?: boolean | Prisma.Session$locationMarkersArgs<ExtArgs>
   User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  TimeSheets?: boolean | Prisma.Session$TimeSheetsArgs<ExtArgs>
   _count?: boolean | Prisma.SessionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type SessionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -693,15 +693,15 @@ export type SessionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
 export type $SessionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Session"
   objects: {
-    TimeSheets: Prisma.$TimeSheetPayload<ExtArgs>[]
     locationMarkers: Prisma.$LocationMarkerPayload<ExtArgs>[]
     User: Prisma.$UserPayload<ExtArgs>
+    TimeSheets: Prisma.$TimeSheetPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     userId: string
-    startTime: Date
     endTime: Date | null
+    startTime: Date
   }, ExtArgs["result"]["session"]>
   composites: {}
 }
@@ -1096,9 +1096,9 @@ readonly fields: SessionFieldRefs;
  */
 export interface Prisma__SessionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  TimeSheets<T extends Prisma.Session$TimeSheetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Session$TimeSheetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TimeSheetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   locationMarkers<T extends Prisma.Session$locationMarkersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Session$locationMarkersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LocationMarkerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   User<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  TimeSheets<T extends Prisma.Session$TimeSheetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Session$TimeSheetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TimeSheetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1130,8 +1130,8 @@ export interface Prisma__SessionClient<T, Null = never, ExtArgs extends runtime.
 export interface SessionFieldRefs {
   readonly id: Prisma.FieldRef<"Session", 'Int'>
   readonly userId: Prisma.FieldRef<"Session", 'String'>
-  readonly startTime: Prisma.FieldRef<"Session", 'DateTime'>
   readonly endTime: Prisma.FieldRef<"Session", 'DateTime'>
+  readonly startTime: Prisma.FieldRef<"Session", 'DateTime'>
 }
     
 
@@ -1528,30 +1528,6 @@ export type SessionDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * Session.TimeSheets
- */
-export type Session$TimeSheetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the TimeSheet
-   */
-  select?: Prisma.TimeSheetSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the TimeSheet
-   */
-  omit?: Prisma.TimeSheetOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.TimeSheetInclude<ExtArgs> | null
-  where?: Prisma.TimeSheetWhereInput
-  orderBy?: Prisma.TimeSheetOrderByWithRelationInput | Prisma.TimeSheetOrderByWithRelationInput[]
-  cursor?: Prisma.TimeSheetWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.TimeSheetScalarFieldEnum | Prisma.TimeSheetScalarFieldEnum[]
-}
-
-/**
  * Session.locationMarkers
  */
 export type Session$locationMarkersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1573,6 +1549,30 @@ export type Session$locationMarkersArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.LocationMarkerScalarFieldEnum | Prisma.LocationMarkerScalarFieldEnum[]
+}
+
+/**
+ * Session.TimeSheets
+ */
+export type Session$TimeSheetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TimeSheet
+   */
+  select?: Prisma.TimeSheetSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TimeSheet
+   */
+  omit?: Prisma.TimeSheetOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TimeSheetInclude<ExtArgs> | null
+  where?: Prisma.TimeSheetWhereInput
+  orderBy?: Prisma.TimeSheetOrderByWithRelationInput | Prisma.TimeSheetOrderByWithRelationInput[]
+  cursor?: Prisma.TimeSheetWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TimeSheetScalarFieldEnum | Prisma.TimeSheetScalarFieldEnum[]
 }
 
 /**

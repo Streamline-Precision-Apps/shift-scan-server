@@ -1,15 +1,23 @@
 import { Router } from "express";
 import { verifyToken } from "../middleware/authMiddleware.js";
+import {
+  pushReminderController,
+  upsertFCMToken,
+} from "../controllers/pushNotificationController.js";
 
 const router = Router();
 
 // Route to register an FCM token for a user
-router.post("/user/:userId/fcm-token", verifyToken);
+router.post("/user/:userId/fcm-tokens", verifyToken, upsertFCMToken);
 
-// Route to update a user's FCM token based on user platform
-router.put("/user/:userId/fcm-token", verifyToken);
+// send push notification single user and single device
+// user forgets to clock out and needs to be reminded
+router.post(
+  "/user/:userId/device/:deviceId/send-notification",
+  verifyToken,
+  pushReminderController
+);
 
-// Route to delete a user's FCM token based on user platform
-router.delete("/user/:userId/fcm-token", verifyToken);
+// send push notification to all users
 
 export default router;

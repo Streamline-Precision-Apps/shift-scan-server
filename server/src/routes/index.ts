@@ -1,4 +1,6 @@
 import { Router } from "express";
+
+import pushNotificationRoutes from "./pushNotificationRoute.js";
 import notificationRoutes from "./notificationsRoute.js";
 import blobRoutes from "./blobRoute.js";
 import tokenRoutes from "./tokenRoutes.js";
@@ -47,10 +49,9 @@ router.use("/v1/admins/cost-codes", apiLimiter, adminsCostCodesRoutes);
 router.use("/v1/admins/report", apiLimiter, adminsReportRoutes);
 router.use("/v1/admins/forms", apiLimiter, adminsFormRoutes);
 router.use("/v1/admins/timesheet", apiLimiter, adminsTimesheetRoutes);
+router.use("/v1/push-notifications", apiLimiter, pushNotificationRoutes); // in-app notifications
 
-router.use("/notifications", apiLimiter, notificationRoutes);
-router.use("/push-notifications", apiLimiter, notificationRoutes);
-
+router.use("/notifications", apiLimiter, notificationRoutes); // admin notifications
 router.use("/storage", apiLimiter, blobRoutes);
 router.use("/tokens", tokenRoutes);
 router.use("/location", apiLimiter, locationRoutes);

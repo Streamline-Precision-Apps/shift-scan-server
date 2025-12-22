@@ -43,8 +43,8 @@ const router = express.Router();
  *                   type: string
  *                   example: Too many login attempts. Please try again later.
  */
-
-router.post("/login", validateRequest(loginSchema), loginLimiter, loginUser);
+//  loginLimiter,
+router.post("/login", loginUser);
 
 /**
  * @swagger

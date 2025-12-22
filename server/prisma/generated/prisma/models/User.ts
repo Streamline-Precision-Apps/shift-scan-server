@@ -334,7 +334,6 @@ export type UserWhereInput = {
   middleName?: Prisma.StringNullableFilter<"User"> | string | null
   secondLastName?: Prisma.StringNullableFilter<"User"> | string | null
   lastSeen?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  Session?: Prisma.SessionListRelationFilter
   accountSetupToken?: Prisma.XOR<Prisma.AccountSetupTokenNullableScalarRelationFilter, Prisma.AccountSetupTokenWhereInput> | null
   Contact?: Prisma.XOR<Prisma.ContactsNullableScalarRelationFilter, Prisma.ContactsWhereInput> | null
   Equipment?: Prisma.EquipmentListRelationFilter
@@ -346,6 +345,7 @@ export type UserWhereInput = {
   NotificationRead?: Prisma.NotificationReadListRelationFilter
   NotificationResponse?: Prisma.NotificationResponseListRelationFilter
   PasswordResetTokens?: Prisma.PasswordResetTokenListRelationFilter
+  Session?: Prisma.SessionListRelationFilter
   TimeSheets?: Prisma.TimeSheetListRelationFilter
   TimeSheetChanges?: Prisma.TimeSheetChangeLogListRelationFilter
   topicSubscriptions?: Prisma.TopicSubscriptionListRelationFilter
@@ -379,7 +379,6 @@ export type UserOrderByWithRelationInput = {
   middleName?: Prisma.SortOrderInput | Prisma.SortOrder
   secondLastName?: Prisma.SortOrderInput | Prisma.SortOrder
   lastSeen?: Prisma.SortOrderInput | Prisma.SortOrder
-  Session?: Prisma.SessionOrderByRelationAggregateInput
   accountSetupToken?: Prisma.AccountSetupTokenOrderByWithRelationInput
   Contact?: Prisma.ContactsOrderByWithRelationInput
   Equipment?: Prisma.EquipmentOrderByRelationAggregateInput
@@ -391,6 +390,7 @@ export type UserOrderByWithRelationInput = {
   NotificationRead?: Prisma.NotificationReadOrderByRelationAggregateInput
   NotificationResponse?: Prisma.NotificationResponseOrderByRelationAggregateInput
   PasswordResetTokens?: Prisma.PasswordResetTokenOrderByRelationAggregateInput
+  Session?: Prisma.SessionOrderByRelationAggregateInput
   TimeSheets?: Prisma.TimeSheetOrderByRelationAggregateInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogOrderByRelationAggregateInput
   topicSubscriptions?: Prisma.TopicSubscriptionOrderByRelationAggregateInput
@@ -428,7 +428,6 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   middleName?: Prisma.StringNullableFilter<"User"> | string | null
   secondLastName?: Prisma.StringNullableFilter<"User"> | string | null
   lastSeen?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  Session?: Prisma.SessionListRelationFilter
   accountSetupToken?: Prisma.XOR<Prisma.AccountSetupTokenNullableScalarRelationFilter, Prisma.AccountSetupTokenWhereInput> | null
   Contact?: Prisma.XOR<Prisma.ContactsNullableScalarRelationFilter, Prisma.ContactsWhereInput> | null
   Equipment?: Prisma.EquipmentListRelationFilter
@@ -440,6 +439,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   NotificationRead?: Prisma.NotificationReadListRelationFilter
   NotificationResponse?: Prisma.NotificationResponseListRelationFilter
   PasswordResetTokens?: Prisma.PasswordResetTokenListRelationFilter
+  Session?: Prisma.SessionListRelationFilter
   TimeSheets?: Prisma.TimeSheetListRelationFilter
   TimeSheetChanges?: Prisma.TimeSheetChangeLogListRelationFilter
   topicSubscriptions?: Prisma.TopicSubscriptionListRelationFilter
@@ -532,7 +532,6 @@ export type UserCreateInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentCreateNestedManyWithoutCreatedByInput
@@ -544,6 +543,7 @@ export type UserCreateInput = {
   NotificationRead?: Prisma.NotificationReadCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionCreateNestedManyWithoutUserInput
@@ -577,7 +577,6 @@ export type UserUncheckedCreateInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsUncheckedCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentUncheckedCreateNestedManyWithoutCreatedByInput
@@ -589,6 +588,7 @@ export type UserUncheckedCreateInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetUncheckedCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedCreateNestedManyWithoutUserInput
@@ -620,7 +620,6 @@ export type UserUpdateInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUpdateManyWithoutCreatedByNestedInput
@@ -632,6 +631,7 @@ export type UserUpdateInput = {
   NotificationRead?: Prisma.NotificationReadUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUpdateManyWithoutUserNestedInput
@@ -665,7 +665,6 @@ export type UserUncheckedUpdateInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUncheckedUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -677,6 +676,7 @@ export type UserUncheckedUpdateInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUncheckedUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedUpdateManyWithoutUserNestedInput
@@ -1209,7 +1209,6 @@ export type UserCreateWithoutCompanyInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentCreateNestedManyWithoutCreatedByInput
@@ -1221,6 +1220,7 @@ export type UserCreateWithoutCompanyInput = {
   NotificationRead?: Prisma.NotificationReadCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionCreateNestedManyWithoutUserInput
@@ -1252,7 +1252,6 @@ export type UserUncheckedCreateWithoutCompanyInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsUncheckedCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentUncheckedCreateNestedManyWithoutCreatedByInput
@@ -1264,6 +1263,7 @@ export type UserUncheckedCreateWithoutCompanyInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetUncheckedCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedCreateNestedManyWithoutUserInput
@@ -1351,7 +1351,6 @@ export type UserCreateWithoutCrewsInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentCreateNestedManyWithoutCreatedByInput
@@ -1363,6 +1362,7 @@ export type UserCreateWithoutCrewsInput = {
   NotificationRead?: Prisma.NotificationReadCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionCreateNestedManyWithoutUserInput
@@ -1395,7 +1395,6 @@ export type UserUncheckedCreateWithoutCrewsInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsUncheckedCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentUncheckedCreateNestedManyWithoutCreatedByInput
@@ -1407,6 +1406,7 @@ export type UserUncheckedCreateWithoutCrewsInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetUncheckedCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedCreateNestedManyWithoutUserInput
@@ -1458,7 +1458,6 @@ export type UserCreateWithoutEquipmentInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsCreateNestedOneWithoutUserInput
   FCMToken?: Prisma.FCMTokenCreateNestedManyWithoutUserInput
@@ -1469,6 +1468,7 @@ export type UserCreateWithoutEquipmentInput = {
   NotificationRead?: Prisma.NotificationReadCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionCreateNestedManyWithoutUserInput
@@ -1502,7 +1502,6 @@ export type UserUncheckedCreateWithoutEquipmentInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsUncheckedCreateNestedOneWithoutUserInput
   FCMToken?: Prisma.FCMTokenUncheckedCreateNestedManyWithoutUserInput
@@ -1513,6 +1512,7 @@ export type UserUncheckedCreateWithoutEquipmentInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetUncheckedCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedCreateNestedManyWithoutUserInput
@@ -1560,7 +1560,6 @@ export type UserUpdateWithoutEquipmentInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUpdateOneWithoutUserNestedInput
   FCMToken?: Prisma.FCMTokenUpdateManyWithoutUserNestedInput
@@ -1571,6 +1570,7 @@ export type UserUpdateWithoutEquipmentInput = {
   NotificationRead?: Prisma.NotificationReadUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUpdateManyWithoutUserNestedInput
@@ -1604,7 +1604,6 @@ export type UserUncheckedUpdateWithoutEquipmentInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUncheckedUpdateOneWithoutUserNestedInput
   FCMToken?: Prisma.FCMTokenUncheckedUpdateManyWithoutUserNestedInput
@@ -1615,6 +1614,7 @@ export type UserUncheckedUpdateWithoutEquipmentInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUncheckedUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedUpdateManyWithoutUserNestedInput
@@ -1646,7 +1646,6 @@ export type UserCreateWithoutFormSubmissionsInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentCreateNestedManyWithoutCreatedByInput
@@ -1657,6 +1656,7 @@ export type UserCreateWithoutFormSubmissionsInput = {
   NotificationRead?: Prisma.NotificationReadCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionCreateNestedManyWithoutUserInput
@@ -1690,7 +1690,6 @@ export type UserUncheckedCreateWithoutFormSubmissionsInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsUncheckedCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentUncheckedCreateNestedManyWithoutCreatedByInput
@@ -1701,6 +1700,7 @@ export type UserUncheckedCreateWithoutFormSubmissionsInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetUncheckedCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedCreateNestedManyWithoutUserInput
@@ -1748,7 +1748,6 @@ export type UserUpdateWithoutFormSubmissionsInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUpdateManyWithoutCreatedByNestedInput
@@ -1759,6 +1758,7 @@ export type UserUpdateWithoutFormSubmissionsInput = {
   NotificationRead?: Prisma.NotificationReadUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUpdateManyWithoutUserNestedInput
@@ -1792,7 +1792,6 @@ export type UserUncheckedUpdateWithoutFormSubmissionsInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUncheckedUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1803,6 +1802,7 @@ export type UserUncheckedUpdateWithoutFormSubmissionsInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUncheckedUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedUpdateManyWithoutUserNestedInput
@@ -1834,7 +1834,6 @@ export type UserCreateWithoutFormApprovalsInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentCreateNestedManyWithoutCreatedByInput
@@ -1845,6 +1844,7 @@ export type UserCreateWithoutFormApprovalsInput = {
   NotificationRead?: Prisma.NotificationReadCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionCreateNestedManyWithoutUserInput
@@ -1878,7 +1878,6 @@ export type UserUncheckedCreateWithoutFormApprovalsInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsUncheckedCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentUncheckedCreateNestedManyWithoutCreatedByInput
@@ -1889,6 +1888,7 @@ export type UserUncheckedCreateWithoutFormApprovalsInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetUncheckedCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedCreateNestedManyWithoutUserInput
@@ -1936,7 +1936,6 @@ export type UserUpdateWithoutFormApprovalsInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUpdateManyWithoutCreatedByNestedInput
@@ -1947,6 +1946,7 @@ export type UserUpdateWithoutFormApprovalsInput = {
   NotificationRead?: Prisma.NotificationReadUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUpdateManyWithoutUserNestedInput
@@ -1980,7 +1980,6 @@ export type UserUncheckedUpdateWithoutFormApprovalsInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUncheckedUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1991,6 +1990,7 @@ export type UserUncheckedUpdateWithoutFormApprovalsInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUncheckedUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedUpdateManyWithoutUserNestedInput
@@ -2022,7 +2022,6 @@ export type UserCreateWithoutJobsiteInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentCreateNestedManyWithoutCreatedByInput
@@ -2033,6 +2032,7 @@ export type UserCreateWithoutJobsiteInput = {
   NotificationRead?: Prisma.NotificationReadCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionCreateNestedManyWithoutUserInput
@@ -2066,7 +2066,6 @@ export type UserUncheckedCreateWithoutJobsiteInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsUncheckedCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentUncheckedCreateNestedManyWithoutCreatedByInput
@@ -2077,6 +2076,7 @@ export type UserUncheckedCreateWithoutJobsiteInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetUncheckedCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedCreateNestedManyWithoutUserInput
@@ -2124,7 +2124,6 @@ export type UserUpdateWithoutJobsiteInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUpdateManyWithoutCreatedByNestedInput
@@ -2135,6 +2134,7 @@ export type UserUpdateWithoutJobsiteInput = {
   NotificationRead?: Prisma.NotificationReadUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUpdateManyWithoutUserNestedInput
@@ -2168,7 +2168,6 @@ export type UserUncheckedUpdateWithoutJobsiteInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUncheckedUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -2179,6 +2178,7 @@ export type UserUncheckedUpdateWithoutJobsiteInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUncheckedUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedUpdateManyWithoutUserNestedInput
@@ -2398,7 +2398,6 @@ export type UserCreateWithoutTimeSheetsInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentCreateNestedManyWithoutCreatedByInput
@@ -2410,6 +2409,7 @@ export type UserCreateWithoutTimeSheetsInput = {
   NotificationRead?: Prisma.NotificationReadCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionCreateNestedManyWithoutUserInput
   Company: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -2442,7 +2442,6 @@ export type UserUncheckedCreateWithoutTimeSheetsInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsUncheckedCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentUncheckedCreateNestedManyWithoutCreatedByInput
@@ -2454,6 +2453,7 @@ export type UserUncheckedCreateWithoutTimeSheetsInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedCreateNestedManyWithoutUserInput
   UserSettings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
@@ -2500,7 +2500,6 @@ export type UserUpdateWithoutTimeSheetsInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUpdateManyWithoutCreatedByNestedInput
@@ -2512,6 +2511,7 @@ export type UserUpdateWithoutTimeSheetsInput = {
   NotificationRead?: Prisma.NotificationReadUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUpdateManyWithoutUserNestedInput
   Company?: Prisma.CompanyUpdateOneRequiredWithoutUsersNestedInput
@@ -2544,7 +2544,6 @@ export type UserUncheckedUpdateWithoutTimeSheetsInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUncheckedUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -2556,6 +2555,7 @@ export type UserUncheckedUpdateWithoutTimeSheetsInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedUpdateManyWithoutUserNestedInput
   UserSettings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
@@ -2586,7 +2586,6 @@ export type UserCreateWithoutMaintenanceLogsInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentCreateNestedManyWithoutCreatedByInput
@@ -2597,6 +2596,7 @@ export type UserCreateWithoutMaintenanceLogsInput = {
   NotificationRead?: Prisma.NotificationReadCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionCreateNestedManyWithoutUserInput
@@ -2630,7 +2630,6 @@ export type UserUncheckedCreateWithoutMaintenanceLogsInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsUncheckedCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentUncheckedCreateNestedManyWithoutCreatedByInput
@@ -2641,6 +2640,7 @@ export type UserUncheckedCreateWithoutMaintenanceLogsInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetUncheckedCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedCreateNestedManyWithoutUserInput
@@ -2688,7 +2688,6 @@ export type UserUpdateWithoutMaintenanceLogsInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUpdateManyWithoutCreatedByNestedInput
@@ -2699,6 +2698,7 @@ export type UserUpdateWithoutMaintenanceLogsInput = {
   NotificationRead?: Prisma.NotificationReadUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUpdateManyWithoutUserNestedInput
@@ -2732,7 +2732,6 @@ export type UserUncheckedUpdateWithoutMaintenanceLogsInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUncheckedUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -2743,6 +2742,7 @@ export type UserUncheckedUpdateWithoutMaintenanceLogsInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUncheckedUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedUpdateManyWithoutUserNestedInput
@@ -2774,7 +2774,6 @@ export type UserCreateWithoutTimeSheetChangesInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentCreateNestedManyWithoutCreatedByInput
@@ -2786,6 +2785,7 @@ export type UserCreateWithoutTimeSheetChangesInput = {
   NotificationRead?: Prisma.NotificationReadCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionCreateNestedManyWithoutUserInput
   Company: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -2818,7 +2818,6 @@ export type UserUncheckedCreateWithoutTimeSheetChangesInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsUncheckedCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentUncheckedCreateNestedManyWithoutCreatedByInput
@@ -2830,6 +2829,7 @@ export type UserUncheckedCreateWithoutTimeSheetChangesInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetUncheckedCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedCreateNestedManyWithoutUserInput
   UserSettings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
@@ -2876,7 +2876,6 @@ export type UserUpdateWithoutTimeSheetChangesInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUpdateManyWithoutCreatedByNestedInput
@@ -2888,6 +2887,7 @@ export type UserUpdateWithoutTimeSheetChangesInput = {
   NotificationRead?: Prisma.NotificationReadUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUpdateManyWithoutUserNestedInput
   Company?: Prisma.CompanyUpdateOneRequiredWithoutUsersNestedInput
@@ -2920,7 +2920,6 @@ export type UserUncheckedUpdateWithoutTimeSheetChangesInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUncheckedUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -2932,6 +2931,7 @@ export type UserUncheckedUpdateWithoutTimeSheetChangesInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUncheckedUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedUpdateManyWithoutUserNestedInput
   UserSettings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
@@ -2962,7 +2962,6 @@ export type UserCreateWithoutUserSettingsInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentCreateNestedManyWithoutCreatedByInput
@@ -2974,6 +2973,7 @@ export type UserCreateWithoutUserSettingsInput = {
   NotificationRead?: Prisma.NotificationReadCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionCreateNestedManyWithoutUserInput
@@ -3006,7 +3006,6 @@ export type UserUncheckedCreateWithoutUserSettingsInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsUncheckedCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentUncheckedCreateNestedManyWithoutCreatedByInput
@@ -3018,6 +3017,7 @@ export type UserUncheckedCreateWithoutUserSettingsInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetUncheckedCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedCreateNestedManyWithoutUserInput
@@ -3064,7 +3064,6 @@ export type UserUpdateWithoutUserSettingsInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUpdateManyWithoutCreatedByNestedInput
@@ -3076,6 +3075,7 @@ export type UserUpdateWithoutUserSettingsInput = {
   NotificationRead?: Prisma.NotificationReadUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUpdateManyWithoutUserNestedInput
@@ -3108,7 +3108,6 @@ export type UserUncheckedUpdateWithoutUserSettingsInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUncheckedUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -3120,6 +3119,7 @@ export type UserUncheckedUpdateWithoutUserSettingsInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUncheckedUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedUpdateManyWithoutUserNestedInput
@@ -3150,7 +3150,6 @@ export type UserCreateWithoutContactInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentCreateNestedManyWithoutCreatedByInput
   FCMToken?: Prisma.FCMTokenCreateNestedManyWithoutUserInput
@@ -3161,6 +3160,7 @@ export type UserCreateWithoutContactInput = {
   NotificationRead?: Prisma.NotificationReadCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionCreateNestedManyWithoutUserInput
@@ -3194,7 +3194,6 @@ export type UserUncheckedCreateWithoutContactInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentUncheckedCreateNestedManyWithoutCreatedByInput
   FCMToken?: Prisma.FCMTokenUncheckedCreateNestedManyWithoutUserInput
@@ -3205,6 +3204,7 @@ export type UserUncheckedCreateWithoutContactInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetUncheckedCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedCreateNestedManyWithoutUserInput
@@ -3252,7 +3252,6 @@ export type UserUpdateWithoutContactInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUpdateManyWithoutCreatedByNestedInput
   FCMToken?: Prisma.FCMTokenUpdateManyWithoutUserNestedInput
@@ -3263,6 +3262,7 @@ export type UserUpdateWithoutContactInput = {
   NotificationRead?: Prisma.NotificationReadUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUpdateManyWithoutUserNestedInput
@@ -3296,7 +3296,6 @@ export type UserUncheckedUpdateWithoutContactInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUncheckedUpdateManyWithoutCreatedByNestedInput
   FCMToken?: Prisma.FCMTokenUncheckedUpdateManyWithoutUserNestedInput
@@ -3307,6 +3306,7 @@ export type UserUncheckedUpdateWithoutContactInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUncheckedUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedUpdateManyWithoutUserNestedInput
@@ -3338,7 +3338,6 @@ export type UserCreateWithoutPasswordResetTokensInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentCreateNestedManyWithoutCreatedByInput
@@ -3349,6 +3348,7 @@ export type UserCreateWithoutPasswordResetTokensInput = {
   MaintenanceLogs?: Prisma.MaintenanceLogCreateNestedManyWithoutUserInput
   NotificationRead?: Prisma.NotificationReadCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionCreateNestedManyWithoutUserInput
@@ -3382,7 +3382,6 @@ export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsUncheckedCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentUncheckedCreateNestedManyWithoutCreatedByInput
@@ -3393,6 +3392,7 @@ export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
   MaintenanceLogs?: Prisma.MaintenanceLogUncheckedCreateNestedManyWithoutUserInput
   NotificationRead?: Prisma.NotificationReadUncheckedCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetUncheckedCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedCreateNestedManyWithoutUserInput
@@ -3440,7 +3440,6 @@ export type UserUpdateWithoutPasswordResetTokensInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUpdateManyWithoutCreatedByNestedInput
@@ -3451,6 +3450,7 @@ export type UserUpdateWithoutPasswordResetTokensInput = {
   MaintenanceLogs?: Prisma.MaintenanceLogUpdateManyWithoutUserNestedInput
   NotificationRead?: Prisma.NotificationReadUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUpdateManyWithoutUserNestedInput
@@ -3484,7 +3484,6 @@ export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUncheckedUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -3495,6 +3494,7 @@ export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
   MaintenanceLogs?: Prisma.MaintenanceLogUncheckedUpdateManyWithoutUserNestedInput
   NotificationRead?: Prisma.NotificationReadUncheckedUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUncheckedUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedUpdateManyWithoutUserNestedInput
@@ -3526,7 +3526,6 @@ export type UserCreateWithoutAccountSetupTokenInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   Contact?: Prisma.ContactsCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentCreateNestedManyWithoutCreatedByInput
   FCMToken?: Prisma.FCMTokenCreateNestedManyWithoutUserInput
@@ -3537,6 +3536,7 @@ export type UserCreateWithoutAccountSetupTokenInput = {
   NotificationRead?: Prisma.NotificationReadCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionCreateNestedManyWithoutUserInput
@@ -3570,7 +3570,6 @@ export type UserUncheckedCreateWithoutAccountSetupTokenInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   Contact?: Prisma.ContactsUncheckedCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentUncheckedCreateNestedManyWithoutCreatedByInput
   FCMToken?: Prisma.FCMTokenUncheckedCreateNestedManyWithoutUserInput
@@ -3581,6 +3580,7 @@ export type UserUncheckedCreateWithoutAccountSetupTokenInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetUncheckedCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedCreateNestedManyWithoutUserInput
@@ -3628,7 +3628,6 @@ export type UserUpdateWithoutAccountSetupTokenInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   Contact?: Prisma.ContactsUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUpdateManyWithoutCreatedByNestedInput
   FCMToken?: Prisma.FCMTokenUpdateManyWithoutUserNestedInput
@@ -3639,6 +3638,7 @@ export type UserUpdateWithoutAccountSetupTokenInput = {
   NotificationRead?: Prisma.NotificationReadUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUpdateManyWithoutUserNestedInput
@@ -3672,7 +3672,6 @@ export type UserUncheckedUpdateWithoutAccountSetupTokenInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   Contact?: Prisma.ContactsUncheckedUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUncheckedUpdateManyWithoutCreatedByNestedInput
   FCMToken?: Prisma.FCMTokenUncheckedUpdateManyWithoutUserNestedInput
@@ -3683,6 +3682,7 @@ export type UserUncheckedUpdateWithoutAccountSetupTokenInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUncheckedUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedUpdateManyWithoutUserNestedInput
@@ -3714,7 +3714,6 @@ export type UserCreateWithoutFCMTokenInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentCreateNestedManyWithoutCreatedByInput
@@ -3725,6 +3724,7 @@ export type UserCreateWithoutFCMTokenInput = {
   NotificationRead?: Prisma.NotificationReadCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionCreateNestedManyWithoutUserInput
@@ -3758,7 +3758,6 @@ export type UserUncheckedCreateWithoutFCMTokenInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsUncheckedCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentUncheckedCreateNestedManyWithoutCreatedByInput
@@ -3769,6 +3768,7 @@ export type UserUncheckedCreateWithoutFCMTokenInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetUncheckedCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedCreateNestedManyWithoutUserInput
@@ -3816,7 +3816,6 @@ export type UserUpdateWithoutFCMTokenInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUpdateManyWithoutCreatedByNestedInput
@@ -3827,6 +3826,7 @@ export type UserUpdateWithoutFCMTokenInput = {
   NotificationRead?: Prisma.NotificationReadUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUpdateManyWithoutUserNestedInput
@@ -3860,7 +3860,6 @@ export type UserUncheckedUpdateWithoutFCMTokenInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUncheckedUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -3871,6 +3870,7 @@ export type UserUncheckedUpdateWithoutFCMTokenInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUncheckedUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedUpdateManyWithoutUserNestedInput
@@ -3902,7 +3902,6 @@ export type UserCreateWithoutTopicSubscriptionsInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentCreateNestedManyWithoutCreatedByInput
@@ -3914,6 +3913,7 @@ export type UserCreateWithoutTopicSubscriptionsInput = {
   NotificationRead?: Prisma.NotificationReadCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogCreateNestedManyWithoutUserInput
   Company: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -3946,7 +3946,6 @@ export type UserUncheckedCreateWithoutTopicSubscriptionsInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsUncheckedCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentUncheckedCreateNestedManyWithoutCreatedByInput
@@ -3958,6 +3957,7 @@ export type UserUncheckedCreateWithoutTopicSubscriptionsInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetUncheckedCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedCreateNestedManyWithoutUserInput
   UserSettings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
@@ -4004,7 +4004,6 @@ export type UserUpdateWithoutTopicSubscriptionsInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUpdateManyWithoutCreatedByNestedInput
@@ -4016,6 +4015,7 @@ export type UserUpdateWithoutTopicSubscriptionsInput = {
   NotificationRead?: Prisma.NotificationReadUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUpdateManyWithoutUserNestedInput
   Company?: Prisma.CompanyUpdateOneRequiredWithoutUsersNestedInput
@@ -4048,7 +4048,6 @@ export type UserUncheckedUpdateWithoutTopicSubscriptionsInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUncheckedUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -4060,6 +4059,7 @@ export type UserUncheckedUpdateWithoutTopicSubscriptionsInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUncheckedUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedUpdateManyWithoutUserNestedInput
   UserSettings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
@@ -4090,7 +4090,6 @@ export type UserCreateWithoutNotificationResponseInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentCreateNestedManyWithoutCreatedByInput
@@ -4101,6 +4100,7 @@ export type UserCreateWithoutNotificationResponseInput = {
   MaintenanceLogs?: Prisma.MaintenanceLogCreateNestedManyWithoutUserInput
   NotificationRead?: Prisma.NotificationReadCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionCreateNestedManyWithoutUserInput
@@ -4134,7 +4134,6 @@ export type UserUncheckedCreateWithoutNotificationResponseInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsUncheckedCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentUncheckedCreateNestedManyWithoutCreatedByInput
@@ -4145,6 +4144,7 @@ export type UserUncheckedCreateWithoutNotificationResponseInput = {
   MaintenanceLogs?: Prisma.MaintenanceLogUncheckedCreateNestedManyWithoutUserInput
   NotificationRead?: Prisma.NotificationReadUncheckedCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetUncheckedCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedCreateNestedManyWithoutUserInput
@@ -4192,7 +4192,6 @@ export type UserUpdateWithoutNotificationResponseInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUpdateManyWithoutCreatedByNestedInput
@@ -4203,6 +4202,7 @@ export type UserUpdateWithoutNotificationResponseInput = {
   MaintenanceLogs?: Prisma.MaintenanceLogUpdateManyWithoutUserNestedInput
   NotificationRead?: Prisma.NotificationReadUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUpdateManyWithoutUserNestedInput
@@ -4236,7 +4236,6 @@ export type UserUncheckedUpdateWithoutNotificationResponseInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUncheckedUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -4247,6 +4246,7 @@ export type UserUncheckedUpdateWithoutNotificationResponseInput = {
   MaintenanceLogs?: Prisma.MaintenanceLogUncheckedUpdateManyWithoutUserNestedInput
   NotificationRead?: Prisma.NotificationReadUncheckedUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUncheckedUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedUpdateManyWithoutUserNestedInput
@@ -4278,7 +4278,6 @@ export type UserCreateWithoutNotificationReadInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentCreateNestedManyWithoutCreatedByInput
@@ -4289,6 +4288,7 @@ export type UserCreateWithoutNotificationReadInput = {
   MaintenanceLogs?: Prisma.MaintenanceLogCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionCreateNestedManyWithoutUserInput
@@ -4322,7 +4322,6 @@ export type UserUncheckedCreateWithoutNotificationReadInput = {
   middleName?: string | null
   secondLastName?: string | null
   lastSeen?: Date | string | null
-  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedCreateNestedOneWithoutUserInput
   Contact?: Prisma.ContactsUncheckedCreateNestedOneWithoutUserInput
   Equipment?: Prisma.EquipmentUncheckedCreateNestedManyWithoutCreatedByInput
@@ -4333,6 +4332,7 @@ export type UserUncheckedCreateWithoutNotificationReadInput = {
   MaintenanceLogs?: Prisma.MaintenanceLogUncheckedCreateNestedManyWithoutUserInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedCreateNestedManyWithoutUserInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  Session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   TimeSheets?: Prisma.TimeSheetUncheckedCreateNestedManyWithoutUserInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedCreateNestedManyWithoutUserInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedCreateNestedManyWithoutUserInput
@@ -4380,7 +4380,6 @@ export type UserUpdateWithoutNotificationReadInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUpdateManyWithoutCreatedByNestedInput
@@ -4391,6 +4390,7 @@ export type UserUpdateWithoutNotificationReadInput = {
   MaintenanceLogs?: Prisma.MaintenanceLogUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUpdateManyWithoutUserNestedInput
@@ -4424,7 +4424,6 @@ export type UserUncheckedUpdateWithoutNotificationReadInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUncheckedUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -4435,6 +4434,7 @@ export type UserUncheckedUpdateWithoutNotificationReadInput = {
   MaintenanceLogs?: Prisma.MaintenanceLogUncheckedUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUncheckedUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedUpdateManyWithoutUserNestedInput
@@ -4492,7 +4492,6 @@ export type UserUpdateWithoutCompanyInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUpdateManyWithoutCreatedByNestedInput
@@ -4504,6 +4503,7 @@ export type UserUpdateWithoutCompanyInput = {
   NotificationRead?: Prisma.NotificationReadUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUpdateManyWithoutUserNestedInput
@@ -4535,7 +4535,6 @@ export type UserUncheckedUpdateWithoutCompanyInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUncheckedUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -4547,6 +4546,7 @@ export type UserUncheckedUpdateWithoutCompanyInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUncheckedUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedUpdateManyWithoutUserNestedInput
@@ -4604,7 +4604,6 @@ export type UserUpdateWithoutCrewsInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUpdateManyWithoutCreatedByNestedInput
@@ -4616,6 +4615,7 @@ export type UserUpdateWithoutCrewsInput = {
   NotificationRead?: Prisma.NotificationReadUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUpdateManyWithoutUserNestedInput
@@ -4648,7 +4648,6 @@ export type UserUncheckedUpdateWithoutCrewsInput = {
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accountSetupToken?: Prisma.AccountSetupTokenUncheckedUpdateOneWithoutUserNestedInput
   Contact?: Prisma.ContactsUncheckedUpdateOneWithoutUserNestedInput
   Equipment?: Prisma.EquipmentUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -4660,6 +4659,7 @@ export type UserUncheckedUpdateWithoutCrewsInput = {
   NotificationRead?: Prisma.NotificationReadUncheckedUpdateManyWithoutUserNestedInput
   NotificationResponse?: Prisma.NotificationResponseUncheckedUpdateManyWithoutUserNestedInput
   PasswordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  Session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   TimeSheets?: Prisma.TimeSheetUncheckedUpdateManyWithoutUserNestedInput
   TimeSheetChanges?: Prisma.TimeSheetChangeLogUncheckedUpdateManyWithoutUserNestedInput
   topicSubscriptions?: Prisma.TopicSubscriptionUncheckedUpdateManyWithoutUserNestedInput
@@ -4699,7 +4699,6 @@ export type UserUncheckedUpdateManyWithoutCrewsInput = {
  */
 
 export type UserCountOutputType = {
-  Session: number
   Equipment: number
   FCMToken: number
   FormApprovals: number
@@ -4709,6 +4708,7 @@ export type UserCountOutputType = {
   NotificationRead: number
   NotificationResponse: number
   PasswordResetTokens: number
+  Session: number
   TimeSheets: number
   TimeSheetChanges: number
   topicSubscriptions: number
@@ -4716,7 +4716,6 @@ export type UserCountOutputType = {
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  Session?: boolean | UserCountOutputTypeCountSessionArgs
   Equipment?: boolean | UserCountOutputTypeCountEquipmentArgs
   FCMToken?: boolean | UserCountOutputTypeCountFCMTokenArgs
   FormApprovals?: boolean | UserCountOutputTypeCountFormApprovalsArgs
@@ -4726,6 +4725,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   NotificationRead?: boolean | UserCountOutputTypeCountNotificationReadArgs
   NotificationResponse?: boolean | UserCountOutputTypeCountNotificationResponseArgs
   PasswordResetTokens?: boolean | UserCountOutputTypeCountPasswordResetTokensArgs
+  Session?: boolean | UserCountOutputTypeCountSessionArgs
   TimeSheets?: boolean | UserCountOutputTypeCountTimeSheetsArgs
   TimeSheetChanges?: boolean | UserCountOutputTypeCountTimeSheetChangesArgs
   topicSubscriptions?: boolean | UserCountOutputTypeCountTopicSubscriptionsArgs
@@ -4740,13 +4740,6 @@ export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
    * Select specific fields to fetch from the UserCountOutputType
    */
   select?: Prisma.UserCountOutputTypeSelect<ExtArgs> | null
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountSessionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.SessionWhereInput
 }
 
 /**
@@ -4815,6 +4808,13 @@ export type UserCountOutputTypeCountPasswordResetTokensArgs<ExtArgs extends runt
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountSessionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SessionWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountTimeSheetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.TimeSheetWhereInput
 }
@@ -4866,7 +4866,6 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   middleName?: boolean
   secondLastName?: boolean
   lastSeen?: boolean
-  Session?: boolean | Prisma.User$SessionArgs<ExtArgs>
   accountSetupToken?: boolean | Prisma.User$accountSetupTokenArgs<ExtArgs>
   Contact?: boolean | Prisma.User$ContactArgs<ExtArgs>
   Equipment?: boolean | Prisma.User$EquipmentArgs<ExtArgs>
@@ -4878,6 +4877,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   NotificationRead?: boolean | Prisma.User$NotificationReadArgs<ExtArgs>
   NotificationResponse?: boolean | Prisma.User$NotificationResponseArgs<ExtArgs>
   PasswordResetTokens?: boolean | Prisma.User$PasswordResetTokensArgs<ExtArgs>
+  Session?: boolean | Prisma.User$SessionArgs<ExtArgs>
   TimeSheets?: boolean | Prisma.User$TimeSheetsArgs<ExtArgs>
   TimeSheetChanges?: boolean | Prisma.User$TimeSheetChangesArgs<ExtArgs>
   topicSubscriptions?: boolean | Prisma.User$topicSubscriptionsArgs<ExtArgs>
@@ -4972,7 +4972,6 @@ export type UserSelectScalar = {
 
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firstName" | "lastName" | "username" | "email" | "password" | "signature" | "DOB" | "truckView" | "tascoView" | "laborView" | "mechanicView" | "permission" | "image" | "startDate" | "terminationDate" | "accountSetup" | "clockedIn" | "companyId" | "passwordResetTokenId" | "workTypeId" | "middleName" | "secondLastName" | "lastSeen", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  Session?: boolean | Prisma.User$SessionArgs<ExtArgs>
   accountSetupToken?: boolean | Prisma.User$accountSetupTokenArgs<ExtArgs>
   Contact?: boolean | Prisma.User$ContactArgs<ExtArgs>
   Equipment?: boolean | Prisma.User$EquipmentArgs<ExtArgs>
@@ -4984,6 +4983,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   NotificationRead?: boolean | Prisma.User$NotificationReadArgs<ExtArgs>
   NotificationResponse?: boolean | Prisma.User$NotificationResponseArgs<ExtArgs>
   PasswordResetTokens?: boolean | Prisma.User$PasswordResetTokensArgs<ExtArgs>
+  Session?: boolean | Prisma.User$SessionArgs<ExtArgs>
   TimeSheets?: boolean | Prisma.User$TimeSheetsArgs<ExtArgs>
   TimeSheetChanges?: boolean | Prisma.User$TimeSheetChangesArgs<ExtArgs>
   topicSubscriptions?: boolean | Prisma.User$topicSubscriptionsArgs<ExtArgs>
@@ -5002,7 +5002,6 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
-    Session: Prisma.$SessionPayload<ExtArgs>[]
     accountSetupToken: Prisma.$AccountSetupTokenPayload<ExtArgs> | null
     Contact: Prisma.$ContactsPayload<ExtArgs> | null
     Equipment: Prisma.$EquipmentPayload<ExtArgs>[]
@@ -5014,6 +5013,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     NotificationRead: Prisma.$NotificationReadPayload<ExtArgs>[]
     NotificationResponse: Prisma.$NotificationResponsePayload<ExtArgs>[]
     PasswordResetTokens: Prisma.$PasswordResetTokenPayload<ExtArgs>[]
+    Session: Prisma.$SessionPayload<ExtArgs>[]
     TimeSheets: Prisma.$TimeSheetPayload<ExtArgs>[]
     TimeSheetChanges: Prisma.$TimeSheetChangeLogPayload<ExtArgs>[]
     topicSubscriptions: Prisma.$TopicSubscriptionPayload<ExtArgs>[]
@@ -5440,7 +5440,6 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  Session<T extends Prisma.User$SessionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$SessionArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   accountSetupToken<T extends Prisma.User$accountSetupTokenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$accountSetupTokenArgs<ExtArgs>>): Prisma.Prisma__AccountSetupTokenClient<runtime.Types.Result.GetResult<Prisma.$AccountSetupTokenPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   Contact<T extends Prisma.User$ContactArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ContactArgs<ExtArgs>>): Prisma.Prisma__ContactsClient<runtime.Types.Result.GetResult<Prisma.$ContactsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   Equipment<T extends Prisma.User$EquipmentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$EquipmentArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EquipmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -5452,6 +5451,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   NotificationRead<T extends Prisma.User$NotificationReadArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$NotificationReadArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationReadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   NotificationResponse<T extends Prisma.User$NotificationResponseArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$NotificationResponseArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationResponsePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   PasswordResetTokens<T extends Prisma.User$PasswordResetTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$PasswordResetTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PasswordResetTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  Session<T extends Prisma.User$SessionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$SessionArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   TimeSheets<T extends Prisma.User$TimeSheetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$TimeSheetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TimeSheetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   TimeSheetChanges<T extends Prisma.User$TimeSheetChangesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$TimeSheetChangesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TimeSheetChangeLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   topicSubscriptions<T extends Prisma.User$topicSubscriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$topicSubscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TopicSubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -5907,30 +5907,6 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * User.Session
- */
-export type User$SessionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Session
-   */
-  select?: Prisma.SessionSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Session
-   */
-  omit?: Prisma.SessionOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.SessionInclude<ExtArgs> | null
-  where?: Prisma.SessionWhereInput
-  orderBy?: Prisma.SessionOrderByWithRelationInput | Prisma.SessionOrderByWithRelationInput[]
-  cursor?: Prisma.SessionWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.SessionScalarFieldEnum | Prisma.SessionScalarFieldEnum[]
-}
-
-/**
  * User.accountSetupToken
  */
 export type User$accountSetupTokenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -6182,6 +6158,30 @@ export type User$PasswordResetTokensArgs<ExtArgs extends runtime.Types.Extension
   take?: number
   skip?: number
   distinct?: Prisma.PasswordResetTokenScalarFieldEnum | Prisma.PasswordResetTokenScalarFieldEnum[]
+}
+
+/**
+ * User.Session
+ */
+export type User$SessionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Session
+   */
+  select?: Prisma.SessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Session
+   */
+  omit?: Prisma.SessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SessionInclude<ExtArgs> | null
+  where?: Prisma.SessionWhereInput
+  orderBy?: Prisma.SessionOrderByWithRelationInput | Prisma.SessionOrderByWithRelationInput[]
+  cursor?: Prisma.SessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SessionScalarFieldEnum | Prisma.SessionScalarFieldEnum[]
 }
 
 /**

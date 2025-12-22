@@ -29,6 +29,7 @@ export type FCMTokenMinAggregateOutputType = {
   token: string | null
   userId: string | null
   platform: string | null
+  identifier: string | null
   lastUsedAt: Date | null
   isValid: boolean | null
   createdAt: Date | null
@@ -40,6 +41,7 @@ export type FCMTokenMaxAggregateOutputType = {
   token: string | null
   userId: string | null
   platform: string | null
+  identifier: string | null
   lastUsedAt: Date | null
   isValid: boolean | null
   createdAt: Date | null
@@ -51,6 +53,7 @@ export type FCMTokenCountAggregateOutputType = {
   token: number
   userId: number
   platform: number
+  identifier: number
   lastUsedAt: number
   isValid: number
   createdAt: number
@@ -64,6 +67,7 @@ export type FCMTokenMinAggregateInputType = {
   token?: true
   userId?: true
   platform?: true
+  identifier?: true
   lastUsedAt?: true
   isValid?: true
   createdAt?: true
@@ -75,6 +79,7 @@ export type FCMTokenMaxAggregateInputType = {
   token?: true
   userId?: true
   platform?: true
+  identifier?: true
   lastUsedAt?: true
   isValid?: true
   createdAt?: true
@@ -86,6 +91,7 @@ export type FCMTokenCountAggregateInputType = {
   token?: true
   userId?: true
   platform?: true
+  identifier?: true
   lastUsedAt?: true
   isValid?: true
   createdAt?: true
@@ -170,6 +176,7 @@ export type FCMTokenGroupByOutputType = {
   token: string
   userId: string
   platform: string | null
+  identifier: string | null
   lastUsedAt: Date | null
   isValid: boolean
   createdAt: Date
@@ -202,6 +209,7 @@ export type FCMTokenWhereInput = {
   token?: Prisma.StringFilter<"FCMToken"> | string
   userId?: Prisma.StringFilter<"FCMToken"> | string
   platform?: Prisma.StringNullableFilter<"FCMToken"> | string | null
+  identifier?: Prisma.StringNullableFilter<"FCMToken"> | string | null
   lastUsedAt?: Prisma.DateTimeNullableFilter<"FCMToken"> | Date | string | null
   isValid?: Prisma.BoolFilter<"FCMToken"> | boolean
   createdAt?: Prisma.DateTimeFilter<"FCMToken"> | Date | string
@@ -214,6 +222,7 @@ export type FCMTokenOrderByWithRelationInput = {
   token?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   platform?: Prisma.SortOrderInput | Prisma.SortOrder
+  identifier?: Prisma.SortOrderInput | Prisma.SortOrder
   lastUsedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   isValid?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -229,6 +238,7 @@ export type FCMTokenWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.FCMTokenWhereInput | Prisma.FCMTokenWhereInput[]
   userId?: Prisma.StringFilter<"FCMToken"> | string
   platform?: Prisma.StringNullableFilter<"FCMToken"> | string | null
+  identifier?: Prisma.StringNullableFilter<"FCMToken"> | string | null
   lastUsedAt?: Prisma.DateTimeNullableFilter<"FCMToken"> | Date | string | null
   isValid?: Prisma.BoolFilter<"FCMToken"> | boolean
   createdAt?: Prisma.DateTimeFilter<"FCMToken"> | Date | string
@@ -241,6 +251,7 @@ export type FCMTokenOrderByWithAggregationInput = {
   token?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   platform?: Prisma.SortOrderInput | Prisma.SortOrder
+  identifier?: Prisma.SortOrderInput | Prisma.SortOrder
   lastUsedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   isValid?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -258,6 +269,7 @@ export type FCMTokenScalarWhereWithAggregatesInput = {
   token?: Prisma.StringWithAggregatesFilter<"FCMToken"> | string
   userId?: Prisma.StringWithAggregatesFilter<"FCMToken"> | string
   platform?: Prisma.StringNullableWithAggregatesFilter<"FCMToken"> | string | null
+  identifier?: Prisma.StringNullableWithAggregatesFilter<"FCMToken"> | string | null
   lastUsedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"FCMToken"> | Date | string | null
   isValid?: Prisma.BoolWithAggregatesFilter<"FCMToken"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"FCMToken"> | Date | string
@@ -268,6 +280,7 @@ export type FCMTokenCreateInput = {
   id?: string
   token: string
   platform?: string | null
+  identifier?: string | null
   lastUsedAt?: Date | string | null
   isValid?: boolean
   createdAt?: Date | string
@@ -280,6 +293,7 @@ export type FCMTokenUncheckedCreateInput = {
   token: string
   userId: string
   platform?: string | null
+  identifier?: string | null
   lastUsedAt?: Date | string | null
   isValid?: boolean
   createdAt?: Date | string
@@ -290,6 +304,7 @@ export type FCMTokenUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   token?: Prisma.StringFieldUpdateOperationsInput | string
   platform?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isValid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -302,6 +317,7 @@ export type FCMTokenUncheckedUpdateInput = {
   token?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   platform?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isValid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -313,6 +329,7 @@ export type FCMTokenCreateManyInput = {
   token: string
   userId: string
   platform?: string | null
+  identifier?: string | null
   lastUsedAt?: Date | string | null
   isValid?: boolean
   createdAt?: Date | string
@@ -323,6 +340,7 @@ export type FCMTokenUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   token?: Prisma.StringFieldUpdateOperationsInput | string
   platform?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isValid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -334,6 +352,7 @@ export type FCMTokenUncheckedUpdateManyInput = {
   token?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   platform?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isValid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -355,6 +374,7 @@ export type FCMTokenCountOrderByAggregateInput = {
   token?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   platform?: Prisma.SortOrder
+  identifier?: Prisma.SortOrder
   lastUsedAt?: Prisma.SortOrder
   isValid?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -366,6 +386,7 @@ export type FCMTokenMaxOrderByAggregateInput = {
   token?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   platform?: Prisma.SortOrder
+  identifier?: Prisma.SortOrder
   lastUsedAt?: Prisma.SortOrder
   isValid?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -377,6 +398,7 @@ export type FCMTokenMinOrderByAggregateInput = {
   token?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   platform?: Prisma.SortOrder
+  identifier?: Prisma.SortOrder
   lastUsedAt?: Prisma.SortOrder
   isValid?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -429,6 +451,7 @@ export type FCMTokenCreateWithoutUserInput = {
   id?: string
   token: string
   platform?: string | null
+  identifier?: string | null
   lastUsedAt?: Date | string | null
   isValid?: boolean
   createdAt?: Date | string
@@ -439,6 +462,7 @@ export type FCMTokenUncheckedCreateWithoutUserInput = {
   id?: string
   token: string
   platform?: string | null
+  identifier?: string | null
   lastUsedAt?: Date | string | null
   isValid?: boolean
   createdAt?: Date | string
@@ -479,6 +503,7 @@ export type FCMTokenScalarWhereInput = {
   token?: Prisma.StringFilter<"FCMToken"> | string
   userId?: Prisma.StringFilter<"FCMToken"> | string
   platform?: Prisma.StringNullableFilter<"FCMToken"> | string | null
+  identifier?: Prisma.StringNullableFilter<"FCMToken"> | string | null
   lastUsedAt?: Prisma.DateTimeNullableFilter<"FCMToken"> | Date | string | null
   isValid?: Prisma.BoolFilter<"FCMToken"> | boolean
   createdAt?: Prisma.DateTimeFilter<"FCMToken"> | Date | string
@@ -489,6 +514,7 @@ export type FCMTokenCreateManyUserInput = {
   id?: string
   token: string
   platform?: string | null
+  identifier?: string | null
   lastUsedAt?: Date | string | null
   isValid?: boolean
   createdAt?: Date | string
@@ -499,6 +525,7 @@ export type FCMTokenUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   token?: Prisma.StringFieldUpdateOperationsInput | string
   platform?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isValid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -509,6 +536,7 @@ export type FCMTokenUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   token?: Prisma.StringFieldUpdateOperationsInput | string
   platform?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isValid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -519,6 +547,7 @@ export type FCMTokenUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   token?: Prisma.StringFieldUpdateOperationsInput | string
   platform?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isValid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -532,6 +561,7 @@ export type FCMTokenSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   token?: boolean
   userId?: boolean
   platform?: boolean
+  identifier?: boolean
   lastUsedAt?: boolean
   isValid?: boolean
   createdAt?: boolean
@@ -544,6 +574,7 @@ export type FCMTokenSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   token?: boolean
   userId?: boolean
   platform?: boolean
+  identifier?: boolean
   lastUsedAt?: boolean
   isValid?: boolean
   createdAt?: boolean
@@ -556,6 +587,7 @@ export type FCMTokenSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   token?: boolean
   userId?: boolean
   platform?: boolean
+  identifier?: boolean
   lastUsedAt?: boolean
   isValid?: boolean
   createdAt?: boolean
@@ -568,13 +600,14 @@ export type FCMTokenSelectScalar = {
   token?: boolean
   userId?: boolean
   platform?: boolean
+  identifier?: boolean
   lastUsedAt?: boolean
   isValid?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type FCMTokenOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "token" | "userId" | "platform" | "lastUsedAt" | "isValid" | "createdAt" | "updatedAt", ExtArgs["result"]["fCMToken"]>
+export type FCMTokenOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "token" | "userId" | "platform" | "identifier" | "lastUsedAt" | "isValid" | "createdAt" | "updatedAt", ExtArgs["result"]["fCMToken"]>
 export type FCMTokenInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -595,6 +628,7 @@ export type $FCMTokenPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     token: string
     userId: string
     platform: string | null
+    identifier: string | null
     lastUsedAt: Date | null
     isValid: boolean
     createdAt: Date
@@ -1027,6 +1061,7 @@ export interface FCMTokenFieldRefs {
   readonly token: Prisma.FieldRef<"FCMToken", 'String'>
   readonly userId: Prisma.FieldRef<"FCMToken", 'String'>
   readonly platform: Prisma.FieldRef<"FCMToken", 'String'>
+  readonly identifier: Prisma.FieldRef<"FCMToken", 'String'>
   readonly lastUsedAt: Prisma.FieldRef<"FCMToken", 'DateTime'>
   readonly isValid: Prisma.FieldRef<"FCMToken", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"FCMToken", 'DateTime'>

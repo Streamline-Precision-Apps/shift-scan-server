@@ -233,14 +233,14 @@ export const FormTemplateScalarFieldEnum = {
   id: 'id',
   companyId: 'companyId',
   name: 'name',
-  spanishName: 'spanishName',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   isSignatureRequired: 'isSignatureRequired',
   description: 'description',
   isActive: 'isActive',
   formType: 'formType',
-  isApprovalRequired: 'isApprovalRequired'
+  isApprovalRequired: 'isApprovalRequired',
+  spanishName: 'spanishName'
 } as const
 
 export type FormTemplateScalarFieldEnum = (typeof FormTemplateScalarFieldEnum)[keyof typeof FormTemplateScalarFieldEnum]
@@ -249,11 +249,11 @@ export type FormTemplateScalarFieldEnum = (typeof FormTemplateScalarFieldEnum)[k
 export const FormGroupingScalarFieldEnum = {
   id: 'id',
   title: 'title',
-  spanishTitle: 'spanishTitle',
   order: 'order',
-  conditionalOnFieldId: 'conditionalOnFieldId',
   conditionType: 'conditionType',
-  conditionalOnValue: 'conditionalOnValue'
+  conditionalOnFieldId: 'conditionalOnFieldId',
+  conditionalOnValue: 'conditionalOnValue',
+  spanishTitle: 'spanishTitle'
 } as const
 
 export type FormGroupingScalarFieldEnum = (typeof FormGroupingScalarFieldEnum)[keyof typeof FormGroupingScalarFieldEnum]
@@ -263,7 +263,6 @@ export const FormFieldScalarFieldEnum = {
   id: 'id',
   formGroupingId: 'formGroupingId',
   label: 'label',
-  spanishLabel: 'spanishLabel',
   type: 'type',
   required: 'required',
   order: 'order',
@@ -273,9 +272,10 @@ export const FormFieldScalarFieldEnum = {
   filter: 'filter',
   minLength: 'minLength',
   multiple: 'multiple',
-  conditionalOnFieldId: 'conditionalOnFieldId',
   conditionType: 'conditionType',
-  conditionalOnValue: 'conditionalOnValue'
+  conditionalOnFieldId: 'conditionalOnFieldId',
+  conditionalOnValue: 'conditionalOnValue',
+  spanishLabel: 'spanishLabel'
 } as const
 
 export type FormFieldScalarFieldEnum = (typeof FormFieldScalarFieldEnum)[keyof typeof FormFieldScalarFieldEnum]
@@ -394,8 +394,8 @@ export type ReportRunScalarFieldEnum = (typeof ReportRunScalarFieldEnum)[keyof t
 export const SessionScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  startTime: 'startTime',
-  endTime: 'endTime'
+  endTime: 'endTime',
+  startTime: 'startTime'
 } as const
 
 export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
@@ -691,6 +691,7 @@ export const FCMTokenScalarFieldEnum = {
   token: 'token',
   userId: 'userId',
   platform: 'platform',
+  identifier: 'identifier',
   lastUsedAt: 'lastUsedAt',
   isValid: 'isValid',
   createdAt: 'createdAt',
