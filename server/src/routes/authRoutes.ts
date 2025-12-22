@@ -44,7 +44,7 @@ const router = express.Router();
  *                   example: Too many login attempts. Please try again later.
  */
 //  loginLimiter,
-router.post("/login", loginUser);
+router.post("/login", loginLimiter, validateRequest(loginSchema), loginUser);
 
 /**
  * @swagger
