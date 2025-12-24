@@ -4,8 +4,8 @@
 async function exportData() {
   try {
     console.log("Triggering data export...");
-    
-    const response = await fetch("http://localhost:3000/v1/export", {
+
+    const response = await fetch("http://0.0.0.0:8080/api/v1/export", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -13,7 +13,7 @@ async function exportData() {
     });
 
     const result = await response.json();
-    
+
     if (result.success) {
       console.log("\n✅ Export successful!");
       console.log("\n📁 Files created:");
@@ -24,7 +24,9 @@ async function exportData() {
       console.log(`   Total Records: ${result.metadata.totalRecords}`);
       console.log(`   Export Date: ${result.metadata.exportDate}`);
       console.log("\n📋 Record counts:");
-      for (const [table, count] of Object.entries(result.metadata.recordCounts)) {
+      for (const [table, count] of Object.entries(
+        result.metadata.recordCounts
+      )) {
         console.log(`   ${table}: ${count} records`);
       }
     } else {

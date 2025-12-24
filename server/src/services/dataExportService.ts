@@ -1,8 +1,6 @@
-import { PrismaClient } from "../../generated/prisma/index.js";
+import prisma from "../lib/prisma.js";
 import fs from "fs/promises";
 import path from "path";
-
-const prisma = new PrismaClient();
 
 // Define the tables we want to export
 const TABLES_TO_EXPORT = [
@@ -34,9 +32,9 @@ interface ExportData {
 export async function fetchAllTableData(): Promise<ExportData> {
   const data: ExportData = {};
 
-  try {
-    // Fetch data from each table
-    for (const tableName of TABLES_TO_EXPORT) {
+  // Fetch data from each table
+  for (const tableName of TABLES_TO_EXPORT) {
+    try {
       const modelName = tableName.charAt(0).toLowerCase() + tableName.slice(1);
       const prismaModel = (prisma as any)[modelName];
 
@@ -49,25 +47,33 @@ export async function fetchAllTableData(): Promise<ExportData> {
         console.warn(`⚠ Could not find model for ${tableName}`);
         data[tableName] = [];
       }
+    } catch (error) {
+      console.warn(
+        `⚠ Error fetching ${tableName}, setting to empty array: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      );
+      data[tableName] = [];
     }
-
-    return data;
-  } catch (error) {
-    console.error("Error fetching table data:", error);
-    throw error;
   }
+
+  return data;
 }
 
 /**
  * Generates a TypeScript seed file for Prisma
  */
-export async function generatePrismaSeedFile(data: ExportData): Promise<string> {
+export async function generatePrismaSeedFile(
+  data: ExportData
+): Promise<string> {
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
   const filename = `seed-${timestamp}.ts`;
   const filepath = path.join(process.cwd(), "prisma", "seeds", filename);
 
   // Ensure the seeds directory exists
-  await fs.mkdir(path.join(process.cwd(), "prisma", "seeds"), { recursive: true });
+  await fs.mkdir(path.join(process.cwd(), "prisma", "seeds"), {
+    recursive: true,
+  });
 
   let seedContent = `import { PrismaClient } from "../generated/prisma/index.js";
 
@@ -91,14 +97,22 @@ async function main() {
 
     seedContent += `    // Seed ${tableName}\n`;
     seedContent += `    console.log("Seeding ${tableName}...");\n`;
-    seedContent += `    for (const record of ${JSON.stringify(records, null, 2)}) {\n`;
+    seedContent += `    for (const record of ${JSON.stringify(
+      records,
+      null,
+      2
+    )}) {\n`;
     seedContent += `      await prisma.${modelName}.upsert({\n`;
     seedContent += `        where: { id: record.id },\n`;
     seedContent += `        update: record,\n`;
     seedContent += `        create: record,\n`;
     seedContent += `      });\n`;
     seedContent += `    }\n`;
-    seedContent += `    console.log(\`✓ Seeded \${${JSON.stringify(records, null, 2)}.length} records in ${tableName}\`);\n\n`;
+    seedContent += `    console.log(\`✓ Seeded \${${JSON.stringify(
+      records,
+      null,
+      2
+    )}.length} records in ${tableName}\`);\n\n`;
   }
 
   seedContent += `    console.log("✓ Database seed completed successfully!");
@@ -126,20 +140,27 @@ main()
 /**
  * Generates a JSON export file
  */
-export async function generateJsonExportFile(data: ExportData): Promise<string> {
+export async function generateJsonExportFile(
+  data: ExportData
+): Promise<string> {
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
   const filename = `export-${timestamp}.json`;
   const filepath = path.join(process.cwd(), "prisma", "exports", filename);
 
   // Ensure the exports directory exists
-  await fs.mkdir(path.join(process.cwd(), "prisma", "exports"), { recursive: true });
+  await fs.mkdir(path.join(process.cwd(), "prisma", "exports"), {
+    recursive: true,
+  });
 
   const exportData = {
     exportDate: new Date().toISOString(),
     tables: TABLES_TO_EXPORT,
     data,
     metadata: {
-      totalRecords: Object.values(data).reduce((sum, records) => sum + records.length, 0),
+      totalRecords: Object.values(data).reduce(
+        (sum, records) => sum + records.length,
+        0
+      ),
       tableCount: TABLES_TO_EXPORT.length,
     },
   };
@@ -159,7 +180,9 @@ export async function generateSqlExportFile(data: ExportData): Promise<string> {
   const filepath = path.join(process.cwd(), "prisma", "exports", filename);
 
   // Ensure the exports directory exists
-  await fs.mkdir(path.join(process.cwd(), "prisma", "exports"), { recursive: true });
+  await fs.mkdir(path.join(process.cwd(), "prisma", "exports"), {
+    recursive: true,
+  });
 
   let sqlContent = `-- Database Export Generated: ${new Date().toISOString()}\n`;
   sqlContent += `-- Tables exported: ${TABLES_TO_EXPORT.join(", ")}\n\n`;
@@ -174,12 +197,12 @@ export async function generateSqlExportFile(data: ExportData): Promise<string> {
     }
 
     sqlContent += `-- Inserting data into ${tableName}\n`;
-    
+
     for (const record of records) {
       const columns = Object.keys(record);
       const values = columns.map((col) => {
         const value = record[col];
-        
+
         if (value === null || value === undefined) {
           return "NULL";
         } else if (typeof value === "string") {
@@ -197,7 +220,13 @@ export async function generateSqlExportFile(data: ExportData): Promise<string> {
         }
       });
 
-      sqlContent += `INSERT INTO "${tableName}" (${columns.map((c) => `"${c}"`).join(", ")}) VALUES (${values.join(", ")}) ON CONFLICT (id) DO UPDATE SET ${columns.map((c) => `"${c}" = EXCLUDED."${c}"`).join(", ")};\n`;
+      sqlContent += `INSERT INTO "${tableName}" (${columns
+        .map((c) => `"${c}"`)
+        .join(", ")}) VALUES (${values.join(
+        ", "
+      )}) ON CONFLICT (id) DO UPDATE SET ${columns
+        .map((c) => `"${c}" = EXCLUDED."${c}"`)
+        .join(", ")};\n`;
     }
 
     sqlContent += `\n`;
