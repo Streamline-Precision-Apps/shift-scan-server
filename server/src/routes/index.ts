@@ -25,6 +25,7 @@ import adminsReportRoutes from "./adminsReportRoutes.js";
 import adminsFormRoutes from "./adminsFormRoutes.js";
 import adminsTimesheetRoutes from "./adminsTimesheetRoutes.js";
 import { apiLimiter } from "../middleware/rateLimitMiddleware.js";
+import dataExportRoutes from "./dataExportRoute.js";
 
 const router = Router();
 
@@ -49,6 +50,7 @@ router.use("/v1/admins/report", apiLimiter, adminsReportRoutes);
 router.use("/v1/admins/forms", apiLimiter, adminsFormRoutes);
 router.use("/v1/admins/timesheet", apiLimiter, adminsTimesheetRoutes);
 router.use("/push-notifications", apiLimiter, pushNotificationsRoutes);
+router.use("/v1/export", dataExportRoutes);
 
 router.use("/notifications", apiLimiter, notificationRoutes); // admin notifications
 

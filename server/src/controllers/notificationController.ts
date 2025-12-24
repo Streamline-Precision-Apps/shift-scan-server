@@ -41,7 +41,7 @@ export async function sendNotificationMulticast(req: Request, res: Response) {
       referenceId: referenceId?.toString() ?? null,
     });
 
-    const urlWithId = `${notification.url ? notification.url : "/admins"}${
+    const urlWithId = `${notification.url ? notification.url : "/"}${
       notification.url?.includes("?") ? "&" : "?"
     }notificationId=${notification.id}`;
     const notificationLink = await updateNotificationUrl(
