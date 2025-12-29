@@ -447,3 +447,15 @@ export async function handleUserSignature(userId: string) {
     },
   });
 }
+
+export async function getUserLocale(userId: string) {
+  const userSettings = await prisma.userSettings.findUnique({
+    where: {
+      userId,
+    },
+    select: {
+      language: true,
+    },
+  });
+  return userSettings;
+}

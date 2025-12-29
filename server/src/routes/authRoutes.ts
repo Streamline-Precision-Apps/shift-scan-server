@@ -1,6 +1,10 @@
 import express from "express";
 
-import { loginUser, signOutUser } from "../controllers/AuthController.js";
+import {
+  loginUser,
+  signOutUser,
+  getSession,
+} from "../controllers/AuthController.js";
 import { validateRequest } from "../middleware/validateRequest.js";
 import { loginLimiter, apiLimiter } from "../middleware/rateLimitMiddleware.js";
 import { loginSchema } from "../lib/validation/auth.js";
@@ -45,6 +49,29 @@ const router = express.Router();
  */
 
 router.post("/login", validateRequest(loginSchema), loginLimiter, loginUser);
+
+/**
+ * @swagger
+ * /auth/session:
+ *   get:
+ *     summary: Get the current session information based on the JWT token in cookies
+ *     responses:
+ *       200:
+ *         description: Successful retrieval of session information
+ *       401:
+ *         description: Unauthorized request
+ *       429:
+ *         description: Too many requests, rate limit exceeded
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Too many requests. Please try again later.
+ */
+router.get("/session", apiLimiter, getSession);
 
 /**
  * @swagger
@@ -98,6 +125,6 @@ router.post("/login", validateRequest(loginSchema), loginLimiter, loginUser);
  *                   type: string
  *                   example: Internal server error
  */
-router.post("/signout", requireOnlyCookies, apiLimiter, signOutUser);
+router.post("/signout", apiLimiter, requireOnlyCookies, signOutUser);
 
 export default router;

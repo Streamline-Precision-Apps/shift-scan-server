@@ -3,7 +3,7 @@ import rateLimit from "express-rate-limit";
 // Aggressive limit for login attempts (brute force protection)
 // Allows 5 requests per 15 minutes per IP address
 export const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: 5 * 60 * 1000, // 5 minutes
   max: 5, // 5 requests per windowMs
   message: "Too many login attempts. Please try again after 15 minutes.",
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers

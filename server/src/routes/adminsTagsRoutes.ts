@@ -16,13 +16,37 @@ import {
 
 const router = Router();
 
-// /api/v1/admins/tags - gets all tags for admin -- summary
+/**
+ * @swagger
+ * /api/v1/admins/tags:
+ *   get:
+ *     summary: Get all tags (summary)
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Tags summary retrieved successfully
+ *       401:
+ *         description: Unauthorized
+ *   post:
+ *     summary: Create a new tag
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreateTagRequest'
+ *     responses:
+ *       201:
+ *         description: Tag created successfully
+ *       400:
+ *         description: Invalid request
+ *       401:
+ *         description: Unauthorized
+ */
 router.get("/", verifyToken, getTagSummaryController);
-
-// /api/v1/admins/tags/:id - get tag by id
-router.get("/:id", verifyToken, getTagByIdController);
-
-// /api/v1/admins/tags/ - create tag
 router.post(
   "/",
   verifyToken,
@@ -30,15 +54,76 @@ router.post(
   createTagController
 );
 
-// /api/v1/admins/tags/:id - update tag
+/**
+ * @swagger
+ * /api/v1/admins/tags/{id}:
+ *   get:
+ *     summary: Get tag by ID
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Tag retrieved successfully
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Tag not found
+ *   put:
+ *     summary: Update tag by ID
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateTagRequest'
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Tag updated successfully
+ *       400:
+ *         description: Invalid request
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Tag not found
+ *   delete:
+ *     summary: Delete tag by ID
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Tag deleted successfully
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Tag not found
+ */
+router.get("/:id", verifyToken, getTagByIdController);
 router.put(
   "/:id",
   verifyToken,
   validateRequest(updateTagSchema),
   updateTagController
 );
-
-// /api/v1/admins/tags/:id - delete tag
 router.delete("/:id", verifyToken, deleteTagController);
 
 export default router;

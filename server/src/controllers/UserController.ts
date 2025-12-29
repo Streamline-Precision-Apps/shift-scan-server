@@ -672,3 +672,28 @@ export async function userSignatureController(req: Request, res: Response) {
     });
   }
 }
+
+export async function getUserLocaleController(req: Request, res: Response) {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        error: "User ID is required",
+        message: "Failed to retrieve user locale",
+      });
+    }
+    const locale = await UserService.getUserLocale(id);
+    res.status(200).json({
+      success: true,
+      data: locale,
+      message: "User locale retrieved successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error",
+      message: "Failed to retrieve user locale",
+    });
+  }
+}

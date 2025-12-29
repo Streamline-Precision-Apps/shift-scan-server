@@ -10,13 +10,68 @@ import {
   getJobsiteByQrId,
 } from "../controllers/jobsiteController.js";
 const router = Router();
-
-router.get("/qr/:qrId", getJobsiteByQrId);
-
+/**
+ * @swagger
+ * /v1/jobsites/:
+ *   get:
+ *     summary: Get a list of all jobsites
+ *     responses:
+ *       200:
+ *         description: List of jobsites
+ *       400:
+ *         description: Failed to retrieve jobsites
+ *   post:
+ *     summary: Create a new jobsite
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreateJobsiteRequest'
+ *     responses:
+ *       201:
+ *         description: Jobsite created
+ *       400:
+ *         description: Invalid request or failed to create jobsite
+ */
 router.get("/", getJobsites);
-
-router.get("/:id", getJobsiteById);
-
 router.post("/", validateRequest(createJobsiteSchema), createJobsite);
 
+/**
+ * @swagger
+ * /v1/jobsites/{id}:
+ *   get:
+ *     summary: Get jobsite details by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Jobsite found
+ *       404:
+ *         description: Jobsite not found
+ */
+router.get("/:id", getJobsiteById);
+
+/**
+ * @swagger
+ * /v1/jobsites/qr/{qrId}:
+ *   get:
+ *     summary: Get jobsite details by QR code ID
+ *     parameters:
+ *       - in: path
+ *         name: qrId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Jobsite found
+ *       404:
+ *         description: Jobsite not found
+ */
+router.get("/qr/:qrId", getJobsiteByQrId);
 export default router;

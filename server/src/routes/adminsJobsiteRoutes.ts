@@ -19,13 +19,38 @@ import {
 } from "../lib/validation/dashboard/jobsite.js";
 
 const router = Router();
+/**
+ * @swagger
+ * /api/v1/admins/jobsite:
+ *   get:
+ *     summary: Get all jobsites (admin)
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Jobsites retrieved successfully
+ *       401:
+ *         description: Unauthorized
+ *   post:
+ *     summary: Create a new jobsite (admin)
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreateJobsiteRequest'
+ *     responses:
+ *       201:
+ *         description: Jobsite created successfully
+ *       400:
+ *         description: Invalid request
+ *       401:
+ *         description: Unauthorized
+ */
 
-// /api/v1/admins/jobsite/:id - gets a specific jobsite for admin
-router.get("/:id", verifyToken, getJobsiteByIdController);
-// /api/v1/admins/jobsite - gets all jobsites for admin
 router.get("/", verifyToken, getAllJobsitesController);
-
-// /api/v1/admins/jobsite - creates a new jobsite
 router.post(
   "/",
   verifyToken,
@@ -33,29 +58,151 @@ router.post(
   createJobsiteController
 );
 
-// /api/v1/admins/jobsite/:id - updates a specific jobsite for admin
+/**
+ * @swagger
+ * /api/v1/admins/jobsite/{id}:
+ *   get:
+ *     summary: Get a specific jobsite by ID (admin)
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Jobsite retrieved successfully
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Jobsite not found
+ *   put:
+ *     summary: Update a specific jobsite by ID (admin)
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateJobsiteRequest'
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Jobsite updated successfully
+ *       400:
+ *         description: Invalid request
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Jobsite not found
+ *   delete:
+ *     summary: Delete a specific jobsite by ID (admin)
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Jobsite deleted successfully
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Jobsite not found
+ */
+
+router.get("/:id", verifyToken, getJobsiteByIdController);
 router.put(
   "/:id",
   verifyToken,
   validateRequest(updateJobsiteSchema),
   updateJobsiteController
 );
-// /api/v1/admins/jobsite/:id/archive - archives a specific jobsite for admin
+router.delete("/:id", verifyToken, deleteJobsiteController);
+
+/**
+ * @swagger
+ * /api/v1/admins/jobsite/{id}/archive:
+ *   put:
+ *     summary: Archive a specific jobsite by ID (admin)
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ArchiveJobsiteRequest'
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Jobsite archived successfully
+ *       400:
+ *         description: Invalid request
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Jobsite not found
+ */
+
 router.put(
   "/:id/archive",
   verifyToken,
   validateRequest(archiveJobsiteSchema),
   archiveJobsiteController
 );
-// /api/v1/admins/jobsite/:id/restore - restores a specific jobsite for admin
+
+/**
+ * @swagger
+ * /api/v1/admins/jobsite/{id}/restore:
+ *   put:
+ *     summary: Restore a specific jobsite by ID (admin)
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/RestoreJobsiteRequest'
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Jobsite restored successfully
+ *       400:
+ *         description: Invalid request
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Jobsite not found
+ */
+
 router.put(
   "/:id/restore",
   verifyToken,
   validateRequest(restoreJobsiteSchema),
   restoreJobsiteController
 );
-
-// /api/v1/admins/jobsite/:id - deletes a specific jobsite for admin
-router.delete("/:id", verifyToken, deleteJobsiteController);
 
 export default router;

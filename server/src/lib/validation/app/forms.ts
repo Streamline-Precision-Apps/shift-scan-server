@@ -12,7 +12,7 @@ export type CreateFormSubmissionInput = z.infer<
 // PUT /submission/:id (partial update allowed)
 export const updateFormSubmissionSchema = z.object({
   submissionId: z.number().optional(), // If present in body
-  formData: z.record(z.string(), z.string()).optional(),
+  formData: z.record(z.string(), z.unknown()).optional(),
   formTemplateId: z.string().optional(),
   userId: z.string().optional(),
   formType: z.string().optional(),
@@ -25,7 +25,7 @@ export type UpdateFormSubmissionInput = z.infer<
 
 // POST /draft
 export const saveDraftSchema = z.object({
-  formData: z.record(z.string(), z.string()),
+  formData: z.record(z.string(), z.unknown()),
   formTemplateId: z.string().min(1, "formTemplateId is required"),
   userId: z.string().min(1, "userId is required"),
   formType: z.string().optional(),
@@ -36,7 +36,7 @@ export type SaveDraftInput = z.infer<typeof saveDraftSchema>;
 
 // POST /draft-to-pending
 export const saveDraftToPendingSchema = z.object({
-  formData: z.record(z.string(), z.string()),
+  formData: z.record(z.string(), z.unknown()),
   isApprovalRequired: z.boolean(),
   formTemplateId: z.string().min(1, "formTemplateId is required"),
   userId: z.string().min(1, "userId is required"),
@@ -48,7 +48,7 @@ export type SaveDraftToPendingInput = z.infer<typeof saveDraftToPendingSchema>;
 
 // POST /pending
 export const savePendingSchema = z.object({
-  formData: z.record(z.string(), z.string()),
+  formData: z.record(z.string(), z.unknown()),
   formTemplateId: z.string().min(1, "formTemplateId is required"),
   userId: z.string().min(1, "userId is required"),
   formType: z.string().optional(),

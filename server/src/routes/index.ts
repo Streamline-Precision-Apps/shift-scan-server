@@ -25,11 +25,13 @@ import adminsReportRoutes from "./adminsReportRoutes.js";
 import adminsFormRoutes from "./adminsFormRoutes.js";
 import adminsTimesheetRoutes from "./adminsTimesheetRoutes.js";
 import { apiLimiter } from "../middleware/rateLimitMiddleware.js";
-import dataExportRoutes from "./dataExportRoute.js";
+// import dataExportRoutes from "./dataExportRoute.js";
+import authRoutes from "./authRoutes.js";
 
 const router = Router();
 
 // all app routes
+router.use("/auth", apiLimiter, authRoutes);
 router.use("/v1/forms", apiLimiter, formsRoutes);
 router.use("/v1/equipment", apiLimiter, equipmentRoutes);
 router.use("/v1/cost-codes", apiLimiter, costCodesRoute);
@@ -50,10 +52,9 @@ router.use("/v1/admins/report", apiLimiter, adminsReportRoutes);
 router.use("/v1/admins/forms", apiLimiter, adminsFormRoutes);
 router.use("/v1/admins/timesheet", apiLimiter, adminsTimesheetRoutes);
 router.use("/push-notifications", apiLimiter, pushNotificationsRoutes);
-router.use("/v1/export", dataExportRoutes);
+//router.use("/v1/export", dataExportRoutes); // disabled unless needed for recovery
 
 router.use("/notifications", apiLimiter, notificationRoutes); // admin notifications
-
 router.use("/storage", apiLimiter, blobRoutes);
 router.use("/tokens", tokenRoutes);
 router.use("/location", apiLimiter, locationRoutes);

@@ -7,14 +7,16 @@ import { z } from "zod";
 export const locationUpdateSchema = z
   .object({
     userId: z.string().min(1, "userId is required"),
-    sessionId: z.string(),
-    coords: z.object({
-      lat: z.number(),
-      lng: z.number(),
-      accuracy: z.number().nullable().optional(),
-      speed: z.number().nullable().optional(),
-      heading: z.number().nullable().optional(),
-    }),
+    sessionId: z.number(),
+    coords: z
+      .object({
+        lat: z.number(),
+        lng: z.number(),
+        accuracy: z.number().nullable().optional(),
+        speed: z.number().nullable().optional(),
+        heading: z.number().nullable().optional(),
+      })
+      .nullable(),
     device: z.record(z.string(), z.any()).optional(),
   })
   .strict();

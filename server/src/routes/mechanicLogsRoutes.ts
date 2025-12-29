@@ -14,15 +14,91 @@ import {
 } from "../lib/validation/app/mechanicLogs.js";
 
 const router = Router();
-
-router.get("/timesheet/:timesheetId", verifyToken, getMechanicLogsController);
-router.get("/:id", verifyToken, getMechanicLogController);
+/**
+ * @swagger
+ * /api/v1/mechanic-logs/:
+ *   post:
+ *     summary: Create a new mechanic log
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreateMechanicLogRequest'
+ *     responses:
+ *       201:
+ *         description: Mechanic log created successfully
+ *       400:
+ *         description: Invalid request
+ */
 router.post(
   "/",
   verifyToken,
   validateRequest(createMechanicLogSchema),
   createMechanicProjectController
 );
+
+/**
+ * @swagger
+ * /api/v1/mechanic-logs/{id}:
+ *   get:
+ *     summary: Get a specific mechanic log by ID
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Mechanic log retrieved successfully
+ *       404:
+ *         description: Mechanic log not found
+ *   put:
+ *     summary: Update a mechanic log by ID
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateMechanicLogRequest'
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Mechanic log updated successfully
+ *       400:
+ *         description: Invalid request
+ *       404:
+ *         description: Mechanic log not found
+ *   delete:
+ *     summary: Delete a mechanic log by ID
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Mechanic log deleted successfully
+ *       404:
+ *         description: Mechanic log not found
+ */
+
+router.get("/:id", verifyToken, getMechanicLogController);
 router.put(
   "/:id",
   verifyToken,
@@ -30,5 +106,26 @@ router.put(
   updateMechanicProjectController
 );
 router.delete("/:id", verifyToken, deleteMechanicProjectController);
+
+/**
+ * @swagger
+ * /api/v1/mechanic-logs/timesheet/{timesheetId}:
+ *   get:
+ *     summary: Get all mechanic logs for a timesheet
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: timesheetId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Mechanic logs retrieved successfully
+ *       404:
+ *         description: Timesheet or logs not found
+ */
+router.get("/timesheet/:timesheetId", verifyToken, getMechanicLogsController);
 
 export default router;

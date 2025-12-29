@@ -71,6 +71,36 @@ router.post(
   sendNotificationMulticast
 );
 
+/**
+ * @swagger
+ * /api/notifications/mark-read:
+ *   post:
+ *     tags:
+ *       - Notifications
+ *     summary: Mark notification as read
+ *     description: Mark a notification as read for the current user.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               notificationId:
+ *                 type: string
+ *                 description: ID of the notification to mark as read
+ *     responses:
+ *       200:
+ *         description: Notification marked as read
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Server error
+ */
 router.post(
   "/mark-read",
   verifyToken,
@@ -148,6 +178,39 @@ router.post(
 // ----------------------------------------------------------------------
 //
 // Used in the push notification management Lib for
+/**
+ * @swagger
+ * /api/notifications/subscribe-to-topic:
+ *   post:
+ *     tags:
+ *       - Notifications
+ *     summary: Subscribe device to topic
+ *     description: Subscribe a device token to a topic for push notifications.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               topic:
+ *                 type: string
+ *               token:
+ *                 type: string
+ *               userId:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Subscribed to topic
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Server error
+ */
 router.post(
   "/subscribe-to-topic",
   verifyToken,
@@ -156,6 +219,39 @@ router.post(
   topics
 );
 
+/**
+ * @swagger
+ * /api/notifications/unsubscribe-from-topic:
+ *   post:
+ *     tags:
+ *       - Notifications
+ *     summary: Unsubscribe device from topic
+ *     description: Unsubscribe a device token from a topic for push notifications.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               topic:
+ *                 type: string
+ *               token:
+ *                 type: string
+ *               userId:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Unsubscribed from topic
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Server error
+ */
 router.post(
   "/unsubscribe-from-topic",
   verifyToken,

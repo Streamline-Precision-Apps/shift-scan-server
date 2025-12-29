@@ -4,9 +4,9 @@ import { z } from "zod";
 export const sendMulticastSchema = z.object({
   topic: z.string().min(1, "Topic is required"),
   title: z.string().min(1, "Title is required"),
-  message: z.string().min(1, "Message is required"),
+  message: z.string().nullable().optional(),
   link: z.string().nullable().optional(),
-  referenceId: z.string().optional(),
+  referenceId: z.number().nullable().optional(),
 });
 
 // /topics, /subscribe-to-topic, /unsubscribe-from-topic

@@ -4,11 +4,14 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import prisma from "../lib/prisma.js";
 import config from "../lib/config.js";
-import { success } from "zod";
+import type { JwtPayload } from "jsonwebtoken";
 
 dotenv.config();
 
 interface JwtUserPayload {
+  id: string;
+}
+interface AuthJwtPayload extends JwtPayload {
   id: string;
 }
 
@@ -50,11 +53,13 @@ export const loginUser = async (
       expiresIn: config.jwtExpiration, // 30 days
     });
 
+    const isProd = process.env.NODE_ENV === "production";
+
     // set token in httpOnly cookie so client can send it with requests
     const cookieOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "none", // necessary for cross-site cookies with credentials: 'include'
+      sameSite: isProd ? "none" : "lax", // necessary for cross-site cookies with credentials: 'include'
       maxAge: config.jwtExpiration * 1000, // convert seconds -> ms
     } as const;
 
@@ -65,7 +70,6 @@ export const loginUser = async (
     return res.status(200).json({
       success: true,
       message: "Login successful",
-      token,
       user: {
         id: user.id,
         accountSetup: user.accountSetup,
@@ -97,6 +101,32 @@ export const signOutUser = async (
       }
     });
     return res.status(200).json({ message: "Sign out successful" });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getSession = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const token = req.cookies.session;
+    if (!token) {
+      return res.status(200).json({ user: null });
+    }
+    const decoded = jwt.verify(token, config.jwtSecret);
+    if (typeof decoded !== "object" || !("id" in decoded)) {
+      return res.status(200).json({ user: null });
+    }
+    const payload = decoded as AuthJwtPayload;
+
+    return res.status(200).json({
+      user: {
+        id: payload.id,
+      },
+    });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "Internal server error" });
