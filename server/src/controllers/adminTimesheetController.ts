@@ -23,7 +23,7 @@ export async function getAllTimesheetsController(req: Request, res: Response) {
     // If status is an array, use "all" as default for showPendingOnly
     let statusParam = "all";
     let statusFilters: string[] = [];
-    
+
     if (req.query.status) {
       if (Array.isArray(req.query.status)) {
         // Multiple status values = filter selections
@@ -41,7 +41,7 @@ export async function getAllTimesheetsController(req: Request, res: Response) {
         }
       }
     }
-    
+
     const page = req.query.page ? parseInt(req.query.page as string, 10) : 1;
     const pageSize = req.query.pageSize
       ? parseInt(req.query.pageSize as string, 10)
@@ -134,7 +134,7 @@ export async function getAllTimesheetsController(req: Request, res: Response) {
  */
 export async function getTimesheetByIdController(req: Request, res: Response) {
   try {
-    const {id} = req.params;
+    const { id } = req.params;
     if (!id) {
       return res.status(400).json({
         success: false,
@@ -170,7 +170,7 @@ export async function getTimesheetChangeLogsController(
   res: Response
 ) {
   try {
-    const {id} = req.params;
+    const { id } = req.params;
     if (!id) {
       return res.status(400).json({
         success: false,
@@ -220,7 +220,7 @@ export async function createTimesheetController(req: Request, res: Response) {
 export async function exportTimesheetsController(req: Request, res: Response) {
   try {
     const { timesheetIds = [], fields, dateRange, filters } = req.body;
-    
+
     if (!Array.isArray(timesheetIds)) {
       return res.status(400).json({
         success: false,
@@ -237,8 +237,8 @@ export async function exportTimesheetsController(req: Request, res: Response) {
     }
 
     const result = await exportTimesheets(
-      timesheetIds, 
-      fields, 
+      timesheetIds,
+      fields,
       parsedDateRange,
       filters
     );
@@ -259,7 +259,7 @@ export async function exportTimesheetsController(req: Request, res: Response) {
  */
 export async function updateTimesheetController(req: Request, res: Response) {
   try {
-    const {id} = req.params;
+    const { id } = req.params;
     if (!id) {
       return res.status(400).json({
         success: false,
@@ -311,7 +311,7 @@ export async function updateTimesheetStatusController(
   res: Response
 ) {
   try {
-    const {id} = req.params;
+    const { id } = req.params;
     if (!id) {
       return res.status(400).json({
         success: false,
@@ -320,7 +320,7 @@ export async function updateTimesheetStatusController(
     }
 
     const { status, changes } = req.body;
-    
+
     if (!status || !["APPROVED", "REJECTED", "PENDING"].includes(status)) {
       return res.status(400).json({
         success: false,
@@ -359,7 +359,7 @@ export async function updateTimesheetStatusController(
  */
 export async function deleteTimesheetController(req: Request, res: Response) {
   try {
-    const {id} = req.params;
+    const { id } = req.params;
     if (!id) {
       return res.status(400).json({
         success: false,
@@ -414,7 +414,7 @@ export async function resolveTimecardNotificationController(
 ) {
   try {
     const { timesheetId, notificationId } = req.body;
-    
+
     if (!timesheetId || !notificationId) {
       return res.status(400).json({
         success: false,

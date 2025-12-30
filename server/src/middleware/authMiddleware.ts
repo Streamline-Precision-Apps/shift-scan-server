@@ -7,26 +7,33 @@ export interface AuthenticatedRequest extends express.Request {
   user?: JwtUserPayload;
 }
 
+/**
+ * Express middleware to verify JWT token from Authorization header or session cookie.
+ * Attaches decoded user payload to req.user if valid.
+ */
+
 export function verifyToken(
   req: AuthenticatedRequest,
   res: express.Response,
   next: express.NextFunction
 ) {
-  // Check Authorization header first (Bearer <token>) then fall back to cookie
   const authHeader = req.headers["authorization"] as string | undefined;
   let token: string | undefined;
 
   if (authHeader && authHeader.startsWith("Bearer ")) {
     token = authHeader.split(" ")[1];
-  } else if ((req as any).cookies && (req as any).cookies.token) {
-    token = (req as any).cookies.token;
+  } else {
+    const cookie = req.cookies["session"];
+    token = cookie; // Use utility for cookie access
   }
 
-  if (!token) return res.status(401).json({ message: "No token provided" });
+  if (!token) {
+    return res.status(401).json({ message: "No token provided" });
+  }
 
   // Allow build token for static export/build processes
   if (process.env.BUILD_TOKEN && token === process.env.BUILD_TOKEN) {
-    req.user = { id: "build-script" } as JwtUserPayload; // dummy user info
+    req.user = { id: "build-script" } as JwtUserPayload;
     return next();
   }
 

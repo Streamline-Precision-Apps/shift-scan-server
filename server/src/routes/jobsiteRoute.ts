@@ -1,29 +1,85 @@
 // server/src/routes/jobsiteRoutes.ts
+
 import { Router } from "express";
+import { validateRequest } from "../middleware/validateRequest.js";
+import { createJobsiteSchema } from "../lib/validation/app/jobsite.js";
 import {
   createJobsite,
-  deleteJobsite,
   getJobsiteById,
   getJobsites,
-  updateJobsite,
   getJobsiteByQrId,
 } from "../controllers/jobsiteController.js";
 const router = Router();
-
-router.get("/qr/:qrId", getJobsiteByQrId);
-
+/**
+ * @swagger
+ * /api/v1/jobsites/:
+ *   get:
+ *     tags:
+ *       - App - Jobsites
+ *     summary: Get a list of all jobsites
+ *     responses:
+ *       200:
+ *         description: List of jobsites
+ *       400:
+ *         description: Failed to retrieve jobsites
+ *   post:
+ *     tags:
+ *       - App - Jobsites
+ *     summary: Create a new jobsite
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreateJobsiteRequest'
+ *     responses:
+ *       201:
+ *         description: Jobsite created
+ *       400:
+ *         description: Invalid request or failed to create jobsite
+ */
 router.get("/", getJobsites);
+router.post("/", validateRequest(createJobsiteSchema), createJobsite);
 
-// Get a jobsite by ID
+/**
+ * @swagger
+ * /api/v1/jobsites/{id}:
+ *   get:
+ *     tags:
+ *       - App - Jobsites
+ *     summary: Get jobsite details by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Jobsite found
+ *       404:
+ *         description: Jobsite not found
+ */
 router.get("/:id", getJobsiteById);
 
-// Create a jobsite
-router.post("/", createJobsite);
-
-// Update a jobsite
-router.put("/:id", updateJobsite);
-
-// Delete a jobsite
-router.delete("/:id", deleteJobsite);
-
+/**
+ * @swagger
+ * /api/v1/jobsites/qr/{qrId}:
+ *   get:
+ *     tags:
+ *       - App - Jobsites
+ *     summary: Get jobsite details by QR code ID
+ *     parameters:
+ *       - in: path
+ *         name: qrId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Jobsite found
+ *       404:
+ *         description: Jobsite not found
+ */
+router.get("/qr/:qrId", getJobsiteByQrId);
 export default router;

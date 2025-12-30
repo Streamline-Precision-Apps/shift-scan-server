@@ -5,9 +5,13 @@ import {
   findTopicSubscription,
   createTopicSubscription,
   deleteTopicSubscription,
-} from "../models/notificationModel.js";
+  updateNotificationReadStatusService,
+  markAllNotificationsAsReadService,
+  markBrokenEquipmentNotificationsAsReadService,
+} from "../services/notificationServices.js";
 import { getFirebaseAdmin } from "../lib/firebase.js";
 import type { Message } from "firebase-admin/messaging";
+import type { FirebaseError } from "firebase-admin";
 
 export async function sendNotificationMulticast(req: Request, res: Response) {
   const admin = getFirebaseAdmin();
@@ -37,7 +41,7 @@ export async function sendNotificationMulticast(req: Request, res: Response) {
       referenceId: referenceId?.toString() ?? null,
     });
 
-    const urlWithId = `${notification.url ? notification.url : "/admins"}${
+    const urlWithId = `${notification.url ? notification.url : "/"}${
       notification.url?.includes("?") ? "&" : "?"
     }notificationId=${notification.id}`;
     const notificationLink = await updateNotificationUrl(
@@ -77,63 +81,6 @@ export async function sendNotificationMulticast(req: Request, res: Response) {
       error: "Failed to send notification",
       details: error instanceof Error ? error.message : "Unknown error",
     });
-  }
-}
-
-export async function sendNotification(req: Request, res: Response) {
-  const admin = getFirebaseAdmin();
-  const { token, title, message, link, topic } = req.body;
-
-  if (!token) {
-    return res.status(400).json({ error: "Device token is required" });
-  }
-
-  let payload: Message;
-  if (link) {
-    payload = {
-      notification: { title, body: message },
-      token,
-      webpush: { fcmOptions: { link } },
-    };
-  } else {
-    payload = {
-      notification: { title, body: message },
-      token,
-    };
-  }
-
-  try {
-    // Send the FCM notification
-    await admin.messaging().send(payload);
-
-    // Save the notification to the database
-    await createNotification({
-      topic,
-      title,
-      body: message,
-      url: link,
-      pushedAt: new Date(),
-      pushAttempts: 1,
-    });
-
-    return res
-      .status(200)
-      .json({ success: true, message: "Notification sent!" });
-  } catch (error) {
-    // Still save notification to DB but with failed attempt
-    try {
-      await createNotification({
-        topic,
-        title,
-        body: message,
-        url: link,
-        pushAttempts: 1,
-      });
-    } catch (dbError) {
-      console.error("Failed to save notification to database:", dbError);
-    }
-
-    return res.status(500).json({ success: false, error });
   }
 }
 
@@ -199,4 +146,92 @@ export async function topics(req: Request, res: Response) {
     } out of ${topics.length} topics`,
     results,
   });
+}
+
+export async function subscribeToTopicController(req: Request, res: Response) {
+  try {
+    const admin = getFirebaseAdmin();
+    const { topic, deviceToken } = req.body;
+
+    if (!topic || !deviceToken) {
+      return res.status(400).json({ error: "Topic is required" });
+    }
+    // Subscribe the device to the topic via Firebase Admin SDK
+    await admin.messaging().subscribeToTopic(deviceToken, topic);
+    res.status(200).json({
+      success: true,
+      message: `Successfully subscribed to topic: ${topic}`,
+    });
+  } catch (error) {
+    const firebaseError = error as FirebaseError;
+    res.status(500).json({
+      error: "Failed to subscribe to topic",
+      message: firebaseError.message || String(error),
+    });
+  }
+}
+
+export async function unsubscribeFromTopicController(
+  req: Request,
+  res: Response
+) {
+  try {
+    const admin = getFirebaseAdmin();
+    const { topic, deviceToken } = req.body;
+
+    if (!topic || !deviceToken) {
+      return res.status(400).json({ error: "Topic is required" });
+    }
+    // Unsubscribe the device to the topic via Firebase Admin SDK
+    await admin.messaging().unsubscribeFromTopic(deviceToken, topic);
+    res.status(200).json({
+      success: true,
+      message: `Successfully subscribed to topic: ${topic}`,
+    });
+  } catch (error) {
+    const firebaseError = error as FirebaseError;
+    res.status(500).json({
+      error: "Failed to unsubscribe",
+      message: firebaseError.message || String(error),
+    });
+  }
+}
+
+export async function markReadController(req: Request, res: Response) {
+  try {
+    const { notificationId, markAll, brokenEquipment, userId } = req.body;
+    let result;
+
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    if (markAll) {
+      result = await markAllNotificationsAsReadService(userId);
+      return res.status(200).json({ success: true, ...result });
+    }
+
+    if (brokenEquipment && notificationId) {
+      result = await markBrokenEquipmentNotificationsAsReadService(
+        notificationId,
+        userId
+      );
+      return res.status(200).json({ success: true, ...result });
+    }
+
+    if (notificationId) {
+      result = await updateNotificationReadStatusService(
+        notificationId,
+        userId
+      );
+      return res.status(200).json({ success: true, ...result });
+    }
+
+    return res.status(400).json({ error: "Invalid parameters" });
+  } catch (error) {
+    console.error("Error in markReadController:", error);
+    return res
+      .status(500)
+      .json({ error: "Failed to mark notification(s) as read" });
+  }
 }

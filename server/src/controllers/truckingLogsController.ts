@@ -217,14 +217,14 @@ export async function updateTruckingLogsController(
     let result;
 
     switch (field) {
-      case "endingMileage": {
-        const { endingMileage } = req.body;
-        if (endingMileage === undefined) {
+      case "endMileage": {
+        const { endMileage } = req.body;
+        if (endMileage === undefined) {
           return res
             .status(400)
             .json({ error: "endingMileage value is required." });
         }
-        result = await updateTruckingLogEndingMileageService(id, endingMileage);
+        result = await updateTruckingLogEndingMileageService(id, endMileage);
         return res.json(result);
       }
 

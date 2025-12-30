@@ -109,66 +109,6 @@ export async function getUserByIdQuery(id: string, query: string) {
   }
 }
 
-export async function createUser(
-  userData: Prisma.UserCreateInput
-): Promise<User> {
-  // Validate required fields
-  if (!userData.firstName) {
-    throw new Error("First name is required");
-  }
-  if (!userData.lastName) {
-    throw new Error("Last name is required");
-  }
-  if (!userData.username) {
-    throw new Error("Username is required");
-  }
-  if (!userData.password) {
-    throw new Error("Password is required");
-  }
-  if (!userData.Company) {
-    throw new Error("Company is required");
-  }
-
-  // Validate email format if provided
-  if (userData.email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(userData.email)) {
-      throw new Error("Invalid email format");
-    }
-  }
-
-  try {
-    // Check if user already exists
-    if (userData.email) {
-      const existingUser = await prisma.user.findUnique({
-        where: { email: userData.email },
-      });
-      if (existingUser) {
-        throw new Error("User with this email already exists");
-      }
-    }
-
-    if (userData.username) {
-      const existingUsername = await prisma.user.findUnique({
-        where: { username: userData.username },
-      });
-      if (existingUsername) {
-        throw new Error("Username already exists");
-      }
-    }
-
-    return await prisma.user.create({
-      data: userData,
-    });
-  } catch (error) {
-    throw new Error(
-      `Failed to create user: ${
-        error instanceof Error ? error.message : "Unknown error"
-      }`
-    );
-  }
-}
-
 export async function updateUser(
   id: string,
   userData: Prisma.UserUpdateInput
@@ -216,24 +156,6 @@ export async function updateUser(
   } catch (error) {
     throw new Error(
       `Failed to update user: ${
-        error instanceof Error ? error.message : "Unknown error"
-      }`
-    );
-  }
-}
-
-export async function deleteUser(id: string) {
-  if (!id) {
-    throw new Error("User ID is required");
-  }
-
-  try {
-    const user = await prisma.user.findUnique({ where: { id } });
-    if (!user) throw new Error("User not found");
-    return await prisma.user.delete({ where: { id } });
-  } catch (error) {
-    throw new Error(
-      `Failed to delete user: ${
         error instanceof Error ? error.message : "Unknown error"
       }`
     );
@@ -524,4 +446,16 @@ export async function handleUserSignature(userId: string) {
       signature: true,
     },
   });
+}
+
+export async function getUserLocale(userId: string) {
+  const userSettings = await prisma.userSettings.findUnique({
+    where: {
+      userId,
+    },
+    select: {
+      language: true,
+    },
+  });
+  return userSettings;
 }

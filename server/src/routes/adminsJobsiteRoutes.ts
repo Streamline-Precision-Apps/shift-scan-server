@@ -9,24 +9,214 @@ import {
   deleteJobsiteController,
 } from "../controllers/adminJobsiteController.js";
 
+import { verifyToken } from "../middleware/authMiddleware.js";
+import { validateRequest } from "../middleware/validateRequest.js";
+import {
+  createJobsiteSchema,
+  updateJobsiteSchema,
+  archiveJobsiteSchema,
+  restoreJobsiteSchema,
+} from "../lib/validation/dashboard/jobsite.js";
+
 const router = Router();
+/**
+ * @swagger
+ * /api/v1/admins/jobsite:
+ *   get:
+ *     tags:
+ *       - Admins - Jobsites
+ *     summary: Get all jobsites (admin)
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Jobsites retrieved successfully
+ *       401:
+ *         description: Unauthorized
+ *   post:
+ *     tags:
+ *       - Admins - Jobsites
+ *     summary: Create a new jobsite (admin)
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreateJobsiteRequest'
+ *     responses:
+ *       201:
+ *         description: Jobsite created successfully
+ *       400:
+ *         description: Invalid request
+ *       401:
+ *         description: Unauthorized
+ */
 
-// /api/v1/admins/jobsite/:id - gets a specific jobsite for admin
-router.get("/:id", getJobsiteByIdController);
-// /api/v1/admins/jobsite - gets all jobsites for admin
-router.get("/", getAllJobsitesController);
+router.get("/", verifyToken, getAllJobsitesController);
+router.post(
+  "/",
+  verifyToken,
+  validateRequest(createJobsiteSchema),
+  createJobsiteController
+);
 
-// /api/v1/admins/jobsite - creates a new jobsite
-router.post("/", createJobsiteController);
+/**
+ * @swagger
+ * /api/v1/admins/jobsite/{id}:
+ *   get:
+ *     tags:
+ *       - Admins - Jobsites
+ *     summary: Get a specific jobsite by ID (admin)
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Jobsite retrieved successfully
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Jobsite not found
+ *   put:
+ *     tags:
+ *       - Admins - Jobsites
+ *     summary: Update a specific jobsite by ID (admin)
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateJobsiteRequest'
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Jobsite updated successfully
+ *       400:
+ *         description: Invalid request
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Jobsite not found
+ *   delete:
+ *     tags:
+ *       - Admins - Jobsites
+ *     summary: Delete a specific jobsite by ID (admin)
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Jobsite deleted successfully
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Jobsite not found
+ */
 
-// /api/v1/admins/jobsite/:id - updates a specific jobsite for admin
-router.put("/:id", updateJobsiteController);
-// /api/v1/admins/jobsite/:id/archive - archives a specific jobsite for admin
-router.put("/:id/archive", archiveJobsiteController);
-// /api/v1/admins/jobsite/:id/restore - restores a specific jobsite for admin
-router.put("/:id/restore", restoreJobsiteController);
+router.get("/:id", verifyToken, getJobsiteByIdController);
+router.put(
+  "/:id",
+  verifyToken,
+  validateRequest(updateJobsiteSchema),
+  updateJobsiteController
+);
+router.delete("/:id", verifyToken, deleteJobsiteController);
 
-// /api/v1/admins/jobsite/:id - deletes a specific jobsite for admin
-router.delete("/:id", deleteJobsiteController);
+/**
+ * @swagger
+ * /api/v1/admins/jobsite/{id}/archive:
+ *   put:
+ *     tags:
+ *       - Admins - Jobsites
+ *     summary: Archive a specific jobsite by ID (admin)
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ArchiveJobsiteRequest'
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Jobsite archived successfully
+ *       400:
+ *         description: Invalid request
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Jobsite not found
+ */
+
+router.put(
+  "/:id/archive",
+  verifyToken,
+  validateRequest(archiveJobsiteSchema),
+  archiveJobsiteController
+);
+
+/**
+ * @swagger
+ * /api/v1/admins/jobsite/{id}/restore:
+ *   put:
+ *     tags:
+ *       - Admins - Jobsites
+ *     summary: Restore a specific jobsite by ID (admin)
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/RestoreJobsiteRequest'
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Jobsite restored successfully
+ *       400:
+ *         description: Invalid request
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Jobsite not found
+ */
+
+router.put(
+  "/:id/restore",
+  verifyToken,
+  validateRequest(restoreJobsiteSchema),
+  restoreJobsiteController
+);
 
 export default router;

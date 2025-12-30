@@ -12,7 +12,7 @@ export const payPeriodSheetsHandler = async (
   }
   try {
     const payPeriodSheets = await getPayPeriodSheets(userId);
-    res.setHeader("Cache-Control", "no-store");
+
     res.json(payPeriodSheets);
   } catch (error) {
     console.error("Error fetching pay period sheets:", error);

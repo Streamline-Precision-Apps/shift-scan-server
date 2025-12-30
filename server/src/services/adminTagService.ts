@@ -200,7 +200,11 @@ export async function updateTag(id: string, payload: UpdateTagPayload) {
     }
   }
   if (payload.CostCodes) {
-    const filteredCostCodes = payload.CostCodes.filter((cc) => cc && cc.id);
+    // Normalize: convert string[] to {id: string}[] if needed
+    const costCodesArray = payload.CostCodes.map((cc) =>
+      typeof cc === "string" ? { id: cc } : cc
+    );
+    const filteredCostCodes = costCodesArray.filter((cc) => cc && cc.id);
     if (filteredCostCodes.length > 0) {
       updateData.CostCodes = {
         set: filteredCostCodes.map((cc) => ({ id: cc.id })),

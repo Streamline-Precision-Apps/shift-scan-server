@@ -2,6 +2,12 @@
 import { Router } from "express";
 import { initHandler } from "../controllers/initController.js";
 import { payPeriodSheetsHandler } from "../controllers/payPeriodController.js";
+import { verifyToken } from "../middleware/authMiddleware.js";
+import { validateRequest } from "../middleware/validateRequest.js";
+import {
+  payPeriodTimesheetsSchema,
+  initRequestSchema,
+} from "../lib/validation/app/init.js";
 const router = Router();
 // Define your init routes here
 
@@ -9,6 +15,8 @@ const router = Router();
  * @swagger
  * /api/v1/init:
  *   post:
+ *     tags:
+ *       - App - Init
  *     summary: Initialize user session and get user info
  *     description: Returns user information and settings for a given userId.
  *     requestBody:
@@ -18,9 +26,6 @@ const router = Router();
  *           schema:
  *             type: object
  *             properties:
- *               token:
- *                 type: string
- *                 description: JWT token for authentication
  *               userId:
  *                 type: string
  *                 description: User ID to fetch info for
@@ -46,12 +51,19 @@ const router = Router();
  *         description: Server error
  */
 
-router.post("/init", initHandler);
+router.post(
+  "/init",
+  verifyToken,
+  validateRequest(initRequestSchema),
+  initHandler
+);
 
 /**
  * @swagger
  * /api/v1/pay-period-timesheets:
  *   post:
+ *     tags:
+ *       - App - Pay Period Timesheets
  *     summary: Get pay period timesheets for a user
  *     description: Returns timesheets for the current pay period for the given userId.
  *     requestBody:
@@ -89,6 +101,11 @@ router.post("/init", initHandler);
  *       '500':
  *         description: Server error
  */
-router.post("/pay-period-timesheets", payPeriodSheetsHandler);
+router.post(
+  "/pay-period-timesheets",
+  verifyToken,
+  validateRequest(payPeriodTimesheetsSchema),
+  payPeriodSheetsHandler
+);
 
 export default router;

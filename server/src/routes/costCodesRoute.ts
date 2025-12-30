@@ -3,7 +3,19 @@ import { getCostCodeController } from "../controllers/costCodeController.js";
 
 const router = Router();
 
-// get all cost codes
+/**
+ * @swagger
+ * /api/v1/costCodes/:
+ *   get:
+ *     tags:
+ *       - App - CostCodes
+ *     summary: Get all cost codes
+ *     responses:
+ *       200:
+ *         description: List of cost codes
+ *       400:
+ *         description: Failed to retrieve cost codes
+ */
 router.get("/", getCostCodeController);
 
 export default router;

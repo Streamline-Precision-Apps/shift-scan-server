@@ -3,6 +3,9 @@ import multer from "multer";
 
 import { requireFirebaseEnv } from "../middleware/requireFirebaseEnv.js";
 import { blobDelete, blobUpload } from "../controllers/blobsController.js";
+import { verifyToken } from "../middleware/authMiddleware.js";
+import { validateRequest } from "../middleware/validateRequest.js";
+import { blobUploadSchema } from "../lib/validation/blobs.js";
 
 const router = Router();
 
@@ -49,8 +52,10 @@ const upload = multer({ storage: multer.memoryStorage() });
  */
 router.post(
   "/upload",
+  verifyToken,
   requireFirebaseEnv,
   upload.single("file"),
+  validateRequest(blobUploadSchema),
   blobUpload
 );
 
@@ -91,6 +96,6 @@ router.post(
  *       500:
  *         description: Delete failed
  */
-router.delete("/delete", requireFirebaseEnv, blobDelete);
+router.delete("/delete", verifyToken, requireFirebaseEnv, blobDelete);
 
 export default router;

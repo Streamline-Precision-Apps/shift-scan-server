@@ -1,2 +1,0 @@
--- CreateEnum
-CREATE TYPE "AssetType" AS ENUM ('EQUIPMENT', 'JOBSITES', 'COST_CODES', 'CLIENTS');

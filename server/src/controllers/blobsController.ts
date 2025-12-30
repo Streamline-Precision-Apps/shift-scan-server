@@ -1,64 +1,37 @@
 import type { Request, Response } from "express";
-import { getFirebaseAdmin } from "../lib/firebase.js";
+
+import { uploadBlob, deleteBlob } from "../services/blobService.js";
 
 export async function blobUpload(req: Request, res: Response) {
   try {
-    const admin = getFirebaseAdmin();
-    const bucket = admin.storage().bucket();
-
-    const userId = req.body.userId;
+    const { userId, folder = "profileImages" } = req.body;
     const file = req.file;
-    const folder = req.body.folder || "profileImages";
-    console.log("file", file);
-
-    if (!userId) {
-      return res.status(400).json({ error: "No userId provided" });
+    if (!userId || !file) {
+      return res.status(400).json({ error: "Invalid request." });
     }
-    if (!file) {
-      return res.status(400).json({ error: "No file provided" });
-    }
-
-    // Upsert: Save file (creates if new, overwrites if exists)
-    const fileRef = bucket.file(`${folder}/${userId}.png`);
-    const contentType = folder === "docs" ? "application/pdf" : "image/png";
-
-    await fileRef.save(file.buffer, {
-      contentType,
-      public: true,
-      metadata: {
-        cacheControl: "no-cache", // Prevent caching old images
-      },
-    });
-
-    const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileRef.name}`;
-
-    return res.status(200).json({
-      url: publicUrl,
-      message: "Image uploaded successfully",
-    });
+    // (Optional: Add authentication/authorization checks here)
+    const result = await uploadBlob({ userId, file, folder });
+    return res.status(200).json(result);
   } catch (err) {
     console.error("Upload error:", err);
-    return res.status(500).json({ error: "Upload failed" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 }
 
 export async function blobDelete(req: Request, res: Response) {
   try {
-    const admin = getFirebaseAdmin();
-    const bucket = admin.storage().bucket();
     const { userId, folder = "profileImages" } = req.body;
     if (!userId) {
-      return res.status(400).json({ error: "No userId provided" });
+      return res.status(400).json({ error: "Invalid request." });
     }
-    const fileRef = bucket.file(`${folder}/${userId}.png`);
-    const [exists] = await fileRef.exists();
-    if (!exists) {
-      return res.status(404).json({ error: "File not found" });
+    // (Optional: Add authentication/authorization checks here)
+    const result = await deleteBlob({ userId, folder });
+    if (result.error === "File not found") {
+      return res.status(404).json({ error: "Resource not found." });
     }
-    await fileRef.delete();
-    return res.json({ success: true });
+    return res.json(result);
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: "Delete failed" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 }

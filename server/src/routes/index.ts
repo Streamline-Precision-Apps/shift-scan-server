@@ -1,6 +1,6 @@
 import { Router } from "express";
 import notificationRoutes from "./notificationsRoute.js";
-import pushNotificationsRoute from "./pushNotificationsRoute.js";
+import pushNotificationsRoutes from "./pushNotificationsRoute.js";
 import blobRoutes from "./blobRoute.js";
 import tokenRoutes from "./tokenRoutes.js";
 import locationRoutes from "./locationRoutes.js";
@@ -24,35 +24,40 @@ import adminsCostCodesRoutes from "./adminsCostCodesRoutes.js";
 import adminsReportRoutes from "./adminsReportRoutes.js";
 import adminsFormRoutes from "./adminsFormRoutes.js";
 import adminsTimesheetRoutes from "./adminsTimesheetRoutes.js";
+import { apiLimiter } from "../middleware/rateLimitMiddleware.js";
+// import dataExportRoutes from "./dataExportRoute.js";
+import authRoutes from "./authRoutes.js";
 
 const router = Router();
 
 // all app routes
-router.use("/v1/forms", formsRoutes);
-router.use("/v1/equipment", equipmentRoutes);
-router.use("/v1/cost-codes", costCodesRoute);
-router.use("/v1/jobsite", jobsiteRoutes);
-router.use("/v1/user", userRoutes);
-router.use("/v1/timesheet", timesheetRoutes);
-router.use("/v1/mechanic-logs", mechanicLogsRoutes);
-router.use("/v1/trucking-logs", truckingLogsRoutes);
-router.use("/v1/tasco-logs", tascoLogsRoutes);
-router.use("/v1", initRoutes);
-router.use("/v1/admins", adminsBaseRoutes);
-router.use("/v1/admins/personnel", adminsPersonnelRoutes);
-router.use("/v1/admins/equipment", adminsEquipmentRoutes);
-router.use("/v1/admins/jobsite", adminsJobsiteRoutes);
-router.use("/v1/admins/tags", adminsTagsRoutes);
-router.use("/v1/admins/cost-codes", adminsCostCodesRoutes);
-router.use("/v1/admins/report", adminsReportRoutes);
-router.use("/v1/admins/forms", adminsFormRoutes);
-router.use("/v1/admins/timesheet", adminsTimesheetRoutes);
+router.use("/auth", apiLimiter, authRoutes);
+router.use("/v1/forms", apiLimiter, formsRoutes);
+router.use("/v1/equipment", apiLimiter, equipmentRoutes);
+router.use("/v1/cost-codes", apiLimiter, costCodesRoute);
+router.use("/v1/jobsite", apiLimiter, jobsiteRoutes);
+router.use("/v1/user", apiLimiter, userRoutes);
+router.use("/v1/timesheet", apiLimiter, timesheetRoutes);
+router.use("/v1/mechanic-logs", apiLimiter, mechanicLogsRoutes);
+router.use("/v1/trucking-logs", apiLimiter, truckingLogsRoutes);
+router.use("/v1/tasco-logs", apiLimiter, tascoLogsRoutes);
+router.use("/v1", apiLimiter, initRoutes);
+router.use("/v1/admins", apiLimiter, adminsBaseRoutes);
+router.use("/v1/admins/personnel", apiLimiter, adminsPersonnelRoutes);
+router.use("/v1/admins/equipment", apiLimiter, adminsEquipmentRoutes);
+router.use("/v1/admins/jobsite", apiLimiter, adminsJobsiteRoutes);
+router.use("/v1/admins/tags", apiLimiter, adminsTagsRoutes);
+router.use("/v1/admins/cost-codes", apiLimiter, adminsCostCodesRoutes);
+router.use("/v1/admins/report", apiLimiter, adminsReportRoutes);
+router.use("/v1/admins/forms", apiLimiter, adminsFormRoutes);
+router.use("/v1/admins/timesheet", apiLimiter, adminsTimesheetRoutes);
+router.use("/push-notifications", apiLimiter, pushNotificationsRoutes);
+//router.use("/v1/export", dataExportRoutes); // disabled unless needed for recovery
 
-router.use("/notifications", notificationRoutes);
-router.use("/push-notifications", pushNotificationsRoute);
-router.use("/storage", blobRoutes);
+router.use("/notifications", apiLimiter, notificationRoutes); // admin notifications
+router.use("/storage", apiLimiter, blobRoutes);
 router.use("/tokens", tokenRoutes);
-router.use("/location", locationRoutes);
-router.use("/cookies", cookiesRoutes);
+router.use("/location", apiLimiter, locationRoutes);
+router.use("/cookies", apiLimiter, cookiesRoutes);
 
 export default router;
