@@ -11,6 +11,8 @@ const router = Router();
  * @swagger
  * /api/v1/admins/notification-center:
  *   get:
+ *     tags:
+ *       - Admin - Home
  *     summary: Get notification center data
  *     security:
  *       - bearerAuth: []
@@ -26,6 +28,8 @@ router.get("/notification-center", verifyToken, baseController);
  * @swagger
  * /api/v1/admins/dashboard-data:
  *   get:
+ *     tags:
+ *       - Admin - Home
  *     summary: Get dashboard data for admin
  *     security:
  *       - bearerAuth: []
@@ -41,6 +45,8 @@ router.get("/dashboard-data", verifyToken, getDashboardDataController);
  * @swagger
  * /api/v1/admins/notification-preferences:
  *   get:
+ *     tags:
+ *       - Admin - Home
  *     summary: Get user notification topic preferences
  *     security:
  *       - bearerAuth: []

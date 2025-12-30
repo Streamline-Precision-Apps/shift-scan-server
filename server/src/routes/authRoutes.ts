@@ -16,6 +16,8 @@ const router = express.Router();
  * @swagger
  * /auth/login:
  *   post:
+ *     tags:
+ *       - Auth
  *     summary: Log in to get a JWT token
  *     requestBody:
  *       required: true
@@ -54,6 +56,8 @@ router.post("/login", validateRequest(loginSchema), loginLimiter, loginUser);
  * @swagger
  * /auth/session:
  *   get:
+ *     tags:
+ *       - Auth
  *     summary: Get the current session information based on the JWT token in cookies
  *     responses:
  *       200:
@@ -77,6 +81,8 @@ router.get("/session", apiLimiter, getSession);
  * @swagger
  * /auth/signout:
  *   post:
+ *     tags:
+ *       - Auth
  *     summary: Sign out and clear authentication cookies
  *     description: |
  *       Signs out the user by clearing all authentication cookies. This endpoint does not accept any body or query parameters—only cookies are allowed. If any body or query parameters are present, a 400 error is returned.

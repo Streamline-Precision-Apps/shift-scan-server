@@ -18,6 +18,8 @@ const router = Router();
  * @swagger
  * /api/v1/trucking-logs/{id}:
  *   get:
+ *     tags:
+ *       - App - Logs
  *     summary: Get a specific trucking log by ID
  *     security:
  *       - bearerAuth: []
@@ -33,6 +35,8 @@ const router = Router();
  *       404:
  *         description: Trucking log not found
  *   post:
+ *     tags:
+ *       - App - Logs
  *     summary: Create a new trucking log for a specific ID
  *     security:
  *       - bearerAuth: []
@@ -54,6 +58,8 @@ const router = Router();
  *       400:
  *         description: Invalid request
  *   put:
+ *     tags:
+ *       - App - Logs
  *     summary: Update a trucking log by ID
  *     security:
  *       - bearerAuth: []
@@ -77,6 +83,8 @@ const router = Router();
  *       404:
  *         description: Trucking log not found
  *   delete:
+ *     tags:
+ *       - App - Logs
  *     summary: Delete a trucking log by ID
  *     security:
  *       - bearerAuth: []
@@ -111,6 +119,8 @@ router.delete("/:id", verifyToken, deleteTruckingLogController);
  * @swagger
  * /api/v1/trucking-logs/user/{userId}:
  *   get:
+ *     tags:
+ *       - App - Logs
  *     summary: Get all trucking logs for a user
  *     security:
  *       - bearerAuth: []

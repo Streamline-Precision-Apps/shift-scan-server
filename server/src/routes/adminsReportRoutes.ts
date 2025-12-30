@@ -12,6 +12,8 @@ const router = Router();
  * @swagger
  * /api/v1/admins/reports/tasco:
  *   get:
+ *     tags:
+ *       - Admins - Reports
  *     summary: Get Tasco report
  *     security:
  *       - bearerAuth: []
@@ -26,6 +28,8 @@ router.get("/tasco", verifyToken, getTascoReport);
  * @swagger
  * /api/v1/admins/reports/tasco/filters:
  *   get:
+ *     tags:
+ *       - Admins - Reports
  *     summary: Get Tasco report filter options
  *     security:
  *       - bearerAuth: []
@@ -40,6 +44,8 @@ router.get("/tasco/filters", verifyToken, getTascoFilterOptions);
  * @swagger
  * /api/v1/admins/reports/trucking:
  *   get:
+ *     tags:
+ *       - Admins - Reports
  *     summary: Get Trucking report
  *     security:
  *       - bearerAuth: []
@@ -54,6 +60,8 @@ router.get("/trucking", verifyToken, getTruckingReport);
  * @swagger
  * /api/v1/admins/reports/mechanic:
  *   get:
+ *     tags:
+ *       - Admins - Reports
  *     summary: Get Mechanic report
  *     security:
  *       - bearerAuth: []

@@ -5,9 +5,11 @@ const router = Router();
 
 /**
  * @swagger
- * /v1/costCodes/:
+ * /api/v1/costCodes/:
  *   get:
- *     summary: Get a list of all cost codes
+ *     tags:
+ *       - App - CostCodes
+ *     summary: Get all cost codes
  *     responses:
  *       200:
  *         description: List of cost codes

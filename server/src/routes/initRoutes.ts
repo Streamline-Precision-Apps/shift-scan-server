@@ -15,6 +15,8 @@ const router = Router();
  * @swagger
  * /api/v1/init:
  *   post:
+ *     tags:
+ *       - App - Init
  *     summary: Initialize user session and get user info
  *     description: Returns user information and settings for a given userId.
  *     requestBody:
@@ -24,9 +26,6 @@ const router = Router();
  *           schema:
  *             type: object
  *             properties:
- *               token:
- *                 type: string
- *                 description: JWT token for authentication
  *               userId:
  *                 type: string
  *                 description: User ID to fetch info for
@@ -63,6 +62,8 @@ router.post(
  * @swagger
  * /api/v1/pay-period-timesheets:
  *   post:
+ *     tags:
+ *       - App - Pay Period Timesheets
  *     summary: Get pay period timesheets for a user
  *     description: Returns timesheets for the current pay period for the given userId.
  *     requestBody:

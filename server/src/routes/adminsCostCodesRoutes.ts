@@ -20,11 +20,12 @@ import {
 
 const router = Router();
 
-// /api/v1/admins/cost-codes - get all cost codes
 /**
  * @swagger
  * /api/v1/admins/cost-codes:
  *   get:
+ *     tags:
+ *       - Admins - CostCodes
  *     summary: Get all cost codes
  *     security:
  *       - bearerAuth: []
@@ -35,10 +36,13 @@ const router = Router();
  *         description: Unauthorized
  */
 router.get("/", verifyToken, getCostCodesController);
+
 /**
  * @swagger
  * /api/v1/admins/cost-codes:
  *   post:
+ *     tags:
+ *       - Admins - CostCodes
  *     summary: Create a new cost code
  *     security:
  *       - bearerAuth: []
@@ -63,11 +67,12 @@ router.post(
   createCostCodeController
 );
 
-// /api/v1/admins/cost-codes/:id - get cost code by id
 /**
  * @swagger
  * /api/v1/admins/cost-codes/{id}:
  *   get:
+ *     tags:
+ *       - Admins - CostCodes
  *     summary: Get cost code by ID
  *     security:
  *       - bearerAuth: []
@@ -86,11 +91,13 @@ router.post(
  *         description: Cost code not found
  */
 router.get("/:id", verifyToken, getCostCodeByIdController);
-// /api/v1/admins/cost-codes/:id - update cost code
+
 /**
  * @swagger
  * /api/v1/admins/cost-codes/{id}:
  *   put:
+ *     tags:
+ *       - Admins - CostCodes
  *     summary: Update cost code by ID
  *     security:
  *       - bearerAuth: []
@@ -122,11 +129,13 @@ router.put(
   validateRequest(updateCostCodeSchema),
   updateCostCodeController
 );
-// /api/v1/admins/cost-codes/:id - delete cost code
+
 /**
  * @swagger
  * /api/v1/admins/cost-codes/{id}:
  *   delete:
+ *     tags:
+ *       - Admins - CostCodes
  *     summary: Delete cost code by ID
  *     security:
  *       - bearerAuth: []
@@ -146,11 +155,12 @@ router.put(
  */
 router.delete("/:id", verifyToken, deleteCostCodeController);
 
-// /api/v1/admins/cost-codes/:id/archive - archive cost code
 /**
  * @swagger
  * /api/v1/admins/cost-codes/{id}/archive:
  *   put:
+ *     tags:
+ *       - Admins - CostCodes
  *     summary: Archive cost code by ID
  *     security:
  *       - bearerAuth: []
@@ -183,11 +193,12 @@ router.put(
   archiveCostCodeController
 );
 
-// /api/v1/admins/cost-codes/:id/restore - restore cost code
 /**
  * @swagger
  * /api/v1/admins/cost-codes/{id}/restore:
  *   put:
+ *     tags:
+ *       - Admins - CostCodes
  *     summary: Restore cost code by ID
  *     security:
  *       - bearerAuth: []
@@ -220,11 +231,12 @@ router.put(
   restoreCostCodeController
 );
 
-// /api/v1/admins/cost-codes/summary - get cost code summary (must come before /:id)
 /**
  * @swagger
  * /api/v1/admins/cost-codes/summary:
  *   get:
+ *     tags:
+ *       - Admins - CostCodes
  *     summary: Get cost code summary
  *     security:
  *       - bearerAuth: []

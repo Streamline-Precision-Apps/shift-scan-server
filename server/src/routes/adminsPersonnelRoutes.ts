@@ -29,6 +29,8 @@ const router = Router();
  * @swagger
  * /api/v1/admins/employees/getAllEmployees:
  *   get:
+ *     tags:
+ *       - Admins - Personnel
  *     summary: Get all employees in crew
  *     security:
  *       - bearerAuth: []
@@ -44,6 +46,8 @@ router.get("/getAllEmployees", verifyToken, getCrewEmployeesController);
  * @swagger
  * /api/v1/admins/employees/getAllActiveEmployees:
  *   get:
+ *     tags:
+ *       - Admins - Personnel
  *     summary: Get all active employees in crew
  *     security:
  *       - bearerAuth: []
@@ -63,6 +67,8 @@ router.get(
  * @swagger
  * /api/v1/admins/employees/getAllCrews:
  *   get:
+ *     tags:
+ *       - Admins - Personnel
  *     summary: Get all crews
  *     security:
  *       - bearerAuth: []
@@ -78,6 +84,8 @@ router.get("/getAllCrews", verifyToken, getAllCrewsController);
  * @swagger
  * /api/v1/admins/employees/getEmployeeInfo/{id}:
  *   get:
+ *     tags:
+ *       - Admins - Personnel
  *     summary: Get employee info by ID
  *     security:
  *       - bearerAuth: []
@@ -101,6 +109,8 @@ router.get("/getEmployeeInfo/:id", verifyToken, getEmployeeInfoController);
  * @swagger
  * /api/v1/admins/employees/getCrewByIdAdmin/{id}:
  *   get:
+ *     tags:
+ *       - Admins - Personnel
  *     summary: Get crew info by ID
  *     security:
  *       - bearerAuth: []
@@ -124,6 +134,8 @@ router.get("/getCrewByIdAdmin/:id", verifyToken, getCrewByIdAdminController);
  * @swagger
  * /api/v1/admins/employees/crewManagers:
  *   get:
+ *     tags:
+ *       - Admins - Personnel
  *     summary: Get all crew managers
  *     security:
  *       - bearerAuth: []
@@ -139,6 +151,8 @@ router.get("/crewManagers", verifyToken, getCrewManagersController);
  * @swagger
  * /api/v1/admins/employees/personnelManager:
  *   get:
+ *     tags:
+ *       - Admins - Personnel
  *     summary: Get personnel manager data
  *     security:
  *       - bearerAuth: []
@@ -154,6 +168,8 @@ router.get("/personnelManager", verifyToken, getPersonnelManagerController);
  * @swagger
  * /api/v1/admins/employees/createUserAdmin:
  *   post:
+ *     tags:
+ *       - Admins - Personnel
  *     summary: Create a new user (admin)
  *     security:
  *       - bearerAuth: []
@@ -182,6 +198,8 @@ router.post(
  * @swagger
  * /api/v1/admins/employees/editUserAdmin/{id}:
  *   put:
+ *     tags:
+ *       - Admins - Personnel
  *     summary: Edit a user (admin)
  *     security:
  *       - bearerAuth: []
@@ -218,6 +236,8 @@ router.put(
  * @swagger
  * /api/v1/admins/employees/deleteUser/{id}:
  *   delete:
+ *     tags:
+ *       - Admins - Personnel
  *     summary: Delete a user (admin)
  *     security:
  *       - bearerAuth: []
@@ -241,6 +261,8 @@ router.delete("/deleteUser/:id", verifyToken, deleteUserController);
  * @swagger
  * /api/v1/admins/employees/createCrew:
  *   post:
+ *     tags:
+ *       - Admins - Personnel
  *     summary: Create a new crew
  *     security:
  *       - bearerAuth: []
@@ -269,6 +291,8 @@ router.post(
  * @swagger
  * /api/v1/admins/employees/editCrew/{id}:
  *   put:
+ *     tags:
+ *       - Admins - Personnel
  *     summary: Edit a crew
  *     security:
  *       - bearerAuth: []
@@ -305,6 +329,8 @@ router.put(
  * @swagger
  * /api/v1/admins/employees/deleteCrew/{id}:
  *   delete:
+ *     tags:
+ *       - Admins - Personnel
  *     summary: Delete a crew
  *     security:
  *       - bearerAuth: []

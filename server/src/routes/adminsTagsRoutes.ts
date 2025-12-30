@@ -20,6 +20,8 @@ const router = Router();
  * @swagger
  * /api/v1/admins/tags:
  *   get:
+ *     tags:
+ *       - Admins - Tags
  *     summary: Get all tags (summary)
  *     security:
  *       - bearerAuth: []
@@ -29,6 +31,8 @@ const router = Router();
  *       401:
  *         description: Unauthorized
  *   post:
+ *     tags:
+ *       - Admins - Tags
  *     summary: Create a new tag
  *     security:
  *       - bearerAuth: []
@@ -58,6 +62,8 @@ router.post(
  * @swagger
  * /api/v1/admins/tags/{id}:
  *   get:
+ *     tags:
+ *       - Admins - Tags
  *     summary: Get tag by ID
  *     security:
  *       - bearerAuth: []
@@ -75,6 +81,8 @@ router.post(
  *       404:
  *         description: Tag not found
  *   put:
+ *     tags:
+ *       - Admins - Tags
  *     summary: Update tag by ID
  *     security:
  *       - bearerAuth: []
@@ -100,6 +108,8 @@ router.post(
  *       404:
  *         description: Tag not found
  *   delete:
+ *     tags:
+ *       - Admins - Tags
  *     summary: Delete tag by ID
  *     security:
  *       - bearerAuth: []

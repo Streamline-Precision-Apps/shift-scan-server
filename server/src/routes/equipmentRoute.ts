@@ -13,8 +13,10 @@ const router = Router();
 
 /**
  * @swagger
- * /v1/equipment/:
+ * /api/v1/equipment/:
  *   get:
+ *     tags:
+ *       - App - Equipment
  *     summary: Get a list of all equipment
  *     responses:
  *       200:
@@ -22,6 +24,8 @@ const router = Router();
  *       400:
  *         description: Failed to retrieve equipment
  *   post:
+ *     tags:
+ *       - App - Equipment
  *     summary: Create a new equipment entry
  *     requestBody:
  *       required: true
@@ -40,8 +44,10 @@ router.post("/", validateRequest(createEquipmentSchema), createEquipment);
 
 /**
  * @swagger
- * /v1/equipment/{id}/lastMileage:
+ * /api/v1/equipment/{id}/lastMileage:
  *   get:
+ *     tags:
+ *       - App - Equipment
  *     summary: Get the last mileage entry for a piece of equipment by ID
  *     parameters:
  *       - in: path
@@ -59,8 +65,10 @@ router.get("/:id/lastMileage", getEquipmentMileageController);
 
 /**
  * @swagger
- * /v1/equipment/qr/{qrId}:
+ * /api/v1/equipment/qr/{qrId}:
  *   get:
+ *     tags:
+ *       - App - Equipment
  *     summary: Get equipment details by QR code ID
  *     parameters:
  *       - in: path

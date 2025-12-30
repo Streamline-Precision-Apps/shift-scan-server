@@ -24,6 +24,8 @@ const router = Router();
  * @swagger
  * /api/v1/admins/equipment/summary:
  *   get:
+ *     tags:
+ *       - Admins - Equipment
  *     summary: List all equipment (summary fields only)
  *     security:
  *       - bearerAuth: []
@@ -40,6 +42,8 @@ router.get("/summary", verifyToken, getEquipmentSummary);
  * @swagger
  * /api/v1/admins/equipment/{id}:
  *   get:
+ *     tags:
+ *       - Admins - Equipment
  *     summary: Get equipment by ID
  *     security:
  *       - bearerAuth: []
@@ -57,6 +61,8 @@ router.get("/summary", verifyToken, getEquipmentSummary);
  *       404:
  *         description: Equipment not found
  *   put:
+ *     tags:
+ *       - Admins - Equipment
  *     summary: Update equipment by ID
  *     security:
  *       - bearerAuth: []
@@ -82,6 +88,8 @@ router.get("/summary", verifyToken, getEquipmentSummary);
  *       404:
  *         description: Equipment not found
  *   delete:
+ *     tags:
+ *       - Admins - Equipment
  *     summary: Delete equipment by ID
  *     security:
  *       - bearerAuth: []
@@ -113,6 +121,8 @@ router.delete("/:id", verifyToken, deleteEquipment);
  * @swagger
  * /api/v1/admins/equipment/{id}/archive:
  *   put:
+ *     tags:
+ *       - Admins - Equipment
  *     summary: Archive equipment by ID
  *     security:
  *       - bearerAuth: []
@@ -149,6 +159,8 @@ router.put(
  * @swagger
  * /api/v1/admins/equipment/{id}/restore:
  *   put:
+ *     tags:
+ *       - Admins - Equipment
  *     summary: Restore archived equipment by ID
  *     security:
  *       - bearerAuth: []
@@ -185,6 +197,8 @@ router.put(
  * @swagger
  * /api/v1/admins/equipment/archived:
  *   get:
+ *     tags:
+ *       - Admins - Equipment
  *     summary: List all archived equipment
  *     security:
  *       - bearerAuth: []
@@ -200,6 +214,8 @@ router.get("/archived", verifyToken, listArchivedEquipment);
  * @swagger
  * /api/v1/admins/equipment:
  *   get:
+ *     tags:
+ *       - Admins - Equipment
  *     summary: List all equipment
  *     security:
  *       - bearerAuth: []
@@ -209,6 +225,8 @@ router.get("/archived", verifyToken, listArchivedEquipment);
  *       401:
  *         description: Unauthorized
  *   post:
+ *     tags:
+ *       - Admins - Equipment
  *     summary: Create new equipment
  *     security:
  *       - bearerAuth: []

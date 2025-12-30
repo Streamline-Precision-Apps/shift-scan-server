@@ -31,13 +31,12 @@ import {
 
 const router = Router();
 // --- Form Template Routes ---
-
-// GET /api/v1/admins/forms/template
-// Returns all form templates (supports filtering, pagination, search)
 /**
  * @swagger
  * /api/v1/admins/forms/template:
  *   get:
+ *     tags:
+ *       - Admins - Forms
  *     summary: Get all form templates
  *     security:
  *       - bearerAuth: []
@@ -49,12 +48,12 @@ const router = Router();
  */
 router.get("/template", verifyToken, getAllFormTemplatesController);
 
-// POST /api/v1/admins/forms/template
-// Creates a new form template
 /**
  * @swagger
  * /api/v1/admins/forms/template:
  *   post:
+ *     tags:
+ *       - Admins - Forms
  *     summary: Create a new form template
  *     security:
  *       - bearerAuth: []
@@ -78,12 +77,13 @@ router.post(
   validateRequest(createFormTemplateSchema),
   createFormTemplateController
 );
-// GET /api/v1/admins/forms/template/:id
-// Returns a single form template by ID
+
 /**
  * @swagger
  * /api/v1/admins/forms/template/{id}:
  *   get:
+ *     tags:
+ *       - Admins - Forms
  *     summary: Get form template by ID
  *     security:
  *       - bearerAuth: []
@@ -103,12 +103,12 @@ router.post(
  */
 router.get("/template/:id", verifyToken, getFormTemplateByIdController);
 
-// PUT /api/v1/admins/forms/template/:id
-// Updates a form template by ID
 /**
  * @swagger
  * /api/v1/admins/forms/template/{id}:
  *   put:
+ *     tags:
+ *       - Admins - Forms
  *     summary: Update form template by ID
  *     security:
  *       - bearerAuth: []
@@ -140,12 +140,13 @@ router.put(
   validateRequest(updateFormTemplateSchema),
   updateFormTemplateController
 );
-// PUT /api/v1/admins/forms/template/:id/draft
-// Sets a form template to DRAFT status
+
 /**
  * @swagger
  * /api/v1/admins/forms/template/{id}/draft:
  *   put:
+ *     tags:
+ *       - Admins - Forms
  *     summary: Set form template to draft status
  *     security:
  *       - bearerAuth: []
@@ -165,12 +166,12 @@ router.put(
  */
 router.put("/template/:id/draft", verifyToken, draftFormTemplateController);
 
-// PUT /api/v1/admins/forms/template/:id/archive
-// Archives a form template by ID
 /**
  * @swagger
  * /api/v1/admins/forms/template/{id}/archive:
  *   put:
+ *     tags:
+ *       - Admins - Forms
  *     summary: Archive form template by ID
  *     security:
  *       - bearerAuth: []
@@ -202,12 +203,13 @@ router.put(
   validateRequest(archiveFormTemplateSchema),
   archiveFormTemplateController
 );
-// PUT /api/v1/admins/forms/template/:id/publish
-// Publishes a form template by ID
+
 /**
  * @swagger
  * /api/v1/admins/forms/template/{id}/publish:
  *   put:
+ *     tags:
+ *       - Admins - Forms
  *     summary: Publish form template by ID
  *     security:
  *       - bearerAuth: []
@@ -240,12 +242,12 @@ router.put(
   publishFormTemplateController
 );
 
-// DELETE /api/v1/admins/forms/template/:id
-// Deletes a form template by ID
 /**
  * @swagger
  * /api/v1/admins/forms/template/{id}:
  *   delete:
+ *     tags:
+ *       - Admins - Forms
  *     summary: Delete form template by ID
  *     security:
  *       - bearerAuth: []
@@ -266,12 +268,12 @@ router.put(
 router.delete("/template/:id", verifyToken, deleteFormTemplateController);
 // --- Form Submission Routes ---
 
-// GET /api/v1/admins/forms/template/:id/submissions
-// Returns all submissions for a given form template (supports date range)
 /**
  * @swagger
  * /api/v1/admins/forms/template/{id}/submissions/export:
  *   get:
+ *     tags:
+ *       - Admins - Forms
  *     summary: Export all submissions for a form template
  *     security:
  *       - bearerAuth: []
@@ -295,12 +297,12 @@ router.get(
   getFormSubmissionsController
 );
 
-// GET /api/v1/admins/forms/template/:id/submissions-detailed
-// Returns all submissions for a given form template with full details (supports pagination, status filter, date range)
 /**
  * @swagger
  * /api/v1/admins/forms/template/{id}/submissions:
  *   get:
+ *     tags:
+ *       - Admins - Forms
  *     summary: Get all submissions for a form template (detailed)
  *     security:
  *       - bearerAuth: []
@@ -324,12 +326,12 @@ router.get(
   getFormSubmissionByTemplateIdController
 );
 
-// POST /api/v1/admins/forms/template/:id/submissions
-// Creates a new form submission for a given template
 /**
  * @swagger
  * /api/v1/admins/forms/template/{id}/submissions:
  *   post:
+ *     tags:
+ *       - Admins - Forms
  *     summary: Create a new form submission for a template
  *     security:
  *       - bearerAuth: []
@@ -362,12 +364,12 @@ router.post(
   createFormSubmissionController
 );
 
-// GET /api/v1/admins/forms/submissions/:submissionId
-// Returns a single form submission by submission ID
 /**
  * @swagger
  * /api/v1/admins/forms/submissions/{submissionId}:
  *   get:
+ *     tags:
+ *       - Admins - Forms
  *     summary: Get form submission by ID
  *     security:
  *       - bearerAuth: []
@@ -390,12 +392,13 @@ router.get(
   verifyToken,
   getFormSubmissionByIdController
 );
-// PUT /api/v1/admins/forms/submissions/:submissionId
-// Updates a form submission by submission ID
+
 /**
  * @swagger
  * /api/v1/admins/forms/submissions/{submissionId}:
  *   put:
+ *     tags:
+ *       - Admins - Forms
  *     summary: Update form submission by ID
  *     security:
  *       - bearerAuth: []
@@ -428,12 +431,12 @@ router.put(
   updateFormSubmissionController
 );
 
-// PUT /api/v1/admins/forms/submissions/:submissionId/approve
-// Approves or rejects a form submission by submission ID
 /**
  * @swagger
  * /api/v1/admins/forms/submissions/{submissionId}/approve:
  *   put:
+ *     tags:
+ *       - Admins - Forms
  *     summary: Approve or reject a form submission by ID
  *     security:
  *       - bearerAuth: []
@@ -466,12 +469,12 @@ router.put(
   approveFormSubmissionController
 );
 
-// DELETE /api/v1/admins/forms/submissions/:submissionId
-// Deletes a form submission by submission ID
 /**
  * @swagger
  * /api/v1/admins/forms/submissions/{submissionId}:
  *   delete:
+ *     tags:
+ *       - Admins - Forms
  *     summary: Delete form submission by ID
  *     security:
  *       - bearerAuth: []

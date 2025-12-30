@@ -18,6 +18,8 @@ const router = Router();
  * @swagger
  * /api/v1/mechanic-logs/:
  *   post:
+ *     tags:
+ *       - App - Logs
  *     summary: Create a new mechanic log
  *     security:
  *       - bearerAuth: []
@@ -44,6 +46,8 @@ router.post(
  * @swagger
  * /api/v1/mechanic-logs/{id}:
  *   get:
+ *     tags:
+ *       - App - Logs
  *     summary: Get a specific mechanic log by ID
  *     security:
  *       - bearerAuth: []
@@ -59,6 +63,8 @@ router.post(
  *       404:
  *         description: Mechanic log not found
  *   put:
+ *     tags:
+ *       - App - Logs
  *     summary: Update a mechanic log by ID
  *     security:
  *       - bearerAuth: []
@@ -82,6 +88,8 @@ router.post(
  *       404:
  *         description: Mechanic log not found
  *   delete:
+ *     tags:
+ *       - App - Logs
  *     summary: Delete a mechanic log by ID
  *     security:
  *       - bearerAuth: []
@@ -111,6 +119,8 @@ router.delete("/:id", verifyToken, deleteMechanicProjectController);
  * @swagger
  * /api/v1/mechanic-logs/timesheet/{timesheetId}:
  *   get:
+ *     tags:
+ *       - App - Logs
  *     summary: Get all mechanic logs for a timesheet
  *     security:
  *       - bearerAuth: []

@@ -34,6 +34,8 @@ const router = Router();
  * @swagger
  * /api/v1/tasco-logs/user/{userId}/active:
  *   get:
+ *     tags:
+ *       - App - Logs
  *     summary: Get the active Tasco Log for a user
  *     security:
  *       - bearerAuth: []
@@ -55,6 +57,8 @@ router.get("/user/:userId/active", verifyToken, getActiveTascoLogController);
  * @swagger
  * /api/v1/tasco-logs/timesheet/{timesheetId}:
  *   get:
+ *     tags:
+ *       - App - Logs
  *     summary: Get all Tasco Logs for a timesheet
  *     security:
  *       - bearerAuth: []
@@ -80,6 +84,8 @@ router.get(
  * @swagger
  * /api/v1/tasco-logs/{id}:
  *   get:
+ *     tags:
+ *       - App - Logs
  *     summary: Get a single Tasco Log by ID
  *     security:
  *       - bearerAuth: []
@@ -95,6 +101,8 @@ router.get(
  *       404:
  *         description: Tasco Log not found
  *   delete:
+ *     tags:
+ *       - App - Logs
  *     summary: Delete a Tasco Log (cascades to all related records)
  *     security:
  *       - bearerAuth: []
@@ -117,6 +125,8 @@ router.delete("/:id", verifyToken, deleteTascoLogController);
  * @swagger
  * /api/v1/tasco-logs/{id}/field/{field}:
  *   get:
+ *     tags:
+ *       - App - Logs
  *     summary: Get specific field data for a Tasco Log
  *     security:
  *       - bearerAuth: []
@@ -144,6 +154,8 @@ router.get("/:id/field/:field", verifyToken, getTascoLogFieldController);
  * @swagger
  * /api/v1/tasco-logs/{id}/complete:
  *   get:
+ *     tags:
+ *       - App - Logs
  *     summary: Get complete Tasco Log data with all relations
  *     security:
  *       - bearerAuth: []
@@ -165,6 +177,8 @@ router.get("/:id/complete", verifyToken, getCompleteTascoLogController);
  * @swagger
  * /api/v1/tasco-logs/{id}/load-quantity:
  *   put:
+ *     tags:
+ *       - App - Logs
  *     summary: Update Tasco Log load quantity
  *     security:
  *       - bearerAuth: []
@@ -199,6 +213,8 @@ router.put(
  * @swagger
  * /api/v1/tasco-logs/{id}/comment:
  *   put:
+ *     tags:
+ *       - App - Logs
  *     summary: Update Tasco Log comment
  *     security:
  *       - bearerAuth: []
@@ -233,6 +249,8 @@ router.put(
  * @swagger
  * /api/v1/tasco-logs/{id}/refuel-logs:
  *   get:
+ *     tags:
+ *       - App - Logs
  *     summary: Get all Refuel Logs for a Tasco Log
  *     security:
  *       - bearerAuth: []
@@ -248,6 +266,8 @@ router.put(
  *       404:
  *         description: Tasco Log or logs not found
  *   post:
+ *     tags:
+ *       - App - Logs
  *     summary: Create a new Refuel Log
  *     security:
  *       - bearerAuth: []
@@ -281,6 +301,8 @@ router.post(
  * @swagger
  * /api/v1/tasco-logs/{id}/f-loads:
  *   get:
+ *     tags:
+ *       - App - Logs
  *     summary: Get all F-Loads for a Tasco Log
  *     security:
  *       - bearerAuth: []
@@ -296,6 +318,8 @@ router.post(
  *       404:
  *         description: Tasco Log or F-Loads not found
  *   post:
+ *     tags:
+ *       - App - Logs
  *     summary: Create a new TascoFLoad
  *     security:
  *       - bearerAuth: []
@@ -329,6 +353,8 @@ router.post(
  * @swagger
  * /api/v1/tasco-logs/refuel-logs/{refuelLogId}:
  *   put:
+ *     tags:
+ *       - App - Logs
  *     summary: Update a Refuel Log
  *     security:
  *       - bearerAuth: []
@@ -352,6 +378,8 @@ router.post(
  *       404:
  *         description: Refuel Log not found
  *   delete:
+ *     tags:
+ *       - App - Logs
  *     summary: Delete a Refuel Log
  *     security:
  *       - bearerAuth: []
@@ -384,6 +412,8 @@ router.delete(
  * @swagger
  * /api/v1/tasco-logs/f-loads/{fLoadId}:
  *   put:
+ *     tags:
+ *       - App - Logs
  *     summary: Update a TascoFLoad
  *     security:
  *       - bearerAuth: []
@@ -407,6 +437,8 @@ router.delete(
  *       404:
  *         description: TascoFLoad not found
  *   delete:
+ *     tags:
+ *       - App - Logs
  *     summary: Delete a TascoFLoad
  *     security:
  *       - bearerAuth: []

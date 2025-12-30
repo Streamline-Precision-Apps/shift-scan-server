@@ -36,8 +36,10 @@ const router = Router();
 
 /**
  * @swagger
- * /v1/forms/:
+ * /api/v1/forms/:
  *   get:
+ *     tags:
+ *       - App - Forms
  *     summary: Get all form templates
  *     responses:
  *       200:
@@ -49,8 +51,10 @@ router.get("/", getForms);
 
 /**
  * @swagger
- * /v1/forms/{filter}:
+ * /api/v1/forms/{filter}:
  *   get:
+ *     tags:
+ *       - App - Forms
  *     summary: Get user submissions by filter
  *     security:
  *       - bearerAuth: []
@@ -97,8 +101,10 @@ router.get("/:filter", verifyToken, getUserSubmissions);
 
 /**
  * @swagger
- * /v1/forms/formDraft/{id}:
+ * /api/v1/forms/formDraft/{id}:
  *   get:
+ *     tags:
+ *       - App - Forms
  *     summary: Get a draft form submission by ID
  *     security:
  *       - bearerAuth: []
@@ -120,8 +126,10 @@ router.get("/formDraft/:id", verifyToken, getFormDraft);
 
 /**
  * @swagger
- * /v1/forms/teamSubmission/{id}:
+ * /api/v1/forms/teamSubmission/{id}:
  *   get:
+ *     tags:
+ *       - App - Forms
  *     summary: Get a team submission by ID
  *     security:
  *       - bearerAuth: []
@@ -141,8 +149,10 @@ router.get("/teamSubmission/:id", verifyToken, getTeamSubmission);
 
 /**
  * @swagger
- * /v1/forms/formSubmission/{id}:
+ * /api/v1/forms/formSubmission/{id}:
  *   get:
+ *     tags:
+ *       - App - Forms
  *     summary: Get a form submission by ID
  *     security:
  *       - bearerAuth: []
@@ -162,8 +172,10 @@ router.get("/formSubmission/:id", verifyToken, getFormSubmission);
 
 /**
  * @swagger
- * /v1/forms/managerFormApproval/{id}:
+ * /api/v1/forms/managerFormApproval/{id}:
  *   get:
+ *     tags:
+ *       - App - Forms
  *     summary: Get manager form approval by ID
  *     security:
  *       - bearerAuth: []
@@ -183,8 +195,10 @@ router.get("/managerFormApproval/:id", verifyToken, getManagerFormApproval);
 
 /**
  * @swagger
- * /v1/forms/form/{id}:
+ * /api/v1/forms/form/{id}:
  *   get:
+ *     tags:
+ *       - App - Forms
  *     summary: Get a form template by ID
  *     security:
  *       - bearerAuth: []
@@ -206,8 +220,10 @@ router.get("/form/:id", verifyToken, getFormTemplate);
 
 /**
  * @swagger
- * /v1/forms/submissions:
+ * /api/v1/forms/submissions:
  *   get:
+ *     tags:
+ *       - App - Forms
  *     summary: Get all form submissions
  *     responses:
  *       200:
@@ -219,8 +235,10 @@ router.get("/submissions", getFormsSubmissions);
 
 /**
  * @swagger
- * /v1/forms/submission:
+ * /api/v1/forms/submission:
  *   post:
+ *     tags:
+ *       - App - Forms
  *     summary: Create a new form submission
  *     security:
  *       - bearerAuth: []
@@ -253,8 +271,10 @@ router.post(
 
 /**
  * @swagger
- * /v1/forms/submission/{id}:
+ * /api/v1/forms/submission/{id}:
  *   put:
+ *     tags:
+ *       - App - Forms
  *     summary: Update a form submission
  *     security:
  *       - bearerAuth: []
@@ -292,6 +312,8 @@ router.post(
  *       400:
  *         description: Failed to update form submission
  *   delete:
+ *     tags:
+ *       - App - Forms
  *     summary: Delete a form submission
  *     security:
  *       - bearerAuth: []
@@ -319,8 +341,10 @@ router.delete("/submission/:id", verifyToken, deleteFormSubmission);
 
 /**
  * @swagger
- * /v1/forms/draft:
+ * /api/v1/forms/draft:
  *   post:
+ *     tags:
+ *       - App - Forms
  *     summary: Save a draft form submission
  *     security:
  *       - bearerAuth: []
@@ -358,8 +382,10 @@ router.post("/draft", verifyToken, validateRequest(saveDraftSchema), saveDraft);
 
 /**
  * @swagger
- * /v1/forms/draft-to-pending:
+ * /api/v1/forms/draft-to-pending:
  *   post:
+ *     tags:
+ *       - App - Forms
  *     summary: Save a draft and move to pending/approved
  *     security:
  *       - bearerAuth: []
@@ -404,8 +430,10 @@ router.post(
 
 /**
  * @swagger
- * /v1/forms/pending:
+ * /api/v1/forms/pending:
  *   post:
+ *     tags:
+ *       - App - Forms
  *     summary: Save a pending form submission
  *     security:
  *       - bearerAuth: []
@@ -447,8 +475,10 @@ router.post(
 
 /**
  * @swagger
- * /v1/forms/employeeRequests/{filter}:
+ * /api/v1/forms/employeeRequests/{filter}:
  *   get:
+ *     tags:
+ *       - App - Forms
  *     summary: Get employee requests for a manager
  *     security:
  *       - bearerAuth: []
@@ -477,8 +507,10 @@ router.get("/employeeRequests/:filter", verifyToken, getEmployeeRequests);
 
 /**
  * @swagger
- * /v1/forms/approval:
+ * /api/v1/forms/approval:
  *   post:
+ *     tags:
+ *       - App - Forms
  *     summary: Create a form approval
  *     security:
  *       - bearerAuth: []
@@ -520,8 +552,10 @@ router.post(
 
 /**
  * @swagger
- * /v1/forms/approval/update:
+ * /api/v1/forms/approval/update:
  *   put:
+ *     tags:
+ *       - App - Forms
  *     summary: Update a form approval
  *     security:
  *       - bearerAuth: []

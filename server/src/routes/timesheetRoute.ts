@@ -41,6 +41,8 @@ const router = Router();
  * @swagger
  * /api/v1/timesheets/{id}:
  *   put:
+ *     tags:
+ *       - App - Timesheets
  *     summary: Update a timesheet (general update)
  *     requestBody:
  *       required: true
@@ -68,6 +70,8 @@ router.put("/:id", validateRequest(updateTimesheetSchema), updateTimesheet);
  * @swagger
  * /api/v1/timesheets/approve-batch:
  *   post:
+ *     tags:
+ *       - App - Timesheets
  *     summary: Batch approve timesheets
  *     requestBody:
  *       required: true
@@ -91,6 +95,8 @@ router.post(
  * @swagger
  * /api/v1/timesheets/create:
  *   post:
+ *     tags:
+ *       - App - Timesheets
  *     summary: Create a new timesheet and switch jobs
  *     requestBody:
  *       required: true
@@ -114,6 +120,8 @@ router.post(
  * @swagger
  * /api/v1/timesheets/user/{userId}/recent:
  *   get:
+ *     tags:
+ *       - App - Timesheets
  *     summary: Get recent timesheet for a user
  *     parameters:
  *       - in: path
@@ -133,6 +141,8 @@ router.get("/user/:userId/recent", getRecentTimesheetController);
  * @swagger
  * /api/v1/timesheets/user/{userId}/return:
  *   get:
+ *     tags:
+ *       - App - Timesheets
  *     summary: Get recent return timesheet for a user
  *     parameters:
  *       - in: path
@@ -152,6 +162,8 @@ router.get("/user/:userId/return", getRecentReturnTimesheetController);
  * @swagger
  * /api/v1/timesheets/user/{userId}/active-status:
  *   get:
+ *     tags:
+ *       - App - Timesheets
  *     summary: Get active timesheet status for a user
  *     parameters:
  *       - in: path
@@ -171,6 +183,8 @@ router.get("/user/:userId/active-status", getTimesheetActiveStatusController);
  * @swagger
  * /api/v1/timesheets/user/{userId}/dashboard-logs:
  *   get:
+ *     tags:
+ *       - App - Timesheets
  *     summary: Get dashboard logs for a user
  *     parameters:
  *       - in: path
@@ -190,6 +204,8 @@ router.get("/user/:userId/dashboard-logs", getDashboardLogsController);
  * @swagger
  * /api/v1/timesheets/user/{userId}/clockOutComment:
  *   get:
+ *     tags:
+ *       - App - Timesheets
  *     summary: Get clock out comment for a user
  *     parameters:
  *       - in: path
@@ -209,6 +225,8 @@ router.get("/user/:userId/clockOutComment", getClockOutCommentController);
  * @swagger
  * /api/v1/timesheets/user/{userId}/clock-out-details:
  *   get:
+ *     tags:
+ *       - App - Timesheets
  *     summary: Get today's timesheets and signature for a user
  *     parameters:
  *       - in: path
@@ -228,6 +246,8 @@ router.get("/user/:userId/clock-out-details", getClockOutDetailsController);
  * @swagger
  * /api/v1/timesheets/user/{userId}/equipmentLogs:
  *   get:
+ *     tags:
+ *       - App - Timesheets
  *     summary: Get equipment logs for a user
  *     parameters:
  *       - in: path
@@ -247,6 +267,8 @@ router.get("/user/:userId/equipmentLogs", getUserEquipmentLogsController);
  * @swagger
  * /api/v1/timesheets/user/{userId}/recentJobDetails:
  *   get:
+ *     tags:
+ *       - App - Timesheets
  *     summary: Get recent jobsite details for a user
  *     parameters:
  *       - in: path
@@ -269,6 +291,8 @@ router.get(
  * @swagger
  * /api/v1/timesheets/{id}/user/{userId}/continue-timesheet:
  *   get:
+ *     tags:
+ *       - App - Timesheets
  *     summary: Check for ongoing timesheet to continue
  *     parameters:
  *       - in: path
@@ -296,6 +320,8 @@ router.get(
  * @swagger
  * /api/v1/timesheets/{id}/clock-out:
  *   put:
+ *     tags:
+ *       - App - Timesheets
  *     summary: Update a timesheet (clock-out)
  *     requestBody:
  *       required: true
@@ -327,6 +353,8 @@ router.put(
  * @swagger
  * /api/v1/timesheets/{id}/previous-work:
  *   get:
+ *     tags:
+ *       - App - Timesheets
  *     summary: Get previous work details for a timesheet
  *     parameters:
  *       - in: path
@@ -346,6 +374,8 @@ router.get("/:id/previous-work", getPreviousWorkController);
  * @swagger
  * /api/v1/timesheets/{id}/user/{userId}:
  *   get:
+ *     tags:
+ *       - App - Timesheets
  *     summary: Get banner data for a timesheet
  *     parameters:
  *       - in: path
@@ -370,6 +400,8 @@ router.get("/:id/user/:userId", getBannerDataController);
  * @swagger
  * /api/v1/timesheets/{id}/details:
  *   get:
+ *     tags:
+ *       - App - Timesheets
  *     summary: Get timesheet details for manager editing
  *     parameters:
  *       - in: path
@@ -389,6 +421,8 @@ router.get("/:id/details", getTimesheetDetailsManagerController);
  * @swagger
  * /api/v1/timesheets/user/{userId}:
  *   get:
+ *     tags:
+ *       - App - Timesheets
  *     summary: Get all timesheets for a user
  *     parameters:
  *       - in: path
@@ -408,6 +442,8 @@ router.get("/user/:userId", getUserTimesheetsByDateController);
  * @swagger
  * /api/v1/timesheets/equipment-log:
  *   get:
+ *     tags:
+ *       - App - Timesheets
  *     summary: Get all equipment logs
  *     responses:
  *       200:
@@ -415,6 +451,8 @@ router.get("/user/:userId", getUserTimesheetsByDateController);
  *       404:
  *         description: No equipment logs found
  *   post:
+ *     tags:
+ *       - App - Timesheets
  *     summary: Create a new employee equipment log
  *     requestBody:
  *       required: true
@@ -434,6 +472,8 @@ router.get("/equipment-log", getAllEquipmentLogsController);
  * @swagger
  * /api/v1/timesheets/equipment-log/{logId}:
  *   get:
+ *     tags:
+ *       - App - Timesheets
  *     summary: Get details of a specific employee equipment log
  *     parameters:
  *       - in: path
@@ -447,6 +487,8 @@ router.get("/equipment-log", getAllEquipmentLogsController);
  *       404:
  *         description: Equipment log not found
  *   put:
+ *     tags:
+ *       - App - Timesheets
  *     summary: Update an employee equipment log
  *     requestBody:
  *       required: true
@@ -468,6 +510,8 @@ router.get("/equipment-log", getAllEquipmentLogsController);
  *       404:
  *         description: Equipment log not found
  *   delete:
+ *     tags:
+ *       - App - Timesheets
  *     summary: Delete an employee equipment log
  *     parameters:
  *       - in: path
@@ -498,6 +542,8 @@ router.delete("/equipment-log/:logId", deleteEmployeeEquipmentLogController);
  * @swagger
  * /api/v1/timesheets/refuel-log/{refuelLogId}:
  *   delete:
+ *     tags:
+ *       - App - Timesheets
  *     summary: Delete a refuel log
  *     parameters:
  *       - in: path
@@ -517,6 +563,8 @@ router.delete("/refuel-log/:refuelLogId", deleteRefuelLogController);
  * @swagger
  * /api/v1/timesheets/manager/{managerId}/crew-timesheets:
  *   get:
+ *     tags:
+ *       - App - Timesheets
  *     summary: Get all timesheets for all users in a manager's crew
  *     parameters:
  *       - in: path

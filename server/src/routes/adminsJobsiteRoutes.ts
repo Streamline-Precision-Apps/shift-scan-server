@@ -23,6 +23,8 @@ const router = Router();
  * @swagger
  * /api/v1/admins/jobsite:
  *   get:
+ *     tags:
+ *       - Admins - Jobsites
  *     summary: Get all jobsites (admin)
  *     security:
  *       - bearerAuth: []
@@ -32,6 +34,8 @@ const router = Router();
  *       401:
  *         description: Unauthorized
  *   post:
+ *     tags:
+ *       - Admins - Jobsites
  *     summary: Create a new jobsite (admin)
  *     security:
  *       - bearerAuth: []
@@ -62,6 +66,8 @@ router.post(
  * @swagger
  * /api/v1/admins/jobsite/{id}:
  *   get:
+ *     tags:
+ *       - Admins - Jobsites
  *     summary: Get a specific jobsite by ID (admin)
  *     security:
  *       - bearerAuth: []
@@ -79,6 +85,8 @@ router.post(
  *       404:
  *         description: Jobsite not found
  *   put:
+ *     tags:
+ *       - Admins - Jobsites
  *     summary: Update a specific jobsite by ID (admin)
  *     security:
  *       - bearerAuth: []
@@ -104,6 +112,8 @@ router.post(
  *       404:
  *         description: Jobsite not found
  *   delete:
+ *     tags:
+ *       - Admins - Jobsites
  *     summary: Delete a specific jobsite by ID (admin)
  *     security:
  *       - bearerAuth: []
@@ -135,6 +145,8 @@ router.delete("/:id", verifyToken, deleteJobsiteController);
  * @swagger
  * /api/v1/admins/jobsite/{id}/archive:
  *   put:
+ *     tags:
+ *       - Admins - Jobsites
  *     summary: Archive a specific jobsite by ID (admin)
  *     security:
  *       - bearerAuth: []
@@ -172,6 +184,8 @@ router.put(
  * @swagger
  * /api/v1/admins/jobsite/{id}/restore:
  *   put:
+ *     tags:
+ *       - Admins - Jobsites
  *     summary: Restore a specific jobsite by ID (admin)
  *     security:
  *       - bearerAuth: []

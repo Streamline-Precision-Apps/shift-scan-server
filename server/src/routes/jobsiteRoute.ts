@@ -12,8 +12,10 @@ import {
 const router = Router();
 /**
  * @swagger
- * /v1/jobsites/:
+ * /api/v1/jobsites/:
  *   get:
+ *     tags:
+ *       - App - Jobsites
  *     summary: Get a list of all jobsites
  *     responses:
  *       200:
@@ -21,6 +23,8 @@ const router = Router();
  *       400:
  *         description: Failed to retrieve jobsites
  *   post:
+ *     tags:
+ *       - App - Jobsites
  *     summary: Create a new jobsite
  *     requestBody:
  *       required: true
@@ -39,8 +43,10 @@ router.post("/", validateRequest(createJobsiteSchema), createJobsite);
 
 /**
  * @swagger
- * /v1/jobsites/{id}:
+ * /api/v1/jobsites/{id}:
  *   get:
+ *     tags:
+ *       - App - Jobsites
  *     summary: Get jobsite details by ID
  *     parameters:
  *       - in: path
@@ -58,8 +64,10 @@ router.get("/:id", getJobsiteById);
 
 /**
  * @swagger
- * /v1/jobsites/qr/{qrId}:
+ * /api/v1/jobsites/qr/{qrId}:
  *   get:
+ *     tags:
+ *       - App - Jobsites
  *     summary: Get jobsite details by QR code ID
  *     parameters:
  *       - in: path
