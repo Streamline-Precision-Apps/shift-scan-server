@@ -59,7 +59,6 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.1",
     "multer": "^2.0.2",
-    "next-auth": "^5.0.0-beta.29",
     "pg": "^8.16.3",
     "resend": "^6.3.0",
     "swagger-jsdoc": "^6.2.8",
