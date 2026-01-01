@@ -9,6 +9,7 @@ import {
 // --- Types ---
 export interface FormSettingsData {
   name: string;
+  spanishName?: string;
   description: string;
   formType: string;
   requireSignature: boolean;
@@ -19,12 +20,14 @@ export interface FormSettingsData {
 export interface FormFieldOption {
   id?: string;
   value: string;
+  spanishValue?: string;
 }
 
 export interface FormFieldData {
   id: string;
   formGroupingId?: string;
   label: string;
+  spanishLabel?: string;
   type: string;
   required: boolean;
   order: number;
@@ -421,6 +424,7 @@ export async function createFormTemplate(data: SaveFormData) {
       data: {
         companyId: companyId || "1",
         name: settings.name,
+        spanishName: settings.spanishName || null,
         description: settings.description || null,
         formType: settings.formType as FormTemplateCategory,
         isActive: settings.isActive as FormTemplateStatus,
@@ -447,6 +451,7 @@ export async function createFormTemplate(data: SaveFormData) {
         data: {
           formGroupingId: formGrouping.id,
           label: field.label,
+          spanishLabel: field.spanishLabel || null,
           type: field.type as FieldType,
           required: field.required,
           order: field.order,
@@ -472,6 +477,7 @@ export async function createFormTemplate(data: SaveFormData) {
             data: {
               fieldId: formField.id,
               value: optionData.value,
+              spanishValue: optionData.spanishValue || null,
             },
           });
         }
@@ -490,6 +496,7 @@ export async function updateFormTemplate(data: SaveFormData) {
     where: { id: formId },
     data: {
       name: settings.name,
+      spanishName: settings.spanishName || null,
       formType: settings.formType as FormTemplateCategory,
       isActive:
         (settings.isActive as FormTemplateStatus) || FormTemplateStatus.DRAFT,
@@ -534,6 +541,7 @@ export async function updateFormTemplate(data: SaveFormData) {
         where: { id: field.id },
         data: {
           label: field.label,
+          spanishLabel: field.spanishLabel || null,
           type: field.type as FieldType,
           required: field.required,
           order: field.order,
@@ -554,6 +562,7 @@ export async function updateFormTemplate(data: SaveFormData) {
           id: field.id,
           formGroupingId,
           label: field.label,
+          spanishLabel: field.spanishLabel || null,
           type: field.type as FieldType,
           required: field.required,
           order: field.order,
@@ -578,6 +587,7 @@ export async function updateFormTemplate(data: SaveFormData) {
           data: {
             fieldId: formFieldId,
             value: option.value,
+            spanishValue: option.spanishValue || null,
           },
         });
       }
